@@ -1,0 +1,20 @@
+    /* Animación para la línea roja */
+    .nav-link {
+      position: relative;
+      display: inline-block;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background-color: #EF4444;
+      transition: all 0.3s ease-in-out;
+      transform: translateX(-50%);
+    }
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
