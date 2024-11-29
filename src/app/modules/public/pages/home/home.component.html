@@ -1,83 +1,185 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LaslesVPN Home</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50">
-  <!-- Header -->
-  <header class="flex items-center justify-between px-8 py-4 bg-white shadow-md">
-    <div class="flex items-center space-x-2">
-      <img src="https://placehold.co/40x40" alt="Logo" class="w-8 h-8">
-      <span class="text-xl font-bold text-gray-800">LaslesVPN</span>
-    </div>
-    <nav class="flex items-center space-x-8">
-      <a href="#" class="text-gray-800 hover:text-red-500 font-medium">About</a>
-      <a href="#" class="text-gray-800 hover:text-red-500 font-medium">Feature</a>
-      <a href="#" class="text-gray-800 hover:text-red-500 font-medium">Pricing</a>
-      <a href="#" class="text-gray-800 hover:text-red-500 font-medium">Testimonial</a>
-    </nav>
-    <div class="flex items-center space-x-4">
-      <a href="#" class="text-gray-800 font-medium hover:text-red-500">Sign In</a>
-      <a href="#" class="px-4 py-2 border border-red-500 text-red-500 rounded-full font-medium hover:bg-red-500 hover:text-white transition">
-        Sign Up
-      </a>
-    </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="flex flex-col md:flex-row items-center justify-between px-8 py-16 bg-white">
-    <div class="max-w-lg space-y-6">
-      <h1 class="text-4xl font-bold text-gray-800 leading-tight">
-        Want anything to be easy with <span class="text-red-500">LaslesVPN</span>.
-      </h1>
-      <p class="text-gray-600">
-        Provide a network for all your needs with ease and fun using LaslesVPN. Discover interesting features from us.
-      </p>
-      <a href="#" class="px-6 py-3 bg-red-500 text-white rounded-lg shadow-lg hover:bg-red-600 transition">
-        Get Started
-      </a>
-    </div>
-    <div class="mt-8 md:mt-0">
-      <img src="https://placehold.co/400x300" alt="Illustration" class="w-full max-w-md mx-auto">
-    </div>
-  </section>
-
-  <!-- Features Section -->
-  <section class="bg-gray-50 py-16">
-    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-      <div class="space-y-4">
-        <div class="flex justify-center">
-          <img src="https://placehold.co/50x50" alt="Users" class="w-12 h-12">
-        </div>
-        <h3 class="text-2xl font-bold text-gray-800">390+</h3>
-        <p class="text-gray-600">Users</p>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICATHI - Capacitación para Todos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Animaciones */
+      .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeIn 1s ease-in-out forwards;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+  
+      .hover-grow:hover {
+        transform: scale(1.05);
+        transition: transform 0.3s ease-in-out;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <!-- Header Section -->
+    <header class="relative bg-gray-900 text-white">
+      <div class="absolute inset-0">
+        <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" 
+             alt="Background" class="w-full h-full object-cover opacity-70">
       </div>
-      <div class="space-y-4">
-        <div class="flex justify-center">
-          <img src="https://placehold.co/50x50" alt="Locations" class="w-12 h-12">
-        </div>
-        <h3 class="text-2xl font-bold text-gray-800">20+</h3>
-        <p class="text-gray-600">Locations</p>
+      <div class="relative z-10 flex flex-col items-center justify-center text-center px-4 py-20 space-y-4">
+        <h1 class="text-4xl md:text-6xl font-bold">
+          Instituto de Capacitación para el Trabajo del Estado de Hidalgo
+        </h1>
+        <h2 class="text-3xl md:text-4xl font-semibold text-red-500">ICATHI</h2>
+        <p class="text-lg md:text-xl max-w-2xl">
+          Descubre una amplia variedad de cursos diseñados para ayudarte a alcanzar tus metas laborales y personales.
+        </p>
+        <a href="#courses" class="px-6 py-3 bg-red-500 text-white rounded-full font-medium hover:bg-red-600 transition">
+          Explora Nuestros Cursos
+        </a>
       </div>
-      <div class="space-y-4">
-        <div class="flex justify-center">
-          <img src="https://placehold.co/50x50" alt="Servers" class="w-12 h-12">
-        </div>
-        <h3 class="text-2xl font-bold text-gray-800">50+</h3>
-        <p class="text-gray-600">Servers</p>
-      </div>
-    </div>
-  </section>
+    </header>
 
-  <!-- Operating Hours -->
-  <footer class="bg-white py-8">
-    <div class="max-w-6xl mx-auto text-center">
-      <h4 class="text-lg font-bold text-gray-800">Operating Hours</h4>
-      <p class="text-gray-600">Lun - Vie: 9:00 a.m. - 5:00 p.m. / Sáb - Dom: Cerrado</p>
-    </div>
-  </footer>
-</body>
-</html>
+
+    <section id="nosotros" class="py-16 bg-gradient-to-b from-gray-50 to-gray-100 relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Title Section -->
+        <div class="text-center mb-12 fade-in">
+          <h2 class="text-sm font-bold text-orange-500 tracking-wide uppercase">Nosotros</h2>
+          <h3 class="text-4xl font-extrabold text-gray-900 mb-4">Nuestros Servicios</h3>
+          <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+            Todos los servicios que ofertamos están avalados por la norma 
+            <span class="font-bold">ISO-9001-2015</span> y estándares de calidad, igualdad y no discriminación,
+            lo que te asegura un trato adecuado y servicios de calidad.
+          </p>
+        </div>
+    
+        <!-- Services Cards -->
+        <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+          <!-- Card 1 -->
+          <div class="bg-white shadow-md rounded-lg transform transition hover:scale-105 hover:shadow-2xl hover:shadow-orange-200 fade-in">
+            <div class="relative">
+              <img src="https://www.icathi.edu.mx/img/office/services-4.jpg" alt="Capacitación" class="w-full h-40 object-cover rounded-t-lg opacity-50">
+              <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent opacity-90 rounded-t-lg"></div>
+              <h4 class="absolute bottom-4 left-4 text-lg font-semibold text-white">Capacitación para y en el Trabajo</h4>
+            </div>
+            <div class="p-6">
+              <p class="text-gray-600 mb-4">
+                254 cursos impartidos por personal docente en espacios designados para la capacitación.
+              </p>
+              <div class="flex items-center text-orange-500 font-bold hover:text-orange-600">
+                <span>Leer más</span>
+                <svg class="ml-2 w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+    
+          <!-- Card 2 -->
+          <div class="bg-white shadow-md rounded-lg transform transition hover:scale-105 hover:shadow-2xl hover:shadow-orange-200 fade-in delay-200">
+            <div class="relative">
+              <img src="https://www.icathi.edu.mx/img/office/services-3.jpg" alt="Certificación" class="w-full h-40 object-cover rounded-t-lg opacity-50">
+              <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent opacity-90 rounded-t-lg"></div>
+              <h4 class="absolute bottom-4 left-4 text-lg font-semibold text-white">Certificación en Competencia Laboral</h4>
+            </div>
+            <div class="p-6">
+              <p class="text-gray-600 mb-4">
+                Certifica los conocimientos, habilidades, actitudes y destrezas en el desempeño de una función determinada.
+              </p>
+              <div class="flex items-center text-orange-500 font-bold hover:text-orange-600">
+                <span>Leer más</span>
+                <svg class="ml-2 w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+    
+          <!-- Card 3 -->
+          <div class="bg-white shadow-md rounded-lg transform transition hover:scale-105 hover:shadow-2xl hover:shadow-orange-200 fade-in delay-400">
+            <div class="relative">
+              <img src="https://www.icathi.edu.mx/img/office/services-2.jpg" alt="Incubadora" class="w-full h-40 object-cover rounded-t-lg opacity-50">
+              <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent opacity-90 rounded-t-lg"></div>
+              <h4 class="absolute bottom-4 left-4 text-lg font-semibold text-white">Incubadora de Empresas</h4>
+            </div>
+            <div class="p-6">
+              <p class="text-gray-600 mb-4">
+                Asesora y acompaña a las personas emprendedoras desde el diseño de su plan de negocio hasta su implementación.
+              </p>
+              <div class="flex items-center text-orange-500 font-bold hover:text-orange-600">
+                <span>Leer más</span>
+                <svg class="ml-2 w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+    
+          <!-- Card 4 -->
+          <div class="bg-white shadow-md rounded-lg transform transition hover:scale-105 hover:shadow-2xl hover:shadow-orange-200 fade-in delay-600">
+            <div class="relative">
+              <img src="https://www.icathi.edu.mx/img/office/services-1.jpg" alt="Vinculación" class="w-full h-40 object-cover rounded-t-lg opacity-50">
+              <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent opacity-90 rounded-t-lg"></div>
+              <h4 class="absolute bottom-4 left-4 text-lg font-semibold text-white">Vinculación con el Sector Productivo</h4>
+            </div>
+            <div class="p-6">
+              <p class="text-gray-600 mb-4">
+                Puentes de colaboración para fortalecer competencias y la empleabilidad en el sector productivo.
+              </p>
+              <div class="flex items-center text-orange-500 font-bold hover:text-orange-600">
+                <span>Leer más</span>
+                <svg class="ml-2 w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+    
+          <!-- Card 5 -->
+          <div class="bg-white shadow-md rounded-lg transform transition hover:scale-105 hover:shadow-2xl hover:shadow-orange-200 fade-in delay-800">
+            <div class="relative">
+              <img src="https://www.icathi.edu.mx/img/office/services-1.jpg" alt="Asesorías" class="w-full h-40 object-cover rounded-t-lg opacity-50">
+              <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent opacity-90 rounded-t-lg"></div>
+              <h4 class="absolute bottom-4 left-4 text-lg font-semibold text-white">Asesorías Especializadas</h4>
+            </div>
+            <div class="p-6">
+              <p class="text-gray-600 mb-4">
+                Brindamos asesorías en áreas específicas para fortalecer tus competencias profesionales.
+              </p>
+              <div class="flex items-center text-orange-500 font-bold hover:text-orange-600">
+                <span>Leer más</span>
+                <svg class="ml-2 w-5 h-5" xmlns="https://www.icathi.edu.mx/img/office/services-1.jpg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+    
+          <!-- Card 6 -->
+          <div class="bg-white shadow-md rounded-lg transform transition hover:scale-105 hover:shadow-2xl hover:shadow-orange-200 fade-in delay-1000">
+            <div class="relative">
+              <img src="https://www.icathi.edu.mx/img/office/services-1.jpg" alt="Cursos en línea" class="w-full h-40 object-cover rounded-t-lg opacity-50">
+              <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent opacity-90 rounded-t-lg"></div>
+              <h4 class="absolute bottom-4 left-4 text-lg font-semibold text-white">Cursos en Línea</h4>
+            </div>
+            <div class="p-6">
+              <p class="text-gray-600 mb-4">
+                Aprende desde casa con nuestros cursos en línea diseñados para diferentes niveles.
+              </p>
+              <div class="flex items-center text-orange-500 font-bold hover:text-orange-600">
+                <span>Leer más</span>
+                <svg class="ml-2 w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
