@@ -1,1 +1,34 @@
-<p>header works!</p>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Header with Tailwind</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <header class="flex items-center justify-between px-8 py-4 bg-white shadow-md">
+    <!-- Logo -->
+    <div class="flex items-center space-x-2">
+      <img src="https://www.icathi.edu.mx/img/ICATHI.png" alt="Logo" class="w-8 h-8">
+      <span class="text-xl font-bold text-gray-800">ICATHI</span>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex items-center space-x-8">
+      <a href="#" class="text-gray-800 hover:text-red-500 font-medium relative">
+        About
+        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-red-500"></span>
+      </a>
+      <a href="#" class="text-gray-800 hover:text-red-500 font-medium">Cursos</a>
+      <a href="#" class="text-gray-800 hover:text-red-500 font-medium">Testimonial</a>
+      <a href="#" class="text-gray-800 hover:text-red-500 font-medium">Horarios</a>
+    </nav>
+
+    <!-- Buttons -->
+    <div class="flex items-center space-x-4">
+      <a href="#" class="text-gray-800 font-medium hover:text-red-500">Contactanos</a>
+      <a href="public/login" class="px-4 py-2 border border-red-500 text-red-500 rounded-full font-medium hover:bg-red-500 hover:text-white transition">
+        Sign In
+      </a>
+    </div>
+  </header>

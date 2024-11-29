@@ -1,7 +1,8 @@
-import { NgModule } from '@angular/core';
+ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PublicComponent } from './public.component';
 import { HomeComponent } from './pages/home/home.component';
+import { LoginComponent } from './pages/login/login.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,19 @@ const routes: Routes = [
             {
               label: 'Home',
               path: '/public/home',
+            },
+          ],
+        },
+      },
+      {
+        path: 'login',
+        component: LoginComponent,
+        data: {
+          title: 'logoin',
+          breadcrumb: [
+            {
+              label: 'Home',
+              path: '/public/login',
             },
           ],
         },
