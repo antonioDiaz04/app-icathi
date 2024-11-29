@@ -1,4 +1,83 @@
-<div class="text-blue-500 text-2xl">
-    ¡Hola, Tailwind en Angular 19!
-  </div>
-  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LaslesVPN Home</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+  <!-- Header -->
+  <header class="flex items-center justify-between px-8 py-4 bg-white shadow-md">
+    <div class="flex items-center space-x-2">
+      <img src="https://placehold.co/40x40" alt="Logo" class="w-8 h-8">
+      <span class="text-xl font-bold text-gray-800">LaslesVPN</span>
+    </div>
+    <nav class="flex items-center space-x-8">
+      <a href="#" class="text-gray-800 hover:text-red-500 font-medium">About</a>
+      <a href="#" class="text-gray-800 hover:text-red-500 font-medium">Feature</a>
+      <a href="#" class="text-gray-800 hover:text-red-500 font-medium">Pricing</a>
+      <a href="#" class="text-gray-800 hover:text-red-500 font-medium">Testimonial</a>
+    </nav>
+    <div class="flex items-center space-x-4">
+      <a href="#" class="text-gray-800 font-medium hover:text-red-500">Sign In</a>
+      <a href="#" class="px-4 py-2 border border-red-500 text-red-500 rounded-full font-medium hover:bg-red-500 hover:text-white transition">
+        Sign Up
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="flex flex-col md:flex-row items-center justify-between px-8 py-16 bg-white">
+    <div class="max-w-lg space-y-6">
+      <h1 class="text-4xl font-bold text-gray-800 leading-tight">
+        Want anything to be easy with <span class="text-red-500">LaslesVPN</span>.
+      </h1>
+      <p class="text-gray-600">
+        Provide a network for all your needs with ease and fun using LaslesVPN. Discover interesting features from us.
+      </p>
+      <a href="#" class="px-6 py-3 bg-red-500 text-white rounded-lg shadow-lg hover:bg-red-600 transition">
+        Get Started
+      </a>
+    </div>
+    <div class="mt-8 md:mt-0">
+      <img src="https://placehold.co/400x300" alt="Illustration" class="w-full max-w-md mx-auto">
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="bg-gray-50 py-16">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+      <div class="space-y-4">
+        <div class="flex justify-center">
+          <img src="https://placehold.co/50x50" alt="Users" class="w-12 h-12">
+        </div>
+        <h3 class="text-2xl font-bold text-gray-800">390+</h3>
+        <p class="text-gray-600">Users</p>
+      </div>
+      <div class="space-y-4">
+        <div class="flex justify-center">
+          <img src="https://placehold.co/50x50" alt="Locations" class="w-12 h-12">
+        </div>
+        <h3 class="text-2xl font-bold text-gray-800">20+</h3>
+        <p class="text-gray-600">Locations</p>
+      </div>
+      <div class="space-y-4">
+        <div class="flex justify-center">
+          <img src="https://placehold.co/50x50" alt="Servers" class="w-12 h-12">
+        </div>
+        <h3 class="text-2xl font-bold text-gray-800">50+</h3>
+        <p class="text-gray-600">Servers</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Operating Hours -->
+  <footer class="bg-white py-8">
+    <div class="max-w-6xl mx-auto text-center">
+      <h4 class="text-lg font-bold text-gray-800">Operating Hours</h4>
+      <p class="text-gray-600">Lun - Vie: 9:00 a.m. - 5:00 p.m. / Sáb - Dom: Cerrado</p>
+    </div>
+  </footer>
+</body>
+</html>
