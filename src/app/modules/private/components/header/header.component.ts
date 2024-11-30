@@ -1,15 +1,11 @@
- import { Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
-  standalone:false,
   selector: 'app-header',
+  standalone: false,
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-  sidebarVisible: boolean = false;
-  show() {
-    this.sidebarVisible = true;
-  }
 
 }

@@ -8,8 +8,17 @@ import { FooterComponent } from './components/footer/footer.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegistroUserComponent } from './pages/registro-user/registro-user.component';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CursosComponent } from './pages/cursos/cursos.component'; // Importa FormsModule
+
+
+import { SidebarModule } from 'primeng/sidebar';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
+
+
+
+
 @NgModule({
   declarations: [
     PublicComponent,
@@ -19,9 +28,11 @@ import { CursosComponent } from './pages/cursos/cursos.component'; // Importa Fo
     LoginComponent,RegistroUserComponent, CursosComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  imports: [FormsModule,
-    CommonModule,
+  imports: [FormsModule,SidebarModule,
+    CommonModule,ReactiveFormsModule,
     PublicRoutingModule
+// BrowserAnimationsModule,
+
   ]
 })
 export class PublicModule { }

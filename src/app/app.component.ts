@@ -1,16 +1,15 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { PublicModule } from './modules/public/public.module';
-import { PublicRoutingModule } from './modules/public/public-routing.module';
+import { CommonModule } from '@angular/common';
+import { RouterLink, RouterOutlet } from '@angular/router';
+// import  } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,PublicRoutingModule,CommonModule],
+  imports: [CommonModule, RouterLink, RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'icathi';
+  isCollapsed = false;
 }

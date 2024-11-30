@@ -1,38 +1,78 @@
 
+<header class="flex items-center justify-between px-4 py-3 bg-white shadow-md">
+  <!-- Logo -->
+  <div class="flex items-center">
+    <img
+      src="https://www.icathi.edu.mx/img/ICATHI.png"
+      alt="Logo"
+      class="h-auto max-h-16"
+    />
+  </div>
 
-    <header class="flex items-center justify-between px-4 py-3 bg-white shadow-md">
-      <!-- Logo -->
-      <div class="flex items-center">
-        <img src="https://www.icathi.edu.mx/img/ICATHI.png" alt="Logo" class="h-auto max-h-16">
-      </div>
 
-      <!-- Hamburger Menu Button (Mobile Only) -->
-      <button id="menu-toggle" class="block md:hidden text-gray-800 focus:outline-none">
-        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-        </svg>
-      </button>
+  <!-- Hamburger Menu Button (Mobile Only) -->
+  <button
 
-      <!-- Navigation (Hidden on small screens) -->
-      <nav id="menu" class="hidden md:flex items-center space-x-8">
-        <a routerLink="" class="nav-link text-gray-800 font-medium hover:text-red-500">About</a>
-        <a routerLink="cursos" class="nav-link text-gray-800 font-medium hover:text-red-500">Cursos</a>
-        <a routerLink="" class="nav-link text-gray-800 font-medium hover:text-red-500">Testimonial</a>
-        <a routerLink="" class="nav-link text-gray-800 font-medium hover:text-red-500">Horarios</a>
-        <a routerLink="" class="text-gray-800 font-medium hover:text-red-500">Contactanos</a>
-        <a routerLink="login" class="px-4 py-2 border border-red-500 text-red-500 rounded-full font-medium hover:bg-red-500 hover:text-white transition duration-300 ease-in-out">
-          Sign In
-        </a>
-      </nav>
-    </header>
+    id="menu-toggle"
+    class="block md:hidden text-gray-800 focus:outline-none"
+  >
+    <svg
 
-    <!-- JavaScript for Hamburger Menu -->
-    <script>
-      const menuToggle = document.getElementById('menu-toggle');
-      const menu = document.getElementById('menu');
+    class="w-6 h-6"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M4 6h16M4 12h16m-7 6h7"
+      />
+    </svg>
+  </button>
 
-      menuToggle.addEventListener('click', () => {
-        menu.classList.toggle('hidden');
-      });
-    </script>
+  <!-- Navigation (Hidden on small screens) -->
+  <nav id="menu" class="hidden md:flex items-center space-x-8">
+    <a
+      routerLink=""
+      class="nav-link text-gray-800 font-medium hover:text-red-500"
+      >About</a
+    >
+    <a
+      routerLink="cursos"
+      class="nav-link text-gray-800 font-medium hover:text-red-500"
+      >Cursos</a
+    >
+    <a
+      routerLink=""
+      class="nav-link text-gray-800 font-medium hover:text-red-500"
+      >Testimonial</a
+    >
+    <a
+      routerLink=""
+      class="nav-link text-gray-800 font-medium hover:text-red-500"
+      >Horarios</a
+    >
+    <a routerLink="" class="text-gray-800 font-medium hover:text-red-500"
+      >Contactanos</a
+    >
+    <a
+      routerLink="login"
+      class="px-4 py-2 border border-red-500 text-red-500 rounded-full font-medium hover:bg-red-500 hover:text-white transition duration-300 ease-in-out"
+    >
+      Sign In
+    </a>
+  </nav>
+</header>
 
+<!-- JavaScript for Hamburger Menu -->
+<script>
+  const menuToggle = document.getElementById("menu-toggle");
+  const menu = document.getElementById("menu");
+
+  menuToggle.addEventListener("click", () => {
+    menu.classList.toggle("hidden");
+  });
+</script>
