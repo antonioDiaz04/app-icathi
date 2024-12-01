@@ -25,12 +25,10 @@ import { InstructoresCursosComponent } from './pages/instructores-cursos/instruc
     ListadoInstructoresCursosComponent,
     FormularioInstructorComponent,
     ValidacionDeInstructorComponent,
-<<<<<<< HEAD
 
-=======
     ListadoCursosComponent,
     InstructoresCursosComponent
->>>>>>> 352c8e42fdafa85ffcfe1a6b78556cdd9128e277
+
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
