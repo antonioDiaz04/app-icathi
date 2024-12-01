@@ -11,6 +11,8 @@ import { FormularioInstructorComponent } from './pages/formulario-instructor/for
 import { ValidacionDeInstructorComponent } from './pages/validacion-de-instructor/validacion-de-instructor.component';
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
+import { ListadoCursosComponent } from './pages/listado-cursos/listado-cursos.component';
+import { InstructoresCursosComponent } from './pages/instructores-cursos/instructores-cursos.component';
 
 
 @NgModule({
@@ -23,7 +25,12 @@ import { HeaderComponent } from './components/header/header.component';
     ListadoInstructoresCursosComponent,
     FormularioInstructorComponent,
     ValidacionDeInstructorComponent,
+<<<<<<< HEAD
 
+=======
+    ListadoCursosComponent,
+    InstructoresCursosComponent
+>>>>>>> 352c8e42fdafa85ffcfe1a6b78556cdd9128e277
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
