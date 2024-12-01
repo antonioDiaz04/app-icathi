@@ -22,7 +22,8 @@ import { HeaderComponent } from './components/header/header.component';
     ListadoInstructoresComponent,
     ListadoInstructoresCursosComponent,
     FormularioInstructorComponent,
-    ValidacionDeInstructorComponent
+    ValidacionDeInstructorComponent,
+
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

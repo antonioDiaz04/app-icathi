@@ -1,1 +1,162 @@
-<p>validacion-de-instructor works!</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validación y Detalles del Instructor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-7xl mx-auto space-y-8">
+        <!-- Validación del Instructor -->
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h1 class="text-2xl font-bold mb-4">VALIDACIÓN DEL INSTRUCTOR</h1>
+            <div class="mb-4">
+                <label for="course-search" class="block text-sm font-medium text-gray-700">1. Selecciona la Oferta educativa</label>
+                <div class="flex mt-2">
+                    <input 
+                        type="text" 
+                        id="course-search" 
+                        placeholder="Buscar por Nombre de Curso" 
+                        class="flex-grow border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded-r-lg hover:bg-blue-600">Buscar</button>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full border-collapse border border-gray-300">
+                    <thead class="bg-gray-200">
+                        <tr>
+                            <th class="border border-gray-300 px-4 py-2 text-left">AREA</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">ESPECIALIDAD</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">CLAVE</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">NOMBRE</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">TIPO</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">HORAS</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">DETALLES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-gray-100">
+                            <td class="border border-gray-300 px-4 py-2">ADMINISTRACION</td>
+                            <td class="border border-gray-300 px-4 py-2">SECRETARIAL</td>
+                            <td class="border border-gray-300 px-4 py-2">15/02/01</td>
+                            <td class="border border-gray-300 px-4 py-2">SECRETARIADO CON COMPUTACION</td>
+                            <td class="border border-gray-300 px-4 py-2">TA</td>
+                            <td class="border border-gray-300 px-4 py-2">190</td>
+                            <td class="border border-gray-300 px-4 py-2">
+                                <button class="bg-teal-500 text-white px-3 py-1 rounded hover:bg-teal-600">Detalle</button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-100">
+                            <td class="border border-gray-300 px-4 py-2">ADMINISTRACION</td>
+                            <td class="border border-gray-300 px-4 py-2">SECRETARIAL</td>
+                            <td class="border border-gray-300 px-4 py-2">98-02</td>
+                            <td class="border border-gray-300 px-4 py-2">ORTOGRAFIA Y GRAMATICA</td>
+                            <td class="border border-gray-300 px-4 py-2">RE</td>
+                            <td class="border border-gray-300 px-4 py-2">40</td>
+                            <td class="border border-gray-300 px-4 py-2">
+                                <button class="bg-teal-500 text-white px-3 py-1 rounded hover:bg-teal-600">Detalle</button>
+                            </td>
+                        </tr>
+                        <!-- Additional rows can be added here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Detalles del Instructor -->
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h1 class="text-2xl font-bold mb-4">Detalles del Instructor</h1>
+            <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre Completo</label>
+                    <input 
+                        type="text" 
+                        id="nombre" 
+                        placeholder="Juan Pérez" 
+                        class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    />
+                </div>
+                <div>
+                    <label for="correo" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+                    <input 
+                        type="email" 
+                        id="correo" 
+                        placeholder="juan.perez@email.com" 
+                        class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    />
+                </div>
+                <div>
+                    <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
+                    <input 
+                        type="text" 
+                        id="telefono" 
+                        placeholder="123-456-7890" 
+                        class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    />
+                </div>
+                <div>
+                    <label for="direccion" class="block text-sm font-medium text-gray-700">Dirección</label>
+                    <input 
+                        type="text" 
+                        id="direccion" 
+                        placeholder="Calle Ficticia 123" 
+                        class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    />
+                </div>
+                <div class="md:col-span-2">
+                    <label for="experiencia" class="block text-sm font-medium text-gray-700">Experiencia Profesional</label>
+                    <textarea 
+                        id="experiencia" 
+                        rows="4" 
+                        placeholder="Describa su experiencia laboral como instructor..." 
+                        class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    ></textarea>
+                </div>
+                <div class="md:col-span-2 text-right">
+                    <button 
+                        type="submit" 
+                        class="bg-blue-500 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-600"
+                    >
+                        Registrar Instructor
+                    </button>
+                </div>
+            </form>
+        </div>
+         <!-- Tabla de Cursos -->
+         <div class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Cursos Impartidos por el Instructor</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full border-collapse border border-gray-300">
+                    <thead class="bg-gray-200">
+                        <tr>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Curso</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Fecha de Inicio</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Fecha de Finalización</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Duración</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Estatus</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-gray-100">
+                            <td class="border border-gray-300 px-4 py-2">Introducción a la Programación</td>
+                            <td class="border border-gray-300 px-4 py-2">01/05/2024</td>
+                            <td class="border border-gray-300 px-4 py-2">30/06/2024</td>
+                            <td class="border border-gray-300 px-4 py-2">2 meses</td>
+                            <td class="border border-gray-300 px-4 py-2">Completado</td>
+                        </tr>
+                        <tr class="hover:bg-gray-100">
+                            <td class="border border-gray-300 px-4 py-2">Fundamentos de Redes</td>
+                            <td class="border border-gray-300 px-4 py-2">15/03/2024</td>
+                            <td class="border border-gray-300 px-4 py-2">15/04/2024</td>
+                            <td class="border border-gray-300 px-4 py-2">1 mes</td>
+                            <td class="border border-gray-300 px-4 py-2">En Curso</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
