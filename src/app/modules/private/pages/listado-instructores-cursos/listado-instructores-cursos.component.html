@@ -1,1 +1,21 @@
-<p>listado-instructores-cursos works!</p>
+<div class="max-w-4xl mx-auto p-6">
+  <h2 class="text-lg font-bold mb-4">Instructores del Curso</h2>
+  <table class="table-auto w-full border-collapse border border-gray-300">
+    <thead>
+      <tr class="bg-gray-800 text-white">
+        <th class="border border-gray-300 px-4 py-2">ID</th>
+        <th class="border border-gray-300 px-4 py-2">NOMBRE DEL INSTRUCTOR</th>
+        <th class="border border-gray-300 px-4 py-2">CERTIFICADO</th>
+        <th class="border border-gray-300 px-4 py-2">FECHA DE VENCIMIENTO</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let instructor of instructores" class="hover:bg-gray-100">
+        <td class="border border-gray-300 px-4 py-2 text-center">{{ instructor.id }}</td>
+        <td class="border border-gray-300 px-4 py-2">{{ instructor.nombre }}</td>
+        <td class="border border-gray-300 px-4 py-2">{{ instructor.certificado }}</td>
+        <td class="border border-gray-300 px-4 py-2 text-center">{{ instructor.fechaVencimiento }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

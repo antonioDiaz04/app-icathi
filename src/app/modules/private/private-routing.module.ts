@@ -6,6 +6,7 @@ import { RegistroCursoComponent } from './pages/registro-curso/registro-curso.co
 import { ListadoInstructoresComponent } from './pages/listado-instructores/listado-instructores.component';
 import { ListadoInstructoresCursosComponent } from './pages/listado-instructores-cursos/listado-instructores-cursos.component';
 import { ValidacionDeInstructorComponent } from './pages/validacion-de-instructor/validacion-de-instructor.component';
+import { ListadoCursosComponent } from './pages/listado-cursos/listado-cursos.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,14 @@ const routes: Routes = [
       {
         path: 'Registro-curso',
         component: RegistroCursoComponent,
+      },
+      {
+        path: 'listado-cursos',
+        component: ListadoCursosComponent,
+      },
+      {
+        path: 'Instructores-cursos',
+        component: ListadoCursosComponent,
       },
       {
         path: 'Listado-instructores',
