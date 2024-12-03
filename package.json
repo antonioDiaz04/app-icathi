@@ -23,6 +23,7 @@
     "@angular/ssr": "^18.2.11",
     "@primeng/themes": "^18.0.0-rc.1",
     "express": "^4.18.2",
+    "icathi": "file:",
     "primeng": "^18.0.0-rc.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
