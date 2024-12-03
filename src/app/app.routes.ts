@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { RoleGuard } from './modules/public/guards/role-guard.guard';
 
 export const routes: Routes = [
   {
@@ -12,6 +13,8 @@ export const routes: Routes = [
   },
   {
     path: 'privado',
-    loadChildren: () => import('./modules/private/private.module').then(m => m.PrivateModule)
+    loadChildren: () => import('./modules/private/private.module').then(m => m.PrivateModule),    canActivate: [RoleGuard], // Aplicamos el RoleGuard a la ruta
+    data: { role: 'SuperAdmin' } // Rol necesario para acceder a esta ruta (
+
   }
 ];
