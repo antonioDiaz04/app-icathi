@@ -1,0 +1,15 @@
+:host {
+    display: block;
+  }
+
+  .modal {
+    backdrop-filter: blur(5px);
+  }
+
+  button {
+    transition: all 0.2s ease;
+  }
+
+  button:hover {
+    transform: scale(1.05);
+  }

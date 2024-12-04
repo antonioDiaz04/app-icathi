@@ -15,6 +15,8 @@ import { ListadoCursosComponent } from './pages/listado-cursos/listado-cursos.co
 import { InstructoresCursosComponent } from './pages/instructores-cursos/instructores-cursos.component';
 import { ListadoPlantelesComponent } from './pages/planteles/listado-planteles/listado-planteles.component';
 import { FrmPlantelComponent } from './pages/planteles/frm-plantel/frm-plantel.component';
+import { UsuariosComponent } from './pages/usuarios/usuarios.component';
+import { FormsModule } from '@angular/forms'; // Importar FormsModule
 
 
 @NgModule({
@@ -31,11 +33,13 @@ import { FrmPlantelComponent } from './pages/planteles/frm-plantel/frm-plantel.c
     ListadoCursosComponent,
     InstructoresCursosComponent,
     ListadoPlantelesComponent,
-    FrmPlantelComponent
+    FrmPlantelComponent,
+    UsuariosComponent
 
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
+    FormsModule,
     CommonModule,RouterModule,
     PrivateRoutingModule
   ]

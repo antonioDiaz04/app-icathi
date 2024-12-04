@@ -1,19 +1,13 @@
-export class Usuario {
-  _id?: number;
+export interface Usuario {
+  id: number;
   nombre: string;
+  apellidos: string;
   email: string;
-  telefono: string;
-  password?: string;
-
-  constructor(
-    nombre: string,
-    telefono: string,
-    email: string,
-    password: string
-  ) {
-    this.nombre = nombre;
-    this.telefono = telefono;
-    this.email = email;
-    this.password = password;
-  }
+  telefono: string | null;
+  username: string;
+  password_hash: string;
+  rol: string;
+  estatus: boolean;
+  created_at: string;
+  updated_at: string;
 }
