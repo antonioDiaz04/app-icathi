@@ -7,6 +7,8 @@ import { ListadoInstructoresComponent } from './pages/listado-instructores/lista
 import { ListadoInstructoresCursosComponent } from './pages/listado-instructores-cursos/listado-instructores-cursos.component';
 import { ValidacionDeInstructorComponent } from './pages/validacion-de-instructor/validacion-de-instructor.component';
 import { ListadoCursosComponent } from './pages/listado-cursos/listado-cursos.component';
+import { ListadoPlantelesComponent } from './pages/planteles/listado-planteles/listado-planteles.component';
+import { FrmPlantelComponent } from './pages/planteles/frm-plantel/frm-plantel.component';
 
 const routes: Routes = [
   {
@@ -18,6 +20,20 @@ const routes: Routes = [
     path: '',
     component: PrivateComponent,
     children: [
+
+      // {
+        // path: 'control-productos',
+        // children: [
+          {
+            path: 'lista-planteles',
+            component: ListadoPlantelesComponent,
+          },
+          {
+            path: 'frm-plantel',
+            component: FrmPlantelComponent,
+          }
+    // ]},
+,
       {
         path: 'home',
         component: HomeComponent,

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable, tap } from 'rxjs';
-import { environment } from '../../../../environments/environment.prod';
+import { environment } from '../../../environments/environment.prod';
 import { IndexedService } from './indexed.service'; // Importamos IndexedService
 export interface LoginResponse {
   token: string;
@@ -33,7 +33,7 @@ export class AuthService {
       })
     );
   }
-  
+
 
   // Guardar el token en IndexedDB
   async setToken(token: string): Promise<void> {
@@ -69,7 +69,7 @@ export class AuthService {
     }
     return null;
   }
-  
+
   async isAuthenticated(): Promise<boolean> {
     try {
       const token = await this.getToken();
@@ -79,7 +79,7 @@ export class AuthService {
       return false;
     }
   }
-  
+
 
   // Decodificar el JWT y obtener su contenido
   private decodeToken(token: string): any {

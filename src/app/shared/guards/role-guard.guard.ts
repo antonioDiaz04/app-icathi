@@ -7,7 +7,7 @@ import { AuthService } from '../services/auth.service';
   providedIn: 'root',
 })
 export class RoleGuard implements CanActivate {
-  
+
   constructor(
     private authService: AuthService,
     private router: Router
@@ -18,7 +18,7 @@ export class RoleGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Promise<boolean> {
     const requiredRole = route.data['role'];
-    
+
     // Esperar a que el token esté disponible
     const token = await this.authService.getToken();
 

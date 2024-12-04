@@ -13,6 +13,8 @@ import { RouterModule } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { ListadoCursosComponent } from './pages/listado-cursos/listado-cursos.component';
 import { InstructoresCursosComponent } from './pages/instructores-cursos/instructores-cursos.component';
+import { ListadoPlantelesComponent } from './pages/planteles/listado-planteles/listado-planteles.component';
+import { FrmPlantelComponent } from './pages/planteles/frm-plantel/frm-plantel.component';
 
 
 @NgModule({
@@ -27,7 +29,9 @@ import { InstructoresCursosComponent } from './pages/instructores-cursos/instruc
     ValidacionDeInstructorComponent,
 
     ListadoCursosComponent,
-    InstructoresCursosComponent
+    InstructoresCursosComponent,
+    ListadoPlantelesComponent,
+    FrmPlantelComponent
 
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
