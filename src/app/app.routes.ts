@@ -13,8 +13,10 @@ export const routes: Routes = [
   },
   {
     path: 'privado',
-    loadChildren: () => import('./modules/private/private.module').then(m => m.PrivateModule),    canActivate: [RoleGuard], // Aplicamos el RoleGuard a la ruta
-    data: { role: 'SuperAdmin' } // Rol necesario para acceder a esta ruta (
+    loadChildren: () => import('./modules/private/private.module').then(m => m.PrivateModule),
+    // canActivate: [RoleGuard], // Aplicamos el RoleGuard a la ruta
+    
+    // data: { role: 'SuperAdmin' } // Rol necesario para acceder a esta ruta (
 
   }
 ];
