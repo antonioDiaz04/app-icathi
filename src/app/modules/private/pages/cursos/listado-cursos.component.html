@@ -1,0 +1,348 @@
+<div class="max-w-7xl mx-auto p-6 space-y-8">
+  <!-- Título y botón para agregar curso -->
+  <div class="flex justify-between items-center">
+    <h2 class="text-2xl font-bold text-gray-800">Listado de Cursos</h2>
+    <button
+      (click)="toggleFormulario()"
+      class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md"
+    >
+      {{ mostrarFormulario ? 'Cancelar' : 'Agregar Curso' }}
+    </button>
+  </div>
+
+  <!-- Tabla de cursos -->
+  <div *ngIf="!mostrarFormulario">
+    <table class="table-auto w-full border-collapse border border-gray-300 shadow-md rounded-lg">
+      <thead>
+        <tr class="bg-gray-800 text-white">
+          <th class="border border-gray-300 px-4 py-2">ID</th>
+          <th class="border border-gray-300 px-4 py-2">NOMBRE DEL CURSO</th>
+          <th class="border border-gray-300 px-4 py-2">DURACIÓN (HORAS)</th>
+          <th class="border border-gray-300 px-4 py-2">ACCIONES</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let modulo of modulos"
+          class="hover:bg-gray-100 transition duration-200"
+        >
+          <td class="border border-gray-300 px-4 py-2 text-center">{{ modulo.id }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ modulo.nombre }}</td>
+          <td class="border border-gray-300 px-4 py-2 text-center">{{ modulo.duracion_horas }}</td>
+          <td class="border border-gray-300 px-4 py-2 text-center">
+            <button
+              (click)="editarCurso(modulo)"
+              class="bg-blue-500 text-white px-2 py-1 rounded-md mr-2 hover:bg-blue-700"
+            >
+              Editar
+            </button>
+            <button
+              (click)="eliminarCurso(modulo.id)"
+              class="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-700"
+            >
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Formulario para agregar curso -->
+  <div *ngIf="mostrarFormulario" class="space-y-8">
+    <h2 class="text-xl font-bold text-gray-800">Agregar Nuevo Curso</h2>
+    <form (ngSubmit)="agregarCurso()" class="space-y-8">
+      <!-- Datos del Curso -->
+      <section class="space-y-4">
+        <h3 class="text-lg font-bold">Datos del Curso</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div>
+            <label class="block text-sm font-medium">Área</label>
+            <select class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+              <option>Seleccione Área</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Especialidad</label>
+            <select class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+              <option>Seleccione Especialidad</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Tipo de Curso</label>
+            <select class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+              <option>Seleccione Tipo</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Nombre del Curso</label>
+            <input
+              type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Nombre del curso"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Clave</label>
+            <input
+              type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Clave"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Duración</label>
+            <input
+              type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Duración"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Datos Regular Portada -->
+      <section class="space-y-4">
+        <h3 class="text-lg font-bold">Datos Regular Portada</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-medium">Elaborado por</label>
+            <input
+              type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Nombre"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Revisado por</label>
+            <input
+              type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Nombre"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Autorizado por</label>
+            <input
+              type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Nombre"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Vigencia a partir de</label>
+            <input
+              type="date"
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Publicación</label>
+            <input
+              type="date"
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">1ª Actualización</label>
+            <input
+              type="date"
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Datos PDF -->
+      <section class="space-y-4">
+        <h3 class="text-lg font-bold">Datos PDF</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-medium">Presentación</label>
+            <textarea class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Objetivo Especialidad</label>
+            <textarea class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Objetivo del Curso</label>
+            <textarea class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Perfil de Ingreso</label>
+            <textarea class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Perfil de Egreso</label>
+            <textarea class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Publicación Laboral</label>
+            <textarea class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mapa de la Especialidad -->
+      <section class="space-y-4">
+        <h3 class="text-lg font-bold">Mapa de la Especialidad</h3>
+        <div class="flex items-center space-x-4">
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" class="h-4 w-4">
+            <span>Curso con especialidad</span>
+          </label>
+          <select class="border border-gray-300 rounded-md p-2">
+            <option>Previa</option>
+          </select>
+          <select class="border border-gray-300 rounded-md p-2">
+            <option>Posterior</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Temario -->
+      <section class="space-y-4">
+        <h3 class="text-lg font-bold">Temario</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-medium">Nombre del Tema</label>
+            <input
+              type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Nombre del Tema"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Actividades</label>
+            <input
+              type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Actividades"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Material</label>
+            <input
+              type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Material"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Criterios de Evaluación</label>
+            <input
+              type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Criterios de Evaluación"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Bibliografía</label>
+            <input
+              type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Bibliografía"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Material -->
+      <section class="space-y-4">
+        <h3 class="text-lg font-bold">Material</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium">Nombre del Material</label>
+            <input
+              type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Nombre del Material"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Cantidad</label>
+            <input
+              type="number"
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Cantidad"
+            />
+          </div>
+        </div>
+        <button
+          class="mt-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md"
+        >
+          Agregar
+        </button>
+      </section>
+
+      <!-- Botón para enviar el formulario -->
+      <div class="flex justify-end">
+        <button
+          type="submit"
+          class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md"
+        >
+          Guardar Curso
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Modal de edición -->
+  <div
+    *ngIf="mostrarModal"
+    class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50"
+  >
+    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+      <h2 class="text-xl font-bold mb-4">Editar Curso</h2>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium">Nombre del Curso</label>
+          <input
+            [(ngModel)]="cursoSeleccionado!.nombre"
+            type="text"
+            class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Duración (Horas)</label>
+          <input
+            [(ngModel)]="cursoSeleccionado!.duracion_horas"
+            type="number"
+            class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Descripción</label>
+          <textarea
+            [(ngModel)]="cursoSeleccionado!.descripcion"
+            class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+          ></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Nivel</label>
+          <input
+            [(ngModel)]="cursoSeleccionado!.nivel"
+            type="text"
+            class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            placeholder="Nivel"
+          />
+        </div>
+      </div>
+      <div class="flex justify-end mt-4">
+        <button
+          (click)="cerrarModal()"
+          class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-md mr-2"
+        >
+          Cancelar
+        </button>
+        <button
+          (click)="guardarEdicion()"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md"
+        >
+          Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
