@@ -14,9 +14,9 @@ import { ListadoCursosComponent } from './pages/cursos/listado-cursos.component'
 import { InstructoresCursosComponent } from './pages/instructores-cursos/instructores-cursos.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { ListadoPlantelesComponent } from './pages/planteles/listado-planteles/listado-planteles.component';
 import { FrmPlantelComponent } from './pages/planteles/frm-plantel/frm-plantel.component';
+import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 
 
 @NgModule({
