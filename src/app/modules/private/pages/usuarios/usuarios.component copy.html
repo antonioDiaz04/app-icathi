@@ -1,0 +1,103 @@
+<div class="usuarios-container p-6 max-w-6xl mx-auto">
+  <!-- Título de la sección -->
+  <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
+    <i class="fas fa-users text-blue-600 text-3xl mr-3"></i>
+    Gestión de Usuarios
+  </h2>
+
+  <!-- Barra de búsqueda -->
+  <div class="relative mb-6">
+    <input
+      type="text"
+      placeholder="Buscar usuarios..."
+      [(ngModel)]="filtro"
+      class="p-3 w-full rounded-lg border border-gray-300 shadow focus:outline-none focus:ring-2 focus:ring-blue-500 pr-12"
+    />
+    <i class="fas fa-search absolute top-1/2 right-4 transform -translate-y-1/2 text-blue-500 text-lg"></i>
+  </div>
+
+
+
+  
+  <!-- Tabla de usuarios -->
+  <div class="overflow-x-auto bg-white rounded-xl shadow-lg">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-100 text-gray-600 text-sm">
+        <tr>
+          <th class="px-6 py-3">
+            <i class="fas fa-user text-blue-500 mr-2"></i>Nombre
+          </th>
+          <th class="px-6 py-3">
+            <i class="fas fa-envelope text-green-500 mr-2"></i>Email
+          </th>
+          <th class="px-6 py-3">
+            <i class="fas fa-user-tag text-purple-500 mr-2"></i>Rol
+          </th>
+          <th class="px-6 py-3">
+            <i class="fas fa-cogs text-gray-500 mr-2"></i>Acciones
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let usuario of usuariosFiltrados()"
+          class="border-b hover:bg-gray-50 transition"
+        >
+          <td class="px-6 py-4 text-gray-700">{{ usuario.nombre }}</td>
+          <td class="px-6 py-4 text-gray-700">{{ usuario.email }}</td>
+          <td class="px-6 py-4 text-gray-700">{{ usuario.rol }}</td>
+          <td class="px-6 py-4">
+            <button
+              (click)="abrirModal(usuario)"
+              class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <i class="fas fa-edit text-yellow-300 mr-2"></i>Asignar Rol
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div
+  class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  *ngIf="mostrarModal"
+>
+  <div class="bg-white rounded-lg shadow-lg w-96 p-6">
+    <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+      <i class="fas fa-user-cog text-green-600 mr-3"></i>Asignar Rol
+    </h3>
+    <p class="mb-4 text-gray-600">
+      <strong>Usuario:</strong> {{ usuarioSeleccionado?.nombre }}
+    </p>
+    <div class="mb-4">
+      <label for="rol" class="block text-gray-700 mb-2">Selecciona un rol:</label>
+      <select
+        id="rol"
+        [(ngModel)]="rolSeleccionado"
+        class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <option *ngFor="let rol of roles" [value]="rol">{{ rol }}</option>
+        <!-- Opción inicial para asegurarse de que el usuario debe seleccionar un rol -->
+        <option value="" disabled selected>Selecciona un rol</option>
+      </select>
+    </div>
+    <div class="flex justify-end space-x-4">
+      <button
+        (click)="asignarRol()"
+        [disabled]="!rolSeleccionado" 
+        class="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <i class="fas fa-check text-white mr-2"></i>Guardar
+      </button>
+      <button
+        (click)="cerrarModal()"
+        class="flex items-center px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition focus:outline-none focus:ring-2 focus:ring-gray-400"
+      >
+        <i class="fas fa-times text-white mr-2"></i>Cancelar
+      </button>
+    </div>
+  </div>
+</div>
+
+</div>

@@ -1,0 +1,35 @@
+<div class="overflow-x-auto">
+  <table class="min-w-full border-collapse border border-gray-200 bg-white shadow-md">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">ID</th>
+        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Nombre</th>
+        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Dirección</th>
+        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Teléfono</th>
+        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Email</th>
+        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Director</th>
+        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Capacidad</th>
+        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Estado</th>
+        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Municipio</th>
+        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let plantel of planteles" class="hover:bg-gray-50">
+        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ plantel.id }}</td>
+        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ plantel.nombre }}</td>
+        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ plantel.direccion }}</td>
+        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ plantel.telefono }}</td>
+        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ plantel.email }}</td>
+        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ plantel.director }}</td>
+        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ plantel.capacidad_alumnos }}</td>
+        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ plantel.estado }}</td>
+        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ plantel.municipio }}</td>
+        <td class="border border-gray-300 px-4 py-2 text-sm text-center">
+          <button  (click)="navigateTo('frm-plantel')" class="rounded bg-blue-500 px-2 py-1 text-xs text-white hover:bg-blue-600">Editar</button>
+          <button class="rounded bg-red-500 px-2 py-1 text-xs text-white hover:bg-red-600">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

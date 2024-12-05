@@ -12,8 +12,6 @@ import { RouterModule } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { ListadoCursosComponent } from './pages/cursos/listado-cursos.component';
 import { InstructoresCursosComponent } from './pages/instructores-cursos/instructores-cursos.component';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -27,11 +25,15 @@ import { FormsModule } from '@angular/forms';
     ValidacionDeInstructorComponent,
 
     ListadoCursosComponent,
-    InstructoresCursosComponent
+    InstructoresCursosComponent,
+    ListadoPlantelesComponent,
+    FrmPlantelComponent,
+    UsuariosComponent
 
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
+    FormsModule,
     CommonModule,RouterModule,
     PrivateRoutingModule,
     FormsModule,
