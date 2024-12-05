@@ -1,0 +1,202 @@
+<div class="max-w-7xl mx-auto p-6 space-y-8">
+  <!-- Título y botón para agregar curso -->
+  <div class="flex justify-between items-center">
+    <h2 class="text-3xl font-extrabold text-gray-800">📚 Listado de Cursos</h2>
+    <button (click)="toggleFormulario()"
+      class="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300">
+      {{ mostrarFormulario ? '❌ Cancelar' : '➕ Agregar Curso' }}
+    </button>
+  </div>
+
+  <!-- Tabla de cursos -->
+  <div *ngIf="!mostrarFormulario">
+    <table class="table-auto w-full border-collapse border border-gray-300 shadow-lg rounded-lg overflow-hidden">
+      <thead>
+        <tr class="bg-gradient-to-r from-gray-700 to-gray-900 text-white">
+          <th class="border border-gray-300 px-4 py-3">ID</th>
+          <th class="border border-gray-300 px-4 py-3">NOMBRE DEL CURSO</th>
+          <th class="border border-gray-300 px-4 py-3">DURACIÓN (HORAS)</th>
+          <th class="border border-gray-300 px-4 py-3">ACCIONES</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let modulo of modulos" class="hover:bg-gray-100 transition duration-200">
+          <td class="border border-gray-300 px-4 py-3 text-center">{{ modulo.id }}</td>
+          <td class="border border-gray-300 px-4 py-3">{{ modulo.nombre }}</td>
+          <td class="border border-gray-300 px-4 py-3 text-center">{{ modulo.duracion_horas }}</td>
+          <td class="border border-gray-300 px-4 py-3 text-center">
+            <button (click)="editarCurso(modulo)"
+              class="bg-blue-500 text-white px-3 py-1 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
+              ✏️ Editar
+            </button>
+            <button (click)="eliminarCurso(modulo.id)"
+              class="bg-red-500 text-white px-3 py-1 rounded-lg shadow-md hover:bg-red-700 transition duration-300">
+              🗑️ Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Formulario para agregar curso -->
+  <div *ngIf="mostrarFormulario" class="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">📝 Registrar Nuevo Curso</h2>
+    <form (ngSubmit)="agregarCurso()" #cursoForm="ngForm" class="space-y-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Área -->
+        <div>
+          <label class="block text-sm font-medium">Área</label>
+          <select [(ngModel)]="nuevoCurso.area_id" name="area_id" required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm">
+            <option value="" disabled selected>Seleccione Área</option>
+            <option *ngFor="let area of areas" [value]="area.id">{{ area.nombre }}</option>
+          </select>
+        </div>
+
+        <!-- Especialidad -->
+        <div>
+          <label class="block text-sm font-medium">Especialidad</label>
+          <select [(ngModel)]="nuevoCurso.especialidad_id" name="especialidad_id" required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm">
+            <option value="" disabled selected>Seleccione Especialidad</option>
+            <option *ngFor="let especialidad of especialidades" [value]="especialidad.id">
+              {{ especialidad.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Tipo de Curso -->
+        <div>
+          <label class="block text-sm font-medium">Tipo de Curso</label>
+          <select [(ngModel)]="nuevoCurso.tipo_curso_id" name="tipo_curso_id" required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm">
+            <option value="" disabled selected>Seleccione Tipo</option>
+            <option *ngFor="let tipo of tiposCurso" [value]="tipo.id">{{ tipo.nombre }}</option>
+          </select>
+        </div>
+
+        <!-- Nombre del Curso -->
+        <div>
+          <label class="block text-sm font-medium">Nombre del Curso</label>
+          <input type="text" [(ngModel)]="nuevoCurso.nombre" name="nombre" required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" placeholder="Nombre del curso" />
+        </div>
+
+        <!-- Clave -->
+        <div>
+          <label class="block text-sm font-medium">Clave</label>
+          <input type="text" [(ngModel)]="nuevoCurso.clave" name="clave" required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" placeholder="Clave" />
+        </div>
+
+        <!-- Duración -->
+        <div>
+          <label class="block text-sm font-medium">Duración (Horas)</label>
+          <input type="number" [(ngModel)]="nuevoCurso.duracion_horas" name="duracion_horas" required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" placeholder="Duración en horas" />
+        </div>
+      </div>
+
+      <!-- Descripción -->
+      <div>
+        <label class="block text-sm font-medium">Descripción</label>
+        <textarea [(ngModel)]="nuevoCurso.descripcion" name="descripcion" required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" placeholder="Descripción del curso"
+          #descripcion="ngModel"></textarea>
+        <div *ngIf="descripcion.invalid && descripcion.touched" class="text-red-500 text-sm">
+          La descripción es obligatoria.
+        </div>
+      </div>
+
+      <!-- Nivel -->
+      <div>
+        <label class="block text-sm font-medium">Nivel</label>
+        <select [(ngModel)]="nuevoCurso.nivel" name="nivel" required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm">
+          <option value="" disabled selected>Seleccione Nivel</option>
+          <option value="Básico">Básico</option>
+          <option value="Intermedio">Intermedio</option>
+          <option value="Avanzado">Avanzado</option>
+        </select>
+        <div *ngIf="!nuevoCurso.nivel && cursoForm.submitted" class="text-red-500 text-sm">
+          El nivel es obligatorio.
+        </div>
+      </div>
+
+      <!-- Botón para enviar el formulario -->
+      <div class="flex justify-end">
+        <button type="submit"
+          class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition duration-300">
+          Guardar Curso
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Modal de edición -->
+  <div *ngIf="mostrarModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
+      <h2 class="text-2xl font-bold mb-6">✏️ Editar Curso</h2>
+      <form (ngSubmit)="guardarEdicion()" #editarForm="ngForm" class="space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Nombre del Curso -->
+          <div>
+            <label class="block text-sm font-medium">Nombre del Curso</label>
+            <input [(ngModel)]="cursoSeleccionado!.nombre" name="nombre" required type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" />
+          </div>
+
+          <!-- Duración -->
+          <div>
+            <label class="block text-sm font-medium">Duración (Horas)</label>
+            <input [(ngModel)]="cursoSeleccionado!.duracion_horas" name="duracion_horas" required type="number"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" />
+          </div>
+
+          <!-- Nivel -->
+          <div>
+            <label class="block text-sm font-medium">Nivel</label>
+            <select [(ngModel)]="cursoSeleccionado!.nivel" name="nivel" required
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm">
+              <option value="Básico">Básico</option>
+              <option value="Intermedio">Intermedio</option>
+              <option value="Avanzado">Avanzado</option>
+            </select>
+          </div>
+
+          <!-- Descripción -->
+          <div class="col-span-2">
+            <label class="block text-sm font-medium">Descripción</label>
+            <textarea [(ngModel)]="cursoSeleccionado!.descripcion" name="descripcion" required
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"></textarea>
+          </div>
+
+          <!-- Costo -->
+          <div>
+            <label class="block text-sm font-medium">Costo</label>
+            <input [(ngModel)]="cursoSeleccionado!.costo" name="costo" type="number"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" />
+          </div>
+
+          <!-- Requisitos -->
+          <div class="col-span-2">
+            <label class="block text-sm font-medium">Requisitos</label>
+            <textarea [(ngModel)]="cursoSeleccionado!.requisitos" name="requisitos"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"></textarea>
+          </div>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button type="button" (click)="cerrarModal()"
+            class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-lg shadow-md mr-4">
+            Cancelar
+          </button>
+          <button type="submit"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow-md">
+            Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
