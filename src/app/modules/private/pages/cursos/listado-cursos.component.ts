@@ -6,7 +6,16 @@ export interface Modulo {
   nombre: string;
   duracion_horas: number;
   descripcion: string;
-  nivel: string; // Incluye el campo nivel
+  nivel: string;
+  clave?: string;
+  costo?: number; // Agregada
+  requisitos?: string; // Agregada
+  area_id?: number;
+  especialidad_id?: number;
+  tipo_curso_id?: number;
+  vigencia_inicio?: string;
+  fecha_publicacion?: string;
+  ultima_actualizacion?: string;
 }
 
 @Component({
@@ -16,30 +25,76 @@ export interface Modulo {
 })
 export class ListadoCursosComponent implements OnInit {
   modulos: Modulo[] = [];
+  areas: any[] = [];
+  especialidades: any[] = [];
+  tiposCurso: any[] = [];
   mostrarFormulario = false;
   mostrarModal = false;
   cursoSeleccionado: Modulo | null = null;
-  private apiUrl = 'http://localhost:3000/cursos'; // Cambia esta URL por la de tu backend
+
+  nuevoCurso: Modulo = {
+    id: 0,
+    nombre: '',
+    duracion_horas: 0,
+    descripcion: '',
+    nivel: '', // Inicializado como cadena vacía
+    clave: '',
+    area_id: undefined,
+    especialidad_id: undefined,
+    tipo_curso_id: undefined,
+  };
+
+  private apiUrl = 'http://localhost:3000';
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.cargarModulos();
+    this.cargarAreas();
+    this.cargarEspecialidades();
+    this.cargarTiposCurso();
   }
 
   cargarModulos(): void {
-    this.http.get<Modulo[]>(this.apiUrl).subscribe({
+    this.http.get<Modulo[]>(`${this.apiUrl}/cursos`).subscribe({
       next: (data) => {
-        this.modulos = data.map((curso) => ({
-          id: curso.id,
-          nombre: curso.nombre,
-          duracion_horas: curso.duracion_horas,
-          descripcion: curso.descripcion,
-          nivel: curso.nivel, // Asegúrate de mapear este campo
-        }));
+        this.modulos = data;
       },
       error: (err) => {
         console.error('Error al cargar los módulos:', err);
+      },
+    });
+  }
+
+  cargarAreas(): void {
+    this.http.get<any[]>(`${this.apiUrl}/areas`).subscribe({
+      next: (data) => {
+        this.areas = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar áreas:', err);
+      },
+    });
+  }
+
+  cargarEspecialidades(): void {
+    this.http.get<any[]>(`${this.apiUrl}/especialidades`).subscribe({
+      next: (data) => {
+        this.especialidades = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar especialidades:', err);
+      },
+    });
+  }
+
+  cargarTiposCurso(): void {
+    this.http.get<any[]>(`${this.apiUrl}/tiposCurso`).subscribe({
+      next: (data) => {
+        this.tiposCurso = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar tipos de curso:', err);
       },
     });
   }
@@ -49,7 +104,29 @@ export class ListadoCursosComponent implements OnInit {
   }
 
   agregarCurso(): void {
-    console.log('Curso agregado');
+    console.log('Datos enviados al backend:', this.nuevoCurso); // Verifica el contenido
+  
+    this.http.post<Modulo>(`${this.apiUrl}/cursos`, this.nuevoCurso).subscribe({
+      next: (cursoCreado) => {
+        this.modulos.push(cursoCreado);
+        this.nuevoCurso = {
+          id: 0,
+          nombre: '',
+          duracion_horas: 0,
+          descripcion: '',
+          nivel: '', // Reinicia el campo después de enviar
+          clave: '',
+          area_id: undefined,
+          especialidad_id: undefined,
+          tipo_curso_id: undefined,
+        };
+        this.mostrarFormulario = false;
+        console.log('Curso agregado correctamente');
+      },
+      error: (err) => {
+        console.error('Error al agregar el curso:', err);
+      },
+    });
   }
 
   editarCurso(curso: Modulo): void {
@@ -64,7 +141,7 @@ export class ListadoCursosComponent implements OnInit {
         this.modulos[index] = { ...this.cursoSeleccionado };
       }
 
-      this.http.put(`${this.apiUrl}/${this.cursoSeleccionado.id}`, this.cursoSeleccionado).subscribe({
+      this.http.put(`${this.apiUrl}/cursos/${this.cursoSeleccionado.id}`, this.cursoSeleccionado).subscribe({
         next: () => {
           console.log('Curso actualizado correctamente');
         },
@@ -81,7 +158,7 @@ export class ListadoCursosComponent implements OnInit {
     if (confirm('¿Estás seguro de que deseas eliminar este curso?')) {
       this.modulos = this.modulos.filter((m) => m.id !== id);
 
-      this.http.delete(`${this.apiUrl}/${id}`).subscribe({
+      this.http.delete(`${this.apiUrl}/cursos/${id}`).subscribe({
         next: () => {
           console.log('Curso eliminado correctamente');
         },
