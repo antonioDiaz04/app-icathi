@@ -154,20 +154,19 @@ export class ListadoCursosComponent implements OnInit {
     }
   }
 
-  eliminarCurso(id: number): void {
-    if (confirm('¿Estás seguro de que deseas eliminar este curso?')) {
-      this.modulos = this.modulos.filter((m) => m.id !== id);
-
-      this.http.delete(`${this.apiUrl}/cursos/${id}`).subscribe({
-        next: () => {
-          console.log('Curso eliminado correctamente');
-        },
-        error: (err) => {
-          console.error('Error al eliminar el curso:', err);
-        },
-      });
-    }
+eliminarCurso(id: number): void {
+  if (confirm('¿Estás seguro de que deseas eliminar este curso?')) {
+    this.http.delete(`${this.apiUrl}/cursos/${id}`).subscribe({
+      next: () => {
+        this.modulos = this.modulos.filter((m) => m.id !== id); // Elimina el curso del array local
+        console.log('Curso eliminado correctamente');
+      },
+      error: (err) => {
+        console.error('Error al eliminar el curso:', err); // Log del error
+      },
+    });
   }
+}
 
   cerrarModal(): void {
     this.mostrarModal = false;
