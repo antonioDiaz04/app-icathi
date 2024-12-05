@@ -2,11 +2,15 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PrivateComponent } from './private.component';
 import { HomeComponent } from './pages/home/home.component';
-import { RegistroCursoComponent } from './pages/registro-curso/registro-curso.component';
+// import { RegistroCursoComponent } from './pages/registro-curso/registro-curso.component';
 import { ListadoInstructoresComponent } from './pages/listado-instructores/listado-instructores.component';
 import { ListadoInstructoresCursosComponent } from './pages/listado-instructores-cursos/listado-instructores-cursos.component';
 import { ValidacionDeInstructorComponent } from './pages/validacion-de-instructor/validacion-de-instructor.component';
-import { ListadoCursosComponent } from './pages/listado-cursos/listado-cursos.component';
+import { UsuariosComponent } from './pages/usuarios/usuarios.component';
+import { ListadoCursosComponent } from './pages/cursos/listado-cursos.component';
+import { FrmPlantelComponent } from './pages/planteles/frm-plantel/frm-plantel.component';
+import { ListadoPlantelesComponent } from './pages/planteles/listado-planteles/listado-planteles.component';
+// import { ListadoCursosComponent } from './pages/listado-cursos/listado-cursos.component';
 
 const routes: Routes = [
   {

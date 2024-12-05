@@ -10,7 +10,7 @@ export class ListadoPlantelesComponent {
 
   planteles = [
     {
-      id: 1,
+      id: 1,  
       nombre: 'Plantel A',
       direccion: 'Calle 123',
       telefono: '1234567890',

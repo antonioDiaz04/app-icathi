@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../../environments/environment.prod';
 
 export interface Modulo {
   id: number;
@@ -43,8 +44,8 @@ export class ListadoCursosComponent implements OnInit {
     especialidad_id: undefined,
     tipo_curso_id: undefined,
   };
-
-  private apiUrl = 'http://localhost:3000';
+  // `${environment.api}/user`;
+  private apiUrl =  `${environment.api}`;
 
   constructor(private http: HttpClient) {}
 
@@ -105,7 +106,7 @@ export class ListadoCursosComponent implements OnInit {
 
   agregarCurso(): void {
     console.log('Datos enviados al backend:', this.nuevoCurso); // Verifica el contenido
-  
+
     this.http.post<Modulo>(`${this.apiUrl}/cursos`, this.nuevoCurso).subscribe({
       next: (cursoCreado) => {
         this.modulos.push(cursoCreado);
