@@ -1,0 +1,45 @@
+.validador-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.validador-header {
+  background-color: #4caf50;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.validador-nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
+}
+
+.validador-nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.validador-nav a.active {
+  text-decoration: underline;
+}
+
+.validador-main {
+  flex-grow: 1;
+  padding: 2rem;
+  background-color: #f4f4f4;
+}
+
+.validador-footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #333;
+  color: white;
+}
