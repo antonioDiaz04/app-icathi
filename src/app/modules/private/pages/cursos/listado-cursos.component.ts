@@ -5,12 +5,12 @@ import { environment } from '../../../../../environments/environment.prod';
 export interface Modulo {
   id: number;
   nombre: string;
+  clave?: string;
   duracion_horas: number;
   descripcion: string;
   nivel: string;
-  clave?: string;
-  costo?: number; // Agregada
-  requisitos?: string; // Agregada
+  costo?: number;
+  requisitos?: string;
   area_id?: number;
   especialidad_id?: number;
   tipo_curso_id?: number;
@@ -31,7 +31,9 @@ export class ListadoCursosComponent implements OnInit {
   tiposCurso: any[] = [];
   mostrarFormulario = false;
   mostrarModal = false;
+  mostrarDetalleModal = false; // Nueva variable para el modal de detalles
   cursoSeleccionado: Modulo | null = null;
+  cursoDetalleSeleccionado: Modulo | null = null; // Curso seleccionado para ver detalles
 
   nuevoCurso: Modulo = {
     id: 0,
@@ -155,22 +157,53 @@ export class ListadoCursosComponent implements OnInit {
     }
   }
 
-eliminarCurso(id: number): void {
-  if (confirm('¿Estás seguro de que deseas eliminar este curso?')) {
-    this.http.delete(`${this.apiUrl}/cursos/${id}`).subscribe({
-      next: () => {
-        this.modulos = this.modulos.filter((m) => m.id !== id); // Elimina el curso del array local
-        console.log('Curso eliminado correctamente');
-      },
-      error: (err) => {
-        console.error('Error al eliminar el curso:', err); // Log del error
-      },
-    });
+  eliminarCurso(id: number): void {
+    if (confirm('¿Estás seguro de que deseas eliminar este curso?')) {
+      this.http.delete(`${this.apiUrl}/cursos/${id}`).subscribe({
+        next: () => {
+          this.modulos = this.modulos.filter((m) => m.id !== id); // Elimina el curso del array local
+          console.log('Curso eliminado correctamente');
+        },
+        error: (err) => {
+          console.error('Error al eliminar el curso:', err); // Log del error
+        },
+      });
+    }
   }
-}
 
   cerrarModal(): void {
     this.mostrarModal = false;
     this.cursoSeleccionado = null;
   }
+
+  // Métodos para ver detalles
+  verDetalles(curso: Modulo): void {
+    this.cursoDetalleSeleccionado = curso;
+    this.mostrarDetalleModal = true;
+  }
+
+  cerrarDetalleModal(): void {
+    this.mostrarDetalleModal = false;
+    this.cursoDetalleSeleccionado = null;
+  }
+
+  // Métodos para obtener nombres a partir de IDs
+  obtenerNombreArea(areaId: number | undefined): string {
+    const area = this.areas.find(a => a.id === areaId);
+    return area ? area.nombre : 'N/A';
+  }
+
+  obtenerNombreEspecialidad(especialidadId: number | undefined): string {
+    const especialidad = this.especialidades.find(e => e.id === especialidadId);
+    return especialidad ? especialidad.nombre : 'N/A';
+  }
+
+  obtenerNombreTipoCurso(tipoCursoId: number | undefined): string {
+    const tipoCurso = this.tiposCurso.find(t => t.id === tipoCursoId);
+    return tipoCurso ? tipoCurso.nombre : 'N/A';
+  }
+  // M
+
+
+  
 }
