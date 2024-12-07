@@ -17,6 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { ListadoPlantelesComponent } from './pages/planteles/listado-planteles/listado-planteles.component';
 import { FrmPlantelComponent } from './pages/planteles/frm-plantel/frm-plantel.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
+import { DocentesComponent } from './pages/docentes/docentes.component'
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { UsuariosComponent } from './pages/usuarios/usuarios.component';
     InstructoresCursosComponent,
     ListadoPlantelesComponent,
     FrmPlantelComponent,
-    UsuariosComponent
+    UsuariosComponent,
+    DocentesComponent,
 
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
