@@ -1,0 +1,103 @@
+<div class="min-h-screen flex bg-gray-50">
+  <!-- Menú Lateral -->
+  <aside class="w-64 text-white p-6" style="background: linear-gradient(135deg, #2563eb, #1e40af);">
+    <h1 class="text-2xl font-bold mb-6 text-center">Validador de Cursos</h1>
+    <nav>
+      <ul class="space-y-4">
+        <li class="flex items-center space-x-3 hover:bg-blue-700 p-3 rounded-lg">
+          <i class="fas fa-tasks"></i>
+          <a href="#" class="text-lg">Pendientes</a>
+        </li>
+        <li class="flex items-center space-x-3 hover:bg-blue-700 p-3 rounded-lg">
+          <i class="fas fa-book"></i>
+          <a href="#" class="text-lg">Todos los Cursos</a>
+        </li>
+        <li class="flex items-center space-x-3 hover:bg-blue-700 p-3 rounded-lg">
+          <i class="fas fa-history"></i>
+          <a href="#" class="text-lg">Historial</a>
+        </li>
+        <li class="flex items-center space-x-3 hover:bg-blue-700 p-3 rounded-lg">
+          <i class="fas fa-cogs"></i>
+          <a href="#" class="text-lg">Configuraciones</a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Contenido Principal -->
+  <main class="flex-1 p-8">
+    <!-- Encabezado -->
+    <header class="flex justify-between items-center mb-8">
+      <h2 class="text-2xl font-bold text-gray-700">Panel de Validaciones</h2>
+      <button class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
+        <i class="fas fa-plus-circle mr-2"></i> Nuevo Curso
+      </button>
+    </header>
+
+    <!-- Secciones principales -->
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Widget: Cursos Pendientes -->
+      <div class="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
+        <h3 class="text-lg font-semibold text-blue-700 flex items-center">
+          <i class="fas fa-clock mr-2"></i> Cursos Pendientes
+        </h3>
+        <p class="mt-2 text-gray-600 text-sm">Actualmente hay <strong>15 cursos</strong> pendientes por validar.</p>
+        <button class="mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 w-full">
+          Ver Detalles
+        </button>
+      </div>
+
+      <!-- Widget: Validaciones Realizadas -->
+      <div class="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
+        <h3 class="text-lg font-semibold text-green-700 flex items-center">
+          <i class="fas fa-check-circle mr-2"></i> Validaciones Realizadas
+        </h3>
+        <p class="mt-2 text-gray-600 text-sm">Se han realizado <strong>45 validaciones</strong> este mes.</p>
+        <button class="mt-4 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 w-full">
+          Ver Resumen
+        </button>
+      </div>
+
+      <!-- Widget: Errores Recientes -->
+      <div class="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
+        <h3 class="text-lg font-semibold text-red-700 flex items-center">
+          <i class="fas fa-exclamation-circle mr-2"></i> Errores Recientes
+        </h3>
+        <p class="mt-2 text-gray-600 text-sm">Se encontraron <strong>3 errores</strong> en los últimos registros.</p>
+        <button class="mt-4 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 w-full">
+          Revisar Errores
+        </button>
+      </div>
+    </section>
+
+    <!-- Tabla de Cursos -->
+    <section class="mt-10">
+      <h3 class="text-xl font-semibold text-gray-700 mb-4">Lista de Cursos</h3>
+      <div class="overflow-x-auto bg-white shadow-lg rounded-lg border border-gray-200">
+        <table class="min-w-full table-auto">
+          <thead style="background-color: #f3f4f6;" class="text-gray-700">
+            <tr>
+              <th class="py-3 px-6 text-left">Código</th>
+              <th class="py-3 px-6 text-left">Nombre del Curso</th>
+              <th class="py-3 px-6 text-left">Estado</th>
+              <th class="py-3 px-6 text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="hover:bg-gray-50">
+              <td class="py-3 px-6">CURS123</td>
+              <td class="py-3 px-6">Programación Avanzada</td>
+              <td class="py-3 px-6 text-blue-600">Pendiente</td>
+              <td class="py-3 px-6 text-center">
+                <button class="bg-green-600 text-white py-1 px-3 rounded-lg text-sm hover:bg-green-700">Validar</button>
+                <button class="bg-red-600 text-white py-1 px-3 rounded-lg text-sm hover:bg-red-700 ml-2">Eliminar</button>
+              </td>
+            </tr>
+            <!-- Repite más filas según sea necesario -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div><script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+

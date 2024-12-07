@@ -15,6 +15,7 @@ import { CursosComponent } from './pages/cursos/cursos.component'; // Importa Fo
 import { SidebarModule } from 'primeng/sidebar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
+import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
 
 
 
@@ -25,7 +26,7 @@ import { BrowserModule } from '@angular/platform-browser';
     HomeComponent,
     HeaderComponent,
     FooterComponent,
-    LoginComponent,RegistroUserComponent, CursosComponent,
+    LoginComponent,RegistroUserComponent, CursosComponent, UnauthorizedComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [FormsModule,SidebarModule,
