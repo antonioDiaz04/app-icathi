@@ -1,0 +1,20 @@
+/* General */
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+aside {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+}
+
+table thead {
+  background-color: #f3f4f6;
+}
+
+button {
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
+}

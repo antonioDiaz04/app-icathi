@@ -6,5 +6,10 @@ import { Component } from '@angular/core';
   styleUrl: './validador-docente.component.scss'
 })
 export class ValidadorDocenteComponent {
+  currentDate = new Date().toLocaleDateString('es-ES', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 
 }

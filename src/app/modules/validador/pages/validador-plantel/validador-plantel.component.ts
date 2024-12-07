@@ -6,5 +6,13 @@ import { Component } from '@angular/core';
   styleUrl: './validador-plantel.component.scss'
 })
 export class ValidadorPlantelComponent {
+  plantelData: any = {};
+  validationResult: string = '';
 
+  validate() {
+    this.validationResult = 'Validador en proceso...';
+    setTimeout(() => {
+      this.validationResult = 'Validación exitosa';
+    }, 2000);
+  }
 }
