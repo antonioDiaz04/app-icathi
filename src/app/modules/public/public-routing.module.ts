@@ -6,6 +6,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegistroUserComponent } from './pages/registro-user/registro-user.component';
 import { CursosComponent } from './pages/cursos/cursos.component';
 import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
+import { PostulacionComponent } from './pages/postulacion/postulacion.component';
 
 const routes: Routes = [
   {
@@ -43,6 +44,20 @@ const routes: Routes = [
           ],
         },
       },
+      {
+        path: 'proceso',
+        component: PostulacionComponent,
+        data: {
+          title: 'proceso',
+          breadcrumb: [
+            {
+              label: 'Home',
+              path: '/public/proceso',
+            },
+          ],
+        },
+      },
+      
       {
         path: 'registro-user',
         component: RegistroUserComponent,

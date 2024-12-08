@@ -16,6 +16,8 @@ import { SidebarModule } from 'primeng/sidebar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
+import { TeacherApplicationComponent } from './components/teacher-application/teacher-application.component';
+import { PostulacionComponent } from './pages/postulacion/postulacion.component';
 
 
 
@@ -26,7 +28,7 @@ import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.compone
     HomeComponent,
     HeaderComponent,
     FooterComponent,
-    LoginComponent,RegistroUserComponent, CursosComponent, UnauthorizedComponent,
+    LoginComponent,RegistroUserComponent, CursosComponent, UnauthorizedComponent, TeacherApplicationComponent, PostulacionComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [FormsModule,SidebarModule,
