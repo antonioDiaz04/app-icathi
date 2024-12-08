@@ -17,6 +17,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { ListadoPlantelesComponent } from './pages/planteles/listado-planteles/listado-planteles.component';
 import { FrmPlantelComponent } from './pages/planteles/frm-plantel/frm-plantel.component';
+import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { FrmPlantelComponent } from './pages/planteles/frm-plantel/frm-plantel.c
     InstructoresCursosComponent,
     ListadoPlantelesComponent,
     FrmPlantelComponent,
-    UsuariosComponent
+    UsuariosComponent,
+    DocentesComponent,
 
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -10,6 +10,7 @@ import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { ListadoCursosComponent } from './pages/cursos/listado-cursos.component';
 import { FrmPlantelComponent } from './pages/planteles/frm-plantel/frm-plantel.component';
 import { ListadoPlantelesComponent } from './pages/planteles/listado-planteles/listado-planteles.component';
+import { DocentesComponent } from './pages/docentes/docentes.component';
 // import { ListadoCursosComponent } from './pages/listado-cursos/listado-cursos.component';
 
 const routes: Routes = [
@@ -61,6 +62,10 @@ const routes: Routes = [
       {
         path: 'listado-usuarios',
         component: UsuariosComponent,
+      },
+      {
+        path: 'docentes',
+        component: DocentesComponent,
       },
     ],
   },
