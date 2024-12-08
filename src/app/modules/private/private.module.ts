@@ -13,10 +13,10 @@ import { HeaderComponent } from './components/header/header.component';
 import { ListadoCursosComponent } from './pages/cursos/listado-cursos.component';
 import { InstructoresCursosComponent } from './pages/instructores-cursos/instructores-cursos.component';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { ListadoPlantelesComponent } from './pages/planteles/listado-planteles/listado-planteles.component';
 import { FrmPlantelComponent } from './pages/planteles/frm-plantel/frm-plantel.component';
-import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 
 
 @NgModule({
@@ -38,10 +38,10 @@ import { UsuariosComponent } from './pages/usuarios/usuarios.component';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
-    CommonModule,RouterModule,
+    CommonModule,ReactiveFormsModule,RouterModule,
     PrivateRoutingModule,
     FormsModule,
-     HttpClientModule, // Agregar HttpClientModule aquí
+     HttpClientModule,
   ]
 })
 export class PrivateModule { }

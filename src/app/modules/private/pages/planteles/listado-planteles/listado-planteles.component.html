@@ -1,35 +1,298 @@
+<!-- Botón para abrir el modal -->
+<!-- <button
+  class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+  (click)="openModal()"
+>
+  Editar
+</button> -->
+
+<!-- Modal -->
+<div
+  *ngIf="isModalOpen"
+  class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50"
+>
+  <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-3xl">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold text-gray-800">Editar Datos</h2>
+      <button class="text-gray-600 hover:text-gray-900" (click)="closeModal()">✖</button>
+    </div>
+
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+      <!-- Nombre -->
+      <div>
+        <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
+        <input
+          type="text"
+          id="nombre"
+          formControlName="nombre"
+          maxlength="100"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        />
+      </div>
+
+      <!-- Dirección -->
+      <div>
+        <label for="direccion" class="block text-sm font-medium text-gray-700">Dirección</label>
+        <textarea
+          id="direccion"
+          formControlName="direccion"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        ></textarea>
+      </div>
+
+      <!-- Teléfono -->
+      <div>
+        <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
+        <input
+          type="text"
+          id="telefono"
+          formControlName="telefono"
+          maxlength="15"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        />
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          maxlength="100"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        />
+      </div>
+
+      <!-- Director -->
+      <div>
+        <label for="director" class="block text-sm font-medium text-gray-700">Director</label>
+        <input
+          type="text"
+          id="director"
+          formControlName="director"
+          maxlength="100"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        />
+      </div>
+
+      <!-- Capacidad de Alumnos -->
+      <div>
+        <label for="capacidad_alumnos" class="block text-sm font-medium text-gray-700">Capacidad de Alumnos</label>
+        <input
+          type="number"
+          id="capacidad_alumnos"
+          formControlName="capacidad_alumnos"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        />
+      </div>
+
+      <!-- Estatus -->
+      <div class="flex items-center">
+        <input
+          type="checkbox"
+          id="estatus"
+          formControlName="estatus"
+          class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+        />
+        <label for="estatus" class="ml-2 block text-sm text-gray-700">Estatus</label>
+      </div>
+
+      <!-- Usuario Gestor ID -->
+      <div>
+        <label for="usuario_gestor_id" class="block text-sm font-medium text-gray-700">Usuario Gestor ID</label>
+        <input
+          type="number"
+          id="usuario_gestor_id"
+          formControlName="usuario_gestor_id"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        />
+      </div>
+
+      <!-- Estado -->
+      <div>
+        <label for="estado" class="block text-sm font-medium text-gray-700">Estado</label>
+        <input
+          type="text"
+          id="estado"
+          formControlName="estado"
+          maxlength="50"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        />
+      </div>
+
+      <!-- Municipio -->
+      <div>
+        <label for="municipio" class="block text-sm font-medium text-gray-700">Municipio</label>
+        <input
+          type="text"
+          id="municipio"
+          formControlName="municipio"
+          maxlength="50"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        />
+      </div>
+
+      <!-- Botones -->
+      <div class="flex justify-end space-x-4 mt-4">
+        <button
+          type="button"
+          class="px-4 py-2 bg-gray-300 rounded-md text-gray-700 hover:bg-gray-400"
+          (click)="closeModal()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="px-4 py-2 bg-blue-600 rounded-md text-white hover:bg-blue-700"
+        >
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+
+
+
+
+<!-- Modal de Confirmación -->
+
+<div class="ui basic modal" #confirmModal>
+  <div class="ui icon header">
+    <i class="trash icon"></i>
+    Confirmar Eliminación
+  </div>
+  <div class="content">
+    <p>¿Estás seguro de que deseas eliminar este elemento? Esta acción no se puede deshacer.</p>
+  </div>
+  <div class="actions">
+    <div class="ui red basic cancel inverted button">
+      <i class="remove icon"></i>
+      No
+    </div>
+    <div class="ui green ok inverted button">
+      <i class="checkmark icon"></i>
+      Sí
+    </div>
+  </div>
+</div>
+
+
 <div class="overflow-x-auto">
-  <table class="min-w-full border-collapse border border-gray-200 bg-white shadow-md">
+
+  <button
+  (click)="navigateTo('frm-plantel')"
+  class="rounded bg-blue-500 px-2 py-1 text-xs text-white hover:bg-blue-600"
+>
+Nuevo plantel
+</button>
+  <table
+    class="min-w-full border-collapse border border-gray-200 bg-white shadow-md"
+  >
     <thead>
       <tr class="bg-gray-100">
-        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">ID</th>
-        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Nombre</th>
-        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Dirección</th>
-        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Teléfono</th>
-        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Email</th>
-        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Director</th>
-        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Capacidad</th>
-        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Estado</th>
-        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Municipio</th>
-        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Acciones</th>
+        <th
+          class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600"
+        >
+          ID
+        </th>
+        <th
+          class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600"
+        >
+          Nombre
+        </th>
+        <th
+          class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600"
+        >
+          Dirección
+        </th>
+        <th
+          class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600"
+        >
+          Teléfono
+        </th>
+        <th
+          class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600"
+        >
+          Email
+        </th>
+        <th
+          class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600"
+        >
+          Director
+        </th>
+        <th
+          class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600"
+        >
+          Capacidad
+        </th>
+        <th
+          class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600"
+        >
+          Estado
+        </th>
+        <th
+          class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600"
+        >
+          Municipio
+        </th>
+        <th
+          class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600"
+        >
+          Acciones
+        </th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let plantel of planteles" class="hover:bg-gray-50">
-        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ plantel.id }}</td>
-        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ plantel.nombre }}</td>
-        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ plantel.direccion }}</td>
-        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ plantel.telefono }}</td>
-        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ plantel.email }}</td>
-        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ plantel.director }}</td>
-        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ plantel.capacidad_alumnos }}</td>
-        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ plantel.estado }}</td>
-        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ plantel.municipio }}</td>
+      @for (item of planteles; track $index) {
+      <tr class="hover:bg-gray-50">
+        <!-- <tr *ngFor="let plantel of planteles" class="hover:bg-gray-50"> -->
+        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">
+          {{ item.id }}
+        </td>
+        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">
+          {{ item.nombre }}
+        </td>
+        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">
+          {{ item.direccion }}
+        </td>
+        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">
+          {{ item.telefono }}
+        </td>
+        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">
+          {{ item.email }}
+        </td>
+        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">
+          {{ item.director }}
+        </td>
+        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">
+          {{ item.capacidad_alumnos }}
+        </td>
+        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">
+          {{ item.estado }}
+        </td>
+        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">
+          {{ item.municipio }}
+        </td>
         <td class="border border-gray-300 px-4 py-2 text-sm text-center">
-          <button  (click)="navigateTo('frm-plantel')" class="rounded bg-blue-500 px-2 py-1 text-xs text-white hover:bg-blue-600">Editar</button>
-          <button class="rounded bg-red-500 px-2 py-1 text-xs text-white hover:bg-red-600">Eliminar</button>
+
+          <button
+          (click)="mostrarModal(item.id)"
+            class="rounded bg-red-500 px-2 py-1 text-xs text-white hover:bg-red-600"
+          >
+
+          Eliminar
+        </button>
+
+        <button (click)="openModal(item.id)"             class="rounded bg-red-500 px-2 py-1 text-xs text-white hover:bg-red-600">Editar</button>
+
         </td>
       </tr>
+    }
     </tbody>
   </table>
 </div>
