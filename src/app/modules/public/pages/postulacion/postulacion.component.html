@@ -1,4 +1,46 @@
+<div *ngIf="registroCompletado; else formularioRegistro" class="relative z-50">
+  <!-- Fondo borroso -->
+  <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
+
+  <!-- Modal -->
+  <div class="fixed inset-0 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
+      <div class="text-center">
+        <!-- Icono de Semantic UI -->
+        <i class="check circle outline icon huge text-green-500"></i>
+        <h2 class="mt-4 text-lg font-semibold text-gray-800">
+          ¡Registro completado!
+        </h2>
+        <p class="mt-2 text-sm text-gray-600">
+          Tu usuario ha sido creado exitosamente.
+        </p>
+        <!-- <p class="mt-2 text-lg font-bold text-gray-800">{{ email }}</p> -->
+        <p class="mt-2 text-sm text-gray-600">
+          Por favor, verifica tu correo electrónico para activar tu cuenta.
+        </p>
+      </div>
+      <div class="mt-4 text-center">
+        <!-- Botón con evento de redirección -->
+        <button
+          (click)="cerrarYRedirigir()"
+          class="bg-[#44509D] hover:bg-[#2a3878] text-white font-medium py-2 px-4 rounded-md"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<ng-template #formularioRegistro>
+
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+  <div *ngIf="isLoading" class="ui active inverted dimmer">
+    <div class="ui text loader">Enviando...</div>
+  </div>
+
   <div class="sm:mx-auto sm:w-full sm:max-w-sm">
     <div class="text-center">
       <img class="mx-auto h-12 w-auto" src="https://www.icathi.edu.mx/img/ICATHI.png" alt="ICATHI">
@@ -31,15 +73,31 @@
     <!-- Formulario -->
     <form [formGroup]="postulationForm" (ngSubmit)="onSubmit()" class="space-y-6 mt-8">
       <!-- Paso 1: Nombre completo -->
-      <div *ngIf="currentStep === 1">
-        <label for="name" class="block text-sm font-medium text-gray-700">Nombre completo</label>
-        <input formControlName="name" id="name" type="text" placeholder="Ingresa tu nombre completo"
-               class="custom-input" />
-        <div *ngIf="postulationForm.get('name')?.touched && postulationForm.get('name')?.invalid" class="text-sm text-red-500 mt-2">
-          <div *ngIf="postulationForm.get('name')?.errors?.['required']">El nombre es obligatorio.</div>
-          <div *ngIf="postulationForm.get('name')?.errors?.['minlength']">El nombre debe tener al menos 3 caracteres.</div>
-        </div>
-      </div>
+   <!-- Paso 1: Nombre completo -->
+<div *ngIf="currentStep === 1">
+  <label for="firstName" class="block text-sm font-medium text-gray-700">Nombre</label>
+  <input formControlName="firstName" id="firstName" type="text" placeholder="Ingresa tu nombre"
+         class="custom-input" />
+  <div *ngIf="postulationForm.get('firstName')?.touched && postulationForm.get('firstName')?.invalid" class="text-sm text-red-500 mt-2">
+    <div *ngIf="postulationForm.get('firstName')?.errors?.['required']">El nombre es obligatorio.</div>
+    <div *ngIf="postulationForm.get('firstName')?.errors?.['minlength']">El nombre debe tener al menos 3 caracteres.</div>
+  </div>
+
+  <label for="lastName1" class="block text-sm font-medium text-gray-700 mt-4">Apellido paterno</label>
+  <input formControlName="lastName1" id="lastName1" type="text" placeholder="Ingresa tu apellido paterno"
+         class="custom-input" />
+  <div *ngIf="postulationForm.get('lastName1')?.touched && postulationForm.get('lastName1')?.invalid" class="text-sm text-red-500 mt-2">
+    <div *ngIf="postulationForm.get('lastName1')?.errors?.['required']">El apellido paterno es obligatorio.</div>
+  </div>
+
+  <label for="lastName2" class="block text-sm font-medium text-gray-700 mt-4">Apellido materno</label>
+  <input formControlName="lastName2" id="lastName2" type="text" placeholder="Ingresa tu apellido materno"
+         class="custom-input" />
+  <div *ngIf="postulationForm.get('lastName2')?.touched && postulationForm.get('lastName2')?.invalid" class="text-sm text-red-500 mt-2">
+    <div *ngIf="postulationForm.get('lastName2')?.errors?.['required']">El apellido materno es obligatorio.</div>
+  </div>
+</div>
+
 
       <!-- Paso 2: Correo electrónico -->
       <div *ngIf="currentStep === 2">
@@ -99,6 +157,7 @@
     </form>
   </div>
 </div>
+</ng-template>
 
 <style>
   .custom-input {

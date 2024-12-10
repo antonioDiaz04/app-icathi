@@ -6,10 +6,14 @@ import { Injectable } from '@angular/core';
 export class IndexedService {
 
   private db: IDBDatabase | null = null;
-
   constructor() {
-    this.openDatabase();
+    if (this.isIndexedDBAvailable()) {
+      this.openDatabase();
+    } else {
+      console.warn('IndexedDB no está disponible en este contexto.');
+    }
   }
+  
   private waitForDB(): Promise<void> {
     if (this.db) return Promise.resolve();
     return new Promise((resolve, reject) => {
@@ -52,9 +56,15 @@ export class IndexedService {
     }
   }
   
-
+  private isIndexedDBAvailable(): boolean {
+    return typeof indexedDB !== 'undefined';
+  }
+  
   // Almacena el token en IndexedDB
   storeToken(token: string): Promise<void> {
+    if (!this.isIndexedDBAvailable()) {
+      return Promise.reject('IndexedDB no está disponible.');
+    }
     return new Promise((resolve, reject) => {
       if (this.db) {
         const transaction = this.db.transaction(['tokens'], 'readwrite');

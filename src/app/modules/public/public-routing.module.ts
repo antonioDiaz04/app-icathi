@@ -7,6 +7,8 @@ import { RegistroUserComponent } from './pages/registro-user/registro-user.compo
 import { CursosComponent } from './pages/cursos/cursos.component';
 import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
 import { PostulacionComponent } from './pages/postulacion/postulacion.component';
+import { ValidarCorreoComponent } from './pages/validar-correo/validar-correo.component';
+import { CreapasswordComponent } from './pages/creapassword/creapassword.component';
 
 const routes: Routes = [
   {
@@ -57,7 +59,7 @@ const routes: Routes = [
           ],
         },
       },
-      
+
       {
         path: 'registro-user',
         component: RegistroUserComponent,
@@ -87,6 +89,32 @@ const routes: Routes = [
       {
         path: 'unauthorized',
         component: UnauthorizedComponent,
+        data: {
+          title: 'acceso denegado',
+          breadcrumb: [
+            {
+              label: 'Home',
+              path: '/public/login',
+            },
+          ],
+        },
+      },
+      {
+        path: 'validar-correo',
+        component: ValidarCorreoComponent,
+        data: {
+          title: 'acceso denegado',
+          breadcrumb: [
+            {
+              label: 'Home',
+              path: '/public/login',
+            },
+          ],
+        },
+      },
+      {
+        path: 'crear-password',
+        component: CreapasswordComponent,
         data: {
           title: 'acceso denegado',
           breadcrumb: [

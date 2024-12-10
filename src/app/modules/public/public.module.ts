@@ -18,6 +18,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
 import { TeacherApplicationComponent } from './components/teacher-application/teacher-application.component';
 import { PostulacionComponent } from './pages/postulacion/postulacion.component';
+import { ValidarCorreoComponent } from './pages/validar-correo/validar-correo.component';
+import { CreapasswordComponent } from './pages/creapassword/creapassword.component';
 
 
 
@@ -28,7 +30,7 @@ import { PostulacionComponent } from './pages/postulacion/postulacion.component'
     HomeComponent,
     HeaderComponent,
     FooterComponent,
-    LoginComponent,RegistroUserComponent, CursosComponent, UnauthorizedComponent, TeacherApplicationComponent, PostulacionComponent,
+    LoginComponent,RegistroUserComponent, CursosComponent, UnauthorizedComponent, TeacherApplicationComponent, PostulacionComponent, ValidarCorreoComponent, CreapasswordComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [FormsModule,SidebarModule,

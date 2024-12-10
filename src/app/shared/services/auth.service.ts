@@ -14,6 +14,7 @@ export interface LoginResponse {
 export class AuthService {
 
   private apiUrl = `${environment.api}/auth`;
+  private apiUrl2 = `${environment.api}`;
   private jwtHelper = new JwtHelperService();
 
   constructor(
@@ -86,4 +87,10 @@ export class AuthService {
     const decoded = this.jwtHelper.decodeToken(token);
     return decoded;
   }
+  crearContraseña(email: string, nuevaContraseña: string): Observable<any> {
+    const body = { email, nuevaContraseña };
+    return this.http.post(`${this.apiUrl2}/postulacion/crear-password`, body);
+  }
+
+
 }
