@@ -65,8 +65,10 @@ export const routes: Routes = [
       import('./modules/private/private.module').then((m) => m.PrivateModule),
     canActivate: [RoleGuard],
     data: { role: 'ADMIN' },
-    // canActivate: [RoleGuard], // Aplicamos el RoleGuard a la ruta
-
-    // data: { role: 'ADMIN' } // Rol necesario para acceder a esta ruta (
+  },
+  {
+    title:"home",
+    path: '**',
+    redirectTo: 'public',
   },
 ]

@@ -3,11 +3,15 @@ import { CommonModule } from '@angular/common';
 
 import { ValidadorDocenteRoutingModule } from './validador-docente-routing.module';
 import { ValidadorDocenteComponent } from './validador-docente.component';
+import { DocentesComponent } from './pages/docentes/docentes.component';
+import { PerfilesComponent } from './pages/perfiles/perfiles.component';
 
 
 @NgModule({
   declarations: [
-    ValidadorDocenteComponent
+    ValidadorDocenteComponent,
+    DocentesComponent,
+    PerfilesComponent
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,83 @@
+<section class="bg-gray-100 min-h-screen p-6">
+  <!-- Botón de Regresar -->
+  <div class="max-w-4xl mx-auto mb-4">
+    <button
+      class="bg-[#F08762] text-white px-4 py-2 rounded shadow hover:bg-orange-600 transition inline-flex items-center"
+      (click)="regresar()"
+    >
+      <i class="icon arrow left text-white mr-2"></i> Regresar
+    </button>
+  </div>
+
+  <!-- Contenido Principal -->
+  <div class="bg-white rounded shadow-md max-w-4xl mx-auto p-6">
+    <div class="flex items-center space-x-6">
+      <!-- Foto del docente -->
+      <img
+        [src]="docente.foto"
+        alt="Foto del Docente"
+        class="w-32 h-32 rounded-full shadow-md border-4 border-[#44509D]"
+      />
+      <div>
+        <!-- Nombre del docente -->
+        <h2 class="text-2xl font-bold text-[#44509D]">
+          {{ docente.nombre || 'Pendiente' }} {{ docente.apellidos || 'Pendiente' }}
+        </h2>
+        <p class="text-gray-600">
+          Especialidad: <span class="font-semibold">{{ docente.especialidad || 'Pendiente' }}</span>
+        </p>
+        <p class="text-gray-600">
+          Registrado el: <span class="font-semibold">{{ docente.created_at }}</span>
+        </p>
+        <span
+          class="px-3 py-1 rounded text-white text-sm"
+          [ngClass]="{
+            'bg-[#F08762]': docente.estatus === 'Pendiente',
+            'bg-[#44509D]': docente.estatus === 'Validado'
+          }"
+        >
+          {{ docente.estatus ? (docente.estatus ? 'Validado' : 'Pendiente') : 'Pendiente' }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="mt-6">
+      <h3 class="text-xl font-semibold text-[#44509D] mb-4">Información de Contacto</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <i class="icon phone text-[#44509D]"></i>
+          Teléfono: <span class="font-semibold">{{ docente.telefono || 'Pendiente' }}</span>
+        </div>
+        <div>
+          <i class="icon mail text-[#44509D]"></i>
+          Correo: <a *ngIf="docente.email" href="mailto:{{ docente.email }}" class="text-blue-500 hover:underline">{{ docente.email }}</a>
+          <span *ngIf="!docente.email">Pendiente</span>
+        </div>
+        <div>
+          <i class="icon id card text-[#44509D]"></i>
+          Cédula Profesional: <span class="font-semibold">{{ docente.cedula_profesional || 'Pendiente' }}</span>
+        </div>
+        <div>
+          <i class="icon certificate text-[#44509D]"></i>
+          Certificado Profesional: <span class="font-semibold">{{ docente.certificado_profesional ? 'Sí' : 'No' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Currículum -->
+    <div class="mt-6">
+      <h3 class="text-xl font-semibold text-[#44509D] mb-4">Currículum</h3>
+      <a
+        *ngIf="docente.curriculum_url"
+        [href]="docente.curriculum_url"
+        target="_blank"
+        class="bg-[#D8566C] text-white px-4 py-2 rounded shadow hover:bg-red-700 transition inline-flex items-center"
+      >
+        <i class="icon file text-white"></i>
+        Descargar Currículum
+      </a>
+      <p *ngIf="!docente.curriculum_url" class="text-gray-600">Pendiente</p>
+    </div>
+  </div>
+</section>

@@ -7,23 +7,32 @@
     <nav class="flex-grow">
       <ul class="space-y-2 p-4">
         <li>
-          <a href="#" class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
+          <a      routerLink="/validador/docente/"
+ class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
             <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
           </a>
         </li>
         <li>
-          <a href="#" class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
+          <a      routerLink="/validador/docente/"
+ class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
             <i class="fas fa-user-check mr-2"></i> Validaciones
           </a>
         </li>
         <li>
-          <a href="#" class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
+          <a      routerLink="/validador/docente/"
+ class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
             <i class="fas fa-chart-bar mr-2"></i> Estadísticas
           </a>
         </li>
         <li>
-          <a href="#" class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
+          <a      routerLink="/validador/docente/"
+ class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
             <i class="fas fa-cogs mr-2"></i> Configuración
+          </a>
+        </li>
+        <li >
+          <a (click)="logout()"  class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
+            <i class="fas fa-sign-out-alt mr-3"></i> Cerrar Sesión
           </a>
         </li>
       </ul>
@@ -41,16 +50,14 @@
           <i class="fas fa-user-check"></i> Validador de Docentes
         </h1>
         <p class="text-sm text-gray-600">
-          Usuario: <strong>Admin</strong> - Fecha: {{ currentDate }}
+          Usuario: <strong>Juan Pérez</strong> - Fecha: {{ currentDate }}
         </p>
       </div>
-      <button class="bg-[#F08762] text-white px-4 py-2 rounded hover:bg-[#D8566C] transition">
-        <i class="fas fa-plus-circle"></i> Añadir Docente
-      </button>
+
     </header>
 
     <!-- Statistics -->
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <!-- <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
       <div class="p-4 bg-white shadow-lg rounded border-l-4 border-[#F08762]">
         <h3 class="text-lg font-bold text-[#44509D] flex items-center">
           <i class="fas fa-clock mr-2"></i> Docentes Pendientes
@@ -69,40 +76,32 @@
         </h3>
         <p class="text-gray-600">Se encontraron <strong>3</strong> errores en el proceso.</p>
       </div>
-    </section>
-
-    <!-- Validation Requests Table -->
-    <section>
-      <h2 class="text-xl font-bold text-[#44509D] mb-4">Solicitudes de Validación</h2>
-      <div class="overflow-x-auto bg-white shadow-lg rounded">
-        <table class="w-full text-left border-collapse">
-          <thead class="bg-gray-200">
-            <tr>
-              <th class="p-4">ID</th>
-              <th class="p-4">Nombre</th>
-              <th class="p-4">Estado</th>
-              <th class="p-4">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="hover:bg-gray-50">
-              <td class="p-4">DOC123</td>
-              <td class="p-4">Juan Pérez</td>
-              <td class="p-4">
-                <span class="bg-[#F08762] text-white text-xs px-2 py-1 rounded">Pendiente</span>
-              </td>
-              <td class="p-4">
-                <button class="bg-[#44509D] text-white px-3 py-1 rounded hover:bg-[#D8566C] transition">
-                  Validar
-                </button>
-                <button class="ml-2 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
-                  Rechazar
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    </section> -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="p-4 bg-white shadow-lg rounded border-l-4 border-[#F08762]">
+        <h3 class="text-lg font-bold text-[#44509D] flex items-center">
+          <i class="fas fa-clock mr-2"></i> Docentes Pendientes
+        </h3>
+        <p class="text-gray-600">Actualmente hay <strong>{{ pendientes }}</strong> solicitudes pendientes.</p>
+      </div>
+      <div class="p-4 bg-white shadow-lg rounded border-l-4 border-[#44509D]">
+        <h3 class="text-lg font-bold text-[#44509D] flex items-center">
+          <i class="fas fa-check-circle mr-2"></i> Validaciones Realizadas
+        </h3>
+        <p class="text-gray-600">Se han validado <strong>{{ validados }}</strong> docentes este mes.</p>
+      </div>
+      <div class="p-4 bg-white shadow-lg rounded border-l-4 border-[#D8566C]">
+        <h3 class="text-lg font-bold text-[#44509D] flex items-center">
+          <i class="fas fa-exclamation-circle mr-2"></i> Errores Recientes
+        </h3>
+        <p class="text-gray-600">Se encontraron <strong>{{ errores }}</strong> errores en el proceso.</p>
       </div>
     </section>
+    
+
+    <router-outlet></router-outlet>
+
+    <!-- Validation Requests Table -->
+
   </main>
 </div>
