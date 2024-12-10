@@ -74,7 +74,7 @@ export class LoginComponent {
         this.router.navigate(['validador/plantel']);
         break;
       case ERol.DOCENTE:
-        this.router.navigate(['docente/home']);
+        this.router.navigate(['docente/']);
         break;
       case ERol.ALUMNO:
         this.router.navigate(['alumno/home']);
