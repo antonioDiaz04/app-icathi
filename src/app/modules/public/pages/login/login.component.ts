@@ -7,10 +7,11 @@ import { ERol } from '../../../../shared/constants/rol.enum';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  loading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -19,12 +20,13 @@ export class LoginComponent {
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
   onSubmit() {
     if (this.loginForm.valid) {
+      this.loading = true;
       const { email, password } = this.loginForm.value;
       this.authService.login(email, password).subscribe(
         async (response) => {
@@ -33,22 +35,25 @@ export class LoginComponent {
             await this.authService.setToken(token); // Guardar el token
             const rol = await this.authService.getRoleFromToken();
             console.log('Rol obtenido:', rol); // Para confirmar
+            this.loading = false;
             if (rol) {
               alert('Inicio de sesión exitoso con rol: ' + rol);
               this.redirectByRole(rol as ERol); // Asegúrate de castear el rol si es necesario
             } else {
               alert('No se pudo determinar el rol.');
+              this.loading = false;
             }
           }
         },
-        error => {
+        (error) => {
+          this.loading = false;
           console.error('Error en inicio de sesión:', error);
           alert('Credenciales incorrectas');
         }
       );
-
     } else {
       alert('Por favor completa el formulario correctamente.');
+      this.loading = false;
     }
   }
   redirectByRole(rol: ERol) {
@@ -86,5 +91,5 @@ export class LoginComponent {
       default:
         this.router.navigate(['/public/login']); // Ruta por defecto
     }
-}
+  }
 }
