@@ -1,0 +1,102 @@
+<div class="container mx-auto p-4">
+  <div class="flex justify-between items-center mb-4">
+    <input
+      type="text"
+      [(ngModel)]="textoBusqueda"
+      placeholder="Buscar por curso o profesor"
+      class="p-2 border rounded-md w-1/4"
+    />
+    <div class="flex items-center space-x-2">
+      <span class="text-sm">Rango de fechas:</span>
+      <input type="date" [(ngModel)]="fechaInicio" class="p-2 border rounded-md" />
+      <input type="date" [(ngModel)]="fechaFin" class="p-2 border rounded-md" />
+    </div>
+    <button (click)="abrirModal()" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow">Agregar Curso</button>
+  </div>
+
+  <table class="min-w-full table-auto bg-white rounded-lg shadow-md overflow-hidden">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2 text-left">#ID</th>
+        <th class="px-4 py-2 text-left">Curso</th>
+        <th class="px-4 py-2 text-left">Profesor</th>
+        <th class="px-4 py-2 text-left">Fecha de Asignación</th>
+        <th class="px-4 py-2 text-left">Estado</th>
+        <th class="px-4 py-2 text-left">Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cursoProfesor of cursosProfesoresFiltrados()">
+        <td class="px-4 py-2">{{ cursoProfesor.id }}</td>
+        <td class="px-4 py-2">{{ cursoProfesor.nombreCurso }}</td>
+        <td class="px-4 py-2">{{ cursoProfesor.nombreProfesor }}</td>
+        <td class="px-4 py-2">{{ cursoProfesor.fechaAsignacion }}</td>
+        <td class="px-4 py-2">
+          <span
+            [ngClass]="{
+              'bg-green-200': cursoProfesor.estado === 'Activo',
+              'bg-yellow-200': cursoProfesor.estado === 'Inactivo'
+            }"
+            class="px-2 py-1 rounded-md"
+            >{{ cursoProfesor.estado }}</span
+          >
+        </td>
+        <td class="px-4 py-2">
+          <button (click)="abrirMenuAccion(cursoProfesor)" class="text-blue-500">Acciones</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!-- Modal -->
+<div
+  *ngIf="esModalVisible"
+  class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center"
+>
+  <div class="bg-white p-6 rounded-md shadow-lg w-1/3">
+    <h2 class="text-lg font-bold mb-4">Agregar Nuevo Curso</h2>
+    <form (ngSubmit)="agregarCurso()">
+      <div>
+        <label for="nombreCurso" class="block mb-2 text-sm">Nombre del Curso:</label>
+        <input
+          type="text"
+          id="nombreCurso"
+          [(ngModel)]="nuevoCurso.nombreCurso"
+          name="nombreCurso"
+          class="w-full p-2 border rounded-md mb-4"
+          placeholder="Ingrese el nombre del curso"
+          required
+        />
+      </div>
+      <div>
+        <label for="nombreProfesor" class="block mb-2 text-sm">Nombre del Profesor:</label>
+        <input
+          type="text"
+          id="nombreProfesor"
+          [(ngModel)]="nuevoCurso.nombreProfesor"
+          name="nombreProfesor"
+          class="w-full p-2 border rounded-md mb-4"
+          placeholder="Ingrese el nombre del profesor"
+          required
+        />
+      </div>
+      <div>
+        <label for="estado" class="block mb-2 text-sm">Estado:</label>
+        <select
+          id="estado"
+          [(ngModel)]="nuevoCurso.estado"
+          name="estado"
+          class="w-full p-2 border rounded-md mb-4"
+          required
+        >
+          <option value="Activo">Activo</option>
+          <option value="Inactivo">Inactivo</option>
+        </select>
+      </div>
+      <div class="flex justify-end space-x-2">
+        <button type="button" (click)="cerrarModal()" class="px-4 py-2 bg-gray-400 rounded-md text-white">Cancelar</button>
+        <button type="submit" class="px-4 py-2 bg-blue-500 rounded-md text-white">Agregar</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -47,12 +47,20 @@
 
       <!-- Sign In Button -->
       <div>
+        <button *ngIf="!loading"
+        type="submit"
+        class="button flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-indigo-600"
+      >
+        Sign in
+      </button>
         <button
-          type="submit"
-          class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-indigo-600"
-        >
-          Sign in
-        </button>
+        *ngIf="loading"
+        type="submit"
+        class="ui primary loading button flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-indigo-600"
+      >
+        <!-- Sign in -->
+      </button>
+
       </div>
     </form>
 
