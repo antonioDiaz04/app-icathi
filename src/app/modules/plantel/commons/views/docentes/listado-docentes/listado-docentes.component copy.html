@@ -1,0 +1,103 @@
+<div class="container mx-auto p-4">
+  <div class="flex justify-between items-center mb-4">
+    <input
+      type="text"
+      [(ngModel)]="searchText"
+      placeholder="Search by course or teacher"
+      class="p-2 border rounded-md w-1/4"
+    />
+    <div class="flex items-center space-x-2">
+      <span class="text-sm">Date Range:</span>
+      <input type="date" [(ngModel)]="startDate" class="p-2 border rounded-md" />
+      <input type="date" [(ngModel)]="endDate" class="p-2 border rounded-md" />
+    </div>
+    <button (click)="openAddModal()" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow">Add Course</button>
+  </div>
+
+  <table class="min-w-full table-auto bg-white rounded-lg shadow-md overflow-hidden">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2 text-left">#ID</th>
+        <th class="px-4 py-2 text-left">Course</th>
+        <th class="px-4 py-2 text-left">Teacher</th>
+        <th class="px-4 py-2 text-left">Assignment Date</th>
+        <th class="px-4 py-2 text-left">Status</th>
+        <th class="px-4 py-2 text-left">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let courseTeacher of filteredCoursesTeachers()">
+        <td class="px-4 py-2">{{ courseTeacher.id }}</td>
+        <td class="px-4 py-2">{{ courseTeacher.courseName }}</td>
+        <td class="px-4 py-2">{{ courseTeacher.teacherName }}</td>
+        <td class="px-4 py-2">{{ courseTeacher.assignmentDate }}</td>
+        <td class="px-4 py-2">
+          <span
+            [ngClass]="{
+              'bg-green-200': courseTeacher.status === 'Active',
+              'bg-yellow-200': courseTeacher.status === 'Inactive'
+            }"
+            class="px-2 py-1 rounded-md"
+            >{{ courseTeacher.status }}</span
+          >
+        </td>
+        <td class="px-4 py-2">
+          <button (click)="openActionMenu(courseTeacher)" class="text-blue-500">Actions</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal -->
+<div
+  *ngIf="isModalVisible"
+  class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center"
+>
+  <div class="bg-white p-6 rounded-md shadow-lg w-1/3">
+    <h2 class="text-lg font-bold mb-4">Add New Course</h2>
+    <form (ngSubmit)="addCourse()">
+      <div>
+        <label for="courseName" class="block mb-2 text-sm">Course Name:</label>
+        <input
+          type="text"
+          id="courseName"
+          [(ngModel)]="newCourse.courseName"
+          name="courseName"
+          class="w-full p-2 border rounded-md mb-4"
+          placeholder="Enter course name"
+          required
+        />
+      </div>
+      <div>
+        <label for="teacherName" class="block mb-2 text-sm">Teacher Name:</label>
+        <input
+          type="text"
+          id="teacherName"
+          [(ngModel)]="newCourse.teacherName"
+          name="teacherName"
+          class="w-full p-2 border rounded-md mb-4"
+          placeholder="Enter teacher name"
+          required
+        />
+      </div>
+      <div>
+        <label for="status" class="block mb-2 text-sm">Status:</label>
+        <select
+          id="status"
+          [(ngModel)]="newCourse.status"
+          name="status"
+          class="w-full p-2 border rounded-md mb-4"
+          required
+        >
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+      </div>
+      <div class="flex justify-end space-x-2">
+        <button type="button" (click)="closeModal()" class="px-4 py-2 bg-gray-400 rounded-md text-white">Cancel</button>
+        <button type="submit" class="px-4 py-2 bg-blue-500 rounded-md text-white">Add</button>
+      </div>
+    </form>
+  </div>
+</div>
