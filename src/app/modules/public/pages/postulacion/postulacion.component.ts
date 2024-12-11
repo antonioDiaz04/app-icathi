@@ -37,7 +37,9 @@ export class PostulacionComponent {
       this.validateCurrentStepFields();
     }
   }
-
+  goHome() {
+    this.router.navigate(['/']); // Redirige a la ruta principal
+  }
   // Retrocede al paso anterior
   prevStep() {
     if (this.currentStep > 1) {
