@@ -38,16 +38,17 @@ export class AuthService {
 
   // Guardar el token en IndexedDB
   async setToken(token: string): Promise<void> {
-    await this.indexedService.storeToken(token);
+    if (this.isBrowser()) {
+      await this.indexedService.storeToken(token);
+    }
   }
 
-  // Obtener el token de IndexedDB
   async getToken(): Promise<string | null> {
-    const token = await this.indexedService.getToken();
-    // console.log('Token retrieved from IndexedDB:', token);
-    return token;
+    if (this.isBrowser()) {
+      return await this.indexedService.getToken();
+    }
+    return null;
   }
-
   // Limpiar el token de IndexedDB (logout)
   async clearToken(): Promise<void> {
     await this.indexedService.clearToken();
@@ -90,6 +91,9 @@ export class AuthService {
   crearContraseña(email: string, nuevaContraseña: string): Observable<any> {
     const body = { email, nuevaContraseña };
     return this.http.post(`${this.apiUrl2}/postulacion/crear-password`, body);
+  }
+  private isBrowser(): boolean {
+    return typeof window !== 'undefined';
   }
 
 

@@ -3,43 +3,50 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-registro-user',
   templateUrl: './registro-user.component.html',
-  styleUrl: './registro-user.component.scss'
+  styleUrls: ['./registro-user.component.scss']
 })
 export class RegistroUserComponent {
-  step: number = 1; // Controla el paso actual
+  step: number = 1;
   formData = {
-    userType: '', // Tipo de usuario (alumno o docente)
-    selection: '', // Selección del área o curso
+    plantel: '', // Añade esta propiedad
+    categoria: '',
+    curso: '',
+    name: '',
+    curp: '',
+    email: '',
+    telefono: ''
   };
+  isModalOpen = false;
 
-  // Opciones de selección
+
   availableOptions: string[] = [];
-
-  // Avanzar al siguiente paso
-  nextStep() {
-    if (this.step === 1) {
-      this.updateOptions();
-    }
-    this.step++;
+  // Acción de "Corregir" (redirigir a la edición)
+  editData() {
+    this.closeModal();
+    // Aquí podrías redirigir o permitir editar los datos
+    console.log('Corregir información');
   }
 
-  // Retroceder al paso anterior
-  previousStep() {
-    this.step--;
+  // Abre el modal
+  openModal() {
+    console.log("click")
+    this.isModalOpen = true;
   }
 
-  // Actualizar las opciones disponibles según el tipo de usuario
-  updateOptions() {
-    if (this.formData.userType === 'alumno') {
-      this.availableOptions = ['Matemáticas', 'Ciencias', 'Historia'];
-    } else if (this.formData.userType === 'docente') {
-      this.availableOptions = ['Docencia General', 'Investigación', 'Capacitación'];
-    }
+  // Cierra el modal
+  closeModal() {
+    this.isModalOpen = false;
   }
 
-  // Manejar el envío del formulario
+  proceed() {
+    this.closeModal();
+    // Procede con el siguiente paso, por ejemplo, enviar el formulario
+    console.log('Datos confirmados, proceder');
+    // Cambiar el paso en el formulario
+    this.step = 1;  // Por ejemplo, pasar al paso 4
+  }
   submitForm() {
-    console.log('Formulario enviado:', this.formData);
-    alert(`Formulario enviado: ${JSON.stringify(this.formData, null, 2)}`);
+    console.log('Datos enviados:', this.formData);
+    alert('Registro completado con éxito');
   }
 }

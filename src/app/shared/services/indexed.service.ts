@@ -31,25 +31,31 @@ export class IndexedService {
     })
   }
 
-  // Abre la base de datos IndexedDB
   private openDatabase(): void {
-    const request = indexedDB.open('authDB', 1)
+    if (typeof indexedDB === 'undefined') {
+      console.error('IndexedDB no está disponible en este entorno.');
+      return;
+    }
+
+    const request = indexedDB.open('authDB', 1);
 
     request.onupgradeneeded = (event) => {
-      const db = (event.target as IDBRequest).result
+      const db = (event.target as IDBRequest).result;
       if (!db.objectStoreNames.contains('tokens')) {
-        db.createObjectStore('tokens')
+        db.createObjectStore('tokens');
       }
-    }
+    };
 
     request.onsuccess = (event) => {
-      this.db = (event.target as IDBRequest).result
-    }
+      this.db = (event.target as IDBRequest).result;
+      console.log('IndexedDB inicializado con éxito.');
+    };
 
     request.onerror = (event) => {
-      console.error('Error al abrir IndexedDB', event)
-    }
+      console.error('Error al abrir IndexedDB', event);
+    };
   }
+
   private assertDatabaseReady(): void {
     if (!this.db) {
       throw new Error('IndexedDB no está inicializado.')
