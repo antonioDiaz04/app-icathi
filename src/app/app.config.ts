@@ -18,5 +18,5 @@ export const appConfig: ApplicationConfig = {
       // theme: {
       //     preset: Aura
       // }
-  }),provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideClientHydration(), importProvidersFrom(FormsModule), provideAnimationsAsync(), provideHttpClient()]
+  }),provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideClientHydration(), importProvidersFrom(FormsModule), provideAnimationsAsync(), provideHttpClient(), provideAnimationsAsync()]
 };
