@@ -1,6 +1,6 @@
 <div class="container mx-auto p-4">
   <div class="flex justify-between items-center mb-4">
-    <input type="text" [(ngModel)]="textoBusqueda" placeholder="Buscar" class="p-2 border rounded-md w-1/4" />
+    <input type="text" [(ngModel)]="textoBusqueda" placeholder="Buscar por nombre o email" class="p-2 border rounded-md w-1/4" />
     <div class="flex items-center space-x-2">
       <span class="text-sm">Rango de Fechas:</span>
       <input type="date" [(ngModel)]="fechaInicio" class="p-2 border rounded-md" />
@@ -11,34 +11,31 @@
   <table class="min-w-full table-auto bg-white rounded-lg shadow-md overflow-hidden">
     <thead class="bg-gray-100">
       <tr>
-        <th class="px-4 py-2 text-left">#ID Pedido</th>
+        <th class="px-4 py-2 text-left">#ID Alumno</th>
         <th class="px-4 py-2 text-left">Nombre</th>
-        <th class="px-4 py-2 text-left">Pago</th>
-        <th class="px-4 py-2 text-left">Tiempo Restante</th>
-        <th class="px-4 py-2 text-left">Tipo</th>
-        <th class="px-4 py-2 text-left">Estado</th>
+        <th class="px-4 py-2 text-left">Email</th>
+        <th class="px-4 py-2 text-left">Teléfono</th>
+        <th class="px-4 py-2 text-left">Estatus</th>
         <th class="px-4 py-2 text-left">Acción</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let pedido of filtrarPedidos()">
-        <td class="px-4 py-2">{{ pedido.id }}</td>
-        <td class="px-4 py-2">{{ pedido.nombre }}</td>
-        <td class="px-4 py-2">{{ pedido.pago }}</td>
-        <td class="px-4 py-2">{{ pedido.tiempoRestante }}</td>
-        <td class="px-4 py-2">{{ pedido.tipo }}</td>
+      <tr *ngFor="let alumno of filtrarAlumnos()">
+        <td class="px-4 py-2">{{ alumno.id }}</td>
+        <td class="px-4 py-2">{{ alumno.nombre }} {{ alumno.apellidos }}</td>
+        <td class="px-4 py-2">{{ alumno.email }}</td>
+        <td class="px-4 py-2">{{ alumno.telefono }}</td>
         <td class="px-4 py-2">
           <span [ngClass]="{
-            'bg-green-200': pedido.estado === 'Completado',
-            'bg-yellow-200': pedido.estado === 'Pendiente',
-            'bg-red-200': pedido.estado === 'Cancelado'
-          }" class="px-2 py-1 rounded-md">{{ pedido.estado }}</span>
+            'bg-green-200': alumno.estatus,
+            'bg-red-200': !alumno.estatus
+          }" class="px-2 py-1 rounded-md">{{ alumno.estatus ? 'Activo' : 'Inactivo' }}</span>
         </td>
         <td class="px-4 py-2">
-          <button (click)="abrirMenuAccion(pedido)" class="text-blue-500">Acciones</button>
-          <div *ngIf="pedidoSeleccionado === pedido" class="mt-2 bg-white border p-2 rounded-md shadow-md">
-            <button (click)="reembolsar(pedido)" class="block text-red-500">Reembolsar</button>
-            <button (click)="enviarMensaje(pedido)" class="block text-blue-500">Mensaje</button>
+          <button (click)="abrirMenuAccion(alumno)" class="text-blue-500">Acciones</button>
+          <div *ngIf="alumnoSeleccionado === alumno" class="mt-2 bg-white border p-2 rounded-md shadow-md">
+            <button (click)="editarAlumno(alumno)" class="block text-blue-500">Editar</button>
+            <button (click)="eliminarAlumno(alumno)" class="block text-red-500">Eliminar</button>
           </div>
         </td>
       </tr>
