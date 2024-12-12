@@ -17,4 +17,9 @@ export class AspiranteService {
     return this.http.post(this.apiUrl, JSON.stringify(data), { headers });
   }
 
+  getApirantes():Observable<any>{
+    return this.http.get(`${environment.api}/alumno`)
+  }
+
+
 }

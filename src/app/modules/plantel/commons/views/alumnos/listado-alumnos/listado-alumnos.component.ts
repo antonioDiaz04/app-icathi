@@ -1,46 +1,58 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AspiranteService } from '../../../../../../shared/services/aspirante.service';
 
 @Component({
   selector: 'app-listado-alumnos',
   templateUrl: './listado-alumnos.component.html',
   styles: ``,
-  standalone:false,
+  standalone: false,
 })
-export class ListadoAlumnosComponent {
+export class ListadoAlumnosComponent implements OnInit  {
   textoBusqueda: string = '';
-fechaInicio: string = '';
-fechaFin: string = '';
-pedidoSeleccionado: any = null;
+  fechaInicio: string = '';
+  fechaFin: string = '';
+  alumnoSeleccionado: any = null;
 
-pedidos = [
-  { id: '#20132', nombre: 'Brooklyn Zoe', pago: 'Efectivo', tiempoRestante: '1 min', tipo: 'Entrega', estado: 'Completado', monto: '£20.00' },
-  { id: '#20133', nombre: 'Alice Krøjvold', pago: 'Pagado', tiempoRestante: '49 min', tipo: 'Recolección', estado: 'Cancelado', monto: '£14.00' },
-  { id: '#20134', nombre: 'Jurian van', pago: 'Efectivo', tiempoRestante: '7 min', tipo: 'Entrega', estado: 'Pendiente', monto: '£18.00' },
-  { id: '#20135', nombre: 'Yo Chien-Ho', pago: 'Pagado', tiempoRestante: '15 min', tipo: 'Recolección', estado: 'Completado', monto: '£16.00' },
-  { id: '#20136', nombre: 'Shoamih Ali', pago: 'Efectivo', tiempoRestante: '10 min', tipo: 'Entrega', estado: 'Cancelado', monto: '£19.00' },
-  { id: '#20137', nombre: 'Nick Bove', pago: 'Efectivo', tiempoRestante: '8 min', tipo: 'Recolección', estado: 'Pendiente', monto: '£21.00' },
-  { id: '#20138', nombre: 'Unuwo Hinomo', pago: 'Efectivo', tiempoRestante: '5 min', tipo: 'Entrega', estado: 'Pendiente', monto: '£22.00' }
-];
+  // Datos de alumnos
+  alumnos:any=[]
 
-// Pedidos filtrados según búsqueda y rango de fechas
-filtrarPedidos() {
-  return this.pedidos.filter(pedido => {
-    const coincideTextoBusqueda = pedido.nombre.toLowerCase().includes(this.textoBusqueda.toLowerCase());
-    const coincideFechaInicio = this.fechaInicio ? new Date(pedido.tiempoRestante) >= new Date(this.fechaInicio) : true;
-    const coincideFechaFin = this.fechaFin ? new Date(pedido.tiempoRestante) <= new Date(this.fechaFin) : true;
-    return coincideTextoBusqueda && coincideFechaInicio && coincideFechaFin;
-  });
-}
+  constructor(private aspirantesService:AspiranteService){}
 
-abrirMenuAccion(pedido: any) {
-  this.pedidoSeleccionado = this.pedidoSeleccionado === pedido ? null : pedido;
-}
 
-reembolsar(pedido: any) {
-  alert(`Reembolsando pedido #${pedido.id}`);
-}
+  ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    this.getAlumnos()
+  }
 
-enviarMensaje(pedido: any) {
-  alert(`Enviando mensaje a ${pedido.nombre}`);
-}
+  getAlumnos(){
+this.aspirantesService.getApirantes().subscribe(response=>{
+  this.alumnos = response;
+  // this.alumnos = this.filtrarAlumnos();
+},(error)=>{
+  console.error('Error al obtener los alumnos:', error);
+})
+    
+  }
+  // Alumnos filtrados según búsqueda
+  filtrarAlumnos() {
+    return this.alumnos.filter((alumno:any) => {
+      const nombreCompleto = `${alumno.nombre} ${alumno.apellidos}`.toLowerCase();
+      const coincideTextoBusqueda = nombreCompleto.includes(this.textoBusqueda.toLowerCase()) || 
+                                    alumno.email.toLowerCase().includes(this.textoBusqueda.toLowerCase());
+      return coincideTextoBusqueda;
+    });
+  }
+
+  abrirMenuAccion(alumno: any) {
+    this.alumnoSeleccionado = this.alumnoSeleccionado === alumno ? null : alumno;
+  }
+
+  editarAlumno(alumno: any) {
+    alert(`Editando alumno: ${alumno.nombre} ${alumno.apellidos}`);
+  }
+
+  eliminarAlumno(alumno: any) {
+    alert(`Eliminando alumno: ${alumno.nombre} ${alumno.apellidos}`);
+  }
 }

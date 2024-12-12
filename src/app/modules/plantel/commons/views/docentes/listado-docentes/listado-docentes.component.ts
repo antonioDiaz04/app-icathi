@@ -3,22 +3,22 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-listado-docentes',
   templateUrl: './listado-docentes.component.html',
-  styles: `#addModal {
-    animation: fadeIn 0.3s ease-in-out;
-  }
+  styles: [`
+    #addModal {
+      animation: fadeIn 0.3s ease-in-out;
+    }
 
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  `,
-  standalone: false,
+  `],
 })
 export class ListadoDocentesComponent {
   // Variables de filtro
@@ -29,69 +29,50 @@ export class ListadoDocentesComponent {
   // Control del modal
   esModalVisible: boolean = false;
 
-  // Curso seleccionado
-  cursoSeleccionado: any = null;
-
-  // Modelo para el nuevo curso
-  nuevoCurso = {
-    nombreCurso: '',
-    nombreProfesor: '',
-    estado: 'Activo',
+  // Modelo para el nuevo docente
+  nuevoDocente = {
+    nombre: '',
+    apellidos: '',
+    email: '',
+    telefono: '',
+    especialidad: '',
+    estatus: 'Activo',
   };
 
   // Datos de ejemplo
-  cursosProfesores = [
+  docentes = [
     {
-      id: '#20132',
-      nombreCurso: 'Matemáticas',
-      nombreProfesor: 'John Doe',
-      fechaAsignacion: '2024-05-01',
-      estado: 'Activo',
+      id: '#101',
+      nombre: 'Carlos',
+      apellidos: 'Pérez',
+      email: 'carlos.perez@example.com',
+      telefono: '123456789',
+      especialidad: 'Matemáticas',
+      estatus: 'Activo',
     },
     {
-      id: '#20133',
-      nombreCurso: 'Ciencia',
-      nombreProfesor: 'Alice Smith',
-      fechaAsignacion: '2024-06-15',
-      estado: 'Inactivo',
-    },
-    {
-      id: '#20134',
-      nombreCurso: 'Historia',
-      nombreProfesor: 'Mark Johnson',
-      fechaAsignacion: '2024-07-20',
-      estado: 'Activo',
-    },
-    {
-      id: '#20135',
-      nombreCurso: 'Geografía',
-      nombreProfesor: 'Emma White',
-      fechaAsignacion: '2024-08-05',
-      estado: 'Inactivo',
+      id: '#102',
+      nombre: 'María',
+      apellidos: 'López',
+      email: 'maria.lopez@example.com',
+      telefono: '987654321',
+      especialidad: 'Ciencias',
+      estatus: 'Inactivo',
     },
   ];
 
-  // Filtros dinámicos
-  cursosProfesoresFiltrados() {
-    return this.cursosProfesores.filter((cursoProfesor) => {
+  // Filtrar docentes
+  docentesFiltrados() {
+    return this.docentes.filter(docente => {
       const coincideBusqueda =
-        cursoProfesor.nombreProfesor
-          .toLowerCase()
-          .includes(this.textoBusqueda.toLowerCase()) ||
-        cursoProfesor.nombreCurso
-          .toLowerCase()
-          .includes(this.textoBusqueda.toLowerCase());
-      const coincideFechaInicio = this.fechaInicio
-        ? new Date(cursoProfesor.fechaAsignacion) >= new Date(this.fechaInicio)
-        : true;
-      const coincideFechaFin = this.fechaFin
-        ? new Date(cursoProfesor.fechaAsignacion) <= new Date(this.fechaFin)
-        : true;
-      return coincideBusqueda && coincideFechaInicio && coincideFechaFin;
+        docente.nombre.toLowerCase().includes(this.textoBusqueda.toLowerCase()) ||
+        docente.apellidos.toLowerCase().includes(this.textoBusqueda.toLowerCase());
+      const coincideFecha = true; // Puedes agregar filtro por fechas si lo necesitas
+      return coincideBusqueda && coincideFecha;
     });
   }
 
-  // Función para abrir/cerrar el modal
+  // Abrir/Cerrar modal
   abrirModal() {
     this.esModalVisible = true;
   }
@@ -100,21 +81,20 @@ export class ListadoDocentesComponent {
     this.esModalVisible = false;
   }
 
-  // Función para agregar un curso
-  agregarCurso() {
-    this.cursosProfesores.push({
-      id: `#20${Math.floor(Math.random() * 10000)}`, // Genera un ID aleatorio
-      nombreCurso: this.nuevoCurso.nombreCurso,
-      nombreProfesor: this.nuevoCurso.nombreProfesor,
-      fechaAsignacion: new Date().toISOString().split('T')[0], // Fecha actual
-      estado: this.nuevoCurso.estado,
+  // Agregar docente
+  agregarDocente() {
+    this.docentes.push({
+      ...this.nuevoDocente,
+      id: `#${Math.floor(Math.random() * 10000)}`,
     });
-    this.cerrarModal(); // Cierra el modal
-  }
-
-  // Función para alternar el menú de acciones
-  abrirMenuAccion(cursoProfesor: any) {
-    this.cursoSeleccionado =
-      this.cursoSeleccionado === cursoProfesor ? null : cursoProfesor;
+    this.nuevoDocente = {
+      nombre: '',
+      apellidos: '',
+      email: '',
+      telefono: '',
+      especialidad: '',
+      estatus: 'Activo',
+    };
+    this.cerrarModal();
   }
 }

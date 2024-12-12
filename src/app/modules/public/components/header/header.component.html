@@ -38,8 +38,79 @@
     <a
       routerLink=""
       class="nav-link text-gray-800 font-medium hover:text-red-500"
-      >About</a
+      >Incio</a
     >
+    <div class="relative group">
+      <!-- Main Button -->
+      <a
+        routerLink=""
+        class="text-gray-800 font-medium hover:text-red-500 flex items-center space-x-1"
+      >
+        Nosotros
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-4 h-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </a>
+
+      <!-- Submenu -->
+      <div
+        class="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible hover:opacity-100 hover:visible transition duration-200 z-50"
+      >
+        <a
+          routerLink="acerca-de-nosotros"
+          class="block px-4 py-2 text-sm text-gray-800 hover:bg-red-500 hover:text-white"
+        >
+          Acerca de Nosotros
+        </a>
+        <a
+          routerLink="directorio"
+          class="block px-4 py-2 text-sm text-gray-800 hover:bg-red-500 hover:text-white"
+        >
+          Directorio
+        </a>
+        <a
+          routerLink="planteles"
+          class="block px-4 py-2 text-sm text-gray-800 hover:bg-red-500 hover:text-white"
+        >
+          Planteles
+        </a>
+        <a
+          routerLink="normatividad"
+          class="block px-4 py-2 text-sm text-gray-800 hover:bg-red-500 hover:text-white"
+        >
+          Normatividad
+        </a>
+        <a
+          routerLink="politica"
+          class="block px-4 py-2 text-sm text-gray-800 hover:bg-red-500 hover:text-white"
+        >
+          Política
+        </a>
+        <a
+          routerLink="manuales"
+          class="block px-4 py-2 text-sm text-gray-800 hover:bg-red-500 hover:text-white flex justify-between items-center"
+        >
+          Manuales
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+    </div>
+
+
     <a
       routerLink="cursos"
       class="nav-link text-gray-800 font-medium hover:text-red-500"
