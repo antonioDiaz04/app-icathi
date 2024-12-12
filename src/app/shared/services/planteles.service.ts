@@ -3,6 +3,23 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.prod';
 import { Observable } from 'rxjs';
 
+export interface Plantel {
+  id: number;
+  nombre: string;
+  direccion: string;
+  telefono: string;
+  email: string;
+  director: string;
+  capacidad_alumnos: number;
+  estatus: boolean;
+  created_at: string;
+  updated_at: string;
+  usuario_gestor_id: number;
+  estado: string;
+  municipio: string;
+  password: string;
+  rol: string;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -17,10 +34,13 @@ export class PlantelesService {
     return this.http.post<any>(`${environment.api}/plantel/`,body);
   }
 
-  getPlanteles(){
-    return this.http.get(`${environment.api}/plantel`)
+  // getPlanteles(){
+  //   return this.http.get(`${environment.api}/plantel`)
+  // }
+  // Obtener todos los planteles
+  getPlanteles(): Observable<Plantel[]> {
+    return this.http.get<Plantel[]>(`${environment.api}/plantel`);
   }
-
   deletePlantel(id:any){
     return this.http.delete(`${environment.api}/plantel/${id}`)
   }

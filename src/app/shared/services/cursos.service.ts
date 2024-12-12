@@ -1,0 +1,38 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment.prod';
+
+interface Curso {
+  id: number;
+  nombre: string;
+  clave: string;
+  duracion_horas: number;
+  descripcion: string;
+  area_id: number;
+  area_nombre: string;
+  especialidad_id: number;
+  especialidad_nombre: string;
+  tipo_curso_id: number;
+  tipo_curso_nombre: string;
+  vigencia_inicio: string | null;
+  fecha_publicacion: string | null;
+  ultima_actualizacion: string | null;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CursosService {
+  private cursosApiUrl = `${environment.api}/cursos`;
+
+  constructor(private http: HttpClient) {}
+
+  /**
+   * Obtiene la lista de cursos desde la API
+   * @returns Un observable con la lista de cursos
+   */
+  getCursos(): Observable<Curso[]> {
+    return this.http.get<Curso[]>(this.cursosApiUrl);
+  }
+}
