@@ -62,6 +62,16 @@ export class AuthService {
     }
     return true;
   }
+  async getIdFromToken(): Promise<number | null> {
+    const token = await this.getToken();
+    if (token) {
+      const decodedToken = this.jwtHelper.decodeToken(token); // Decodificar el token
+      // Acceder al campo 'id' si existe
+      return decodedToken?.id || null;
+    }
+    return null;
+  }
+
   async getRoleFromToken(): Promise<string | null> {
     const token = await this.getToken();
     if (token) {

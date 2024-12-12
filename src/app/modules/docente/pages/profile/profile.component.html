@@ -1,0 +1,99 @@
+<!-- Tarjeta del Perfil -->
+<section *ngIf="!isEditing && docenteData" class="bg-white shadow-md rounded-lg p-6 mb-6">
+  <div class="text-center">
+    <img
+      class="w-32 h-32 rounded-full border-4 border-[#F08762] mx-auto"
+      [src]="docenteData.foto_url || 'https://via.placeholder.com/150'"
+      alt="Foto de docente"
+    />
+    <h2 class="text-xl font-bold text-[#44509D] mt-4">
+      {{ docenteData.nombre }}
+    </h2>
+    <p class="text-gray-600">{{ docenteData.apellidos }}</p>
+    <p class="text-gray-600">{{ docenteData.telefono }}</p>
+  </div>
+  <div class="mt-4 flex justify-center gap-4">
+    <button
+      class="bg-[#44509D] text-white px-4 py-2 rounded-lg hover:bg-[#F08762]"
+      (click)="editarPerfil()"
+    >
+      Editar Perfil
+    </button>
+    <button
+      class="bg-[#D8566C] text-white px-4 py-2 rounded-lg hover:bg-[#F08762]"
+      (click)="verClases()"
+    >
+      Ver Clases
+    </button>
+  </div>
+</section>
+
+<!-- Formulario de Edición -->
+<section *ngIf="isEditing && docenteData" class="bg-white shadow-md rounded-lg p-6 mb-6">
+  <form (ngSubmit)="guardarCambios()">
+    <div class="text-center">
+      <img
+        class="w-32 h-32 rounded-full border-4 border-[#F08762] mx-auto"
+        [src]="docenteData.foto_url || 'https://via.placeholder.com/150'"
+        alt="Foto de docente"
+      />
+      <input
+        type="file"
+        class="mt-4 mb-4"
+        (change)="onFileSelected($event)"
+      />
+    </div>
+
+    <div class="mt-4">
+      <label for="nombre" class="block font-bold text-gray-700">Nombre:</label>
+      <input
+        id="nombre"
+        type="text"
+        [(ngModel)]="docenteData.nombre"
+        name="nombre"
+        class="w-full p-2 mt-2 border border-gray-300 rounded-lg"
+        required
+      />
+    </div>
+
+    <div class="mt-4">
+      <label for="apellidos" class="block font-bold text-gray-700">Apellidos:</label>
+      <input
+        id="apellidos"
+        type="text"
+        [(ngModel)]="docenteData.apellidos"
+        name="apellidos"
+        class="w-full p-2 mt-2 border border-gray-300 rounded-lg"
+        required
+      />
+    </div>
+
+    <div class="mt-4">
+      <label for="telefono" class="block font-bold text-gray-700">Teléfono:</label>
+      <input
+        id="telefono"
+        type="text"
+        [(ngModel)]="docenteData.telefono"
+        name="telefono"
+        class="w-full p-2 mt-2 border border-gray-300 rounded-lg"
+        required
+      />
+    </div>
+
+    <div class="mt-4 flex justify-center gap-4">
+      <button
+        type="submit"
+        class="bg-[#44509D] text-white px-4 py-2 rounded-lg hover:bg-[#F08762]"
+      >
+        Guardar Cambios
+      </button>
+      <button
+        type="button"
+        class="bg-[#D8566C] text-white px-4 py-2 rounded-lg hover:bg-[#F08762]"
+        (click)="cancelarEdicion()"
+      >
+        Cancelar
+      </button>
+    </div>
+  </form>
+</section>
