@@ -1,0 +1,63 @@
+<!-- Tabla de cursos -->
+<div *ngIf="!mostrarFormulario">
+    <table class="min-w-full table-auto bg-white rounded-lg shadow-md overflow-hidden">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-2 text-left">ID</th>
+          <th class="px-4 py-2 text-left">NOMBRE DEL CURSO</th>
+          <th class="px-4 py-2 text-left">NIVEL</th>
+          <th class="px-4 py-2 text-left">DURACIÓN (HORAS)</th>
+          <th class="px-4 py-2 text-left">Estatus</th>
+          <th class="px-4 py-2 text-left">Seleccionar Docente</th>
+          <th class="px-4 py-2 text-left">ACCIONES</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let modulo of modulosFiltrados">
+          <td class="px-4 py-2">{{ modulo.id }}</td>
+          <td class="px-4 py-2">{{ modulo.nombre }}</td>
+          <td class="px-4 py-2">{{ modulo.nivel }}</td>
+          <td class="px-4 py-2">{{ modulo.duracion_horas }}</td>
+          <td
+            class="px-4 py-2"
+            [ngClass]="{
+              'text-green-500 hover:bg-green-200': modulo.estatus,
+              'text-red-500 hover:bg-red-200': !modulo.estatus
+            }"
+          >
+            {{ modulo.estatus ? "Curso Validado" : "Curso no Validado" }}
+          </td>
+          <td class="px-4 py-2">
+            <div *ngIf="modulo.estatus">
+              <ng-container *ngIf="modulo.docente_asignado !== '0'; else noDocente">
+                <span class="text-green-500 font-bold">
+                  Docente Asignado: {{ modulo.docente_asignado }}
+                </span>
+              </ng-container>
+              <ng-template #noDocente>
+                <button
+                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  (click)="openModal(modulo)"
+                >
+                  Cambiar Docente
+                </button>
+              </ng-template>
+            </div>
+            <span *ngIf="!modulo.estatus" class="text-red-500">No Validado</span>
+          </td>
+          <td class="px-4 py-2">
+            <button (click)="verDetalles(modulo)" class="text-blue-500">
+              🔍 Ver Detalles
+            </button>
+            <button (click)="editarCurso(modulo)" class="text-yellow-500">
+              ✏️ Editar
+            </button>
+            <button (click)="eliminarCurso(modulo.id)" class="text-red-500">
+              🗑️ Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

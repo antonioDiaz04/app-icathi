@@ -5,6 +5,7 @@ import { HomeComponent } from './commons/views/home/home.component';
 import { ListadoAlumnosComponent } from './commons/views/alumnos/listado-alumnos/listado-alumnos.component';
 import { ListadoCursosComponent } from './commons/views/cursos/listado-cursos/listado-cursos.component';
 import { ListadoDocentesComponent } from './commons/views/docentes/listado-docentes/listado-docentes.component';
+import { ListadoCursosAprovadosComponent } from './commons/views/cursos/listado-cursos-aprovados/listado-cursos-aprovados.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,10 @@ const routes: Routes = [
       {
         path: 'listado-cursos',
         component: ListadoCursosComponent,
+      },
+      {
+        path: 'listado-cursos-aprovados',
+        component: ListadoCursosAprovadosComponent,
       },
       {
         path: 'listado-docentes',

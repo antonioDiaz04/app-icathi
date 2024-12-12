@@ -4,8 +4,8 @@ import { environment } from '../../../../../../../environments/environment.prod'
 import { AuthService } from '../../../../../../shared/services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DocenteService } from '../../../../../../shared/services/docente.service';
-import { response } from 'express';
 import { CursosdocentesService } from '../../../../../../shared/services/cursosdocentes.service';
+
 export interface Modulo {
   id: number;
   nombre: string;
@@ -30,17 +30,16 @@ interface Docente {
   id: number;
   nombre: string;
   estatus: boolean;
-  // Otros campos que necesites
 }
 
 @Component({
-  selector: 'app-listado-cursos',
-  templateUrl: './listado-cursos.component.html',
+  selector: 'app-listado-cursos-aprovados',
+  templateUrl: './listado-cursos-aprovados.component.html',
 })
-export class ListadoCursosComponent implements OnInit {
+export class ListadoCursosAprovadosComponent implements OnInit {
   modulos: Modulo[] = [];
+  modulosFiltrados: Modulo[] = [];
   docentes: Docente[] = [];
-  // docente;
   areas: any[] = [];
   especialidades: any[] = [];
   tiposCurso: any[] = [];
@@ -60,7 +59,6 @@ export class ListadoCursosComponent implements OnInit {
     private cursoDocenteS_: CursosdocentesService,
     private fb: FormBuilder
   ) {
-    // this.plantel_id = this.authService.getIdFromToken();
     this.cursoForm = this.fb.group({
       area_id: ['', Validators.required],
       especialidad_id: ['', Validators.required],
@@ -87,7 +85,6 @@ export class ListadoCursosComponent implements OnInit {
   filtroNombre: string = '';
   filtroNivel: string = '';
   filtroDuracion: number | null = null; // Puede ser null para indicar que no hay filtro
-  // this.filtroDocente = docenteId;
   
   // Función para reiniciar filtros
   resetFilters() {
@@ -97,11 +94,11 @@ export class ListadoCursosComponent implements OnInit {
     this.filtroDuracion = null;
   }
 
-  
   openModal(idCurso: any) {
     this.idCUrso = idCurso;
     this.isModalOpen = true;
   }
+
   closeModal() {
     this.isModalOpen = false;
   }
@@ -122,24 +119,38 @@ export class ListadoCursosComponent implements OnInit {
   cargarCursosByIdPlantel(): void {
     this.authService.getIdFromToken().then((plantelId) => {
       console.log('Plantel ID:', plantelId);
-
+  
       if (!plantelId) {
         console.error('No se pudo obtener el ID del plantel');
         return;
       }
-
+  
       this.http
-        .get<Modulo[]>(
-          `${this.apiUrl}/planteles-curso/byIdPlantel/${plantelId}`
-        )
+        .get<Modulo[]>(`${this.apiUrl}/planteles-curso/byIdPlantel/${plantelId}`)
         .subscribe({
           next: (data) => {
-            this.modulos = data;
+            // Filtrar solo los módulos con estatus verdadero y con docente asignado
+            this.modulos = data.filter(modulo => modulo.estatus && modulo.docente_asignado !== '0');
+            this.modulosFiltrados = [...this.modulos]; // Asignar los módulos filtrados
+            this.filtrarModulos(); // Llama a la función de filtrado si es necesario
           },
           error: (err) => {
             console.error('Error al cargar los módulos:', err);
           },
         });
+    });
+  }
+  
+  
+
+  filtrarModulos(): void {
+    this.modulos = this.modulos.filter(modulo => {
+      const matchesId = this.filtroId ? modulo.id.toString().includes(this.filtroId) : true;
+      const matchesNombre = this.filtroNombre ? modulo.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()) : true;
+      const matchesNivel = this.filtroNivel ? modulo.nivel.toLowerCase().includes(this.filtroNivel.toLowerCase()) : true;
+      const matchesDuracion = this.filtroDuracion !== null ? modulo.duracion_horas === this.filtroDuracion : true;
+
+      return matchesId && matchesNombre && matchesNivel && matchesDuracion;
     });
   }
 
@@ -179,6 +190,7 @@ export class ListadoCursosComponent implements OnInit {
   toggleFormulario(): void {
     this.mostrarFormulario = !this.mostrarFormulario;
   }
+
   agregarCurso(): void {
     this.authService
       .getIdFromToken()
@@ -190,7 +202,6 @@ export class ListadoCursosComponent implements OnInit {
           return;
         }
 
-        // Crear un objeto con los datos necesarios para el backend
         const cursoData = {
           id: 0,
           nombre: this.cursoForm.get('nombre')?.value,
@@ -201,12 +212,11 @@ export class ListadoCursosComponent implements OnInit {
           area_id: this.cursoForm.get('area_id')?.value,
           especialidad_id: this.cursoForm.get('especialidad_id')?.value,
           tipo_curso_id: this.cursoForm.get('tipo_curso_id')?.value,
-          plantel_id: plantelId, // Asignar el plantel ID al curso
+          plantel_id: plantelId,
         };
 
         console.log('Datos enviados al backend:', cursoData);
 
-        // Enviar el objeto al servicio
         this.http.post<Modulo>(`${this.apiUrl}/cursos`, cursoData).subscribe({
           next: (cursoCreado) => {
             this.modulos.push(cursoCreado);
@@ -259,11 +269,11 @@ export class ListadoCursosComponent implements OnInit {
     if (confirm('¿Estás seguro de que deseas eliminar este curso?')) {
       this.http.delete(`${this.apiUrl}/cursos/${id}`).subscribe({
         next: () => {
-          this.modulos = this.modulos.filter((m) => m.id !== id); // Elimina el curso del array local
+          this.modulos = this.modulos.filter((m) => m.id !== id);
           console.log('Curso eliminado correctamente');
         },
         error: (err) => {
-          console.error('Error al eliminar el curso:', err); // Log del error
+          console.error('Error al eliminar el curso:', err);
         },
       });
     }
@@ -274,7 +284,6 @@ export class ListadoCursosComponent implements OnInit {
     this.cursoSeleccionado = null;
   }
 
-  // Métodos para ver detalles
   verDetalles(curso: Modulo): void {
     this.cursoDetalleSeleccionado = curso;
     this.mostrarDetalleModal = true;
@@ -285,7 +294,6 @@ export class ListadoCursosComponent implements OnInit {
     this.cursoDetalleSeleccionado = null;
   }
 
-  // Métodos para obtener nombres a partir de IDs
   obtenerNombreArea(areaId: number | undefined): string {
     const area = this.areas.find((a) => a.id === areaId);
     return area ? area.nombre : 'N/A';
@@ -305,7 +313,7 @@ export class ListadoCursosComponent implements OnInit {
 
   asignarDocente(modulo: any) {
     const docenteId = Number(modulo.docenteSeleccionado);
-    const cursoId = this.idCUrso; // Asumiendo que el ID del curso está en el objeto modulo
+    const cursoId = this.idCUrso; 
     console.log('docente=>', docenteId);
     console.log('curso=>', cursoId);
     if (docenteId && cursoId) {
@@ -315,11 +323,9 @@ export class ListadoCursosComponent implements OnInit {
           this.closeModal();
         },
         (error) => {
-          console.error('Error al asignar el docente:', error);
+          console.error('Error al asignar docente:', error);
         }
       );
-    } else {
-      alert('Por favor, seleccione un docente.');
     }
   }
 }
