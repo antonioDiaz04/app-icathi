@@ -81,19 +81,7 @@ export class AuthService {
     }
     return null;
   }
-  async getIdFromToken(): Promise<number | null> {
-    const token = await this.getToken();
-    let idPlantel;
-    let decodedToken;
-    if (token) {
-       decodedToken = this.jwtHelper.decodeToken(token);  // Decodificamos el token
-      // return decodedToken?.id || null;  // Accedemos al rol
-      idPlantel=decodedToken?.id
-      console.log('Decoded token:', idPlantel);  // Para revisar la estructura del token
-      return idPlantel || null;
-    }
-    return null;
-  }
+
 
 
   async isAuthenticated(): Promise<boolean> {
