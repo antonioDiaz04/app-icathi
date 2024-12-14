@@ -1,5 +1,4 @@
 <div class="flex min-h-screen bg-gray-50">
-  <!-- <div class="flex min-h-screen bg-gray-50"> -->
   <!-- Menú lateral -->
   <aside class="w-64 bg-[#44509D] text-white flex flex-col">
     <div class="px-6 py-4 text-center text-lg font-bold bg-[#F08762]">
@@ -10,7 +9,6 @@
         <li class="hover:bg-[#F08762] transition-all duration-300">
           <a
             (click)="redirecto('home')"
-
             class="block py-3 px-6 flex items-center"
           >
             <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
@@ -19,16 +17,24 @@
         <li class="hover:bg-[#F08762] transition-all duration-300">
           <a
             (click)="redirecto('listado-alumnos')"
-
             class="block py-3 px-6 flex items-center"
           >
             <i class="fas fa-users mr-3"></i> Listado de Alumnos
           </a>
         </li>
+
+        <li class="hover:bg-[#F08762] transition-all duration-300">
+          <a
+            (click)="redirecto('listado-docentes')"
+            class="block py-3 px-6 flex items-center"
+          >
+            <i class="fas fa-chalkboard-teacher mr-3"></i> Listado de Docentes
+          </a>
+        </li>
+
         <li class="hover:bg-[#F08762] transition-all duration-300">
           <a
             (click)="redirecto('listado-cursos')"
-
             class="block py-3 px-6 flex items-center"
           >
             <i class="fas fa-book mr-3"></i> Listado de Cursos
@@ -36,22 +42,13 @@
         </li>
         <li class="hover:bg-[#F08762] transition-all duration-300">
           <a
-            (click)="redirecto('listado-cursos-aprovados')"
-
+            (click)="redirecto('listado-cursos-solicitados')"
             class="block py-3 px-6 flex items-center"
           >
-            <i class="fas fa-book mr-3"></i> Listado de Cursos Aprovados
+            <i class="fas fa-book mr-3"></i> Listado de Cursos solicitados
           </a>
         </li>
-        <li class="hover:bg-[#F08762] transition-all duration-300">
-          <a
-            (click)="redirecto('listado-docentes')"
 
-            class="block py-3 px-6 flex items-center"
-          >
-            <i class="fas fa-chalkboard-teacher mr-3"></i> Listado de Docentes
-          </a>
-        </li>
         <li class="hover:bg-[#F08762] transition-all duration-300">
           <a (click)="logout()" class="block py-3 px-6 flex items-center">
             <i class="fas fa-sign-out-alt mr-3"></i> Cerrar Sesión

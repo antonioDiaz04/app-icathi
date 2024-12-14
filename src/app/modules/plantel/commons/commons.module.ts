@@ -10,10 +10,11 @@ import { DocenteService } from '../../../shared/services/docente.service';
 import { CursosdocentesService } from '../../../shared/services/cursosdocentes.service';
 import { FilterPipe } from '../../../shared/pipes/filter.pipe';
 import { ListadoCursosAprovadosComponent } from './views/cursos/listado-cursos-aprovados/listado-cursos-aprovados.component';
+import { HistorialComponent } from './views/cursos/historial/historial.component';
 
 
 @NgModule({
-  declarations: [    FilterPipe,ListadoAlumnosComponent,ListadoCursosComponent,ListadoDocentesComponent, ListadoCursosAprovadosComponent],
+  declarations: [    FilterPipe,ListadoAlumnosComponent,ListadoCursosComponent,ListadoDocentesComponent, ListadoCursosAprovadosComponent, HistorialComponent],
   imports: [
     CommonModule,ReactiveFormsModule,FormsModule,RouterModule,
   ],

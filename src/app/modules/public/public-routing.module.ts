@@ -9,6 +9,8 @@ import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.compone
 import { PostulacionComponent } from './pages/postulacion/postulacion.component';
 import { ValidarCorreoComponent } from './pages/validar-correo/validar-correo.component';
 import { CreapasswordComponent } from './pages/creapassword/creapassword.component';
+import { ListadoPlantelComponent } from './pages/plantel/listado-plantel/listado-plantel.component';
+import { OptionsRegiterComponent } from './pages/options-regiter/options-regiter.component';
 
 const routes: Routes = [
   {
@@ -42,6 +44,19 @@ const routes: Routes = [
             {
               label: 'Home',
               path: '/public/login',
+            },
+          ],
+        },
+      },
+      {
+        path: 'select-rol',
+        component: OptionsRegiterComponent,
+        data: {
+          title: 'select-rol',
+          breadcrumb: [
+            {
+              label: 'select-rol',
+              path: '/public/select-rol',
             },
           ],
         },
@@ -82,6 +97,19 @@ const routes: Routes = [
             {
               label: 'Home',
               path: '/public/login',
+            },
+          ],
+        },
+      },
+      {
+        path: 'planteles',
+        component: ListadoPlantelComponent,
+        data: {
+          title: 'planteles',
+          breadcrumb: [
+            {
+              label: 'planteles',
+              path: '/public/planteles',
             },
           ],
         },

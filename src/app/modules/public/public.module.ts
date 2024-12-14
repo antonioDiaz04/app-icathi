@@ -20,6 +20,7 @@ import { TeacherApplicationComponent } from './components/teacher-application/te
 import { PostulacionComponent } from './pages/postulacion/postulacion.component';
 import { ValidarCorreoComponent } from './pages/validar-correo/validar-correo.component';
 import { CreapasswordComponent } from './pages/creapassword/creapassword.component';
+import { OptionsRegiterComponent } from './pages/options-regiter/options-regiter.component';
 
 
 
@@ -30,7 +31,7 @@ import { CreapasswordComponent } from './pages/creapassword/creapassword.compone
     HomeComponent,
     HeaderComponent,
     FooterComponent,
-    LoginComponent,RegistroUserComponent, CursosComponent, UnauthorizedComponent, TeacherApplicationComponent, PostulacionComponent, ValidarCorreoComponent, CreapasswordComponent,
+    LoginComponent,RegistroUserComponent, CursosComponent, UnauthorizedComponent, TeacherApplicationComponent, PostulacionComponent, ValidarCorreoComponent, CreapasswordComponent, OptionsRegiterComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [FormsModule,SidebarModule,

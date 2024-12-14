@@ -1,63 +1,93 @@
-<!-- Tabla de cursos -->
-<div *ngIf="!mostrarFormulario">
-    <table class="min-w-full table-auto bg-white rounded-lg shadow-md overflow-hidden">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="px-4 py-2 text-left">ID</th>
-          <th class="px-4 py-2 text-left">NOMBRE DEL CURSO</th>
-          <th class="px-4 py-2 text-left">NIVEL</th>
-          <th class="px-4 py-2 text-left">DURACIÓN (HORAS)</th>
-          <th class="px-4 py-2 text-left">Estatus</th>
-          <th class="px-4 py-2 text-left">Seleccionar Docente</th>
-          <th class="px-4 py-2 text-left">ACCIONES</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let modulo of modulosFiltrados">
-          <td class="px-4 py-2">{{ modulo.id }}</td>
-          <td class="px-4 py-2">{{ modulo.nombre }}</td>
-          <td class="px-4 py-2">{{ modulo.nivel }}</td>
-          <td class="px-4 py-2">{{ modulo.duracion_horas }}</td>
-          <td
-            class="px-4 py-2"
-            [ngClass]="{
-              'text-green-500 hover:bg-green-200': modulo.estatus,
-              'text-red-500 hover:bg-red-200': !modulo.estatus
-            }"
-          >
-            {{ modulo.estatus ? "Curso Validado" : "Curso no Validado" }}
-          </td>
-          <td class="px-4 py-2">
-            <div *ngIf="modulo.estatus">
-              <ng-container *ngIf="modulo.docente_asignado !== '0'; else noDocente">
-                <span class="text-green-500 font-bold">
-                  Docente Asignado: {{ modulo.docente_asignado }}
-                </span>
-              </ng-container>
-              <ng-template #noDocente>
-                <button
-                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  (click)="openModal(modulo)"
-                >
-                  Cambiar Docente
-                </button>
-              </ng-template>
-            </div>
-            <span *ngIf="!modulo.estatus" class="text-red-500">No Validado</span>
-          </td>
-          <td class="px-4 py-2">
-            <button (click)="verDetalles(modulo)" class="text-blue-500">
-              🔍 Ver Detalles
-            </button>
-            <button (click)="editarCurso(modulo)" class="text-yellow-500">
-              ✏️ Editar
-            </button>
-            <button (click)="eliminarCurso(modulo.id)" class="text-red-500">
-              🗑️ Eliminar
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+ <!-- Tabla de cursos   solicitados -->
+ <div *ngIf="!mostrarFormulario" class="container mx-auto p-4">
+  <div>
+    <h2 class="font-semibold text-lg mb-2">Estatus</h2>
+    <div class="flex space-x-2">
+      <button
+        class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+      >
+        Validados
+      </button>
+      <button
+        class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+      >
+        No validados
+      </button>
+    </div>
   </div>
-  
+  <table
+    class="min-w-full table-auto bg-white rounded-lg shadow-md overflow-hidden"
+  >
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2 text-left">ID</th>
+        <th class="px-4 py-2 text-left">ID DEL CURSO</th>
+        <th class="px-4 py-2 text-left">NOMBRE DEL CURSO</th>
+        <!-- <th class="px-4 py-2 text-left">NIVEL</th> -->
+        <!-- <th class="px-4 py-2 text-left">DURACIÓN (HORAS)</th> -->
+        <th class="px-4 py-2 text-left">Estatus</th>
+        <th class="px-4 py-2 text-left">Seleccionar Docente</th>
+        <th class="px-4 py-2 text-left">ACCIONES</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let modulo of cursosSolicitados">
+        <td class="px-4 py-2">{{ modulo.plantel_curso_id }}</td>
+        <td class="px-4 py-2">{{ modulo.curso_id }}</td>
+        <td class="px-4 py-2">{{ modulo.nombre }}</td>
+        <td class="px-4 py-2">{{ modulo.isvalidado }}</td>
+        <!-- <td
+          class="px-4 py-2"
+          [ngClass]="{
+            'text-green-500 hover:bg-green-200': modulo.estatus,
+            'text-red-500 hover:bg-red-200': !modulo.estatus
+          }"
+        >
+          {{ modulo.estatus ? "Curso Validado" : "Curso no Validado" }}
+        </td> -->
+
+        <!-- Columna Acciones -->
+        <td class="px-4 py-2">
+          <div *ngIf="modulo.isvalidado">
+            <!-- Si hay docente asignado, mostrar el ID del docente -->
+            <ng-container
+              *ngIf="modulo.docente_asignado !== '0'; else noDocente"
+            >
+              <span class="text-green-500 font-bold">
+                Docente Asignado: {{ modulo.docente_asignado }}
+              </span>
+            </ng-container>
+
+            <!-- Si no hay docente asignado, mostrar el botón -->
+            <ng-template #noDocente>
+              <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                (click)="openModal(modulo.plantel_id)"
+              >
+                Asignar Docente y alumnos
+              </button>
+            </ng-template>
+          </div>
+          <!-- </td> -->
+
+          <!-- Si el estatus es false, mostrar 'No Validado' -->
+          <span *ngIf="!modulo.isvalidado" class="text-red-500"
+            >No Validado</span
+          >
+        </td>
+
+        <td class="px-4 py-2">
+          <button
+          type="button"
+          (click)="eliminarSolicitudCurso(modulo.plantel_curso_id)"
+
+                class="bg-orange-600 text-white font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-orange-700 transition duration-200 ml-2"
+            >
+                Cancelar Solicitud
+            </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
