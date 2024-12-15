@@ -1,0 +1,40 @@
+<div
+  *ngIf="message"
+  [ngClass]="{
+    'bg-red-500 text-white': type === 'error',
+    'bg-yellow-400 text-black': type === 'warning',
+    'bg-green-500 text-white': type === 'success'
+  }"
+  class="fixed top-4 right-4 px-6 py-4 rounded-xl shadow-2xl z-50 flex items-center space-x-4 animate-fade-in"
+  [@slideInFadeOut]="message ? 'in' : 'out'"
+>
+  <div
+    class="flex items-center justify-center w-10 h-10 rounded-full bg-opacity-20"
+    [ngClass]="{
+      'bg-red-700': type === 'error',
+      'bg-yellow-500': type === 'warning',
+      'bg-green-700': type === 'success'
+    }"
+  >
+    <span
+      class="text-2xl font-bold"
+      [ngClass]="{
+        'text-red-700': type === 'error',
+        'text-yellow-700': type === 'warning',
+        'text-green-700': type === 'success'
+      }"
+    >
+      {{ type === 'error' ? '!' : type === 'warning' ? '⚠' : '✓' }}
+    </span>
+  </div>
+  <div class="flex-1">
+    <span class="block font-semibold text-lg">{{ message }}</span>
+  </div>
+  <button
+    (click)="closeAlert()"
+    class="ml-auto text-xl font-bold text-white transition-transform transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+    aria-label="Close alert"
+  >
+    &times;
+  </button>
+</div>

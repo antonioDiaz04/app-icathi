@@ -16,9 +16,11 @@ export class DocenteService {
  getDocentes():Observable<any>{
   return this.http.get<any>(`${environment.api}/${this.url}`)
  }
+ updateDocente(id: number, docenteData: any): Observable<any> {
+  return this.http.put<any>(`${environment.api}/${this.url}/${id}`, docenteData);
+}
 
 
 
- 
 
 }

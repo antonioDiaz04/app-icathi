@@ -16,8 +16,8 @@ export class PostulacionComponent {
   isLoading = false;
 
   constructor(
-    private fb: FormBuilder, 
-    private router: Router, 
+    private fb: FormBuilder,
+    private router: Router,
     private postulacionService: PostulacionService) { // Inyecta el servicio
     this.postulationForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(3)]],
@@ -73,7 +73,14 @@ export class PostulacionComponent {
         },
         error: (error) => {
           console.error('Error al registrar:', error);
+          if (error.status === 400) {
+            // Si el correo ya existe
+            alert('El correo proporcionado ya está registrado. Intenta con otro correo.');
+          } else {
+            alert('Ocurrió un error al enviar el registro. Inténtalo nuevamente.');
+          }
           alert('Ocurrió un error al enviar el registro. Inténtalo nuevamente.');
+          this.isLoading = false; 
         }
       });
     } else {

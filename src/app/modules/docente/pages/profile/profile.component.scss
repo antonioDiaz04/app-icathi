@@ -1,0 +1,17 @@
+.especialidades-container {
+  margin-top: 1.5rem;
+}
+.especialidades-container ul {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+.especialidades-container li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.especialidades-container li:last-child {
+  margin-bottom: 0;
+}

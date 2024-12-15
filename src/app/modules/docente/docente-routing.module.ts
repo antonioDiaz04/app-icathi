@@ -7,7 +7,7 @@ import { CoursesComponent } from './pages/courses/courses.component';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'perfil',
+    redirectTo: 'home',
     pathMatch: 'full',
   },
   {
@@ -20,7 +20,7 @@ const routes: Routes = [
         component: ProfileComponent,
       },
       {
-        path: 'cursos',
+        path: 'home',
         component: CoursesComponent,
       },
       // {
