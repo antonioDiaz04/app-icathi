@@ -5,10 +5,11 @@ import { AuthService } from '../../../../../../shared/services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DocenteService } from '../../../../../../shared/services/docente.service';
 import { CursosdocentesService } from '../../../../../../shared/services/cursosdocentes.service';
+import { AspiranteService } from '../../../../../../shared/services/aspirante.service';
 
 export interface Modulo {
-  plantel_curso_id: number;
-  curso_id: number;
+  plantel: string;
+  curso: number;
   nombre: string;
   clave?: string;
   duracion_horas: number;
@@ -17,8 +18,8 @@ export interface Modulo {
   costo?: number;
   requisitos?: string;
   isvalidado?: string;
-  area_id?: number;
-  especialidad_id?: number;
+  nombrearea: string;
+  nombreespecialidad?: string;
   tipo_curso_id?: number;
   vigencia_inicio?: string;
   fecha_publicacion?: string;
@@ -30,6 +31,10 @@ export interface Modulo {
 interface Docente {
   id: number;
   nombre: string;
+  apellidos : string;
+  especialidad  : string;
+  cedula_profesional : boolean;
+  certificado_profesional : boolean;
   estatus: boolean;
 }
 
@@ -46,11 +51,14 @@ export class ListadoCursosAprovadosComponent implements OnInit {
   tiposCurso: any[] = [];
   mostrarFormulario = false;
   mostrarModal = false;
+  alumnos: any = [];
+
   mostrarDetalleModal = false; // Nueva variable para el modal de detalles
   cursoSeleccionado: Modulo | null = null;
   cursoDetalleSeleccionado: Modulo | null = null; // Curso seleccionado para ver detalles
   idCUrso: any;
-    cursosSolicitados: Modulo[] = [];
+    cursosSolicitados: any;
+    dataCurso: any;
 
   cursoForm: FormGroup;
   private apiUrl = `${environment.api}`;
@@ -58,10 +66,13 @@ export class ListadoCursosAprovadosComponent implements OnInit {
   constructor(
     private docenteService: DocenteService,
     private http: HttpClient,
+        private aspirantesService: AspiranteService,
+
     private authService: AuthService,
     private cursoDocenteS_: CursosdocentesService,
     private fb: FormBuilder
   ) {
+
     this.cursoForm = this.fb.group({
       area_id: ['', Validators.required],
       especialidad_id: ['', Validators.required],
@@ -76,8 +87,11 @@ export class ListadoCursosAprovadosComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarCursosByIdPlantel();
-    // this.getDocentes();
+    this.getInfo();
+    this.getDocentes();
     this.cargarAreas();
+    this.getAlumnos();
+
     this.cargarEspecialidades();
     this.cargarTiposCurso();
   }
@@ -99,21 +113,54 @@ export class ListadoCursosAprovadosComponent implements OnInit {
 
   openModal(idCurso: any) {
     this.idCUrso = idCurso;
-    this.isModalOpen = true;
+    this.mostrarFormulario = true;
+    this.getDocentes();
+  }
+  getAlumnos() {
+    this.authService.getIdFromToken().then((plantelId) => {
+      console.log('Plantel ID:', plantelId);
+
+      if (!plantelId) {
+        console.error('No se pudo obtener el ID del plantel');
+        return;
+      }
+
+      this.aspirantesService.getApirantesBIdPlantel(plantelId).subscribe(
+        (response) => {
+          this.alumnos = response;
+          // this.alumnos = this.filtrarAlumnos();
+        },
+        (error) => {
+          console.error('Error al obtener los alumnos:', error);
+        }
+      );
+    });
   }
 
+
+
+
+
+  // docentes: any[] = [];
+
   closeModal() {
-    this.isModalOpen = false;
+    this.mostrarFormulario = !this.mostrarFormulario;
   }
+
+
+
+
+
 
   getDocentes() {
     this.docenteService.getDocentes().subscribe(
       (response) => {
-        this.docentes = response.filter(
-          (docente: Docente) => docente.estatus === true
-        );
-      },
-      (error) => {
+        this.docentes = response;
+        // this.docentes = response.filter(
+          //   (docente: Docente) => docente.estatus === true
+          // );
+        },
+          (error) => {
         alert('Ocurrió un error en la consulta:');
       }
     );
@@ -143,18 +190,40 @@ export class ListadoCursosAprovadosComponent implements OnInit {
           });
       });
     }
+  getInfo(): void {
+      this.authService.getIdFromToken().then((plantelId) => {
+        console.log('Plantel ID:', plantelId);
+
+        if (!plantelId) {
+          console.error('No se pudo obtener el ID del plantel');
+          return;
+        }
+        this.http
+          .get<Modulo[]>(
+            `${this.apiUrl}/PlantelCursos/byIdPlantel/${plantelId}/info`
+          )
+          .subscribe({
+            next: (data) => {
+              this.dataCurso = data;
+            },
+            error: (err) => {
+              console.error('Error al cargar los módulos:', err);
+            },
+          });
+      });
+    }
 
 
-  filtrarModulos(): void {
-    this.modulos = this.modulos.filter(modulo => {
-      const matchesId = this.filtroId ? modulo.curso_id.toString().includes(this.filtroId) : true;
-      const matchesNombre = this.filtroNombre ? modulo.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()) : true;
-      const matchesNivel = this.filtroNivel ? modulo.nivel.toLowerCase().includes(this.filtroNivel.toLowerCase()) : true;
-      const matchesDuracion = this.filtroDuracion !== null ? modulo.duracion_horas === this.filtroDuracion : true;
+  // filtrarModulos(): void {
+  //   this.modulos = this.modulos.filter(modulo => {
+  //     const matchesId = this.filtroId ? modulo.curso_id.toString().includes(this.filtroId) : true;
+  //     const matchesNombre = this.filtroNombre ? modulo.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()) : true;
+  //     const matchesNivel = this.filtroNivel ? modulo.nivel.toLowerCase().includes(this.filtroNivel.toLowerCase()) : true;
+  //     const matchesDuracion = this.filtroDuracion !== null ? modulo.duracion_horas === this.filtroDuracion : true;
 
-      return matchesId && matchesNombre && matchesNivel && matchesDuracion;
-    });
-  }
+  //     return matchesId && matchesNombre && matchesNivel && matchesDuracion;
+  //   });
+  // }
 
   cargarAreas(): void {
     this.http.get<any[]>(`${this.apiUrl}/areas`).subscribe({
@@ -240,34 +309,35 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     this.mostrarModal = true;
   }
 
-  guardarEdicion(): void {
-    if (this.cursoSeleccionado) {
-      const index = this.modulos.findIndex(
-        (m) => m.curso_id === this.cursoSeleccionado!.curso_id
-      );
-      if (index !== -1) {
-        this.modulos[index] = { ...this.cursoSeleccionado };
-      }
+  // guardarEdicion(): void {
+  //   if (this.cursoSeleccionado) {
+  //     const index = this.modulos.findIndex(
+  //       (m) => m.curso_id === this.cursoSeleccionado!.curso_id
+  //     );
+  //     if (index !== -1) {
+  //       this.modulos[index] = { ...this.cursoSeleccionado };
+  //     }
 
-      this.http
-        .put(
-          `${this.apiUrl}/cursos/${this.cursoSeleccionado.curso_id}`,
-          this.cursoSeleccionado
-        )
-        .subscribe({
-          next: () => {
-            console.log('Curso actualizado correctamente');
-          },
-          error: (err) => {
-            console.error('Error al actualizar el curso:', err);
-          },
-        });
+  //     this.http
+  //       .put(
+  //         `${this.apiUrl}/cursos/${this.cursoSeleccionado.curso_id}`,
+  //         this.cursoSeleccionado
+  //       )
+  //       .subscribe({
+  //         next: () => {
+  //           console.log('Curso actualizado correctamente');
+  //         },
+  //         error: (err) => {
+  //           console.error('Error al actualizar el curso:', err);
+  //         },
+  //       });
 
-      this.cerrarModal();
-    }
-  }
+  //     this.cerrarModal();
+  //   }
+  // }
 
   eliminarSolicitudCurso(idPlantelCurso: number): void {
+
     if (confirm('¿Estás seguro de que deseas eliminar este curso?')) {
       this.http.delete(`${this.apiUrl}/planteles-curso/byIdPlantel/${idPlantelCurso}`).subscribe(response=>{
           this.cargarCursosByIdPlantel()

@@ -24,7 +24,7 @@ export class AspiranteService {
 
   getApirantesBIdPlantel(id:any):Observable<any>{
     // http://localhost:3000/alumnosPlantelCursos/byIdPlantel/3
-    return this.http.get(`${environment.api}/alumnosPlantelCursos/byIdPlantel/${id}`)
+    return this.http.get(`${environment.api}/PlantelCursos/byIdPlantel/${id}/alumnos`)
   }
 
 
