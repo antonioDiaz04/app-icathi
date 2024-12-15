@@ -1,17 +1,28 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DocenteComponent } from './docente.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { CoursesComponent } from './pages/courses/courses.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'perfil',
     pathMatch: 'full',
   },
   {
     path: '',
     component: DocenteComponent,
     children: [
+
+      {
+        path: 'perfil',
+        component: ProfileComponent,
+      },
+      {
+        path: 'cursos',
+        component: CoursesComponent,
+      },
       // {
       // path: 'control-productos',
       // children: [
@@ -20,7 +31,7 @@ const routes: Routes = [
       //   component: ListadoPlantelesComponent,
       // },
 
- 
+
     ],
   },
 ]

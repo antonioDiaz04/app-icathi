@@ -1,0 +1,74 @@
+<div class="max-w-7xl mx-auto p-6">
+  <!-- Encabezado -->
+
+  <!-- Sección de Cursos -->
+  <div class="mb-12">
+    <h2 class="text-xl font-semibold text-gray-800">Cursos Asignados</h2>
+    <table class="min-w-full table-auto mt-4 border border-gray-300">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="px-6 py-3 text-left text-sm text-gray-600">Curso</th>
+          <th class="px-6 py-3 text-left text-sm text-gray-600">Horario</th>
+          <th class="px-6 py-3 text-left text-sm text-gray-600">Enlace</th>
+          <th class="px-6 py-3 text-left text-sm text-gray-600">Asistencia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b hover:bg-gray-50">
+          <td class="px-6 py-3 text-sm text-gray-700">Curso de Programación Web</td>
+          <td class="px-6 py-3 text-sm text-gray-700">Lunes y Miércoles - 10:00 AM a 12:00 PM</td>
+          <td class="px-6 py-3 text-sm text-blue-500">
+            <a href="/courses/web-development" target="_blank">Acceder</a>
+          </td>
+          <td class="px-6 py-3 text-sm text-gray-700">
+            <button class="px-4 py-2 bg-[#44509D] text-white rounded-full hover:bg-[#34458c]">
+              Marcar Asistencia
+            </button>
+
+          </td>
+        </tr>
+        <tr class="border-b hover:bg-gray-50">
+          <td class="px-6 py-3 text-sm text-gray-700">Curso de Marketing Digital</td>
+          <td class="px-6 py-3 text-sm text-gray-700">Martes y Jueves - 2:00 PM a 4:00 PM</td>
+          <td class="px-6 py-3 text-sm text-blue-500">
+            <a href="/courses/digital-marketing" target="_blank">Acceder</a>
+          </td>
+          <td class="px-6 py-3 text-sm text-gray-700">
+            <button class="px-4 py-2 bg-[#44509D] text-white rounded-full hover:bg-[#34458c]" >
+              Marcar Asistencia
+            </button>
+          </td>
+        </tr>
+        <tr class="border-b hover:bg-gray-50">
+          <td class="px-6 py-3 text-sm text-gray-700">Curso de Inglés Intermedio</td>
+          <td class="px-6 py-3 text-sm text-gray-700">Viernes - 9:00 AM a 1:00 PM</td>
+          <td class="px-6 py-3 text-sm text-blue-500">
+            <a href="/courses/intermediate-english" target="_blank">Acceder</a>
+          </td>
+          <td class="px-6 py-3 text-sm text-gray-700">
+            <button class="px-4 py-2 bg-[#44509D] text-white rounded-full hover:bg-[#34458c]" >
+              Marcar Asistencia
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Enlaces Importantes -->
+  <div class="mb-12">
+    <h2 class="text-xl font-semibold text-gray-800">Enlaces Importantes</h2>
+    <ul class="mt-4 space-y-4">
+      <li><a href="/profile" class="text-[#44509D] hover:text-[#F08762]">Perfil Docente</a></li>
+      <li><a href="/assignments" class="text-[#44509D] hover:text-[#F08762]">Tareas y Evaluaciones</a></li>
+      <li><a href="/calendar" class="text-[#44509D] hover:text-[#F08762]">Calendario Académico</a></li>
+    </ul>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="bg-gray-100 p-6 rounded-xl">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Estadísticas</h2>
+    <p class="text-sm text-gray-600">Asistencia: <span class="font-semibold">{{ attendancePercentage }}%</span></p>
+    <p class="text-sm text-gray-600">Promedio de Calificaciones: <span class="font-semibold">{{ averageGrade }}</span></p>
+  </div>
+</div>

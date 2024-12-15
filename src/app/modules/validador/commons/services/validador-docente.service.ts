@@ -12,7 +12,10 @@ export class ValidadorDocenteService {
   // private apiUrl = 'http://localhost:3000/docentes'; // URL base de tu API
 
   constructor(private http: HttpClient) {}
-
+  // Obtener docentes por el ID del usuario
+  getDocentesByUserId(userId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/usuario/${userId}`);
+  }
   // Obtener un docente por ID
   getDocenteById(id: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`);
