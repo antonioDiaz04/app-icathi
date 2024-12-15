@@ -5,6 +5,8 @@ import { HomeComponent } from './commons/views/home/home.component';
 import { ListadoAlumnosComponent } from './commons/views/alumnos/listado-alumnos/listado-alumnos.component';
 import { ListadoCursosComponent } from './commons/views/cursos/listado-cursos/listado-cursos.component';
 import { ListadoDocentesComponent } from './commons/views/docentes/listado-docentes/listado-docentes.component';
+import { ListadoCursosAprovadosComponent } from './commons/views/cursos/listado-cursos-aprovados/listado-cursos-aprovados.component';
+import { HistorialComponent } from './commons/views/cursos/historial/historial.component';
 
 const routes: Routes = [
   {
@@ -25,8 +27,16 @@ const routes: Routes = [
         component: ListadoAlumnosComponent,
       },
       {
+        path: 'historial-cursos',
+        component: HistorialComponent,
+      },
+      {
         path: 'listado-cursos',
         component: ListadoCursosComponent,
+      },
+      {
+        path: 'listado-cursos-solicitados',
+        component: ListadoCursosAprovadosComponent,
       },
       {
         path: 'listado-docentes',

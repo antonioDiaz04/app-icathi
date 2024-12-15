@@ -12,3 +12,24 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* El body se convierte en un contenedor grid */
+/* Establecer el diseño principal para que ocupe toda la altura de la pantalla */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Esto asegura que el body ocupe al menos toda la altura de la pantalla */
+  margin: 0; /* Elimina márgenes predeterminados */
+}
+
+/* Asegura que el contenido principal ocupe el espacio restante */
+router-outlet {
+  flex: 1; /* Hace que el contenido ocupe el espacio disponible entre el header y el footer */
+}
+
+/* Footer pegado al fondo */
+footer {
+  background-color: #f3f4f6; /* bg-light-600 */
+  color: #000; /* text-black */
+  padding: 2rem 0; /* py-8 */
+  margin-top: auto; /* Asegura que el footer siempre esté pegado al fondo */
+}

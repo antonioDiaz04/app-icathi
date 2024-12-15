@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DocenteService } from '../../../../../../shared/services/docente.service';
 import { response } from 'express';
 import { CursosdocentesService } from '../../../../../../shared/services/cursosdocentes.service';
+import { CursosService } from '../../../../../../shared/services/cursos.service';
 export interface Modulo {
   id: number;
   nombre: string;
@@ -33,16 +34,25 @@ interface Docente {
   // Otros campos que necesites
 }
 
+declare var $: any;
 @Component({
   selector: 'app-listado-cursos',
   templateUrl: './listado-cursos.component.html',
+  styles: `textarea{
+    field-sizing:content;
+  }
+
+  `,
 })
 export class ListadoCursosComponent implements OnInit {
-  modulos: Modulo[] = [];
+  cursosByEspecialidad: any[] = [];
+  cursosSolicitados: Modulo[] = [];
+  especialidadesByArea: any[] = [];
+  modulosF: Modulo[] = [];
+  modulosFiltrados: Modulo[] = [];
   docentes: Docente[] = [];
   // docente;
   areas: any[] = [];
-  especialidades: any[] = [];
   tiposCurso: any[] = [];
   mostrarFormulario = false;
   mostrarModal = false;
@@ -50,39 +60,84 @@ export class ListadoCursosComponent implements OnInit {
   cursoSeleccionado: Modulo | null = null;
   cursoDetalleSeleccionado: Modulo | null = null; // Curso seleccionado para ver detalles
   idCUrso: any;
+  areaSelccionado: any;
+  curso_id!: number;
   cursoForm: FormGroup;
   private apiUrl = `${environment.api}`;
+
+  isUploading: boolean = false; // Estado para saber si está cargando
+  // progressPercent: number = 0;  // Porcentaje del progreso
+  //
+  // progressText: string = '0 of 100 done';  // Texto que muestra el progreso
+
+  // private fakeProgress: any; // Variable para manejar el intervalo
 
   constructor(
     private docenteService: DocenteService,
     private http: HttpClient,
     private authService: AuthService,
-    private cursoDocenteS_: CursosdocentesService,
+    private cursosService: CursosService,
     private fb: FormBuilder
   ) {
     // this.plantel_id = this.authService.getIdFromToken();
     this.cursoForm = this.fb.group({
-      area_id: ['', Validators.required],
-      especialidad_id: ['', Validators.required],
-      tipo_curso_id: ['', Validators.required],
-      nombre: ['', [Validators.required, Validators.maxLength(100)]],
-      clave: ['', Validators.required],
-      duracion_horas: ['', [Validators.required, Validators.min(1)]],
-      descripcion: ['', [Validators.required, Validators.maxLength(500)]],
-      nivel: ['', Validators.required],
+      especialidad_id: ['', Validators.required], // Especialidad (obligatoria)
+      curso_id: ['', Validators.required], // Curso (obligatorio)
+      horario: ['', Validators.required], // Horario (obligatorio)
+      cupo_maximo: [
+        '',
+        [Validators.required, Validators.min(1), Validators.max(100)], // Cupo máximo (entre 1 y 100)
+      ],
+      requisitos_extra: [''], // Requisitos adicionales (opcional)
+      fecha_inicio: ['', Validators.required], // Fecha de inicio (obligatoria)
+      fecha_fin: ['', Validators.required], // Fecha de fin (obligatoria)
     });
   }
+  // progressPercent: number = 0;  // Porcentaje de progreso
+  // progressText: string = 'Cargando...';  // Texto a mostrar
+  // startUpload(): void {
+  //   this.isUploading = true;
+  //   this.progressPercent = 0;
+  //   this.progressText = '0 of 100 done';
+
+  //   // Simular el progreso
+  //   this.fakeProgress = setInterval(() => {
+  //     this.progressPercent += 1;
+  //     this.progressText = `${this.progressPercent} of 100 done`;
+
+  //     if (this.progressPercent >= 100) {
+  //       clearInterval(this.fakeProgress); // Detiene la simulación cuando llega al 100%
+  //       this.isUploading = false;
+  //     }
+  //   }, 2000); // Incrementa cada 100ms
+  // }
 
   ngOnInit(): void {
-    this.cargarCursosByIdPlantel();
-    this.getDocentes();
+    // this.initializeProgressBar();
+
     this.cargarAreas();
-    this.cargarEspecialidades();
-    this.cargarTiposCurso();
+
+    // this.cargarEspecialidades();
+
+    // this.cargarTiposCurso();
   }
 
   isModalOpen = false;
   modulo: any = {};
+  filtroId: string = '';
+  filtroNombre: string = '';
+  filtroNivel: string = '';
+  filtroDuracion: number | null = null; // Puede ser null para indicar que no hay filtro
+  // this.filtroDocente = docenteId;
+
+  // Función para reiniciar filtros
+  resetFilters() {
+    this.filtroId = '';
+    this.filtroNombre = '';
+    this.filtroNivel = '';
+    this.filtroDuracion = null;
+  }
+
   openModal(idCurso: any) {
     this.idCUrso = idCurso;
     this.isModalOpen = true;
@@ -91,38 +146,52 @@ export class ListadoCursosComponent implements OnInit {
     this.isModalOpen = false;
   }
 
-  getDocentes() {
-    this.docenteService.getDocentes().subscribe(
-      (response) => {
-        this.docentes = response.filter(
-          (docente: Docente) => docente.estatus === true
-        );
-      },
-      (error) => {
-        alert('Ocurrió un error en la consulta:');
-      }
-    );
-  }
+  // cargarCursosByIdPlantel(): void {
+  //   this.authService.getIdFromToken().then((plantelId) => {
+  //     console.log('Plantel ID:', plantelId);
 
-  cargarCursosByIdPlantel(): void {
-    this.authService.getIdFromToken().then((plantelId) => {
-      console.log('Plantel ID:', plantelId);
+  //     if (!plantelId) {
+  //       console.error('No se pudo obtener el ID del plantel');
+  //       return;
+  //     }
+  //     this.http
+  //       .get<Modulo[]>(
+  //         `${this.apiUrl}/planteles-curso/byIdPlantel/${plantelId}`
+  //       )
+  //       .subscribe({
+  //         next: (data) => {
+  //           this.cursosSolicitados = data;
 
-      if (!plantelId) {
-        console.error('No se pudo obtener el ID del plantel');
-        return;
-      }
+  //           this.modulosF = data.filter(
+  //             (modulo) => modulo.estatus && modulo.docente_asignado !== '0'
+  //           );
+  //           this.modulosFiltrados = [...this.modulosF]; // Asignar los módulos filtrados
+  //           this.filtrarModulos();
+  //         },
+  //         error: (err) => {
+  //           console.error('Error al cargar los módulos:', err);
+  //         },
+  //       });
+  //   });
+  // }
 
-      this.http
-        .get<Modulo[]>(`${this.apiUrl}/planteles-curso/byIdPlantel/${plantelId}`)
-        .subscribe({
-          next: (data) => {
-            this.modulos = data;
-          },
-          error: (err) => {
-            console.error('Error al cargar los módulos:', err);
-          },
-        });
+  filtrarModulos(): void {
+    this.cursosSolicitados = this.cursosSolicitados.filter((modulo) => {
+      const matchesId = this.filtroId
+        ? modulo.id.toString().includes(this.filtroId)
+        : true;
+      const matchesNombre = this.filtroNombre
+        ? modulo.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase())
+        : true;
+      const matchesNivel = this.filtroNivel
+        ? modulo.nivel.toLowerCase().includes(this.filtroNivel.toLowerCase())
+        : true;
+      const matchesDuracion =
+        this.filtroDuracion !== null
+          ? modulo.duracion_horas === this.filtroDuracion
+          : true;
+
+      return matchesId && matchesNombre && matchesNivel && matchesDuracion;
     });
   }
 
@@ -137,64 +206,86 @@ export class ListadoCursosComponent implements OnInit {
     });
   }
 
-  cargarEspecialidades(): void {
-    this.http.get<any[]>(`${this.apiUrl}/especialidades`).subscribe({
-      next: (data) => {
-        this.especialidades = data;
-      },
-      error: (err) => {
-        console.error('Error al cargar especialidades:', err);
-      },
-    });
-  }
-
-  cargarTiposCurso(): void {
-    this.http.get<any[]>(`${this.apiUrl}/tiposCurso`).subscribe({
-      next: (data) => {
-        this.tiposCurso = data;
-      },
-      error: (err) => {
-        console.error('Error al cargar tipos de curso:', err);
-      },
-    });
-  }
-
   toggleFormulario(): void {
     this.mostrarFormulario = !this.mostrarFormulario;
   }
-  agregarCurso(): void {
+
+  // en la tabla,solicitamos el curso seleccionando el area
+  solicitarCurso(areaId: number): void {
+    this.mostrarFormulario = true;
+    this.getEspecialidadesByAreaId(areaId);
+  }
+  // en el modal obtenemos las especialidades por el area seleccionado
+  // "http://localhost:3000/especialidades/byAreaId/{areaId}"
+  getEspecialidadesByAreaId(areaId: number) {
+    this.cursosService.getEspecialidadesByAreaId(areaId).subscribe(
+      (especialidades) => {
+        this.especialidadesByArea = especialidades;
+      },
+      (error) => {
+        console.error('Error al obtener las especialidades:', error);
+      }
+    );
+  }
+
+  // carga nuevamente los cursos al cambiar de especialidad
+  onEspecialidadChange(event: Event): void {
+    const especialidadId = Number((event.target as HTMLSelectElement).value); // Obtener el ID de la especialidad seleccionada
+    if (!isNaN(especialidadId)) {
+      this.getCursosByEspecialidadId(especialidadId); // Cargar cursos relacionados
+    } else {
+      console.warn('Especialidad no válida seleccionada.');
+    }
+  }
+
+  // obtiene los cursos por especialidad seleccionado
+  // http://localhost:3000/cursos/byEspecialidadId/{especialidadId}
+  getCursosByEspecialidadId(especialidadId: number): void {
+    this.cursosService.getCursosByEspecialidadId(especialidadId).subscribe(
+      (cursos) => {
+        this.cursosByEspecialidad = cursos; // Actualizar los cursos disponibles
+      },
+      (error) => {
+        console.error('Error al obtener los cursos:', error);
+      }
+    );
+  }
+
+  enviarSolicitud(): void {
+    console.log('Inicio de la solicitud');
+
+    if (!this.cursoForm.valid) {
+      console.error('El formulario contiene errores o campos vacíos');
+      return;
+    }
+
     this.authService
       .getIdFromToken()
       .then((plantelId) => {
-        console.log('Plantel ID:', plantelId);
-
         if (!plantelId) {
           console.error('No se pudo obtener el ID del plantel');
           return;
         }
 
-        // Crear un objeto con los datos necesarios para el backend
+        // Construir el objeto con los datos del formulario
         const cursoData = {
-          id: 0,
-          nombre: this.cursoForm.get('nombre')?.value,
-          duracion_horas: this.cursoForm.get('duracion_horas')?.value,
-          descripcion: this.cursoForm.get('descripcion')?.value,
-          nivel: this.cursoForm.get('nivel')?.value,
-          clave: this.cursoForm.get('clave')?.value,
-          area_id: this.cursoForm.get('area_id')?.value,
-          especialidad_id: this.cursoForm.get('especialidad_id')?.value,
-          tipo_curso_id: this.cursoForm.get('tipo_curso_id')?.value,
-          plantel_id: plantelId, // Asignar el plantel ID al curso
+          plantelId: Number(plantelId),
+          curso_id: this.cursoForm.get('curso_id')?.value.toString(), // Convertir a string si es necesario
+          horario: this.cursoForm.get('horario')?.value,
+          cupo_maximo: this.cursoForm.get('cupo_maximo')?.value.toString(), // Convertir a string si es necesario
+          requisitos_extra: this.cursoForm.get('requisitos_extra')?.value,
+          fecha_inicio: this.cursoForm.get('fecha_inicio')?.value,
+          fecha_fin: this.cursoForm.get('fecha_fin')?.value,
         };
 
         console.log('Datos enviados al backend:', cursoData);
 
         // Enviar el objeto al servicio
-        this.http.post<Modulo>(`${this.apiUrl}/cursos`, cursoData).subscribe({
+        this.http.post<Modulo>(`${this.apiUrl}/planteles-curso`, cursoData).subscribe({
           next: (cursoCreado) => {
-            this.modulos.push(cursoCreado);
+            this.cursosSolicitados.push(cursoCreado);
             this.mostrarFormulario = false;
-            console.log('Curso agregado correctamente');
+            console.log('Curso agregado correctamente:', cursoCreado);
           },
           error: (err) => {
             console.error('Error al agregar el curso:', err);
@@ -206,56 +297,8 @@ export class ListadoCursosComponent implements OnInit {
       });
   }
 
-  editarCurso(curso: Modulo): void {
-    this.cursoSeleccionado = { ...curso };
-    this.mostrarModal = true;
-  }
 
-  guardarEdicion(): void {
-    if (this.cursoSeleccionado) {
-      const index = this.modulos.findIndex(
-        (m) => m.id === this.cursoSeleccionado!.id
-      );
-      if (index !== -1) {
-        this.modulos[index] = { ...this.cursoSeleccionado };
-      }
-
-      this.http
-        .put(
-          `${this.apiUrl}/cursos/${this.cursoSeleccionado.id}`,
-          this.cursoSeleccionado
-        )
-        .subscribe({
-          next: () => {
-            console.log('Curso actualizado correctamente');
-          },
-          error: (err) => {
-            console.error('Error al actualizar el curso:', err);
-          },
-        });
-
-      this.cerrarModal();
-    }
-  }
-
-  eliminarCurso(id: number): void {
-    if (confirm('¿Estás seguro de que deseas eliminar este curso?')) {
-      this.http.delete(`${this.apiUrl}/cursos/${id}`).subscribe({
-        next: () => {
-          this.modulos = this.modulos.filter((m) => m.id !== id); // Elimina el curso del array local
-          console.log('Curso eliminado correctamente');
-        },
-        error: (err) => {
-          console.error('Error al eliminar el curso:', err); // Log del error
-        },
-      });
-    }
-  }
-
-  cerrarModal(): void {
-    this.mostrarModal = false;
-    this.cursoSeleccionado = null;
-  }
+  cancelarSolicitud(adi: any) {}
 
   // Métodos para ver detalles
   verDetalles(curso: Modulo): void {
@@ -268,41 +311,52 @@ export class ListadoCursosComponent implements OnInit {
     this.cursoDetalleSeleccionado = null;
   }
 
-  // Métodos para obtener nombres a partir de IDs
-  obtenerNombreArea(areaId: number | undefined): string {
-    const area = this.areas.find((a) => a.id === areaId);
-    return area ? area.nombre : 'N/A';
-  }
+  //*************************FILE */}
+  selectedFile: File | null = null;
+  // isUploading = false;
+  fileExtension: string = '';
 
-  obtenerNombreEspecialidad(especialidadId: number | undefined): string {
-    const especialidad = this.especialidades.find(
-      (e) => e.id === especialidadId
-    );
-    return especialidad ? especialidad.nombre : 'N/A';
-  }
-
-  obtenerNombreTipoCurso(tipoCursoId: number | undefined): string {
-    const tipoCurso = this.tiposCurso.find((t) => t.id === tipoCursoId);
-    return tipoCurso ? tipoCurso.nombre : 'N/A';
-  }
-
-  asignarDocente(modulo: any) {
-    const docenteId = Number(modulo.docenteSeleccionado); 
-    const cursoId = this.idCUrso; // Asumiendo que el ID del curso está en el objeto modulo
-    console.log('docente=>', docenteId);
-    console.log('curso=>', cursoId);
-    if (docenteId && cursoId) {
-      this.cursoDocenteS_.asignarDocenteACurso(docenteId, cursoId).subscribe(
-        (response) => {
-          console.log('Docente asignado:', response);
-          this.closeModal();
-        },
-        (error) => {
-          console.error('Error al asignar el docente:', error);
-        }
-      );
-    } else {
-      alert('Por favor, seleccione un docente.');
+  // Evento cuando se selecciona un archivo
+  onFileSelect(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.fileExtension = this.getFileExtension(file.name);
+      this.uploadFile(file); // Iniciar carga del archivo
     }
+  }
+
+  // Subir el archivo
+  uploadFile(file: File): void {}
+
+  // Eliminar archivo
+  removeFile(): void {
+    this.selectedFile = null;
+    this.fileExtension = '';
+  }
+
+  // Obtener la extensión del archivo
+  getFileExtension(fileName: string): string {
+    const ext = fileName.split('.').pop()?.toLowerCase() || '';
+    return ext;
+  }
+
+  // Manejar eventos de arrastre
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    const file = event.dataTransfer?.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.fileExtension = this.getFileExtension(file.name);
+      this.uploadFile(file);
+    }
+  }
+
+  onDragLeave(event: DragEvent): void {
+    // Se puede agregar algún efecto visual para cuando el archivo sale del área
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 
@@ -34,5 +34,15 @@ export class CursosService {
    */
   getCursos(): Observable<Curso[]> {
     return this.http.get<Curso[]>(this.cursosApiUrl);
+  }
+
+  getEspecialidadesByAreaId(areaId: number): Observable<any[]> {
+    const url = `${environment.api}/especialidades/byAreaId/${areaId}/`;
+    return this.http.get<any>(url);
+  }
+
+  getCursosByEspecialidadId(especialidadId: number): Observable<Curso[]> {
+    const url = `${environment.api}/cursos/byEspecialidadId/${especialidadId}/`;
+    return this.http.get<Curso[]>(url);
   }
 }

@@ -1,197 +1,66 @@
-<!-- Modal -->
-<div
-  *ngIf="isModalOpen"
-  class="fixed z-10 inset-0 overflow-y-auto"
-  aria-labelledby="modal-title"
-  role="dialog"
-  aria-modal="true"
->
-  <div
-    class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
-  >
-    <div
-      class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-blur-sm"
-      aria-hidden="true"
-    ></div>
-
-    <!-- Modal content -->
-    <div
-      class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
-    >
-      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-        <div class="sm:flex sm:items-start">
-          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-            <h3
-              class="text-lg leading-6 font-medium text-gray-900"
-              id="modal-title"
-            >
-              Asignar Docente
-            </h3>
-            <div class="mt-2">
-              <select
-                id="docenteSelect"
-                [(ngModel)]="modulo.docenteSeleccionado"
-                class="border p-2 w-full"
-              >
-                <option value="0">Seleccione un docente</option>
-                <option *ngFor="let docente of docentes" [value]="docente.id">
-                  {{ docente.id }}=> {{ docente.nombre }}
-                </option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-        <button
-          type="button"
-          class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-500 text-base font-medium text-white hover:bg-blue-700 sm:ml-3 sm:w-auto sm:text-sm"
-          (click)="asignarDocente(modulo)"
-        >
-          Asignar
-        </button>
-        <button
-          type="button"
-          class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:w-auto sm:text-sm"
-          (click)="closeModal()"
-        >
-          Cancelar
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="container mx-auto p-4">
-  <!-- Título y botón para agregar curso -->
-  <div class="mb-4 flex justify-between items-center">
-    <h2 class="text-xl font-semibold">Listado de Cursos</h2>
-    <button
-      (click)="toggleFormulario()"
-      class="bg-blue-500 text-white px-4 py-2 rounded-md"
-    >
-      {{ mostrarFormulario ? " Cancelar" : " Solicitar Curso" }}
-    </button>
-  </div>
-
   <!-- Tabla de cursos -->
-  <div *ngIf="!mostrarFormulario">
+  <div>
     <table
       class="min-w-full table-auto bg-white rounded-lg shadow-md overflow-hidden"
     >
       <thead class="bg-gray-100">
         <tr>
           <th class="px-4 py-2 text-left">ID</th>
-          <th class="px-4 py-2 text-left">NOMBRE DEL CURSO</th>
-          <th class="px-4 py-2 text-left">NIVEL</th>
-          <th class="px-4 py-2 text-left">DURACIÓN (HORAS)</th>
-          <th class="px-4 py-2 text-left">Estatus</th>
-          <th class="px-4 py-2 text-left">Seleccionar Docente</th>
+          <th class="px-4 py-2 text-left">NOMBRE DEL AREA DEL CURSO</th>
           <th class="px-4 py-2 text-left">ACCIONES</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let modulo of modulos">
-          <td class="px-4 py-2">{{ modulo.id }}</td>
-          <td class="px-4 py-2">{{ modulo.nombre }}</td>
-          <td class="px-4 py-2">{{ modulo.nivel }}</td>
-          <td class="px-4 py-2">{{ modulo.duracion_horas }}</td>
+        <tr *ngFor="let area of areas">
+          <td class="px-4 py-2">{{ area.id }}</td>
+          <td class="px-4 py-2">{{ area.nombre }}</td>
           <!-- Columna Estatus -->
-          <td
-            class="px-4 py-2"
-            [ngClass]="{
-              'text-green-500 hover:bg-green-200': modulo.estatus,
-              'text-red-500 hover:bg-red-200': !modulo.estatus
-            }"
-          >
-            <!-- Mostrar 'Asignado' si estatus es true, 'No validado' si es false -->
-            {{ modulo.estatus ? "Curso Validado" : "Curso no Validado" }}
-          </td>
-
-          <!-- Columna Acciones -->
           <td class="px-4 py-2">
-            <div *ngIf="modulo.estatus">
-              <!-- Si hay docente asignado, mostrar el ID del docente -->
-              <ng-container
-                *ngIf="modulo.docente_asignado !== '0'; else noDocente"
-              >
-                <span class="text-green-500 font-bold">
-                  Docente Asignado: {{ modulo.docente_asignado }}
-                </span>
-              </ng-container>
-
-              <!-- Si no hay docente asignado, mostrar el botón -->
-              <ng-template #noDocente>
-                <button
-                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  (click)="openModal(modulo.id)"
-                >
-                  Asignar Docente
-                </button>
-              </ng-template>
-            </div>
-            <!-- </td> -->
-
-            <!-- Si el estatus es false, mostrar 'No Validado' -->
-            <span *ngIf="!modulo.estatus" class="text-red-500"
-              >No Validado</span
+            <button
+              (click)="solicitarCurso(area.id)"
+              class="bg-green-600 text-white font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition duration-200"
             >
-          </td>
+              Solicitar
+            </button>
 
-          <td class="px-4 py-2">
-            <button (click)="verDetalles(modulo)" class="text-blue-500">
-              🔍 Ver Detalles
-            </button>
-            <button (click)="editarCurso(modulo)" class="text-yellow-500">
-              ✏️ Editar
-            </button>
-            <button (click)="eliminarCurso(modulo.id)" class="text-red-500">
-              🗑️ Eliminar
+            <button
+              (click)="verDetalles(area.id)"
+              class="bg-purple-600 text-white font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-purple-700 transition duration-200 ml-2"
+            >
+              Ver detalles
             </button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-
-  <!-- Formulario para agregar curso -->
-  <div *ngIf="mostrarFormulario" class="mt-6">
-    <h2 class="text-lg font-semibold">📝 Registrar Nuevo Curso</h2>
-    <form [formGroup]="cursoForm" (ngSubmit)="agregarCurso()" class="space-y-4">
-      <div class="grid grid-cols-1 gap-4">
-        <!-- Área -->
-        <div>
-          <label class="block mb-2 text-sm">Área</label>
-          <select
-            formControlName="area_id"
-            class="w-full p-2 border rounded-md"
-          >
-            <option value="" disabled>Seleccione Área</option>
-            <option *ngFor="let area of areas" [value]="area.id">
-              {{ area.nombre }}
-            </option>
-          </select>
-          <div
-            *ngIf="
-              cursoForm.get('area_id')?.invalid &&
-              cursoForm.get('area_id')?.touched
-            "
-            class="text-red-500 text-sm"
-          >
-            El área es obligatoria.
-          </div>
-        </div>
-
+</div>
+<!-- Modal -->
+<div
+  class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
+  *ngIf="mostrarFormulario"
+>
+  <div class="bg-white rounded-lg shadow-lg p-6 w-full sm:w-[60rem]">
+    <h2 class="text-lg font-semibold mb-4">📝 Solicitar Curso</h2>
+    <form
+      [formGroup]="cursoForm"
+      (ngSubmit)="enviarSolicitud()"
+      enctype="multipart/form-data"
+      class="space-y-4"
+    >
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <!-- Especialidad -->
         <div>
           <label class="block mb-2 text-sm">Especialidad</label>
           <select
+            (change)="onEspecialidadChange($event)"
             formControlName="especialidad_id"
             class="w-full p-2 border rounded-md"
           >
-            <option value="" disabled>Seleccione Especialidad</option>
+            <option value="" disabled>Seleccione la Especialidad</option>
             <option
-              *ngFor="let especialidad of especialidades"
+              *ngFor="let especialidad of especialidadesByArea"
               [value]="especialidad.id"
             >
               {{ especialidad.nombre }}
@@ -208,263 +77,232 @@
           </div>
         </div>
 
-        <!-- Tipo de Curso -->
+        <!-- curso -->
         <div>
-          <label class="block mb-2 text-sm">Tipo de Curso</label>
+          <label class="block mb-2 text-sm">Curso</label>
+
           <select
-            formControlName="tipo_curso_id"
+            *ngIf="cursosByEspecialidad"
+            formControlName="curso_id"
             class="w-full p-2 border rounded-md"
           >
-            <option value="" disabled>Seleccione Tipo</option>
-            <option *ngFor="let tipo of tiposCurso" [value]="tipo.id">
-              {{ tipo.nombre }}
+            <option value="" disabled>Seleccione el Curso</option>
+            <option
+              *ngFor="let curso of cursosByEspecialidad"
+              [value]="curso.id"
+            >
+              {{ curso.nombre }}
             </option>
           </select>
+
           <div
             *ngIf="
-              cursoForm.get('tipo_curso_id')?.invalid &&
-              cursoForm.get('tipo_curso_id')?.touched
+              cursoForm.get('curso_id')?.invalid &&
+              cursoForm.get('curso_id')?.touched
             "
             class="text-red-500 text-sm"
           >
-            El tipo de curso es obligatorio.
+            El área es obligatoria.
           </div>
-        </div>
 
-        <!-- Nombre del Curso -->
-        <div>
-          <label class="block mb-2 text-sm">Nombre del Curso</label>
+          <span *ngIf="!cursosByEspecialidad"
+            >los cursos no disponibles de esta especialidad</span
+          >
+        </div>
+        <!-- Horario -->
+        <div class="flex items-center">
+          <label class="block mb-2 text-sm mr-4">Horario</label>
           <input
             type="text"
-            formControlName="nombre"
-            placeholder="Nombre del curso"
-            class="w-full p-2 border rounded-md"
+            formControlName="horario"
+            class="flex-1 p-2 border rounded-md"
+            placeholder="Ej. Lunes a Viernes, 9am - 12pm"
           />
-          <div
-            *ngIf="
-              cursoForm.get('nombre')?.invalid &&
-              cursoForm.get('nombre')?.touched
-            "
-            class="text-red-500 text-sm"
-          >
-            El nombre del curso es obligatorio y debe tener menos de 100
-            caracteres.
-          </div>
         </div>
 
-        <!-- Clave -->
-        <div>
-          <label class="block mb-2 text-sm">Clave</label>
-          <input
-            type="text"
-            formControlName="clave"
-            placeholder="Clave"
-            class="w-full p-2 border rounded-md"
-          />
-          <div
-            *ngIf="
-              cursoForm.get('clave')?.invalid && cursoForm.get('clave')?.touched
-            "
-            class="text-red-500 text-sm"
-          >
-            La clave es obligatoria.
-          </div>
-        </div>
-
-        <!-- Duración -->
-        <div>
-          <label class="block mb-2 text-sm">Duración (Horas)</label>
+        <!-- Cupo Máximo -->
+        <div class="flex items-center">
+          <label class="block mb-2 text-sm mr-4">Cupo Máximo</label>
           <input
             type="number"
-            formControlName="duracion_horas"
-            placeholder="Duración en horas"
-            class="w-full p-2 border rounded-md"
+            formControlName="cupo_maximo"
+            class="flex-1 p-2 border rounded-md"
+            placeholder="Ej. 30"
           />
-          <div
-            *ngIf="
-              cursoForm.get('duracion_horas')?.invalid &&
-              cursoForm.get('duracion_horas')?.touched
-            "
-            class="text-red-500 text-sm"
+        </div>
+
+        <!-- Requisitos Extra -->
+        <div class="col-span-2">
+          <label class="block mb-2 text-sm">Requisitos Extra</label>
+          <textarea
+            formControlName="requisitos_extra"
+            class="w-full p-2 border rounded-md"
+            placeholder="Ej. Materiales necesarios"
+            rows="2"
+          ></textarea>
+        </div>
+
+        <!-- Fecha de Inicio -->
+        <div class="flex items-center">
+          <label class="block mb-2 text-sm mr-4">Fecha de Inicio</label>
+          <input
+            type="date"
+            formControlName="fecha_inicio"
+            class="flex-1 p-2 border rounded-md"
+          />
+        </div>
+
+        <!-- Fecha de Fin -->
+        <div class="flex items-center">
+          <label class="block mb-2 text-sm mr-4">Fecha de Fin</label>
+          <input
+            type="date"
+            formControlName="fecha_fin"
+            class="flex-1 p-2 border rounded-md"
+          />
+        </div>
+      </div>
+
+      <!-- file -->
+      <div class="w-full mx-auto my-12">
+        <h2 class="text-2xl font-semibold mb-6">Cargar Temario</h2>
+
+        <!-- Contenedor para el drag and drop y clic -->
+        <!-- Disparar el evento de selección del archivo al hacer clic -->
+        <div
+          class="flex flex-col items-center justify-center h-40 border-2 border-gray-300 border-dashed rounded-md hover:border-blue-500 transition-colors duration-300"
+          (click)="fileInput.click()"
+          (dragover)="onDragOver($event)"
+          (drop)="onDrop($event)"
+          (dragleave)="onDragLeave($event)"
+        >
+          <svg
+            *ngIf="!isUploading"
+            class="w-16 h-14 text-gray-400 group-hover:text-blue-500 transition-colors duration-300"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            La duración es obligatoria y debe ser mayor a 0.
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+            ></path>
+          </svg>
+
+          <!-- Loader cuando se está subiendo el archivo -->
+          <!-- <div *ngIf="isUploading" class="flex items-center justify-center"> -->
+          <!-- <div
+              class="w-8 h-8 border-4 border-t-4 border-blue-500 border-solid rounded-full animate-spin"
+            ></div> -->
+
+
+
+          <!-- Mensaje cuando no hay archivo seleccionado -->
+          <p
+            *ngIf="!selectedFile && !isUploading"
+            class="mt-6 text-gray-500 group-hover:text-blue-500 transition-colors duration-300"
+          >
+            Selecciona un archivo para subir<br />o arrástralo aquí
+          </p>
+
+          <!-- Mostrar el nombre del archivo y el ícono correspondiente -->
+          <div
+            *ngIf="selectedFile && !isUploading"
+            class="mt-6 flex items-center space-x-4"
+          >
+            <ng-container [ngSwitch]="fileExtension">
+              <svg
+                *ngSwitchCase="'pdf'"
+                class="w-8 h-8 text-red-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9l-7-7z"
+                ></path>
+              </svg>
+              <svg
+                *ngSwitchCase="'doc'"
+                class="w-8 h-8 text-blue-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15.74 2.72c-.61 0-1.22.24-1.66.66L11.18 5.2l-.24-.2C10.17 4.53 9.65 4 9.01 4H7.99c-.6 0-1.14.27-1.52.73L3.4 7.47c-.44.47-.72 1.06-.83 1.69-.1.6-.07 1.23.1 1.8.38.95 1.24 1.72 2.25 1.86 1.51.2 3.02-.6 4.14-2.23 1.14 1.63 2.67 2.43 4.27 2.45 1.06 0 2.05-.28 2.91-.78l2.99 3.45c.45.51 1.11.78 1.8.78 1.32 0 2.48-1.03 2.56-2.36.1-1.02-.35-2.06-1.14-2.75-.85-.75-2.02-1.04-3.18-.93-1.31.14-2.53.81-3.17 1.84-.42-.73-.97-1.39-1.63-1.99-.75-.72-1.6-1.37-2.47-1.88-.27-.21-.58-.37-.88-.54l-1.05-.49.72-2.32c.33-1.06-.47-2.11-1.54-2.11z"
+                ></path>
+              </svg>
+              <svg
+                *ngSwitchCase="'xlsx'"
+                class="w-8 h-8 text-green-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M4 3v18c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2z"
+                ></path>
+              </svg>
+              <div *ngSwitchDefault class="w-8 h-8 bg-gray-200 text-gray-400">
+                ?
+              </div>
+            </ng-container>
+            <p class="text-sm font-medium text-gray-700">
+              Archivo seleccionado: {{ selectedFile.name }}
+            </p>
+            <button
+            type="button"
+              class="mt-3 bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-md"
+              (click)="removeFile()"
+            >
+              Eliminar archivo
+            </button>
           </div>
         </div>
-      </div>
-
-      <!-- Descripción -->
-      <div>
-        <label class="block mb-2 text-sm">Descripción</label>
-        <textarea
-          formControlName="descripcion"
-          placeholder="Descripción del curso"
-          class="w-full p-2 border rounded-md"
-        ></textarea>
-        <div
-          *ngIf="
-            cursoForm.get('descripcion')?.invalid &&
-            cursoForm.get('descripcion')?.touched
-          "
-          class="text-red-500 text-sm"
+        <label class="block mb-3 text-sm font-medium text-gray-700"
+          >O súbelo desde una URL</label
         >
-          La descripción es obligatoria y debe tener menos de 500 caracteres.
+        <div class="flex">
+          <input
+            type="text"
+            class="flex-1 px-5 py-3 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="https://ejemplo.com/archivo.csv"
+          />
         </div>
+
+        <input
+          #fileInput
+          type="file"
+          (change)="onFileSelect($event)"
+          hidden
+          accept=".pdf,.doc,.docx,.xlsx"
+        />
       </div>
 
-      <!-- Nivel -->
-      <div>
-        <label class="block mb-2 text-sm">Nivel</label>
-        <select formControlName="nivel" class="w-full p-2 border rounded-md">
-          <option value="" disabled>Seleccione Nivel</option>
-          <option value="Básico">Básico</option>
-          <option value="Intermedio">Intermedio</option>
-          <option value="Avanzado">Avanzado</option>
-        </select>
-        <div
-          *ngIf="
-            cursoForm.get('nivel')?.invalid && cursoForm.get('nivel')?.touched
-          "
-          class="text-red-500 text-sm"
-        >
-          El nivel es obligatorio.
-        </div>
-      </div>
-
-      <!-- Botón para enviar el formulario -->
-      <div class="mt-4 flex justify-end">
+      <!-- Botón para enviar solicitud -->
+      <div class="flex justify-end">
         <button
           type="submit"
           class="bg-blue-500 text-white px-6 py-2 rounded-md"
           [disabled]="cursoForm.invalid"
         >
-          Enviar a validador de curso
+          Enviar solicitud a validador de curso
         </button>
       </div>
     </form>
-  </div>
-
-
-
-  <!-- Modal de edición -->
-  <div
-    *ngIf="mostrarModal"
-    class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center"
-  >
-    <div class="bg-white p-6 rounded-md shadow-lg w-1/3">
-      <h2 class="text-lg font-bold mb-4">✏️ Editar Curso</h2>
-      <form (ngSubmit)="guardarEdicion()" #editarForm="ngForm">
-        <div>
-          <!-- Nombre del Curso -->
-          <div>
-            <label>Nombre del Curso</label>
-            <input
-              [(ngModel)]="cursoSeleccionado!.nombre"
-              name="nombre"
-              required
-              type="text"
-              class="w-full p-2 border rounded-md"
-            />
-          </div>
-
-          <!-- Duración -->
-          <div>
-            <label>Duración (Horas)</label>
-            <input
-              [(ngModel)]="cursoSeleccionado!.duracion_horas"
-              name="duracion_horas"
-              required
-              type="number"
-              class="w-full p-2 border rounded-md"
-            />
-          </div>
-
-          <!-- Nivel -->
-          <div>
-            <label>Nivel</label>
-            <select
-              [(ngModel)]="cursoSeleccionado!.nivel"
-              name="nivel"
-              required
-              class="w-full p-2 border rounded-md"
-            >
-              <option value="Básico">Básico</option>
-              <option value="Intermedio">Intermedio</option>
-              <option value="Avanzado">Avanzado</option>
-            </select>
-          </div>
-
-          <!-- Descripción -->
-          <div>
-            <label>Descripción</label>
-            <textarea
-              [(ngModel)]="cursoSeleccionado!.descripcion"
-              name="descripcion"
-              required
-              class="w-full p-2 border rounded-md"
-            ></textarea>
-          </div>
-
-          <!-- Costo -->
-          <div>
-            <label>Costo</label>
-            <input
-              [(ngModel)]="cursoSeleccionado!.costo"
-              name="costo"
-              type="number"
-              class="w-full p-2 border rounded-md"
-            />
-          </div>
-
-          <!-- Requisitos -->
-          <div>
-            <label>Requisitos</label>
-            <textarea
-              [(ngModel)]="cursoSeleccionado!.requisitos"
-              name="requisitos"
-              class="w-full p-2 border rounded-md"
-            ></textarea>
-          </div>
-        </div>
-        <div class="mt-4 flex justify-end space-x-4">
-          <button
-            type="button"
-            (click)="cerrarModal()"
-            class="bg-gray-400 text-white px-4 py-2 rounded-md"
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            class="bg-blue-500 text-white px-4 py-2 rounded-md"
-          >
-            Guardar
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-
-  <!-- Modal de detalles del curso -->
-<div
-*ngIf="mostrarDetalleModal"
-class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center"
->
-<div class="bg-white p-6 rounded-md shadow-lg w-1/3">
-  <h2 class="text-lg font-bold mb-4">Detalles del Curso</h2>
-  <div>
-    <p><strong>ID:</strong> {{ cursoDetalleSeleccionado?.id }}</p>
-    <p><strong>Nombre:</strong> {{ cursoDetalleSeleccionado?.nombre }}</p>
-    <!-- Otros detalles del curso aquí -->
-  </div>
-  <div class="mt-4 flex justify-between">
-    <!-- Botón para cerrar el modal (opcional) -->
+    <!-- Botón para cerrar el modal -->
     <button
-      class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
-      (click)="mostrarDetalleModal = false"
+      (click)="mostrarFormulario = false"
+      class="mt-4 text-gray-500 hover:text-gray-700"
     >
       Cerrar
     </button>
   </div>
-</div>
 </div>
