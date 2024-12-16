@@ -1,62 +1,75 @@
-<section>
-  <h2 class="text-xl font-bold text-[#44509D] mb-4">Solicitudes de Validación</h2>
+<section class="p-6 bg-gray-50 min-h-screen">
+  <h2 class="text-3xl font-bold text-[#44509D] mb-8">Solicitudes de Validación</h2>
+
   <!-- Mostrar mensaje de error si ocurre un problema -->
-  <div *ngIf="errorMessage" class="text-red-500 mb-4">{{ errorMessage }}</div>
+  <div *ngIf="errorMessage" class="text-red-600 bg-red-100 border border-red-300 rounded-md p-4 mb-6 shadow">
+    {{ errorMessage }}
+  </div>
 
   <!-- Tabla de docentes -->
-  <div class="overflow-x-auto bg-white shadow-lg rounded">
-    <table class="w-full text-left border-collapse">
-      <thead class="bg-gray-200">
+  <div class="overflow-x-auto bg-white shadow rounded-lg">
+    <table class="min-w-full border-collapse">
+      <thead class="bg-[#44509D] text-white">
         <tr>
-          <th class="p-4">ID</th>
-          <th class="p-4">Nombre Completo</th>
-          <th class="p-4">Especialidad</th>
-          <th class="p-4">Fecha de Registro</th>
-          <th class="p-4">Documento</th>
-          <th class="p-4">Estado</th>
-          <th class="p-4">Acciones</th>
+          <th class="p-4 text-left font-semibold">ID</th>
+          <th class="p-4 text-left font-semibold">Nombre Completo</th>
+          <th class="p-4 text-left font-semibold">Fecha de Registro</th>
+          <th class="p-4 text-left font-semibold">Documento</th>
+          <th class="p-4 text-left font-semibold">Estado</th>
+          <th class="p-4 text-left font-semibold">Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let docente of docentes" class="hover:bg-gray-50">
-          <td class="p-4">{{ docente.id }}</td>
-          <td class="p-4">
-            <!-- <a [routerLink]="['/perfil', docente.id]" class="text-blue-500 hover:underline flex items-center space-x-1"> -->
-            <a [routerLink]="['/validador/docente/perfil',docente.id]" class="text-blue-500 hover:underline flex items-center space-x-1">
-        
-              <i class="icon user "></i>
-
-              <span>{{ docente.nombre }} {{ docente.apellidos }}</span>
+        <tr *ngFor="let docente of docentes" class="hover:bg-gray-50 transition duration-200">
+          <td class="p-4 border-b text-gray-700">{{ docente.id }}</td>
+          <td class="p-4 border-b text-gray-700">
+            <a [routerLink]="['/validador/docente/perfil', docente.id]" class="text-[#44509D] hover:underline">
+              {{ docente.nombre }} {{ docente.apellidos }}
             </a>
           </td>
-          <td class="p-4">{{ docente.especialidad }}</td>
-          <td class="p-4">{{ docente.created_at | date: 'shortDate' }}</td>
-          <td class="p-4">
-            <a [href]="docente.curriculum_url" target="_blank" class="text-blue-500 hover:underline">
+          <td class="p-4 border-b text-gray-700">{{ docente.created_at | date: 'shortDate' }}</td>
+          <td class="p-4 border-b text-gray-700">
+            <a [href]="docente.curriculum_url" target="_blank" class="text-blue-600 hover:underline">
               Ver Currículum
             </a>
           </td>
-          <td class="p-4">
+          <td class="p-4 border-b">
             <span [ngClass]="{
-                'bg-[#F08762] text-white': !docente.estatus,
-                'bg-green-500 text-white': docente.estatus
+                'bg-orange-500 text-white': docente.estatus_valor === 'Pendiente de validación',
+                'bg-green-500 text-white': docente.estatus_valor === 'Activo',
+                'bg-yellow-500 text-white': docente.estatus_valor === 'Inactivo',
+                'bg-red-500 text-white': docente.estatus_valor === 'Suspendido'
               }"
-              class="text-xs px-2 py-1 rounded">
-              {{ docente.estatus ? 'Validado' : 'Pendiente' }}
+              class="text-xs font-medium px-3 py-1 rounded-full">
+              {{ docente.estatus_valor }}
             </span>
           </td>
-          <td class="p-4 flex items-center space-x-2">
+          <td class="p-4 border-b flex space-x-2">
             <button
-              *ngIf="!docente.estatus"
-              (click)="openValidateModal(docente.id)"
-              class="bg-[#44509D] text-white px-3 py-1 rounded hover:bg-[#D8566C] transition flex items-center">
-              <i class="icon check"></i> Validar
+              (click)="openStatusChangeModal(docente)"
+              class="ui button gray">
+              <i class="sync alternate icon"></i>
+              Cambiar Estado
             </button>
             <button
-              *ngIf="!docente.estatus"
+              *ngIf="docente.estatus_valor === 'Pendiente de validación'"
+              (click)="openValidateModal(docente.id)"
+              class="ui button blue">
+              <i class="check icon"></i>
+              Validar
+            </button>
+            <button
+              *ngIf="docente.estatus_valor === 'Pendiente de validación'"
               (click)="openRejectModal(docente.id)"
-              class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition flex items-center">
-              <i class="icon close"></i> Rechazar
+              class="ui button red">
+              <i class="times icon"></i>
+              Rechazar
+            </button>
+            <button
+              (click)="viewProfile(docente.id)"
+              class="ui button teal">
+              <i class="eye icon"></i>
+              Ver Detalles
             </button>
           </td>
         </tr>
@@ -64,27 +77,74 @@
     </table>
   </div>
 
-  <!-- Modal para Validar -->
-  <div *ngIf="showValidateModal" class="fixed inset-0 flex justify-center items-center backdrop-blur-sm bg-black bg-opacity-50">
-    <div class="bg-white p-6 rounded shadow-lg w-96">
-      <h3 class="text-lg font-semibold mb-4">Confirmar Validación</h3>
-      <p class="mb-4">¿Está seguro de que desea validar al docente con ID {{ selectedDocenteId }}?</p>
-      <div class="flex justify-end space-x-2">
-        <button (click)="closeValidateModal()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancelar</button>
-        <button (click)="validateDocente(selectedDocenteId!)" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Validar</button>
-      </div>
+
+  <!-- Modal para Cambiar Estado -->
+<div *ngIf="showStatusChangeModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Cambiar Estado del Docente</h3>
+    <div class="mb-4">
+      <p class="text-gray-600"><strong>ID:</strong> {{ selectedDocente?.id }}</p>
+      <p class="text-gray-600"><strong>Nombre:</strong> {{ selectedDocente?.nombre }} {{ selectedDocente?.apellidos }}</p>
+      <p class="text-gray-600"><strong>Correo:</strong> {{ selectedDocente?.email }}</p>
+    </div>
+    <p class="text-gray-600 mb-4">Seleccione el nuevo estado para el docente:</p>
+    <select [(ngModel)]="selectedStatus" class="ui dropdown w-full border border-gray-300 rounded px-3 py-2 mb-4">
+      <option value="4">Activo</option>
+      <option value="5">Inactivo</option>
+      <option value="6">Pendiente de validación</option>
+      <option value="7">Suspendido</option>
+    </select>
+    <div class="flex justify-end space-x-2">
+      <button (click)="closeStatusChangeModal()" class="ui button">Cancelar</button>
+      <button (click)="changeDocenteStatus(selectedDocente!.id, selectedStatus)" class="ui button primary">Cambiar Estado</button>
     </div>
   </div>
+</div>
+
+
+<div *ngIf="showValidateModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Confirmar Validación</h3>
+    <!-- <div class="mb-4">
+      <p class="text-gray-600"><strong>ID:</strong> {{ selectedDocente?.id }}</p>
+      <p class="text-gray-600"><strong>Nombre:</strong> {{ selectedDocente?.nombre }} {{ selectedDocente?.apellidos }}</p>
+      <p class="text-gray-600"><strong>Correo:</strong> {{ selectedDocente?.email }}</p>
+    </div> -->
+    <p class="text-gray-600 mb-4 flex items-center">
+
+      <i class="check circle  icon text-green-500 mr-4"></i>
+      ¿Está seguro de que desea validar al docente?
+    </p>
+    <div class="flex justify-end space-x-2">
+      <button (click)="closeValidateModal()" class="ui button">Cancelar</button>
+      <button (click)="validateDocente(selectedDocenteId!)" class="ui button green">Validar</button>
+    </div>
+  </div>
+</div>
+
+  
 
   <!-- Modal para Rechazar -->
-  <div *ngIf="showRejectModal" class="fixed inset-0 flex justify-center items-center backdrop-blur-sm bg-black bg-opacity-50">
-    <div class="bg-white p-6 rounded shadow-lg w-96">
-      <h3 class="text-lg font-semibold mb-4">Confirmar Rechazo</h3>
-      <p class="mb-4">¿Está seguro de que desea rechazar al docente con ID {{ selectedDocenteId }}?</p>
+  <div *ngIf="showRejectModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Confirmar Rechazo</h3>
+      <!-- <div class="mb-4">
+        <p class="text-gray-600"><strong>ID:</strong> {{ selectedDocente?.id }}</p>
+        <p class="text-gray-600"><strong>Nombre:</strong> {{ selectedDocente?.nombre }} {{ selectedDocente?.apellidos}}</p>
+        <p class="text-gray-600"><strong>Correo:</strong> {{ selectedDocente?.email}}</p>
+      </div> -->
+      <p class="text-gray-600 mb-4 flex items-center">
+        <i class="times circle icon text-red-500 mr-4 icon-large"></i>
+
+        <!-- <i class="times circle  icon text-red-500 mr-4"></i> -->
+        ¿Está seguro de que desea rechazar al docente?
+      </p>
       <div class="flex justify-end space-x-2">
-        <button (click)="closeRejectModal()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancelar</button>
-        <button (click)="rejectDocente(selectedDocenteId!)" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Rechazar</button>
+        <button (click)="closeRejectModal()" class="ui button">Cancelar</button>
+        <button (click)="rejectDocente(selectedDocenteId!)" class="ui button red">Rechazar</button>
       </div>
     </div>
   </div>
+  
+  
 </section>
