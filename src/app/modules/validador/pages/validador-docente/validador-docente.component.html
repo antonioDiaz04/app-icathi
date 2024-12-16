@@ -1,46 +1,49 @@
 <div class="flex min-h-screen bg-gray-50">
   <!-- Sidebar -->
-  <aside class="w-64 bg-[#44509D] text-white flex flex-col justify-between">
-    <div class="p-4 bg-[#F08762] text-center text-lg font-bold shadow-md">
-      Panel Admin
-    </div>
-    <nav class="flex-grow">
-      <ul class="space-y-2 p-4">
-        <li>
-          <a      routerLink="/validador/docente/"
- class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
-            <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
-          </a>
-        </li>
-        <li>
-          <a      routerLink="/validador/docente/"
- class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
-            <i class="fas fa-user-check mr-2"></i> Validaciones
-          </a>
-        </li>
-        <li>
-          <a      routerLink="/validador/docente/"
- class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
-            <i class="fas fa-chart-bar mr-2"></i> Estadísticas
-          </a>
-        </li>
-        <li>
-          <a      routerLink="/validador/docente/"
- class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
-            <i class="fas fa-cogs mr-2"></i> Configuración
-          </a>
-        </li>
-        <li >
-          <a (click)="logout()"  class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
-            <i class="fas fa-sign-out-alt mr-3"></i> Cerrar Sesión
-          </a>
-        </li>
-      </ul>
-    </nav>
-    <div class="p-4 bg-[#F08762] text-center text-sm shadow-md">
-      © 2024 Admin
-    </div>
-  </aside>
+  <!-- <div class="flex min-h-screen bg-gray-50"> -->
+    <!-- Sidebar -->
+    <aside class="w-64 bg-[#44509D] text-white flex flex-col justify-between shadow-lg">
+      <!-- Header -->
+      <div class="p-4 bg-[#F08762] text-center text-lg font-bold shadow-md">
+        <i class="cogs icon"></i> Panel Admin
+      </div>
+      <!-- Navigation -->
+      <nav class="flex-grow">
+        <ul class="space-y-4 p-4">
+          <li>
+            <a routerLink="/validador/docente/" class="flex items-center p-3 hover:bg-[#D8566C] rounded transition">
+              <i class="tachometer alternate icon mr-3"></i> Dashboard
+            </a>
+          </li>
+          <li>
+            <a routerLink="/validador/docente/" class="flex items-center p-3 hover:bg-[#D8566C] rounded transition">
+              <i class="user check icon mr-3"></i> Validaciones
+            </a>
+          </li>
+          <li>
+            <a routerLink="/validador/docente/" class="flex items-center p-3 hover:bg-[#D8566C] rounded transition">
+              <i class="chart bar icon mr-3"></i> Estadísticas
+            </a>
+          </li>
+          <li>
+            <a routerLink="/validador/docente/" class="flex items-center p-3 hover:bg-[#D8566C] rounded transition">
+              <i class="cogs icon mr-3"></i> Configuración
+            </a>
+          </li>
+          <li>
+            <a (click)="logout()" class="flex cursor-pointer items-center p-3 hover:bg-[#D8566C] rounded transition">
+              <i class="sign out alternate icon mr-3"></i> Cerrar Sesión
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- Footer -->
+      <div class="p-4 bg-[#F08762] text-center text-sm shadow-md">
+        © 2024 Admin
+      </div>
+    </aside>
+  <!-- </div> -->
+  
 
   <!-- Main Content -->
   <main class="flex-1 p-6">
@@ -82,21 +85,28 @@
         <h3 class="text-lg font-bold text-[#44509D] flex items-center">
           <i class="fas fa-clock mr-2"></i> Docentes Pendientes
         </h3>
-        <p class="text-gray-600">Actualmente hay <strong>{{ pendientes }}</strong> solicitudes pendientes.</p>
+        <p class="text-gray-600">Actualmente hay <strong>{{ pendientes }}</strong> docentes pendientes de validación.</p>
       </div>
       <div class="p-4 bg-white shadow-lg rounded border-l-4 border-[#44509D]">
         <h3 class="text-lg font-bold text-[#44509D] flex items-center">
-          <i class="fas fa-check-circle mr-2"></i> Validaciones Realizadas
+          <i class="fas fa-check-circle mr-2"></i> Docentes Activos
         </h3>
-        <p class="text-gray-600">Se han validado <strong>{{ validados }}</strong> docentes este mes.</p>
+        <p class="text-gray-600">Actualmente hay <strong>{{ activos }}</strong> docentes activos.</p>
       </div>
       <div class="p-4 bg-white shadow-lg rounded border-l-4 border-[#D8566C]">
         <h3 class="text-lg font-bold text-[#44509D] flex items-center">
-          <i class="fas fa-exclamation-circle mr-2"></i> Errores Recientes
+          <i class="fas fa-exclamation-circle mr-2"></i> Docentes Suspendidos
         </h3>
-        <p class="text-gray-600">Se encontraron <strong>{{ errores }}</strong> errores en el proceso.</p>
+        <p class="text-gray-600">Actualmente hay <strong>{{ suspendidos }}</strong> docentes suspendidos.</p>
+      </div>
+      <div class="p-4 bg-white shadow-lg rounded border-l-4 border-[#F08762]">
+        <h3 class="text-lg font-bold text-[#44509D] flex items-center">
+          <i class="fas fa-user-slash mr-2"></i> Docentes Inactivos
+        </h3>
+        <p class="text-gray-600">Actualmente hay <strong>{{ inactivos }}</strong> docentes inactivos.</p>
       </div>
     </section>
+    
     
 
     <router-outlet></router-outlet>

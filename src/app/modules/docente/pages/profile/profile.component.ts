@@ -501,7 +501,20 @@ limpiarDatos(data: Partial<Docente>) {
   triggerDocumentoIdentificacionFileInput(): void {
     this.documentoIdentificacionInput.nativeElement.click();
   }
-
+  getValidadorStatus(usuarioValidadorId: number): string {
+    if (!usuarioValidadorId) {
+      return "Asignación de validador pendiente";
+    }
+  
+    // Aquí podrías añadir lógica adicional si se requieren más estados.
+    if (usuarioValidadorId > 0) {
+      return "El validador ya está asignado y el perfil está en proceso de revisión";
+    }
+  
+    // Valor por defecto si el usuario_validador_id no encaja en los criterios anteriores
+    return "Estado desconocido";
+  }
+  
   // Manejo del cambio de archivo
   onDocumentoIdentificacionFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;

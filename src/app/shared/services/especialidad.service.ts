@@ -25,7 +25,11 @@ export class EspecialidadesService {
   private especialidadesApiUrl = `${environment.api}/especialidades`;
 
   constructor(private http: HttpClient) {}
-
+  obtenerEspecialidadesPorDocente(docenteId: number): Observable<{ especialidades: Especialidad_docente[] }> {
+    return this.http
+      .get<{ especialidades: Especialidad_docente[] }>(`${this.especialidadesApiUrl}/${docenteId}`)
+      .pipe(catchError(this.handleError));
+  }
   /**
    * Obtiene la lista de especialidades desde la API
    * @returns Un observable con la lista de especialidades
@@ -33,11 +37,7 @@ export class EspecialidadesService {
   getEspecialidades(): Observable<Especialidad[]> {
     return this.http.get<Especialidad[]>(this.especialidadesApiUrl);
   }
-  obtenerEspecialidadesPorDocente(docenteId: number): Observable<{ especialidades: Especialidad_docente[] }> {
-    return this.http
-      .get<{ especialidades: Especialidad_docente[] }>(`${this.especialidadesApiUrl}/${docenteId}`)
-      .pipe(catchError(this.handleError));
-  }
+
 
   // Manejo de errores HTTP
   private handleError(error: HttpErrorResponse): Observable<never> {

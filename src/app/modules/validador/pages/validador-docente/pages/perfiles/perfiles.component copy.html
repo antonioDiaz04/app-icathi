@@ -57,54 +57,35 @@
     class="w-full px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-md shadow-md hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-400 focus:ring-opacity-50 transition"
     (click)="abrirModal()"
   >
-    Modificar estatus  
+    Modificar estatus
   </button>
 </div>
 
-<!-- Modal  para modificar status del perfil -->
+<!-- Modal -->
 <div
   *ngIf="mostrarModal"
   class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50"
 >
-  <div class="bg-white max-w-sm w-full p-6 rounded-lg shadow-lg relative">
-    <!-- Header -->
-    <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">
-      Modificar Estatus del Perfil
+  <div class="bg-white w-96 p-6 rounded-lg shadow-lg">
+    <h2 class="text-lg font-semibold text-gray-700 mb-4">
+      Modificar estatus
     </h2>
-    <p class="text-sm text-gray-600 mb-4">
-      Cambiar el estatus del perfil afectará su visibilidad y acceso al sistema. 
-      Selecciona cuidadosamente el nuevo estatus según las necesidades:
-    </p>
-
-    <!-- Status Information -->
-    <div class="bg-gray-50 border border-gray-200 rounded-md p-4 mb-4">
-      <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
-        <li><strong class="text-blue-700">Activo:</strong> Habilitado para interactuar en el sistema.</li>
-        <li><strong class="text-red-700">Inactivo:</strong> Deshabilitado, sin acceso ni acciones.</li>
-        <li><strong class="text-yellow-700">Pendiente de validación:</strong> En revisión con acceso limitado.</li>
-        <li><strong class="text-gray-700">Suspendido:</strong> Bloqueado temporalmente por irregularidades.</li>
-      </ul>
-    </div>
-
-    <!-- Dropdown -->
-    <label for="estatus" class="block text-sm font-medium text-gray-800 mb-2">
+    <label for="estatus" class="block text-sm font-medium text-gray-700 mb-2">
       Selecciona el nuevo estatus:
     </label>
     <select
       id="estatus"
       [(ngModel)]="docente.estatus_valor"
-      class="block w-full px-4 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500 transition mb-6"
+      class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500 transition"
     >
       <option value="Activo">Activo</option>
       <option value="Inactivo">Inactivo</option>
       <option value="Pendiente de validación">Pendiente de validación</option>
       <option value="Suspendido">Suspendido</option>
     </select>
-
-    <!-- Buttons -->
-    <div class="flex justify-end space-x-4">
+    <div class="mt-6 flex justify-end space-x-3">
       <button
-        class="px-4 py-2 text-sm font-semibold text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition"
+        class="px-4 py-2 text-sm font-semibold text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300 transition"
         (click)="cerrarModal()"
       >
         Cancelar
@@ -116,20 +97,6 @@
         Guardar
       </button>
     </div>
-
-    <!-- Decorative Close Button -->
-    <button
-      class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none transition"
-      (click)="cerrarModal()"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-        <path
-          fill-rule="evenodd"
-          d="M10 8.586l4.95-4.95a1 1 0 111.414 1.414L11.414 10l4.95 4.95a1 1 0 01-1.414 1.414L10 11.414l-4.95 4.95a1 1 0 01-1.414-1.414L8.586 10l-4.95-4.95a1 1 0 011.414-1.414L10 8.586z"
-          clip-rule="evenodd"
-        />
-      </svg>
-    </button>
   </div>
 </div>
 
@@ -144,8 +111,7 @@
 
 
     <!-- Especialidades -->
-<!-- Lista de Especialidades -->
-<div class="bg-gray-50 p-4 rounded-md shadow ">
+  <div class="bg-gray-50 p-4 rounded-md shadow">
   <h3 class="text-lg font-bold text-gray-700 mb-4">Especialidades del Docente</h3>
   <ul class="space-y-3">
     <li
@@ -164,100 +130,28 @@
             'bg-red-500 text-white': especialidad.estatus === 'rechazado'
           }"
         >
+          <!-- Ícono opcional -->
+          <i
+            [ngClass]="{
+              'icon check circle': especialidad.estatus === 'aprobado',
+              'icon hourglass': especialidad.estatus === 'pendiente',
+              'icon times circle': especialidad.estatus === 'rechazado'
+            }"
+            class="mr-2"
+          ></i>
           {{ especialidad.estatus | titlecase }}
         </span>
-        <!-- Botón para abrir el modal -->
+        <!-- Botón para cambiar estado -->
         <button
-        class="ui button compact tiny blue basic flex items-center gap-2 hover:bg-blue-100 hover:text-blue-700 transition"
-        (click)="abrirModal_especialidad(especialidad)"
-      >
-        <i class="edit icon"></i>
-        Modificar
-      </button>
-      
+          class="text-blue-500 underline text-sm"
+          (click)="abrirMenuCambiarEstatus(especialidad)"
+        >
+          Cambiar
+        </button>
       </div>
     </li>
   </ul>
 </div>
-
-<!-- Modal -->
-<div
-  *ngIf="mostrarModal_especialidad"
-  class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 backdrop-blur-sm"
->
-  <div
-    class="bg-white w-11/12 sm:w-2/3 lg:w-1/3 p-6 rounded-lg shadow-lg relative"
-  >
-    <!-- Botón de cerrar -->
-    <button
-      class="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-xl"
-      (click)="cerrarModal_especialidad()"
-    >
-      ✖
-    </button>
-    <!-- Título -->
-    <h2 class="text-2xl font-semibold text-gray-700 mb-4">
-      Modificar Especialidad
-    </h2>
-    <!-- Sección informativa -->
-    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-md mb-6">
-      <div class="flex items-start">
-        <i class="text-blue-500 text-xl mr-3">ℹ️</i>
-        <p class="text-gray-700 text-sm leading-relaxed">
-          Cambiar el estado de una especialidad del docente puede implicar
-          actualizar el acceso del docente a ciertas áreas o funcionalidades
-          dentro de la plataforma. Asegúrate de elegir el estado correcto:
-          <span class="font-medium text-green-600">Aprobado</span> para activar,
-          <span class="font-medium text-yellow-600">Pendiente</span> para
-          revisiones, o <span class="font-medium text-red-600">Rechazado</span>
-          para desactivarlo.
-        </p>
-      </div>
-    </div>
-    <!-- Formulario -->
-    <form (ngSubmit)="guardarCambios_especialidad()">
-      <div class="mb-4">
-        <label class="block text-gray-700 font-medium mb-2">Nombre</label>
-        <input
-          type="text"
-          [(ngModel)]="especialidadSeleccionada.especialidad"
-          name="especialidad"
-          class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
-      </div>
-      <div class="mb-4">
-        <label class="block text-gray-700 font-medium mb-2">Estado</label>
-        <select
-          [(ngModel)]="especialidadSeleccionada.estatus"
-          name="estatus"
-          class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        >
-          <option value="aprobado">Aprobado</option>
-          <option value="pendiente">Pendiente</option>
-          <option value="rechazado">Rechazado</option>
-        </select>
-      </div>
-      <!-- Botones -->
-      <div class="flex justify-end space-x-4 mt-6">
-        <button
-          type="button"
-          class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
-          (click)="cerrarModal_especialidad()"
-        >
-          Cancelar
-        </button>
-        <button
-          type="submit"
-          class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-        >
-          Guardar
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
-
-
 
     
     
