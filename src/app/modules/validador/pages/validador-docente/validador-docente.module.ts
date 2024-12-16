@@ -5,6 +5,7 @@ import { ValidadorDocenteRoutingModule } from './validador-docente-routing.modul
 import { ValidadorDocenteComponent } from './validador-docente.component';
 import { DocentesComponent } from './pages/docentes/docentes.component';
 import { PerfilesComponent } from './pages/perfiles/perfiles.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -13,7 +14,7 @@ import { PerfilesComponent } from './pages/perfiles/perfiles.component';
     DocentesComponent,
     PerfilesComponent
   ],
-  imports: [
+  imports: [FormsModule,
     CommonModule,
     ValidadorDocenteRoutingModule
   ]
