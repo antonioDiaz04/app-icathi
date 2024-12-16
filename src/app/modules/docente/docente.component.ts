@@ -2,6 +2,7 @@ import { DocenteDataService } from './commons/services/docente-data.service';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
 import { ValidadorDocenteService } from '../validador/commons/services/validador-docente.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-docente',
@@ -16,7 +17,9 @@ export class DocenteComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private docenteDataService: DocenteDataService  // Inyecta el servicio
-,
+,    private router: Router
+, // Inyectar Router
+
     private validadorDocenteService: ValidadorDocenteService // Servicio para obtener datos del docente
   ) {}
 
@@ -67,14 +70,19 @@ export class DocenteComponent implements OnInit {
   }
 
 
-  logout(): void {
-    this.authService.clearToken().then(() => {
-      this.isAuthenticated = false;
-      this.id = null;
-      this.docenteData = null;
-      console.log('Sesión cerrada');
-    });
+  async logout(): Promise<void> { // Declarar logout como async
+    await this.authService.clearToken();
+    // Redirigir al usuario a la página de inicio de sesión
+    this.router.navigate(['/public/login']);
   }
+  // logout(): void {
+  //   this.authService.clearToken().then(() => {
+  //     this.isAuthenticated = false;
+  //     this.id = null;
+  //     this.docenteData = null;
+  //     console.log('Sesión cerrada');
+  //   });
+  // }
 
   editarPerfil(): void {
     console.log('Redirigir a la página de edición del perfil');
