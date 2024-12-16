@@ -1,6 +1,6 @@
 <div class="min-h-screen flex bg-gray-100">
   <!-- Menú Lateral -->
-  <aside class="w-64 bg-white text-gray-800 shadow-lg flex flex-col transition hover:shadow-xl">
+<aside class="w-64 bg-white text-gray-800 shadow-lg flex flex-col transition hover:shadow-xl">
     <!-- Encabezado del Menú con Logo -->
     <div class="p-6 text-center border-b border-gray-300 shadow-sm">
       <img
@@ -32,7 +32,25 @@
         </li>
         <li>
           <a
-            routerLink="/docente/estadisticas"
+                routerLink="/docente/home"
+            class="block py-3 px-6 flex items-center border-l-4 border-transparent hover:bg-gray-100 hover:border-[#44509D] transition-all text-gray-700 hover:text-[#44509D]"
+          >
+            <i class="book icon mr-3" style="color: #F08762;"></i>
+            <span class="text-sm font-medium">Clases Asignadas</span>
+          </a>
+        </li>
+        <li>
+          <a
+        routerLink="/docente/home"
+            class="block py-3 px-6 flex items-center border-l-4 border-transparent hover:bg-gray-100 hover:border-[#44509D] transition-all text-gray-700 hover:text-[#44509D]"
+          >
+            <i class="users icon mr-3" style="color: #F08762;"></i>
+            <span class="text-sm font-medium">Estudiantes</span>
+          </a>
+        </li>
+        <li>
+          <a
+               routerLink="/docente/home"
             class="block py-3 px-6 flex items-center border-l-4 border-transparent hover:bg-gray-100 hover:border-[#44509D] transition-all text-gray-700 hover:text-[#44509D]"
           >
             <i class="chart bar icon mr-3" style="color: #F08762;"></i>
@@ -41,16 +59,27 @@
         </li>
         <li>
           <a
-            routerLink="/docente/configuracion"
+               routerLink="/docente/home"
             class="block py-3 px-6 flex items-center border-l-4 border-transparent hover:bg-gray-100 hover:border-[#44509D] transition-all text-gray-700 hover:text-[#44509D]"
           >
             <i class="cog icon mr-3" style="color: #F08762;"></i>
             <span class="text-sm font-medium">Configuración</span>
           </a>
         </li>
+        <li>
+          <a
+            (click)="logout()"
+
+            class="block cursor-pointer py-3 px-6 flex items-center border-l-4 border-transparent hover:bg-gray-100 hover:border-[#F08762] transition-all text-gray-700 hover:text-[#F08762]"
+          >
+            <i class="sign-out alternate icon mr-3" style="color: #F08762;"></i>
+            <span class="text-sm font-medium">Cerrar Sesión</span>
+          </a>
+        </li>
       </ul>
     </nav>
-  </aside>
+</aside>
+
 
   <!-- Contenido Principal -->
   <main class="flex-1 p-6">
@@ -65,11 +94,15 @@
         </h1>
         <p class="text-sm" style="color: #D8566C;">Correo: {{ docenteData.email }}</p>
       </div>
-      <img
+      <!-- <img
         src="https://www.icathi.edu.mx/img/ICATHI.png"
         alt="Logo de la Institución"
         class="w-24 h-12 object-contain"
-      />
+      /> -->
+      <img
+      [src]="docenteData.foto_url || 'https://via.placeholder.com/150'"
+      alt="Foto de docente"
+      class="w-24 h-12 object-contain"    />
     </header>
 
     <!-- Contenido Dinámico -->
