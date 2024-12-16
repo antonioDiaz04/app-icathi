@@ -40,4 +40,12 @@ export class ValidadorDocenteService {
   deleteDocente(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+  // Actualizar el estatus de un docente
+  updateDocenteStatus(usuarioValidadorId:number,docenteId: string, nuevoEstatusId: number): Observable<any> {
+    const payload = {
+      estatus_id: nuevoEstatusId,
+      usuario_validador_id: usuarioValidadorId,
+    };
+    return this.http.put(`${this.apiUrl}/${docenteId}/estatus`,payload);
+  }
 }
