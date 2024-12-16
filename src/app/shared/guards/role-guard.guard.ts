@@ -31,7 +31,7 @@ export class RoleGuard implements CanActivate {
       return true;
     }
 
-    this.alertService.showAlert('Acceso denegado. No tienes el rol necesario.', 'warning');
+    this.alertService.showAlert('Acceso denegado. No tienes permiso para acceder a esta página..', 'warning');
     this.router.navigate(['/public/unauthorized']);
     return false;
   }
