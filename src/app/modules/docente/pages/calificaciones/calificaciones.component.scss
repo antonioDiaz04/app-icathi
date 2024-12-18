@@ -1,0 +1,33 @@
+/* Estilos personalizados para el componente Calificaciones */
+.input {
+    @apply border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-[#F08762];
+  }
+  
+  button {
+    @apply text-white rounded-lg px-4 py-2 transition-all duration-300;
+  }
+  
+  button:hover {
+    @apply scale-105;
+  }
+  
+  table {
+    @apply table-auto w-full text-left text-sm text-gray-700;
+  }
+  
+  th, td {
+    @apply py-2 px-4;
+  }
+  
+  thead {
+    @apply bg-[#44509D] text-white;
+  }
+  
+  tbody {
+    @apply bg-white;
+  }
+  
+  tr:hover {
+    @apply bg-gray-100;
+  }
+  
