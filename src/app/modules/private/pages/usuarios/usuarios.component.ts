@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Usuario } from '../../../../shared/models/usuario.model';
 import { ERol } from '../../../../shared/constants/rol.enum';
+import { AlertTaiwilService } from '../../../../shared/services/alert-taiwil.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -13,17 +14,101 @@ export class UsuariosComponent implements OnInit {
   filtro: string = '';
   mostrarModal: boolean = false;
   usuarioSeleccionado: any = null;
-  roles: string[] = Object.values(ERol); // Obtén los roles del enum
+  roles: string[] = [];
+  nuevoUsuario: {
+    nombre: string;
+    apellidos: string;
+    email: string;
+    username: string;
+    password: string;
+    rol: string;
+  } = {
+    nombre: '',
+    apellidos: '',
+    email: '',
+    username: '',
+    password: '',
+    rol: 'USER'  // Rol por defecto, pero el usuario puede elegir otro
+  };
+  mostrarPassword: boolean = false;
+
+  // roles: string[] = Object.values(ERol); // Obtén los roles del enum
   rolSeleccionado: string = '';
   mostrarModalEditar = false;
+  mostrarModalregistro = false;
   usuarioEditado: any = {};
-  constructor(private userService: UserService, private cdr: ChangeDetectorRef) {}
+  constructor(
+        private alertTaiwilService: AlertTaiwilService,
+    
+    private userService: UserService, private cdr: ChangeDetectorRef) {}
   ngOnInit(): void {
+    this.roles = Object.values(ERol).filter(rol => !this.rolesExcluidos.includes(rol));
+
     this.cargarUsuarios();
   }
+
+  // Método para alternar la visibilidad de la contraseña
+  togglePasswordVisibility() {
+    this.mostrarPassword = !this.mostrarPassword;
+  }
+
   abrirModalEditar(usuario: any) {
     this.usuarioEditado = { ...usuario }; // Copia del usuario seleccionado
     this.mostrarModalEditar = true;
+  }crearUsuario() {
+    // Verificar si los campos están vacíos o son nulos
+    if (this.validarCampos()) {
+      console.log("Nuevo usuario:", this.nuevoUsuario);
+      
+      // Llamada al servicio para crear el usuario
+      this.userService.crearUsuario(this.nuevoUsuario).subscribe(
+        (response) => {
+          console.log('Usuario creado con éxito:', response);
+          this.cargarUsuarios();  // Recargar la lista de usuarios si es necesario
+  
+          this.cerrarModalregistro();  // Cerrar el modal después de crear el usuario
+        },
+        (error) => {
+          this.alertTaiwilService.showTailwindAlert(
+            'Error al crear el usuario',
+            'error'
+          );
+          // console.error('Error al crear el usuario:', error);
+        }
+      );
+    } else {
+      this.alertTaiwilService.showTailwindAlert(
+        'Por favor, completa todos los campos',
+        'success'
+      );
+      // Si los campos no son válidos, mostrar un mensaje de error
+      // console.log("Por favor, completa todos los campos.");
+    }
+  }
+  
+  // Método de validación de campos
+  validarCampos(): boolean {
+    // Verifica que todos los campos requeridos no estén vacíos o sean nulos
+    if (
+      !this.nuevoUsuario.nombre.trim() ||
+      !this.nuevoUsuario.apellidos.trim() ||
+      !this.nuevoUsuario.email.trim() ||
+      !this.nuevoUsuario.username.trim() ||
+      !this.nuevoUsuario.password.trim() ||
+      !this.nuevoUsuario.rol.trim()
+    ) {
+      return false;  // Si algún campo es vacío, devuelve false
+    }
+    return true;  // Si todos los campos son válidos, devuelve true
+  }
+  
+  abrirModalregistro() {
+    // this.usuarioEditado = { ...usuario }; // Copia del usuario seleccionado
+    this.mostrarModalregistro = true;
+  }
+  cerrarModalregistro() {
+    // this.usuarioEditado = { ...usuario }; // Copia del usuario seleccionado
+    this.mostrarModalregistro = false;
   }
   
   // Función para cerrar modal de edición
@@ -34,10 +119,56 @@ export class UsuariosComponent implements OnInit {
   
   // Función para guardar cambios
   guardarCambiosUsuario() {
-    console.log('Detalles actualizados:', this.usuarioEditado);
-    // Aquí puedes llamar un servicio para actualizar los datos del usuario en el backend
-    this.cerrarModalEditar();
+    // Extraemos solo los datos necesarios para la actualización
+    const estatus = this.usuarioEditado.estatus;
+    const rol = this.usuarioEditado.rol;
+  
+    // Mostrar los datos que se van a actualizar
+    console.log('Datos a actualizar:', { estatus, rol });
+  
+    // Llamamos al servicio para actualizar el estatus y el rol del usuario
+    this.userService.actualizarEstatusRol(this.usuarioEditado.id, estatus, rol).subscribe(
+      (response) => {
+        console.log('Usuario actualizado con éxito:', response);
+        this.cargarUsuarios()
+        // Aquí puedes manejar la respuesta, como mostrar un mensaje de éxito o cerrar el modal
+        this.cerrarModalEditar();
+      },
+      (error) => {
+        console.error('Error al actualizar el usuario:', error);
+        // Aquí puedes manejar el error, por ejemplo, mostrar un mensaje de error
+      }
+    );
   }
+  eliminarUsuario(usuario: any) {
+    const confirmacion = confirm(
+      `¿Estás seguro de que deseas eliminar al usuario ${usuario.nombre}?`
+    );
+    if (confirmacion) {
+      this.userService.eliminarUsuario(usuario.id).subscribe(
+        (response) => {
+          alert('Usuario eliminado correctamente.');
+          this.cargarUsuarios(); // Actualiza la lista de usuarios
+        },
+        (error) => {
+          console.error('Error al eliminar usuario:', error);
+          alert('Ocurrió un error al intentar eliminar el usuario.');
+        }
+      );
+    }
+  }
+  
+  
+// Roles que deseas excluir
+private readonly rolesExcluidos = [
+  'ALUMNO',
+  'DOCENTE',
+  'PLANTEL',
+  'VALIDA_PLANTEL',
+  'ADMIN_FINANZAS',
+  'VALIDA_ALUMNO',
+  'CONTROL_ESCOLAR',
+];
 
   cargarUsuarios(): void {
     this.userService.listarUsuarios().subscribe(
