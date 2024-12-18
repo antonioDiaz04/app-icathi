@@ -5,14 +5,22 @@ import { AlumnoRoutingModule } from './alumno-routing.module';
 import { AlumnoComponent } from './alumno.component';
 import { InicioComponent } from './pages/inicio/inicio.component';
 import { RouterModule } from '@angular/router';
+import { PerfilComponent } from './pages/perfil/perfil.component';
+import { ClasesComponent } from './pages/clases/clases.component';
+import { CalificacionesComponent } from './pages/calificaciones/calificaciones.component';
+import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
 
 
 @NgModule({
   declarations: [
     AlumnoComponent,
-    InicioComponent
+    InicioComponent,
+    PerfilComponent,
+    ClasesComponent,
+    CalificacionesComponent
   ],
-  imports: [
+  imports: [FormsModule,
     CommonModule,
     AlumnoRoutingModule,RouterModule
   ]
