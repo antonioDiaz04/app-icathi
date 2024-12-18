@@ -33,3 +33,21 @@ footer {
   padding: 2rem 0; /* py-8 */
   margin-top: auto; /* Asegura que el footer siempre esté pegado al fondo */
 }
+@keyframes glowing-border {
+  0% {
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.7), 0 0 10px rgba(255, 255, 255, 0.6);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.9), 0 0 30px rgba(255, 255, 255, 0.7);
+    border-color: rgba(255, 255, 255, 0.9);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.7), 0 0 10px rgba(255, 255, 255, 0.6);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+.animate-glowing-border {
+  animation: glowing-border 1.5s infinite alternate;
+}
