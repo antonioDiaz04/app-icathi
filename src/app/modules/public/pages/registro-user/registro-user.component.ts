@@ -5,6 +5,8 @@ import { CursosService } from '../../../../shared/services/cursos.service';
 import { PlantelesService } from '../../../../shared/services/planteles.service';
 import { Router } from '@angular/router';
 import { AspiranteService } from '../../../../shared/services/aspirante.service';
+import { AlertTaiwilService } from '../../../../shared/services/alert-taiwil.service';
+import { ModalTaiwilService } from '../../../../shared/services/modal-taiwil.service';
 
 @Component({
   selector: 'app-registro-user',
@@ -47,7 +49,9 @@ export class RegistroUserComponent implements OnInit {
     private plantelesService: PlantelesService,
     private areasService: AreasService,
     private especialidadesService: EspecialidadesService,
-    private cursosService: CursosService
+    private cursosService: CursosService,
+    private alertTaiwilService: AlertTaiwilService,
+    private modalService: ModalTaiwilService,
   ) {}
 
   ngOnInit() {
@@ -217,17 +221,36 @@ closeModal() {
   submitForm() {
     console.log('Datos enviados:', this.formData);
 
+    // Mostrar el primer modal indicando que se está procesando el registro
+    this.modalService.showModal('Procesando su registro... Por favor, espere.');
+
     this.aspiranteService.registrarAspirante(this.formData).subscribe(
       response => {
         console.log('Registro exitoso:', response);
-        alert('Registro completado con éxito');
-        this.router.navigate(['/']); // Redirige a la ruta principal
+        
+        // Cambiar el mensaje del modal a "Correo enviado" después de un pequeño retraso
+        setTimeout(() => {
+          this.modalService.showModal('El registro fue exitoso. Se ha enviado un correo de confirmación.');
+        }, 2000); // 2 segundos de espera para cambiar el mensaje
+
+        // Mostrar el tercer modal para informar que el usuario revise su correo
+        setTimeout(() => {
+          this.modalService.showModal('¡Revisa tu correo para completar el registro!');
+        }, 4000); // Mostrar el mensaje final después de 4 segundos
+
+        // Redirigir a la página principal después de 5 segundos
+        setTimeout(() => {
+          this.router.navigate(['/']);
+        }, 5000);
 
       },
       error => {
-        console.error('Error al registrar aspirante:', error);
-        alert('Error al completar el registro. Por favor, intenta nuevamente.');
+        // Obtener el mensaje del backend o usar un mensaje predeterminado
+        const errorMessage = error?.error?.error || 'Error al completar el registro. Por favor, intenta nuevamente.';
+        // Mostrar un mensaje de error
+        this.modalService.showModal(errorMessage);
       }
     );
   }
+
 }

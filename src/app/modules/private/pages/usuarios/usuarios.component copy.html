@@ -5,6 +5,17 @@
     Gestión de Usuarios
   </h2>
 
+  <!-- Botón para dar alta usuario -->
+  <div class="flex justify-end mb-6">
+    <button
+      (click)="abrirFormularioAltaUsuario()"
+      class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    >
+      <i class="fas fa-user-plus mr-2"></i>
+      Dar Alta Usuario
+    </button>
+  </div>
+
   <!-- Barra de búsqueda -->
   <div class="relative mb-6">
     <input
@@ -16,9 +27,28 @@
     <i class="fas fa-search absolute top-1/2 right-4 transform -translate-y-1/2 text-blue-500 text-lg"></i>
   </div>
 
+  <div class="conteo-roles mt-6 p-4 bg-white rounded-lg shadow-sm">
+    <!-- Título de la sección -->
+    <h3 class="text-xl font-semibold text-gray-800 mb-4">
+      Cantidad de Usuarios por Rol
+    </h3>
 
+    <!-- Contenido de los botones de roles -->
+    <div class="flex flex-wrap gap-4">
+      <button
+        *ngFor="let rol of objectKeys(contarUsuariosPorRol())"
+        (click)="filtrarPorRol(rol)"
+        [ngClass]="getRoleClass(rol)"
+        class="flex items-center px-4 py-2 text-white rounded-lg transition"
+      >
+        <span class="mr-2">{{ rol }}</span>
+        <span class="bg-white text-gray-800 rounded-full px-2 py-1 text-xs font-bold">
+          {{ contarUsuariosPorRol()[rol] }}
+        </span>
+      </button>
+    </div>
+  </div>
 
-  
   <!-- Tabla de usuarios -->
   <div class="overflow-x-auto bg-white rounded-xl shadow-lg">
     <table class="min-w-full divide-y divide-gray-200">
@@ -85,7 +115,7 @@
     <div class="flex justify-end space-x-4">
       <button
         (click)="asignarRol()"
-        [disabled]="!rolSeleccionado" 
+        [disabled]="!rolSeleccionado"
         class="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <i class="fas fa-check text-white mr-2"></i>Guardar
@@ -99,5 +129,7 @@
     </div>
   </div>
 </div>
+<!-- Mostrar cantidad de usuarios por rol -->
+
 
 </div>
