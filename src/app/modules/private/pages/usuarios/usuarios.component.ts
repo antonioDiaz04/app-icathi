@@ -15,11 +15,28 @@ export class UsuariosComponent implements OnInit {
   usuarioSeleccionado: any = null;
   roles: string[] = Object.values(ERol); // Obtén los roles del enum
   rolSeleccionado: string = '';
-
+  mostrarModalEditar = false;
+  usuarioEditado: any = {};
   constructor(private userService: UserService, private cdr: ChangeDetectorRef) {}
-
   ngOnInit(): void {
     this.cargarUsuarios();
+  }
+  abrirModalEditar(usuario: any) {
+    this.usuarioEditado = { ...usuario }; // Copia del usuario seleccionado
+    this.mostrarModalEditar = true;
+  }
+  
+  // Función para cerrar modal de edición
+  cerrarModalEditar() {
+    this.mostrarModalEditar = false;
+    this.usuarioEditado = {};
+  }
+  
+  // Función para guardar cambios
+  guardarCambiosUsuario() {
+    console.log('Detalles actualizados:', this.usuarioEditado);
+    // Aquí puedes llamar un servicio para actualizar los datos del usuario en el backend
+    this.cerrarModalEditar();
   }
 
   cargarUsuarios(): void {
