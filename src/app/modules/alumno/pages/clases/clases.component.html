@@ -1,0 +1,33 @@
+<div class="container mx-auto p-6">
+    <header class="bg-[#ffffff] border border-[#44509D] text-black py-4 px-6 rounded-lg mb-6 shadow-md flex justify-between items-center">
+      <h1 class="text-2xl font-medium text-[#44509D]">Mis Cursos</h1>
+    </header>
+  
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        *ngFor="let curso of cursos"
+        class="bg-white border border-gray-300 shadow-lg rounded-lg p-4 transition hover:shadow-xl"
+      >
+        <h2 class="text-lg font-semibold text-[#44509D]">{{ curso.nombre }}</h2>
+        <p class="text-sm text-gray-600">{{ curso.descripcion }}</p>
+        <div class="mt-4">
+          <label class="text-sm font-medium">Progreso:</label>
+          <div class="relative w-full bg-gray-200 rounded-full h-4">
+            <div
+              class="absolute top-0 left-0 h-4 rounded-full"
+              [ngStyle]="{ width: curso.progreso + '%', backgroundColor: curso.progreso === 100 ? '#28a745' : '#F08762' }"
+            ></div>
+          </div>
+          <span class="text-sm text-gray-700">{{ curso.progreso }}%</span>
+        </div>
+        <p class="mt-2 text-sm text-gray-700"><strong>Estado:</strong> {{ curso.estado }}</p>
+        <button
+          class="mt-4 bg-[#44509D] text-white py-2 px-4 rounded-lg hover:bg-[#F08762] transition"
+          (click)="verDetalles(curso.id)"
+        >
+          Ver Detalles
+        </button>
+      </div>
+    </div>
+  </div>
+  
