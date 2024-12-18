@@ -9,8 +9,8 @@
 //     alertContainer.className = `
 //       fixed top-4 right-4 z-50 p-6 rounded-lg shadow-xl transition-all duration-500 ease-in-out
 //       ${type === 'success' ? 'bg-green-200 text-green-800 border-l-4 border-green-600' : 
-//         type === 'error' ? 'bg-red-200 text-red-800 border-l-4 border-red-600' : 
-//         'bg-yellow-200 text-yellow-800 border-l-4 border-yellow-600'}
+//         type === 'error' ? 'bg-red-200 text-red-600 border-l-4 border-red-600' : 
+//         'bg-yellow-100 text-yellow-600 border-l-4 border-yellow-400'}
 //       flex items-center justify-start space-x-4 backdrop-blur-sm opacity-40
 //       bg-opacity-40
 //     `;
