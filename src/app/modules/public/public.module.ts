@@ -21,6 +21,7 @@ import { PostulacionComponent } from './pages/postulacion/postulacion.component'
 import { ValidarCorreoComponent } from './pages/validar-correo/validar-correo.component';
 import { CreapasswordComponent } from './pages/creapassword/creapassword.component';
 import { OptionsRegiterComponent } from './pages/options-regiter/options-regiter.component';
+import { CreatePasswordAlumnoComponent } from './pages/create-password-alumno/create-password-alumno.component';
 
 
 
@@ -31,7 +32,7 @@ import { OptionsRegiterComponent } from './pages/options-regiter/options-regiter
     HomeComponent,
     HeaderComponent,
     FooterComponent,
-    LoginComponent,RegistroUserComponent, CursosComponent, UnauthorizedComponent, TeacherApplicationComponent, PostulacionComponent, ValidarCorreoComponent, CreapasswordComponent, OptionsRegiterComponent,
+    LoginComponent,RegistroUserComponent, CursosComponent, UnauthorizedComponent, TeacherApplicationComponent, PostulacionComponent, ValidarCorreoComponent, CreapasswordComponent, OptionsRegiterComponent, CreatePasswordAlumnoComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [FormsModule,SidebarModule,
