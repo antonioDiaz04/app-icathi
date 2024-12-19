@@ -45,4 +45,23 @@ export class CursosService {
     const url = `${environment.api}/cursos/byEspecialidadId/${especialidadId}/`;
     return this.http.get<Curso[]>(url);
   }
+
+
+
+
+
+
+
+  // Método para obtener los alumnos inscritos en un curso de un plantel
+  getAlumnosCurso(idPlantel: any, idCurso: any): Observable<any[]> {
+    return this.http.get<any[]>(
+      `/alumnos-cursos?plantel_id=${idPlantel}&curso_id=${idCurso}`
+    );
+  }
+
+
+  // Método para obtener los docentes asignados a un curso
+  getDocentesCurso(idCurso: any): Observable<any[]> {
+    return this.http.get<any[]>(`/cursos-docentes?curso_id=${idCurso}`);
+  }
 }

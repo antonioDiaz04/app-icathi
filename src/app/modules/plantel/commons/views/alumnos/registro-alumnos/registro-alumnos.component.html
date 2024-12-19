@@ -1,0 +1,192 @@
+<div class="flex justify-center bg-gray-50 py-6">
+  <div class="w-full max-w-3xl">
+    <div class="text-center">
+      <img src="https://www.icathi.edu.mx/img/ICATHI.png" alt="ICATHI Logo" class="mx-auto h-12 w-auto">
+      <h2 class="mt-6 text-2xl font-extrabold text-gray-900">
+        Registro para aspirantes a capacitados
+      </h2>
+      <p class="mt-2 text-sm text-gray-600">
+        Completa el siguiente formulario para inscribirte en nuestros programas de capacitación.
+      </p>
+    </div>
+
+    <form class="mt-6 space-y-6" (ngSubmit)="submitForm()">
+      <div class="grid grid-cols-2 gap-6">
+        <!-- Selección de plantel -->
+        <!-- <div>
+          <label for="plantel" class="block text-sm font-medium text-gray-700">
+            Selecciona un plantel
+          </label>
+          <div class="ui active inline loader" *ngIf="isLoading"></div>
+          <select
+            id="plantel"
+            name="plantel"
+            required
+            (change)="onPlantelSelected($event)"
+            [(ngModel)]="formData.plantel"
+            class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            [disabled]="isLoading">
+            <option value="">Selecciona un plantel</option>
+            <option *ngFor="let plantel of planteles" [value]="plantel.id">{{ plantel.nombre }}</option>
+          </select>
+        </div> -->
+
+        <!-- Selección de área -->
+        <div>
+          <label for="area" class="block text-sm font-medium text-gray-700">
+            Selecciona el área
+          </label>
+          <div class="ui active inline loader" *ngIf="isLoading"></div>
+          <select
+            id="area"
+            name="area"
+            required
+            [(ngModel)]="formData.area"
+            (change)="onAreaSelect($event)"
+            class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            <option value="">Selecciona un área</option>
+            <option *ngFor="let area of areas" [value]="area.id">
+              {{ area.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Selección de especialidad -->
+        <div>
+          <label for="especialidad" class="block text-sm font-medium text-gray-700">
+            Selecciona la especialidad
+          </label>
+          <select
+            id="especialidad"
+            name="especialidad"
+            required
+            [(ngModel)]="formData.especialidad"
+            (change)="onEspecialidadSelect($event)"
+            class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            <option value="">Selecciona una especialidad</option>
+            <option *ngFor="let especialidad of especialidadesFiltradas" [value]="especialidad.id">
+              {{ especialidad.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Selección de curso -->
+        <div *ngIf="cursosFiltrados.length > 0" class="col-span-2">
+          <label for="curso" class="block text-sm font-medium text-gray-700">
+            Selecciona el curso
+          </label>
+          <div class="ui active inline loader" *ngIf="isLoading"></div>
+          <select
+            id="curso"
+            name="curso"
+            required
+            (change)="onCursoSelect($event)"
+            [(ngModel)]="formData.curso"
+            class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            <option value="">Selecciona un curso</option>
+            <option *ngFor="let curso of cursosFiltrados" [value]="curso.id">
+              {{ curso.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Datos personales -->
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-900">Nombre completo</label>
+          <div class="mt-2">
+            <input type="text" name="name" id="name" required [(ngModel)]="formData.name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600 sm:text-sm">
+          </div>
+        </div>
+
+        <div>
+          <label for="curp" class="block text-sm font-medium text-gray-900">CURP</label>
+          <div class="mt-2">
+            <input type="text" name="curp" id="curp" required [(ngModel)]="formData.curp" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600 sm:text-sm">
+          </div>
+          <p class="mt-1 text-sm text-gray-500">Introduce tu CURP (Clave Única de Registro de Población).</p>
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-900">Correo electrónico</label>
+          <div class="mt-2">
+            <input type="email" name="email" id="email" required [(ngModel)]="formData.email" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600 sm:text-sm">
+          </div>
+        </div>
+
+        <div>
+          <label for="telefono" class="block text-sm font-medium text-gray-900">Teléfono</label>
+          <div class="mt-2">
+            <input type="tel" name="telefono" id="telefono" required [(ngModel)]="formData.telefono" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600 sm:text-sm">
+          </div>
+        </div>
+      </div>
+
+      <!-- Confirmación -->
+      <div *ngIf="isModalOpen" class="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50 backdrop-blur-sm">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-2xl relative">
+          <!-- Logo en la parte superior centrado -->
+          <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-full p-2">
+            <img src="https://www.icathi.edu.mx/img/ICATHI.png" alt="ICATHI Logo" class="h-12 w-auto">
+          </div>
+
+          <h3 class="text-lg font-medium text-gray-900 mb-4 mt-8 text-center">Revisa y confirma tu información</h3>
+
+          <!-- Líneas decorativas -->
+          <div class="flex justify-center mb-4">
+            <div class="h-1 w-16 bg-[#44509D] rounded-full mx-1"></div>
+            <div class="h-1 w-16 bg-[#F08762] rounded-full mx-1"></div>
+            <div class="h-1 w-16 bg-[#D8566C] rounded-full mx-1"></div>
+          </div>
+
+          <!-- Información del curso -->
+          <div class="mb-4">
+            <h4 class="text-sm font-semibold text-gray-700">Información del curso</h4>
+            <p class="text-sm text-gray-600">
+              <strong>Plantel:</strong> {{ formDataNAME.plantel || 'No seleccionado' }}
+            </p>
+            <p class="text-sm text-gray-600">
+              <strong>Área:</strong> {{ this.formDataNAME.area || 'No seleccionada' }}
+            </p>
+            <p class="text-sm text-gray-600">
+              <strong>Especialidad:</strong> {{ this.formDataNAME.especialidad || 'No seleccionada' }}
+            </p>
+            <p class="text-sm text-gray-600">
+              <strong>Curso:</strong> {{ formDataNAME.curso || 'No seleccionado' }}
+            </p>
+          </div>
+
+          <hr class="my-4 border-gray-300">
+
+          <!-- Información personal -->
+          <div class="mb-4">
+            <h4 class="text-sm font-semibold text-gray-700">Información personal</h4>
+            <p class="text-sm text-gray-600"><strong>Nombre:</strong> {{ formData.name || 'No proporcionado' }}</p>
+            <p class="text-sm text-gray-600"><strong>CURP:</strong> {{ formData.curp || 'No proporcionado' }}</p>
+            <p class="text-sm text-gray-600"><strong>Correo electrónico:</strong> {{ formData.email || 'No proporcionado' }}</p>
+            <p class="text-sm text-gray-600"><strong>Teléfono:</strong> {{ formData.telefono || 'No proporcionado' }}</p>
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="flex justify-between">
+            <button (click)="closeModal()" type="button" class="rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-gray-500">
+              Corregir
+            </button>
+            <button (click)="proceed()" type="button" class="rounded-md bg-green-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-green-500">
+              Enviar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones de navegación -->
+      <div class="flex justify-between">
+        <button *ngIf="isModalOpen" type="button" (click)="closeModal()" class="rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">
+          Corregir
+        </button>
+        <button *ngIf="!isModalOpen && formData.area && formData.especialidad && formData.curso" type="button" (click)="openModal()" class="rounded-md bg-green-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-green-500">
+          Siguiente
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

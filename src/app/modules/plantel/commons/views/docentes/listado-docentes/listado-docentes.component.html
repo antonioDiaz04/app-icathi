@@ -1,114 +1,76 @@
-<div class="container mx-auto p-4">
-  <div class="flex justify-between items-center mb-4">
-    <input
-      type="text"
-      [(ngModel)]="textoBusqueda"
-      placeholder="Buscar por nombre o apellidos"
-      class="p-2 border rounded-md w-1/4"
-    />
-    <button (click)="abrirModal()" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow">
-      Agregar Docente
-    </button>
-  </div>
+<div class="overflow-x-auto mx-auto p-6">
+  <a routerLink="/plantel/registro-docentes">registro docente</a>
 
-  <table class="min-w-full table-auto bg-white rounded-lg shadow-md overflow-hidden">
-    <thead class="bg-gray-100">
+  <table class="min-w-full divide-y divide-gray-200">
+    <thead class="bg-gray-50">
       <tr>
-        <th class="px-4 py-2 text-left">#ID</th>
-        <th class="px-4 py-2 text-left">Nombre</th>
-        <th class="px-4 py-2 text-left">Apellidos</th>
-        <th class="px-4 py-2 text-left">Email</th>
-        <th class="px-4 py-2 text-left">Teléfono</th>
-        <th class="px-4 py-2 text-left">Especialidad</th>
-        <th class="px-4 py-2 text-left">Estatus</th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Nombre
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Apellidos
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Email
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Teléfono
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Especialidad
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Estatus
+        </th>
+        <!-- <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Certificado Profesional
+        </th> -->
+        <!-- <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Cédula Profesional
+        </th> -->
+        <!-- <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Seleccionar
+        </th> -->
       </tr>
     </thead>
-    <tbody>
+    <tbody class="bg-white divide-y divide-gray-200">
       <tr *ngFor="let docente of docentesFiltrados()">
-        <td class="px-4 py-2">{{ docente.id }}</td>
-        <td class="px-4 py-2">{{ docente.nombre }}</td>
-        <td class="px-4 py-2">{{ docente.apellidos }}</td>
-        <td class="px-4 py-2">{{ docente.email }}</td>
-        <td class="px-4 py-2">{{ docente.telefono }}</td>
-        <td class="px-4 py-2">{{ docente.especialidad }}</td>
-        <td class="px-4 py-2">
-          <span [ngClass]="{
-              'bg-green-200': docente.estatus === 'Activo',
-              'bg-yellow-200': docente.estatus === 'Inactivo'
-            }" class="px-2 py-1 rounded-md">
-            {{ docente.estatus }}
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="flex items-center">
+            <div class="ml-4">
+              <div class="text-sm font-medium text-gray-900">{{ docente.nombre }}</div>
+            </div>
+          </div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="text-sm text-gray-900">{{ docente.apellidos }}</div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="text-sm text-gray-900">{{ docente.email }}</div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="text-sm text-gray-900">{{ docente.telefono }}</div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="text-sm text-gray-900">{{ docente.especialidad }}</div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800" *ngIf="docente.estatus">
+            Sí
+          </span>
+          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800" *ngIf="!docente.estatus">
+            No
           </span>
         </td>
+        <!-- <td class="px-6 py-4 whitespace-nowrap">
+          <div class="text-sm text-gray-900">{{ docente.cedula_profesional }}</div>
+        </td> -->
+        <!-- <td class="px-6 py-4 whitespace-nowrap">
+          <div class="flex items-center justify-end">
+            <input type="radio" name="docente" [value]="docente.id" class="h-4 w-4 text-blue-600 focus:ring-blue-500" />
+          </div>
+        </td> -->
       </tr>
     </tbody>
   </table>
-</div>
-
-<!-- Modal -->
-<div
-  *ngIf="esModalVisible"
-  class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center"
->
-  <div id="addModal" class="bg-white p-6 rounded-md shadow-lg w-1/3">
-    <h2 class="text-lg font-bold mb-4">Agregar Nuevo Docente</h2>
-    <form (ngSubmit)="agregarDocente()">
-      <div class="mb-4">
-        <label for="nombre" class="block text-sm mb-2">Nombre</label>
-        <input
-          id="nombre"
-          [(ngModel)]="nuevoDocente.nombre"
-          name="nombre"
-          class="w-full p-2 border rounded-md"
-          required
-        />
-      </div>
-      <div class="mb-4">
-        <label for="apellidos" class="block text-sm mb-2">Apellidos</label>
-        <input
-          id="apellidos"
-          [(ngModel)]="nuevoDocente.apellidos"
-          name="apellidos"
-          class="w-full p-2 border rounded-md"
-          required
-        />
-      </div>
-      <div class="mb-4">
-        <label for="email" class="block text-sm mb-2">Email</label>
-        <input
-          id="email"
-          type="email"
-          [(ngModel)]="nuevoDocente.email"
-          name="email"
-          class="w-full p-2 border rounded-md"
-          required
-        />
-      </div>
-      <div class="mb-4">
-        <label for="telefono" class="block text-sm mb-2">Teléfono</label>
-        <input
-          id="telefono"
-          [(ngModel)]="nuevoDocente.telefono"
-          name="telefono"
-          class="w-full p-2 border rounded-md"
-        />
-      </div>
-      <div class="mb-4">
-        <label for="especialidad" class="block text-sm mb-2">Especialidad</label>
-        <input
-          id="especialidad"
-          [(ngModel)]="nuevoDocente.especialidad"
-          name="especialidad"
-          class="w-full p-2 border rounded-md"
-        />
-      </div>
-      <div class="flex justify-end space-x-2">
-        <button type="button" (click)="cerrarModal()" class="bg-gray-400 text-white px-4 py-2 rounded-md">
-          Cancelar
-        </button>
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">
-          Agregar
-        </button>
-      </div>
-    </form>
-  </div>
 </div>

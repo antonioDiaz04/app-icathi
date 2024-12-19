@@ -1,103 +1,59 @@
-<div class="container mx-auto p-4">
-  <div class="flex justify-between items-center mb-4">
-    <input
-      type="text"
-      [(ngModel)]="searchText"
-      placeholder="Search by course or teacher"
-      class="p-2 border rounded-md w-1/4"
-    />
-    <div class="flex items-center space-x-2">
-      <span class="text-sm">Date Range:</span>
-      <input type="date" [(ngModel)]="startDate" class="p-2 border rounded-md" />
-      <input type="date" [(ngModel)]="endDate" class="p-2 border rounded-md" />
-    </div>
-    <button (click)="openAddModal()" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow">Add Course</button>
-  </div>
-
-  <table class="min-w-full table-auto bg-white rounded-lg shadow-md overflow-hidden">
-    <thead class="bg-gray-100">
+<div class="overflow-x-auto">
+  <table class="min-w-full divide-y divide-gray-200">
+    <thead class="bg-gray-50">
       <tr>
-        <th class="px-4 py-2 text-left">#ID</th>
-        <th class="px-4 py-2 text-left">Course</th>
-        <th class="px-4 py-2 text-left">Teacher</th>
-        <th class="px-4 py-2 text-left">Assignment Date</th>
-        <th class="px-4 py-2 text-left">Status</th>
-        <th class="px-4 py-2 text-left">Action</th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Nombre
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Apellidos
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Especialidad
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Certificado Profesional
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Cédula Profesional
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Seleccionar
+        </th>
       </tr>
     </thead>
-    <tbody>
-      <tr *ngFor="let courseTeacher of filteredCoursesTeachers()">
-        <td class="px-4 py-2">{{ courseTeacher.id }}</td>
-        <td class="px-4 py-2">{{ courseTeacher.courseName }}</td>
-        <td class="px-4 py-2">{{ courseTeacher.teacherName }}</td>
-        <td class="px-4 py-2">{{ courseTeacher.assignmentDate }}</td>
-        <td class="px-4 py-2">
-          <span
-            [ngClass]="{
-              'bg-green-200': courseTeacher.status === 'Active',
-              'bg-yellow-200': courseTeacher.status === 'Inactive'
-            }"
-            class="px-2 py-1 rounded-md"
-            >{{ courseTeacher.status }}</span
-          >
+    <tbody class="bg-white divide-y divide-gray-200">
+      <tr *ngFor="let docente of docentesFiltrados()">
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="flex items-center">
+            <div class="ml-4">
+              <div class="text-sm font-medium text-gray-900">{{ docente.nombre }}</div>
+            </div>
+          </div>
         </td>
-        <td class="px-4 py-2">
-          <button (click)="openActionMenu(courseTeacher)" class="text-blue-500">Actions</button>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="text-sm text-gray-900">{{ docente.apellidos }}</div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="text-sm text-gray-900">{{ docente.especialidad }}</div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800" *ngIf="docente.certificado_profesional">
+            Sí
+          </span>
+          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800" *ngIf="!docente.certificado_profesional">
+            No
+          </span>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="text-sm text-gray-900">{{ docente.cedula_profesional }}</div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="flex items-center justify-end">
+            <input type="radio" name="docente" [value]="docente.id" class="h-4 w-4 text-blue-600 focus:ring-blue-500" />
+          </div>
         </td>
       </tr>
     </tbody>
   </table>
-</div>
-
-<!-- Modal -->
-<div
-  *ngIf="isModalVisible"
-  class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center"
->
-  <div class="bg-white p-6 rounded-md shadow-lg w-1/3">
-    <h2 class="text-lg font-bold mb-4">Add New Course</h2>
-    <form (ngSubmit)="addCourse()">
-      <div>
-        <label for="courseName" class="block mb-2 text-sm">Course Name:</label>
-        <input
-          type="text"
-          id="courseName"
-          [(ngModel)]="newCourse.courseName"
-          name="courseName"
-          class="w-full p-2 border rounded-md mb-4"
-          placeholder="Enter course name"
-          required
-        />
-      </div>
-      <div>
-        <label for="teacherName" class="block mb-2 text-sm">Teacher Name:</label>
-        <input
-          type="text"
-          id="teacherName"
-          [(ngModel)]="newCourse.teacherName"
-          name="teacherName"
-          class="w-full p-2 border rounded-md mb-4"
-          placeholder="Enter teacher name"
-          required
-        />
-      </div>
-      <div>
-        <label for="status" class="block mb-2 text-sm">Status:</label>
-        <select
-          id="status"
-          [(ngModel)]="newCourse.status"
-          name="status"
-          class="w-full p-2 border rounded-md mb-4"
-          required
-        >
-          <option value="Active">Active</option>
-          <option value="Inactive">Inactive</option>
-        </select>
-      </div>
-      <div class="flex justify-end space-x-2">
-        <button type="button" (click)="closeModal()" class="px-4 py-2 bg-gray-400 rounded-md text-white">Cancel</button>
-        <button type="submit" class="px-4 py-2 bg-blue-500 rounded-md text-white">Add</button>
-      </div>
-    </form>
-  </div>
 </div>
