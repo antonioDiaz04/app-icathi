@@ -10,6 +10,9 @@ import { PlantelService } from '../../../../../../shared/services/plantel.servic
 import { response } from 'express';
 
 export interface Modulo {
+
+
+
   plantel: string;
   curso: number;
   nombre: string;
@@ -45,6 +48,12 @@ interface Docente {
   templateUrl: './listado-cursos-aprovados.component.html',
 })
 export class ListadoCursosAprovadosComponent implements OnInit {
+
+
+  dateFormat = 'yyyy-MM-dd'; // Formato de fecha
+  monthFormat = 'yyyy-MM';    // Formato de mes
+  quarterFormat = 'yyyy-[Q]Q'; // Formato de trimestre
+
   modulos: Modulo[] = [];
   modulosFiltrados: Modulo[] = [];
   docentes: any[] = [];

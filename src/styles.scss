@@ -5,10 +5,25 @@
 // @import "~ng-zorro-antd/ng-zorro-antd.min.css";
 // import "~ng-zorro-antd/style/index.min.css"; /* Import base styles */
 // @import "~ng-zorro-antd/button/style/index.min.css";  /* Import one component's styles */
+// @import "~ng-zorro-antd/style/entry.less"; /* Import base styles */
+// @import "~ng-zorro-antd/button/style/entry.less";  /* Import one component's styles */
+
 
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+
+// @import '../node_modules/ng-zorro-antd/ng-zorro-antd.min.css';
+
+nz-date-picker,
+nz-range-picker {
+  margin: 0 8px 12px 0;
+}
+
+
+
+
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -15,11 +15,12 @@ import { RegistroAlumnosComponent } from './views/alumnos/registro-alumnos/regis
 // import { RegistroDeocen}teComponent } from './views/docentes/registro-deocente/registro-deocente.component';
 import { RegistroDocenteComponent } from './views/docentes/registro-docente/registro-docente.component';
 
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 
 @NgModule({
   declarations: [    FilterPipe,ListadoAlumnosComponent,ListadoCursosComponent,ListadoDocentesComponent, ListadoCursosAprovadosComponent, HistorialComponent, RegistroAlumnosComponent, RegistroDocenteComponent],
   imports: [
-    CommonModule,ReactiveFormsModule,FormsModule,RouterModule,
+    CommonModule,NzDatePickerModule,ReactiveFormsModule,FormsModule,RouterModule,
   ],
   providers:[AuthService,DocenteService,CursosdocentesService]
 })
