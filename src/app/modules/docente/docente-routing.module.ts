@@ -3,11 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { DocenteComponent } from './docente.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { CoursesComponent } from './pages/courses/courses.component';
+import { AlumnosCursosComponent } from './pages/alumnos/alumnos-cursos/alumnos-cursos.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'perfil',
+    redirectTo: 'home',
     pathMatch: 'full',
   },
   {
@@ -20,8 +21,12 @@ const routes: Routes = [
         component: ProfileComponent,
       },
       {
-        path: 'cursos',
+        path: 'home',
         component: CoursesComponent,
+      },
+      {
+        path: 'alumnos-cursos',
+        component: AlumnosCursosComponent,
       },
       // {
       // path: 'control-productos',

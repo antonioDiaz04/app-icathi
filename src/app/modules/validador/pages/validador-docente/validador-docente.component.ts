@@ -20,6 +20,10 @@ export class ValidadorDocenteComponent {
   pendientes = 0;
   validados = 0;
   errores = 0;
+  activos: number = 0;
+inactivos: number = 0;
+suspendidos: number = 0;
+
   constructor(
     private authService: AuthService,
     private validadorDocenteService: ValidadorDocenteService,
@@ -48,13 +52,13 @@ export class ValidadorDocenteComponent {
   ngOnInit(): void {
     this.fetchDocentes();
   }
-
   calcularMetricas(): void {
-    this.pendientes = this.docentes.filter(doc => !doc.estatus).length;
-    this.validados = this.docentes.filter(doc => doc.estatus && doc.usuario_validador_id).length;
-    this.errores = this.docentes.filter(doc => !doc.estatus && !doc.usuario_validador_id).length;
+    this.activos = this.docentes.filter(doc => doc.estatus_valor === 'Activo').length;
+    this.inactivos = this.docentes.filter(doc => doc.estatus_valor === 'Inactivo').length;
+    this.pendientes = this.docentes.filter(doc => doc.estatus_valor === 'Pendiente de validación').length;
+    this.suspendidos = this.docentes.filter(doc => doc.estatus_valor === 'Suspendido').length;
   }
-
+  
 
 
   async logout(): Promise<void> { // Declarar logout como async

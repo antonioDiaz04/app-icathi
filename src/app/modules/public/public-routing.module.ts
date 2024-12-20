@@ -11,6 +11,7 @@ import { ValidarCorreoComponent } from './pages/validar-correo/validar-correo.co
 import { CreapasswordComponent } from './pages/creapassword/creapassword.component';
 import { ListadoPlantelComponent } from './pages/plantel/listado-plantel/listado-plantel.component';
 import { OptionsRegiterComponent } from './pages/options-regiter/options-regiter.component';
+import { CreatePasswordAlumnoComponent } from './pages/create-password-alumno/create-password-alumno.component';
 
 const routes: Routes = [
   {
@@ -144,7 +145,20 @@ const routes: Routes = [
         path: 'crear-password',
         component: CreapasswordComponent,
         data: {
-          title: 'acceso denegado',
+          title: 'acceso docente',
+          breadcrumb: [
+            {
+              label: 'Home',
+              path: '/public/login',
+            },
+          ],
+        },
+      },
+      {
+        path: 'alumnos-crear-password',
+        component: CreatePasswordAlumnoComponent,
+        data: {
+          title: 'acceso alumno',
           breadcrumb: [
             {
               label: 'Home',

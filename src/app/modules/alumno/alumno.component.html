@@ -1,15 +1,133 @@
+<div class="min-h-screen flex flex-col md:flex-row bg-gray-100 relative">
+  <!-- Botón de Menú para móviles -->
+  <button
+    class="bg-[#44509D] text-white py-2 px-4 fixed top-4 left-4 md:hidden z-10 shadow-lg rounded-lg"
+    (click)="toggleMenu()"
+  >
+    <i class="bars icon"></i> Menú
+  </button>
 
-  <!-- Contenedor principal en Flexbox -->
-  <div class="flex h-screen">
+  <!-- Menú Lateral -->
+  <aside
+  [class.hidden]="!menuOpen"
+  class="w-64 bg-[#F4F6FA] text-gray-800 shadow-lg flex flex-col transition-all duration-300 md:block z-20 fixed md:relative md:z-0 min-h-screen"
+>
 
-    <!-- Menú lateral o Header (a la izquierda) -->
-    <div class="w-1/4 flex h-screen bg-gray-100 text-white p-4">
-      <!-- <app-header></app-header> -->
+    <!-- Encabezado del Menú con Logo -->
+    <div class="p-6 text-center border-b border-[#D8566C] bg-[#F0F4FF] shadow-sm">
+      <img
+        src="https://www.icathi.edu.mx/img/ICATHI.png"
+        alt="Logo de la Institución"
+        class="mx-auto mb-4 w-16 h-16 object-contain"
+      />
+      <h2 class="text-lg font-semibold text-[#44509D]">Perfil Alumno</h2>
     </div>
+    <nav class="flex-1">
+      <ul class="space-y-2 mt-4">
+        <!-- Elementos del menú -->
+        <li>
+          <a
+            routerLink="/alumno/inicio"
+            class="block py-3 px-6 flex items-center border-l-4 border-transparent hover:bg-gray-100 hover:border-[#44509D] transition-all text-gray-700 hover:text-[#44509D]"
+          >
+            <i class="home icon mr-3" style="color: #F08762;"></i>
+            <span class="text-sm font-medium">Inicio</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/alumno/perfil"
+            class="block py-3 px-6 flex items-center border-l-4 border-transparent hover:bg-gray-100 hover:border-[#44509D] transition-all text-gray-700 hover:text-[#44509D]"
+          >
+            <i class="user icon mr-3" style="color: #F08762;"></i>
+            <span class="text-sm font-medium">Perfil</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/alumno/clases"
+            class="block py-3 px-6 flex items-center border-l-4 border-transparent hover:bg-gray-100 hover:border-[#44509D] transition-all text-gray-700 hover:text-[#44509D]"
+          >
+            <i class="book icon mr-3" style="color: #F08762;"></i>
+            <span class="text-sm font-medium">Clases Asignadas</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/alumno/calificaciones"
+            class="block py-3 px-6 flex items-center border-l-4 border-transparent hover:bg-gray-100 hover:border-[#44509D] transition-all text-gray-700 hover:text-[#44509D]"
+          >
+            <i class="clipboard icon mr-3" style="color: #F08762;"></i>
+            <span class="text-sm font-medium">Calificaciones</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/alumno/estadisticas"
+            class="block py-3 px-6 flex items-center border-l-4 border-transparent hover:bg-gray-100 hover:border-[#44509D] transition-all text-gray-700 hover:text-[#44509D]"
+          >
+            <i class="chart bar icon mr-3" style="color: #F08762;"></i>
+            <span class="text-sm font-medium">Oferta  Educativa</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/alumno/avisos"
+            class="block py-3 px-6 flex items-center border-l-4 border-transparent hover:bg-gray-100 hover:border-[#44509D] transition-all text-gray-700 hover:text-[#44509D]"
+          >
+            <i class="bell icon mr-3" style="color: #F08762;"></i>
+            <span class="text-sm font-medium">Avisos</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/alumno/configuracion"
+            class="block py-3 px-6 flex items-center border-l-4 border-transparent hover:bg-gray-100 hover:border-[#44509D] transition-all text-gray-700 hover:text-[#44509D]"
+          >
+            <i class="cog icon mr-3" style="color: #F08762;"></i>
+            <span class="text-sm font-medium">Configuración</span>
+          </a>
+        </li>
+        <li>
+          <a
+            (click)="logout()"
+            class="block cursor-pointer py-3 px-6 flex items-center border-l-4 border-transparent hover:bg-gray-100 hover:border-[#F08762] transition-all text-gray-700 hover:text-[#F08762]"
+          >
+            <i class="sign-out alternate icon mr-3" style="color: #F08762;"></i>
+            <span class="text-sm font-medium">Cerrar Sesión</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
 
-    <!-- Contenido (a la derecha) -->
-    <div class="flex-1 p-6">
+  <!-- Contenido Principal -->
+  <main class="flex-1 p-6 mt-16 md:mt-0">
+    <!-- Encabezado -->
+    <header
+    class="bg-[#F4F6FA] border border-[#44509D] text-black py-4 px-6 rounded-lg mb-6 shadow-md flex justify-between items-center transition hover:shadow-lg hover:border-[#F08762]"
+    *ngIf="alumnoData"
+  >
+  
+      <div>
+        <h1 class="text-2xl font-medium">
+          Bienvenido, <span class="text-[#F08762]">{{ alumnoData.nombre }}</span>
+        </h1>
+        <p class="text-sm text-[#D8566C]">Correo: {{ alumnoData.email }}</p>
+      </div>
+      <img
+        [src]="alumnoData.foto_url || 'https://via.placeholder.com/150'"
+        alt="Foto de alumno"
+        class="w-24 h-12 object-contain"
+      />
+    </header>
+
+    <!-- Contenido Dinámico -->
+    <div
+    class="bg-[#FFFFFF] rounded-lg shadow-lg p-6 border border-[#44509D] transition hover:shadow-xl hover:border-[#F08762]"
+  >
+  
       <router-outlet></router-outlet>
     </div>
-
-  </div>
+  </main>
+</div>

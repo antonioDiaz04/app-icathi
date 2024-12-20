@@ -121,6 +121,8 @@
     <label for="docente" class="block text-sm font-medium text-gray-700 mb-1">
       Docente
     </label>
+    <input type="text" [(ngModel)]="textoBusqueda" placeholder="Buscar por nombre o apellido" class="p-2 border rounded-md w-1/4" />
+
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
@@ -164,7 +166,7 @@
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-          <tr *ngFor="let docente of docentes">
+          <tr *ngFor="let docente of docentesFiltrados()">
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="flex items-center">
                 <div class="ml-4">

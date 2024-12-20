@@ -108,6 +108,7 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     this.cargarEspecialidades();
     this.cargarTiposCurso();
   }
+  textoBusqueda: string = '';
 
   isModalOpen = false;
   modulo: any = {};
@@ -173,41 +174,7 @@ export class ListadoCursosAprovadosComponent implements OnInit {
         });
     });
   }
-  // getInfo(): void {
-  //   this.authService.getIdFromToken().then((plantelId) => {
-  //     console.log('Plantel ID:', plantelId);
-
-  //     if (!plantelId) {
-  //       console.error('No se pudo obtener el ID del plantel');
-  //       return;
-  //     }
-  //     this.http
-  //       .get<Modulo[]>(
-  //         `${this.apiUrl}/PlantelCursos/byIdPlantel/${plantelId}/info`
-  //       )
-  //       .subscribe({
-  //         next: (data) => {
-  //           this.dataCurso = data;
-  //         },
-  //         error: (err) => {
-  //           console.error('Error al cargar los módulos:', err);
-  //         },
-  //       });
-  //   });
-  // }
-
-  // filtrarModulos(): void {
-  //   this.modulos = this.modulos.filter(modulo => {
-  //     const matchesId = this.filtroId ? modulo.curso_id.toString().includes(this.filtroId) : true;
-  //     const matchesNombre = this.filtroNombre ? modulo.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()) : true;
-  //     const matchesNivel = this.filtroNivel ? modulo.nivel.toLowerCase().includes(this.filtroNivel.toLowerCase()) : true;
-  //     const matchesDuracion = this.filtroDuracion !== null ? modulo.duracion_horas === this.filtroDuracion : true;
-
-  //     return matchesId && matchesNombre && matchesNivel && matchesDuracion;
-  //   });
-  // }
-
-  cargarAreas(): void {
+    cargarAreas(): void {
     this.http.get<any[]>(`${this.apiUrl}/areas`).subscribe({
       next: (data) => {
         this.areas = data;
@@ -291,32 +258,6 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     this.mostrarModal = true;
   }
 
-  // guardarEdicion(): void {
-  //   if (this.cursoSeleccionado) {
-  //     const index = this.modulos.findIndex(
-  //       (m) => m.curso_id === this.cursoSeleccionado!.curso_id
-  //     );
-  //     if (index !== -1) {
-  //       this.modulos[index] = { ...this.cursoSeleccionado };
-  //     }
-
-  //     this.http
-  //       .put(
-  //         `${this.apiUrl}/cursos/${this.cursoSeleccionado.curso_id}`,
-  //         this.cursoSeleccionado
-  //       )
-  //       .subscribe({
-  //         next: () => {
-  //           console.log('Curso actualizado correctamente');
-  //         },
-  //         error: (err) => {
-  //           console.error('Error al actualizar el curso:', err);
-  //         },
-  //       });
-
-  //     this.cerrarModal();
-  //   }
-  // }
 
   eliminarSolicitudCurso(idPlantelCurso: number): void {
     if (confirm('¿Estás seguro de que deseas eliminar este curso?')) {
@@ -333,20 +274,16 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     }
   }
 
-  // eliminarSolicitudCurso(idPlantelCurso: number): void {
-  //   if (confirm('¿Estás seguro de que deseas eliminar este curso?')) {
-  //     this.http.delete(`${this.apiUrl}/planteles-curso/byIdPlantel/${idPlantelCurso}`).subscribe({
-  //       next: () => {
-  //         this.cargarCursosByIdPlantel()
-  //         this.modulos = this.modulos.filter((m) => m.curso_id !== curso_id);
-  //         // console.log('Curso eliminado correctamente');
-  //       },
-  //       error: (err) => {
-  //         console.error('Error al eliminar el curso:', err);
-  //       },
-  //     });
-  //   }
-  // }
+  // Filtrar docentes
+  docentesFiltrados() {
+    return this.docentes.filter(docente => {
+      const coincideBusqueda =
+        docente.nombre.toLowerCase().includes(this.textoBusqueda.toLowerCase()) ||
+        docente.apellidos.toLowerCase().includes(this.textoBusqueda.toLowerCase());
+      const coincideFecha = true; // Puedes agregar filtro por fechas si lo necesitas
+      return coincideBusqueda && coincideFecha;
+    });
+  }
 
   cerrarModal(): void {
     this.mostrarModal = false;

@@ -1,109 +1,114 @@
 <div class="flex min-h-screen bg-gray-50">
   <!-- Sidebar -->
   <aside class="w-64 bg-[#44509D] text-white flex flex-col justify-between">
-    <div class="p-4 bg-[#F08762] text-center text-lg font-bold">
+    <div class="p-4 bg-[#F08762] text-center text-lg font-bold shadow-md">
       Panel Admin
     </div>
     <nav class="flex-grow">
       <ul class="space-y-2 p-4">
         <li>
-          <a href="#" class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
+          <a      routerLink="/validador/docente/"
+ class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
             <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
           </a>
         </li>
         <li>
-          <a href="#" class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
+          <a      routerLink="/validador/docente/"
+ class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
             <i class="fas fa-user-check mr-2"></i> Validaciones
           </a>
         </li>
         <li>
-          <a href="#" class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
+          <a      routerLink="/validador/docente/"
+ class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
             <i class="fas fa-chart-bar mr-2"></i> Estadísticas
           </a>
         </li>
         <li>
-          <a href="#" class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
+          <a      routerLink="/validador/docente/"
+ class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
             <i class="fas fa-cogs mr-2"></i> Configuración
+          </a>
+        </li>
+        <li >
+          <a (click)="logout()"  class="flex items-center p-2 hover:bg-[#D8566C] rounded transition">
+            <i class="fas fa-sign-out-alt mr-3"></i> Cerrar Sesión
           </a>
         </li>
       </ul>
     </nav>
-    <div class="p-4 bg-[#F08762] text-center text-sm">
+    <div class="p-4 bg-[#F08762] text-center text-sm shadow-md">
       © 2024 Admin
     </div>
   </aside>
 
   <!-- Main Content -->
   <main class="flex-1 p-6">
-    <header class="flex justify-between items-center mb-6 bg-white p-4 shadow rounded">
+    <header class="flex justify-between items-center mb-6 bg-white p-4 shadow-md rounded border-b-4 border-[#44509D]">
       <div>
         <h1 class="text-2xl font-bold text-[#44509D]">
           <i class="fas fa-user-check"></i> Validador de Docentes
         </h1>
         <p class="text-sm text-gray-600">
-          Usuario: <strong>Admin</strong> - Fecha: {{ currentDate }}
+          Usuario: <strong>Juan Pérez</strong> - Fecha: {{ currentDate }}
         </p>
       </div>
-      <button class="bg-[#F08762] text-white px-4 py-2 rounded hover:bg-[#D8566C] transition">
-        <i class="fas fa-plus-circle"></i> Añadir Docente
-      </button>
+
     </header>
 
     <!-- Statistics -->
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-      <div class="p-4 bg-white shadow rounded border-l-4 border-[#F08762]">
+    <!-- <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="p-4 bg-white shadow-lg rounded border-l-4 border-[#F08762]">
         <h3 class="text-lg font-bold text-[#44509D] flex items-center">
           <i class="fas fa-clock mr-2"></i> Docentes Pendientes
         </h3>
         <p class="text-gray-600">Actualmente hay <strong>10</strong> solicitudes pendientes.</p>
       </div>
-      <div class="p-4 bg-white shadow rounded border-l-4 border-[#44509D]">
+      <div class="p-4 bg-white shadow-lg rounded border-l-4 border-[#44509D]">
         <h3 class="text-lg font-bold text-[#44509D] flex items-center">
           <i class="fas fa-check-circle mr-2"></i> Validaciones Realizadas
         </h3>
         <p class="text-gray-600">Se han validado <strong>45</strong> docentes este mes.</p>
       </div>
-      <div class="p-4 bg-white shadow rounded border-l-4 border-[#D8566C]">
+      <div class="p-4 bg-white shadow-lg rounded border-l-4 border-[#D8566C]">
         <h3 class="text-lg font-bold text-[#44509D] flex items-center">
           <i class="fas fa-exclamation-circle mr-2"></i> Errores Recientes
         </h3>
         <p class="text-gray-600">Se encontraron <strong>3</strong> errores en el proceso.</p>
       </div>
-    </section>
-
-    <!-- Validation Requests Table -->
-    <section>
-      <h2 class="text-xl font-bold text-[#44509D] mb-4">Solicitudes de Validación</h2>
-      <div class="overflow-x-auto bg-white shadow rounded">
-        <table class="w-full text-left border-collapse">
-          <thead class="bg-gray-200">
-            <tr>
-              <th class="p-4">ID</th>
-              <th class="p-4">Nombre</th>
-              <th class="p-4">Estado</th>
-              <th class="p-4">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="hover:bg-gray-50">
-              <td class="p-4">DOC123</td>
-              <td class="p-4">Juan Pérez</td>
-              <td class="p-4">
-                <span class="bg-[#F08762] text-white text-xs px-2 py-1 rounded">Pendiente</span>
-              </td>
-              <td class="p-4">
-                <button class="bg-[#44509D] text-white px-3 py-1 rounded hover:bg-[#D8566C] transition">
-                  Validar
-                </button>
-                <button class="ml-2 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
-                  Rechazar
-                </button>
-              </td>
-            </tr>
-            <!-- Más filas dinámicas -->
-          </tbody>
-        </table>
+    </section> -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="p-4 bg-white shadow-lg rounded border-l-4 border-[#F08762]">
+        <h3 class="text-lg font-bold text-[#44509D] flex items-center">
+          <i class="fas fa-clock mr-2"></i> Docentes Pendientes
+        </h3>
+        <p class="text-gray-600">Actualmente hay <strong>{{ pendientes }}</strong> docentes pendientes de validación.</p>
+      </div>
+      <div class="p-4 bg-white shadow-lg rounded border-l-4 border-[#44509D]">
+        <h3 class="text-lg font-bold text-[#44509D] flex items-center">
+          <i class="fas fa-check-circle mr-2"></i> Docentes Activos
+        </h3>
+        <p class="text-gray-600">Actualmente hay <strong>{{ activos }}</strong> docentes activos.</p>
+      </div>
+      <div class="p-4 bg-white shadow-lg rounded border-l-4 border-[#D8566C]">
+        <h3 class="text-lg font-bold text-[#44509D] flex items-center">
+          <i class="fas fa-exclamation-circle mr-2"></i> Docentes Suspendidos
+        </h3>
+        <p class="text-gray-600">Actualmente hay <strong>{{ suspendidos }}</strong> docentes suspendidos.</p>
+      </div>
+      <div class="p-4 bg-white shadow-lg rounded border-l-4 border-[#F08762]">
+        <h3 class="text-lg font-bold text-[#44509D] flex items-center">
+          <i class="fas fa-user-slash mr-2"></i> Docentes Inactivos
+        </h3>
+        <p class="text-gray-600">Actualmente hay <strong>{{ inactivos }}</strong> docentes inactivos.</p>
       </div>
     </section>
+    
+    
+
+    <router-outlet></router-outlet>
+
+    <!-- Validation Requests Table -->
+
   </main>
 </div>

@@ -21,11 +21,23 @@ export class AspiranteService {
     return this.http.get(`${environment.api}/alumno`)
   }
 
+  // Obtener un alumno por su ID
+  getAlumnoById_user(id: number): Observable<any> {
+    return this.http.get(`${environment.api}/alumno/usuario/${id}`);
+  }
+
+
 
   getApirantesBIdPlantel(id:any):Observable<any>{
     // http://localhost:3000/alumnosPlantelCursos/byIdPlantel/3
     return this.http.get(`${environment.api}/PlantelCursos/byIdPlantel/${id}/alumnos`)
   }
-
+// Nueva función para obtener el CURP por correo electrónico
+obtenerCurpPorEmail(email: string): Observable<any> {
+  return this.http.get(`${environment.api}/aspirante/curp/${email}`);
+}  // Nueva función para obtener un alumno por su ID
+getAlumnoById(id: number): Observable<any> {
+  return this.http.get(`${environment.api}/alumno/${id}`);
+}
 
 }

@@ -1,0 +1,20 @@
+.container {
+    max-width: 1200px;
+  }
+  
+  button {
+    transition: all 0.3s ease;
+  }
+  button:hover {
+    transform: scale(1.05);
+  }
+  
+  .grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+  
+  h1, h2 {
+    font-family: 'Roboto', sans-serif;
+  }
+  
