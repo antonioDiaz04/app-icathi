@@ -1,33 +1,167 @@
 <div class="container mx-auto p-6">
-    <header class="bg-[#ffffff] border border-[#44509D] text-black py-4 px-6 rounded-lg mb-6 shadow-md flex justify-between items-center">
-      <h1 class="text-2xl font-medium text-[#44509D]">Mis Cursos</h1>
-    </header>
-  
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div
-        *ngFor="let curso of cursos"
-        class="bg-white border border-gray-300 shadow-lg rounded-lg p-4 transition hover:shadow-xl"
-      >
-        <h2 class="text-lg font-semibold text-[#44509D]">{{ curso.nombre }}</h2>
-        <p class="text-sm text-gray-600">{{ curso.descripcion }}</p>
+  <header class="bg-[#ffffff] border border-[#44509D] text-black py-4 px-6 rounded-lg mb-6 shadow-md">
+    <h1 class="text-2xl font-medium text-[#44509D]">Detalles de los Cursos</h1>
+  </header>
+
+  <!-- Grid de cursos -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div
+      *ngFor="let curso of cursos"
+      class="bg-white border border-gray-300 shadow-lg rounded-lg p-6 flex flex-col justify-between"
+    >
+      <!-- Información básica del curso -->
+      <div>
+        <h2 class="text-xl font-semibold text-[#44509D]">{{ curso.nombre_curso }}</h2>
+        <p class="mt-2 text-sm text-gray-600">{{ curso.descripcion_curso }}</p>
         <div class="mt-4">
-          <label class="text-sm font-medium">Progreso:</label>
-          <div class="relative w-full bg-gray-200 rounded-full h-4">
-            <div
-              class="absolute top-0 left-0 h-4 rounded-full"
-              [ngStyle]="{ width: curso.progreso + '%', backgroundColor: curso.progreso === 100 ? '#28a745' : '#F08762' }"
-            ></div>
-          </div>
-          <span class="text-sm text-gray-700">{{ curso.progreso }}%</span>
+          <p class="text-sm text-gray-700"><strong>Modalidad:</strong> {{ curso.modalidad }}</p>
+          <p class="text-sm text-gray-700"><strong>Nivel:</strong> {{ curso.nivel }}</p>
+          <p class="text-sm text-gray-700"><strong>Duración:</strong> {{ curso.duracion_horas }} horas</p>
         </div>
-        <p class="mt-2 text-sm text-gray-700"><strong>Estado:</strong> {{ curso.estado }}</p>
-        <button
-          class="mt-4 bg-[#44509D] text-white py-2 px-4 rounded-lg hover:bg-[#F08762] transition"
-          (click)="verDetalles(curso.id)"
-        >
-          Ver Detalles
-        </button>
       </div>
+
+      <!-- Progreso y estado -->
+      <div class="mt-4">
+        <p class="text-sm text-gray-700"><strong>Estado:</strong> {{ curso.estado }}</p>
+        <div class="relative w-full bg-gray-200 rounded-full h-4 mt-1">
+          <div
+            class="absolute top-0 left-0 h-4 rounded-full"
+            [ngStyle]="{
+              width: curso.progreso + '%',
+              backgroundColor: curso.progreso === 100 ? '#28a745' : '#F08762'
+            }"
+          ></div>
+        </div>
+        <span class="text-sm text-gray-700">{{ curso.progreso }}%</span>
+        <p class="mt-2 text-sm text-gray-700"><strong>Calificación Final:</strong> {{ curso.calificacion_final || 'No disponible' }}</p>
+      </div>
+
+      <!-- Botón para abrir modal -->
+      <button
+        class="mt-4 px-4 py-2 text-white bg-[#44509D] rounded-lg hover:bg-[#324070] focus:outline-none"
+        (click)="openModal(curso)"
+      >
+        Ver detalles
+      </button>
     </div>
   </div>
-  
+
+  <!-- Modal -->
+<!-- Modal -->
+<div *ngIf="selectedCurso" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white w-11/12 max-w-3xl rounded-lg shadow-lg p-6 relative">
+    <!-- Botón cerrar -->
+    <button
+      class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+      (click)="closeModal()"
+    >
+      ✖
+    </button>
+
+    <!-- Título del curso -->
+    <h2 class="text-2xl font-semibold text-[#44509D] mb-2">{{ selectedCurso.nombre_curso }}</h2>
+    <p class="text-sm text-gray-600 mb-4">{{ selectedCurso.descripcion_curso }}</p>
+
+    <!-- División -->
+    <hr class="border-gray-300 my-4" />
+
+    <!-- Información del curso -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <p class="text-sm text-gray-700"><strong>Modalidad:</strong> {{ selectedCurso.modalidad }}</p>
+      <p class="text-sm text-gray-700"><strong>Nivel:</strong> {{ selectedCurso.nivel }}</p>
+      <p class="text-sm text-gray-700"><strong>Duración:</strong> {{ selectedCurso.duracion_horas }} horas</p>
+      <p class="text-sm text-gray-700"><strong>Horario:</strong> {{ selectedCurso.horario }}</p>
+      <p class="text-sm text-gray-700"><strong>Estado:</strong> {{ selectedCurso.estado }}</p>
+    </div>
+
+    <!-- Progreso -->
+    <div class="mt-4">
+      <label class="text-sm font-medium">Progreso:</label>
+      <div class="relative w-full bg-gray-200 rounded-full h-4 mt-1">
+        <div
+          class="absolute top-0 left-0 h-4 rounded-full"
+          [ngStyle]="{
+            width: selectedCurso.progreso + '%',
+            backgroundColor: selectedCurso.progreso === 100 ? '#28a745' : '#F08762'
+          }"
+        ></div>
+      </div>
+      <span class="text-sm text-gray-700">{{ selectedCurso.progreso }}%</span>
+    </div>
+    <p class="mt-2 text-sm text-gray-700"><strong>Calificación Final:</strong> {{ selectedCurso.calificacion_final || 'No disponible' }}</p>
+
+    <!-- División -->
+    <hr class="border-gray-300 my-4" />
+
+    <!-- Información del plantel -->
+    <div>
+      <h3 class="text-lg font-semibold text-[#44509D]">Información del Plantel</h3>
+      <p class="text-sm text-gray-700"><strong>Nombre:</strong> {{ selectedCurso.nombre_plantel }}</p>
+      <p class="text-sm text-gray-700"><strong>Dirección:</strong> {{ selectedCurso.direccion }}</p>
+      <p class="text-sm text-gray-700"><strong>Municipio y Estado:</strong> {{ selectedCurso.municipio }}, {{ selectedCurso.estado }}</p>
+      <p class="text-sm text-gray-700"><strong>Contacto:</strong> {{ selectedCurso.telefono }} | {{ selectedCurso.email }}</p>
+    </div>
+
+    <!-- División -->
+    <hr class="border-gray-300 my-4" />
+
+    <!-- Información del docente -->
+    <div>
+      <h3 class="text-lg font-semibold text-[#44509D]">Información del Docente</h3>
+      <ng-container *ngIf="selectedCurso.nombre_docente; else noDocente">
+        <p class="text-sm text-gray-700"><strong>Nombre:</strong> {{ selectedCurso.nombre_docente }} {{ selectedCurso.apellido_docente }}</p>
+        <p class="text-sm text-gray-700"><strong>Correo:</strong> {{ selectedCurso.email_docente }}</p>
+        <p class="text-sm text-gray-700"><strong>Teléfono:</strong> {{ selectedCurso.telefono_docente }}</p>
+      </ng-container>
+      <ng-template #noDocente>
+        <p class="text-sm text-gray-700 text-red-600">El curso se encuentra en proceso de asignación docente.</p>
+      </ng-template>
+    </div>
+
+    <div class="mt-4">
+      <h3 class="text-lg font-semibold text-[#44509D]">Temario</h3>
+      <p class="text-sm text-gray-700">
+        <strong>Descargar:</strong>
+        <a
+          *ngIf="selectedCurso.temario_url; else noTemario"
+          [href]="selectedCurso.temario_url"
+          target="_blank"
+          class="text-blue-600 hover:underline"
+        >
+          Haz clic aquí para descargar el temario
+        </a>
+      </p>
+      <ng-template #noTemario>
+        <p class="text-sm text-red-600">El temario aún no está disponible.</p>
+      </ng-template>
+    </div>
+    
+    <div class="mt-4">
+      <h3 class="text-lg font-semibold text-[#44509D]">Fechas</h3>
+      <p class="text-sm text-gray-700">
+        <strong>Fecha de inicio:</strong> {{ selectedCurso.fecha_inicio | date:'longDate' }}
+      </p>
+      <p class="text-sm text-gray-700">
+        <strong>Fecha de fin:</strong> {{ selectedCurso.fecha_fin | date:'longDate' }}
+      </p>
+      <p class="text-sm text-gray-700">
+        <strong>Fecha de inscripción:</strong> {{ selectedCurso.fecha_inscripcion | date:'longDate' }}
+      </p>
+    </div>
+    
+
+    <!-- Botón cerrar -->
+    <div class="mt-6 flex justify-end">
+      <button
+        class="px-4 py-2 text-white bg-[#44509D] rounded-lg hover:bg-[#324070] focus:outline-none"
+        (click)="closeModal()"
+      >
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+</div>
