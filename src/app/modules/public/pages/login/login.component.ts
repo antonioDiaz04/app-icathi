@@ -63,8 +63,10 @@ export class LoginComponent {
         (error) => {
           this.loading = false;
           console.error('Error en inicio de sesión:', error);
-          // alert('Credenciales incorrectas');
-          this.alertTaiwilService.showTailwindAlert('Credenciales incorrectas', 'error');
+
+  // Muestra el mensaje de error del servidor en el alert
+  const errorMessage = error.error?.message || 'Ocurrió un error inesperado';
+  this.alertTaiwilService.showTailwindAlert(errorMessage, 'error');
         }
       );
     } else {
