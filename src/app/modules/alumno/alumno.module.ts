@@ -10,6 +10,7 @@ import { ClasesComponent } from './pages/clases/clases.component';
 import { CalificacionesComponent } from './pages/calificaciones/calificaciones.component';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { OfertaEducativaComponent } from './pages/oferta-educativa/oferta-educativa.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { BrowserModule } from '@angular/platform-browser';
     InicioComponent,
     PerfilComponent,
     ClasesComponent,
-    CalificacionesComponent
+    CalificacionesComponent,
+    OfertaEducativaComponent
   ],
   imports: [FormsModule,
     CommonModule,
