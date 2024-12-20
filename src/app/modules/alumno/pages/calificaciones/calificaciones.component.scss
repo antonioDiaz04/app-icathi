@@ -1,32 +1,44 @@
-/* Estilos personalizados para el componente Calificaciones */
-.input {
-  @apply border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-[#F08762];
+.calificaciones-container {
+  padding: 20px;
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.table th, .table td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #f2f2f2;
 }
 
 button {
-  @apply text-white rounded-lg px-4 py-2 transition-all duration-300;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 button:hover {
-  @apply scale-105;
+  background-color: #0056b3;
 }
 
-table {
-  @apply table-auto w-full text-left text-sm text-gray-700;
-}
-
-th, td {
-  @apply py-2 px-4;
-}
-
-thead {
-  @apply bg-[#44509D] text-white;
-}
-
-tbody {
-  @apply bg-white;
-}
-
-tr:hover {
-  @apply bg-gray-100;
+ng-template {
+  display: block;
+  margin-top: 20px;
+  font-size: 16px;
+  color: #888;
 }

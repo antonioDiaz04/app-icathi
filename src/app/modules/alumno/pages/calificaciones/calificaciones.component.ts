@@ -1,57 +1,109 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../../../shared/services/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AspiranteService } from '../../../../shared/services/aspirante.service';
+import { AlumnosCursosService } from '../../../../shared/services/alumnos-cursos.service';
 
 @Component({
   selector: 'app-calificaciones',
   templateUrl: './calificaciones.component.html',
   styleUrls: ['./calificaciones.component.scss']
 })
-export class CalificacionesComponent {
-  // Datos de materias disponibles
-  materias = ['Matemáticas', 'Ciencias', 'Historia', 'Lengua y Literatura'];
+export class CalificacionesComponent implements OnInit {
 
-  // Datos de calificaciones por materia
-  calificaciones = [
-    { nombre: 'Matemáticas', calificacion: 9, fechaExamen: '2024-05-20' },
-    { nombre: 'Ciencias', calificacion: 7, fechaExamen: '2024-05-22' },
-    { nombre: 'Historia', calificacion: 8, fechaExamen: '2024-05-24' },
-    { nombre: 'Lengua y Literatura', calificacion: 9, fechaExamen: '2024-05-26' }
-  ];
+  isUsuarioAlumno: number | null = null; // ID del alumno autenticado
+  alumnoData: any = null; // Datos del alumno
+  cursos: any[] = []; // Lista de cursos del alumno
+  selectedCurso: any = null; // Curso seleccionado para el modal
+  selectedMateria: string = ''; // Materia seleccionada para filtrar
+  calificaciones: any[] = []; // Calificaciones de las materias
 
-  // Materia seleccionada por el alumno
-  selectedMateria: string = '';
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private aspiranteService: AspiranteService,
+    private alumnosCursosService: AlumnosCursosService,
+    private route: ActivatedRoute
+  ) {}
 
-  // Método para guardar la calificación del alumno
-  guardarCalificacion(materia: any) {
-    alert(`Calificación de ${materia.nombre} guardada: ${materia.calificacion}`);
-    // Aquí agregaríamos la lógica para guardar los cambios en el servidor o base de datos
+  ngOnInit(): void {
+    this.loadUserDetails();
   }
 
-  // Método para ver detalles de la calificación
-  verDetalles(materia: any) {
-    alert(`Ver detalles de ${materia.nombre}`);
-    // Aquí podrías mostrar un modal o expandir más detalles sobre la materia
+  /**
+   * Carga los detalles del usuario autenticado y sus cursos.
+   */
+  private async loadUserDetails(): Promise<void> {
+    try {
+      this.isUsuarioAlumno = await this.authService.getIdFromToken();
+      console.log('ID del usuario:', this.isUsuarioAlumno);
+
+      if (this.isUsuarioAlumno !== null) {
+        this.getAlumnoCursosDetails(this.isUsuarioAlumno);
+      }
+    } catch (error) {
+      console.error('Error al cargar los detalles del usuario:', error);
+    }
   }
 
-  // Método para exportar las calificaciones a CSV
-  exportarCalificaciones() {
-    const csvContent = this.convertirACSV(this.calificaciones);
-    this.descargarCSV(csvContent);
+  /**
+   * Obtiene los datos del alumno y sus cursos relacionados.
+   * @param id ID del alumno.
+   */
+  getAlumnoCursosDetails(id: number): void {
+    this.aspiranteService.getAlumnoById_user(id).subscribe({
+      next: (data) => {
+        if (data.length > 0) {
+          this.alumnoData = data[0]; // Asignar el primer elemento del array
+          console.log('Datos del alumno:', this.alumnoData);
+
+          this.alumnosCursosService.getCursoById_Alumno(this.alumnoData.id).subscribe({
+            next: (cursos) => {
+              this.cursos = cursos; // Asignar los cursos obtenidos
+              this.calificaciones = this.cursos.map(curso => ({
+                nombre_curso: curso.nombre_curso,
+                calificacion_final: curso.calificacion_final,
+                docente: `${curso.nombre_docente} ${curso.apellido_docente}`,
+                fecha_inicio: curso.fecha_inicio,
+                fecha_fin: curso.fecha_fin
+              }));
+
+              console.log('Cursos del alumno:', this.cursos);
+            },
+            error: (err) => {
+              console.error('Error al obtener los cursos del alumno:', err);
+            }
+          });
+        } else {
+          console.warn('No se encontraron datos del alumno.');
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener los datos del alumno:', err);
+      }
+    });
   }
 
-  // Convertir las calificaciones a formato CSV
-  convertirACSV(calificaciones: any[]) {
-    const header = ['Materia', 'Calificación', 'Fecha de Examen'];
-    const rows = calificaciones.map(materia => [materia.nombre, materia.calificacion, materia.fechaExamen]);
-    const csv = [header, ...rows].map(row => row.join(',')).join('\n');
-    return csv;
+
+
+  verDetalles(curso: any): void {
+    console.log('Detalles del curso:', curso);
+    // Lógica para mostrar un modal o redirigir a otra página
+  }
+  
+  exportarCalificaciones(): void {
+    console.log('Exportando calificaciones...');
+    // Lógica para generar y descargar un archivo CSV
   }
 
-  // Descargar el archivo CSV generado
-  descargarCSV(csvContent: string) {
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'calificaciones.csv';
-    link.click();
+  get promedioGeneral(): string {
+    if (this.cursos.length === 0) {
+      return 'N/A';
+    }
+    const sumaCalificaciones = this.cursos.reduce((sum, curso) => {
+      return sum + (curso.calificacion_final || 0);
+    }, 0);
+    return (sumaCalificaciones / this.cursos.length).toFixed(1);
   }
+  
 }

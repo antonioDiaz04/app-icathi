@@ -290,7 +290,11 @@ guardarCambios() {
     this.docenteService.updateDocente(this.docenteData.id, docenteDataToSave).subscribe({
       next: (response) => {
         console.log('Datos del docente guardados correctamente:', response);
-        this.router.navigate(['/docente/home']); // Ruta por defecto
+        // this.router.navigate(['/docente/home']); // Ruta por defecto
+        this.router.navigate(['/docente/home']).then(() => {
+          // Recargar la página después de redirigir
+          window.location.reload();
+        });
         this.isEditing = false; // Salir del modo edición
       },
       error: (err) => {
