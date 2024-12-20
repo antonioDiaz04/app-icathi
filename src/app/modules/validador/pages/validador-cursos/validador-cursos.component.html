@@ -1,162 +1,132 @@
 <div class="min-h-screen flex bg-gray-50">
   <!-- Menú Lateral -->
-  <aside class="w-64 text-white p-6" style="background: linear-gradient(135deg, #2563eb, #1e40af);">
-    <h1 class="text-2xl font-bold mb-6 text-center">Validador de Cursos</h1>
+  <aside class="w-72 bg-gradient-to-b from-blue-800 to-blue-600 text-white p-6 shadow-lg">
+    <div class="flex items-center justify-center mb-8">
+      <img src="https://www.icathi.edu.mx/img/ICATHI.png" alt="ICATHI Logo" class="w-16 h-auto" />
+    </div>
+    <h1 class="text-2xl font-bold text-center mb-6 tracking-wider">
+      Validador de Cursos
+    </h1>
     <nav>
       <ul class="space-y-4">
-        <li class="flex items-center space-x-3 hover:bg-blue-700 p-3 rounded-lg">
-          <i class="fas fa-tasks"></i>
-          <a href="#" class="text-lg">Pendientes</a>
-        </li>
-        <li class="flex items-center space-x-3 hover:bg-blue-700 p-3 rounded-lg">
-          <i class="fas fa-book"></i>
-          <a href="#" class="text-lg">Todos los Cursos</a>
-        </li>
-        <li class="flex items-center space-x-3 hover:bg-blue-700 p-3 rounded-lg">
-          <i class="fas fa-history"></i>
-          <a href="#" class="text-lg">Historial</a>
-        </li>
-        <li class="flex items-center space-x-3 hover:bg-blue-700 p-3 rounded-lg">
-          <i class="fas fa-cogs"></i>
-          <a href="#" class="text-lg">Configuraciones</a>
+        <li class="flex items-center space-x-3 p-3 hover:bg-blue-700 rounded-lg transition duration-300 cursor-pointer">
+          <i class="fas fa-sign-out-alt"></i>
+          <a href="#" class="text-lg font-medium">Cerrar Sesión</a>
         </li>
       </ul>
     </nav>
   </aside>
 
   <!-- Contenido Principal -->
-  <main class="flex-1 p-8">
-    <header class="flex justify-between items-center mb-8">
-      <h2 class="text-2xl font-bold text-gray-700">Panel de Validaciones</h2>
+  <main class="flex-1 p-10">
+    <header class="flex justify-between items-center mb-10">
+      <h2 class="text-4xl font-extrabold text-blue-800">Panel de Validaciones</h2>
     </header>
 
     <!-- Lista de Planteles -->
-    <section class="mt-10">
-      <h3 class="text-xl font-semibold text-gray-700 mb-4">Lista de Planteles</h3>
-      <ul class="bg-white shadow-lg rounded-lg border border-gray-200">
-        <li *ngFor="let pc of plantelesCursosNoValidados" class="flex justify-between items-center p-4 hover:bg-gray-100 cursor-pointer">
-          <span>{{ pc.plantel_nombre }}</span>
-          <button (click)="seleccionarPlantel(pc.plantel_nombre)" class="bg-blue-600 text-white py-1 px-3 rounded-lg hover:bg-blue-700">
-            Ver Cursos Solicitados
+    <section class="mb-12">
+      <h3 class="text-2xl font-semibold text-blue-800 mb-6">Lista de Planteles</h3>
+      <ul class="bg-white shadow-lg rounded-lg divide-y divide-gray-200">
+        <li
+          *ngFor="let pc of plantelesCursosNoValidados"
+          class="flex justify-between items-center p-6 hover:bg-gray-100 transition duration-300 cursor-pointer"
+        >
+          <span class="text-lg font-medium text-gray-800">{{ pc.plantel_nombre }}</span>
+          <button
+            (click)="verDetallesCurso(pc)"
+            class="bg-orange-500 text-white py-2 px-6 rounded-md hover:bg-orange-600 transition duration-300"
+          >
+            Ver Detalles
           </button>
         </li>
       </ul>
     </section>
 
     <!-- Lista de Planteles con Cursos Validados -->
-    <section class="mt-10">
-      <h3 class="text-xl font-semibold text-gray-700 mb-4">Planteles con Cursos Validados</h3>
-      <ul class="bg-white shadow-lg rounded-lg border border-gray-200">
-        <li *ngFor="let plantel of plantelesConCursosValidados" class="flex justify-between items-center p-4">
-          <span>{{ plantel }}</span>
-          <button (click)="mostrarCursosValidados()" class="bg-green-600 text-white py-1 px-3 rounded-lg hover:bg-green-700">
-            Ver Cursos Validados
+    <section>
+      <h3 class="text-2xl font-semibold text-blue-800 mb-6">Planteles con Cursos Validados</h3>
+      <ul class="bg-white shadow-lg rounded-lg divide-y divide-gray-200">
+        <li
+          *ngFor="let plantel of plantelesConCursosValidados"
+          class="p-6 flex justify-between items-center hover:bg-gray-100 transition duration-300"
+        >
+          <div>
+            <p class="text-gray-800"><strong>Plantel:</strong> {{ plantel.plantel_nombre }}</p>
+            <p class="text-gray-800"><strong>Curso:</strong> {{ plantel.curso_nombre }}</p>
+            <p class="text-sm text-gray-600">
+              <strong>Estatus:</strong> {{ plantel.curso_validado ? 'Validado' : 'No Validado' }}
+            </p>
+          </div>
+          <button
+            (click)="verDetallesCurso(plantel)"
+            class="bg-orange-500 text-white py-2 px-6 rounded-md hover:bg-orange-600 transition duration-300"
+          >
+            Ver Detalles
           </button>
         </li>
-        <li *ngIf="plantelesConCursosValidados.size === 0" class="p-4 text-center text-gray-500">No hay planteles con cursos validados.</li>
+        <li
+          *ngIf="plantelesConCursosValidados.length === 0"
+          class="p-6 text-center text-gray-500"
+        >
+          No hay planteles con cursos validados.
+        </li>
       </ul>
     </section>
   </main>
 </div>
 
-<!-- Modal de detalles del curso -->
-<div *ngIf="mostrarDetalleModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
-  <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
-    <h2 class="text-2xl font-bold mb-6">Cursos Solicitados por {{ plantelSeleccionado }}</h2>
-    <div class="space-y-4">
-      <h3 class="text-xl font-semibold text-gray-700 mb-4">Cursos No Validados</h3>
-      <table class="min-w-full table-auto">
-        <thead style="background-color: #f3f4f6;" class="text-gray-700">
-          <tr>
-            <th class="py-3 px-6 text-left">Nombre del Curso</th>
-            <th class="py-3 px-6 text-left">Estatus</th>
-            <th class="py-3 px-6 text-center">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let curso of cursosNoValidados" class="hover:bg-gray-50">
-            <td class="py-3 px-6">{{ curso.curso_nombre }}</td>
-            <td class="py-3 px-6">Pendiente</td>
-            <td class="py-3 px-6 text-center">
-              <button (click)="actualizarEstatusSolicitud(curso.id, true, 'Validación de curso')" class="bg-yellow-600 text-white py-1 px-3 rounded-lg text-sm hover:bg-yellow-700 ml-2">
-                Validar
-              </button>
-            </td>
-          </tr>
-          <tr *ngIf="cursosNoValidados.length === 0">
-            <td colspan="3" class="py-3 px-6 text-center text-gray-500">No hay cursos no validados para este plantel.</td>
-          </tr>
-        </tbody>
-      </table>
+<!-- Modal de Detalles del Curso -->
+<div
+  *ngIf="mostrarDetalleModal"
+  class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50"
+>
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-3xl p-8 h-auto max-h-[90vh] overflow-y-auto">
+    <h2 class="text-3xl font-bold mb-6 text-blue-800">
+      Detalles del Curso: {{ cursoSeleccionado?.curso_nombre }}
+    </h2>
+    <div class="space-y-4 text-gray-800">
+      <p><strong>Plantel:</strong> {{ cursoSeleccionado?.plantel_nombre }}</p>
+      <p><strong>Curso:</strong> {{ cursoSeleccionado?.curso_nombre }}</p>
+      <p><strong>Horario:</strong> {{ cursoSeleccionado?.horario }}</p>
+      <p><strong>Cupo Máximo:</strong> {{ cursoSeleccionado?.cupo_maximo }}</p>
+      <p><strong>Requisitos Extra:</strong> {{ cursoSeleccionado?.requisitos_extra }}</p>
+      <p><strong>Fecha de Inicio:</strong> {{ cursoSeleccionado?.fecha_inicio | date:'short' }}</p>
+      <p><strong>Fecha de Fin:</strong> {{ cursoSeleccionado?.fecha_fin | date:'short' }}</p>
+      <p><strong>Estatus:</strong> {{ cursoSeleccionado?.estatus ? 'Activo' : 'Inactivo' }}</p>
 
-      <h3 class="text-xl font-semibold text-gray-700 mb-4">Cursos Validados</h3>
-      <table class="min-w-full table-auto">
-        <thead style="background-color: #f3f4f6;" class="text-gray-700">
-          <tr>
-            <th class="py-3 px-6 text-left">Nombre del Curso</th>
-            <th class="py-3 px-6 text-left">Estatus</th>
-            <th class="py-3 px-6 text-center">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let curso of cursosValidados" class="hover:bg-gray-50">
-            <td class="py-3 px-6">{{ curso.curso_nombre }}</td>
-            <td class="py-3 px-6">Validado</td>
-            <td class="py-3 px-6 text-center">
-              <button (click)="actualizarEstatusSolicitud(curso.id, false, 'Desvalidación de curso')" class="bg-red-600 text-white py-1 px-3 rounded-lg text-sm hover:bg-red-700 ml-2">
-                Desvalidar
-              </button>
-            </td>
-          </tr>
-          <tr *ngIf="cursosValidados.length === 0">
-            <td colspan="3" class="py-3 px-6 text-center text-gray-500">No hay cursos validados para este plantel.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="flex justify-end mt-6">
-      <button type="button" (click)="cerrarDetalleModal()" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-lg shadow-md">
-        Cerrar
-      </button>
-    </div>
-  </div>
-</div>
+      <!-- Previsualización del Temario -->
+      <h3 class="text-xl font-semibold text-blue-800 mb-4">Temario del Curso</h3>
+      <iframe
+        *ngIf="cursoSeleccionado?.temario_url"
+        [src]="sanitizer.bypassSecurityTrustResourceUrl(cursoSeleccionado?.temario_url || '')"
+        class="w-full h-96 border border-gray-300 rounded-md"
+      ></iframe>
+      <p *ngIf="!cursoSeleccionado?.temario_url" class="text-red-500">No hay temario disponible.</p>
 
-<!-- Modal de cursos validados -->
-<div *ngIf="mostrarCursosValidadosModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
-  <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
-    <h2 class="text-2xl font-bold mb-6">Cursos Validados</h2>
-    <div class="space-y-4">
-      <table class="min-w-full table-auto">
-        <thead style="background-color: #f3f4f6;" class="text-gray-700">
-          <tr>
-            <th class="py-3 px-6 text-left">Nombre del Curso</th>
-            <th class="py-3 px-6 text-left">Plantel</th>
-            <th class="py-3 px-6 text-left">Estatus</th>
-            <th class="py-3 px-6 text-center">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let curso of cursosValidados" class="hover:bg-gray-50">
-            <td class="py-3 px-6">{{ curso.curso_nombre }}</td>
-            <td class="py-3 px-6">{{ curso.plantel_nombre }}</td>
-            <td class="py-3 px-6">Validado</td>
-            <td class="py-3 px-6 text-center">
-              <button (click)="actualizarEstatusSolicitud(curso.id, false, 'Desvalidación de curso')" class="bg-red-600 text-white py-1 px-3 rounded-lg text-sm hover:bg-red-700 ml-2">
-                Desvalidar
-              </button>
-            </td>
-          </tr>
-          <tr *ngIf="cursosValidados.length === 0">
-            <td colspan="4" class="py-3 px-6 text-center text-gray-500">No hay cursos validados.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="flex justify-end mt-6">
-      <button type="button" (click)="cerrarCursosValidadosModal()" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-lg shadow-md">
-        Cerrar
-      </button>
+      <!-- Botones -->
+      <div class="flex justify-between mt-8">
+        <button
+          *ngIf="cursoSeleccionado"
+          (click)="actualizarEstatusSolicitud(cursoSeleccionado.id, !cursoSeleccionado.estatus, 'Cambio de estatus')"
+          class="bg-orange-500 text-white py-2 px-6 rounded-md hover:bg-orange-600 transition duration-300"
+        >
+          {{ cursoSeleccionado.estatus ? 'Desvalidar Curso' : 'Validar Curso' }}
+        </button>
+        <button
+          (click)="cerrarDetalleModal()"
+          class="bg-gray-500 text-white py-2 px-6 rounded-md hover:bg-gray-600 transition duration-300"
+        >
+          Cerrar
+        </button>
+        <a
+          *ngIf="cursoSeleccionado?.temario_url"
+          [href]="cursoSeleccionado?.temario_url"
+          target="_blank"
+          class="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 transition duration-300"
+        >
+          Ver Temario
+        </a>
+      </div>
     </div>
   </div>
 </div>
