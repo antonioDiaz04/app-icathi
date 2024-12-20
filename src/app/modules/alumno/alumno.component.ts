@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router'; // Para capturar el ID desde la URL
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router'; // Para capturar el ID desde la URL
 import { AspiranteService } from '../../shared/services/aspirante.service';
 import { AuthService } from '../../shared/services/auth.service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-alumno',
@@ -23,15 +24,19 @@ export class AlumnoComponent implements OnInit {
     private aspiranteService: AspiranteService, // Inyectar el servicio AspiranteService
     private route: ActivatedRoute // Inyectar el ActivatedRoute para obtener el ID desde la URL
   ) {}
-
-  ngOnInit(): void {
-    this.loadUserDetails();
-
-
-  }
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
   }
+  ngOnInit(): void {
+    this.loadUserDetails();
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.menuOpen = false;
+    });
+
+  }
+
   // Cargar detalles del usuario desde el token
   private async loadUserDetails(): Promise<void> {
     try {
