@@ -7,6 +7,7 @@ import { DocenteService } from '../../../../../../shared/services/docente.servic
 import { response } from 'express';
 import { CursosdocentesService } from '../../../../../../shared/services/cursosdocentes.service';
 import { CursosService } from '../../../../../../shared/services/cursos.service';
+import { PDFDocumentProxy } from 'ng2-pdf-viewer';
 export interface Modulo {
   id: number;
   nombre: string;
@@ -272,14 +273,7 @@ export class ListadoCursosComponent implements OnInit {
   fileExtension: string = '';
 
   // Evento cuando se selecciona un archivo
-  onFileSelect(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      this.selectedFile = file;
-      this.fileExtension = this.getFileExtension(file.name);
-      // this.uploadFile(file); // Iniciar carga del archivo
-    }
-  }
+
 
   // Subir el archivo
   // uploadFile(file: File): void {
@@ -288,6 +282,7 @@ export class ListadoCursosComponent implements OnInit {
 
   // Eliminar archivo
   removeFile(): void {
+    this.url=''
     this.selectedFile = null;
     this.fileExtension = '';
   }
@@ -316,4 +311,45 @@ export class ListadoCursosComponent implements OnInit {
   onDragLeave(event: DragEvent): void {
     // Se puede agregar algún efecto visual para cuando el archivo sale del área
   }
+  url:any = '';
+
+  onFileSelect(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.fileExtension = this.getFileExtension(file.name);
+
+      // For PDF files, load the file into the viewer
+      if (this.fileExtension === 'pdf') {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.url = reader.result as string; // This will hold the base64 string of the PDF
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  }
+
+
+
+  page:number=1;
+  totalPages!:number;
+  isLoaded:boolean=false;
+
+
+  callbackFn(pdf:PDFDocumentProxy){
+    this.totalPages=pdf.numPages;
+    this.isLoaded=true;
+  }
+
+  nextTep(){
+    this.page++;
+  }
+  prevTep(){
+    this.page--;
+  }
+
+
+
+  // }
 }
