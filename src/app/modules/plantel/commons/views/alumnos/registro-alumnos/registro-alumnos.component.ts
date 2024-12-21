@@ -85,29 +85,9 @@ export class RegistroAlumnosComponent implements OnInit {
       },
     });
   }
-  onPlantelSelected(event: Event): void {
-    const selectedPlantelId = (event.target as HTMLSelectElement).value;
 
-    console.log('Plantel seleccionado:', selectedPlantelId);
-    // if (selectedPlantelId) {
 
-    // this.area_id = Number(selectedAreaId);
-    this.isLoading = true;
 
-    // Buscar el nombre del área seleccionada en la lista de áreas
-    const selectedPlantel = this.planteles.find(
-      (plantel) => plantel.id === Number(selectedPlantelId)
-    );
-
-    if (selectedPlantel) {
-      this.isLoading = false;
-
-      console.log('Nombre del área seleccionada:', selectedPlantel.nombre);
-      this.formDataNAME.plantel = selectedPlantel.nombre;
-    } else {
-      console.error('plantel el ID seleccionado:', selectedPlantelId);
-    }
-  }
   onAreaSelect(event: Event) {
     this.isLoading = true;
     const selectedAreaId = (event.target as HTMLSelectElement).value;

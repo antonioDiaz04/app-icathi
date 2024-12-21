@@ -7,7 +7,8 @@ import { DocenteService } from '../../../../../../shared/services/docente.servic
 import { CursosdocentesService } from '../../../../../../shared/services/cursosdocentes.service';
 import { AspiranteService } from '../../../../../../shared/services/aspirante.service';
 import { PlantelService } from '../../../../../../shared/services/plantel.service';
-import { response } from 'express';
+// import { response } from 'express';
+
 
 export interface Modulo {
 
@@ -334,6 +335,7 @@ export class ListadoCursosAprovadosComponent implements OnInit {
         (response) => {
           console.log('Docente asignado:', response);
           this.closeModal();
+          this.cargarCursosByIdPlantel()
         },
         (error) => {
           console.error('Error al asignar docente:', error);
