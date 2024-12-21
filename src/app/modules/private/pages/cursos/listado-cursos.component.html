@@ -1,65 +1,49 @@
 <div class="max-w-7xl mx-auto p-6 space-y-8">
   <!-- Título y botón para agregar curso -->
   <div class="flex justify-between items-center">
-    <h2 class="text-3xl font-extrabold text-gray-800">
-      📚 Listado de Cursos
-    </h2>
+    <h2 class="text-3xl font-bold text-gray-900">Listado de Cursos</h2>
     <button
       (click)="toggleFormulario()"
-      class="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300"
+      class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300"
     >
-      {{ mostrarFormulario ? '❌ Cancelar' : '➕ Agregar Curso' }}
+      {{ mostrarFormulario ? 'Cancelar' : 'Agregar Curso' }}
     </button>
   </div>
 
   <!-- Tabla de cursos -->
   <div *ngIf="!mostrarFormulario">
-    <table
-      class="table-auto w-full border-collapse border border-gray-300 shadow-lg rounded-lg overflow-hidden"
-    >
+    <table class="min-w-full border border-gray-300 shadow-lg rounded-lg overflow-hidden">
       <thead>
-        <tr class="bg-gradient-to-r from-gray-700 to-gray-900 text-white">
+        <tr class="bg-gradient-to-r from-gray-800 to-gray-900 text-white">
           <th class="border border-gray-300 px-4 py-3">ID</th>
-          <th class="border border-gray-300 px-4 py-3">NOMBRE DEL CURSO</th>
-          <th class="border border-gray-300 px-4 py-3">
-            DURACIÓN (HORAS)
-          </th>
-          <th class="border border-gray-300 px-4 py-3">ACCIONES</th>
+          <th class="border border-gray-300 px-4 py-3">Nombre del Curso</th>
+          <th class="border border-gray-300 px-4 py-3">Duración (Horas)</th>
+          <th class="border border-gray-300 px-4 py-3">Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let modulo of modulos"
-          class="hover:bg-gray-100 transition duration-200"
-        >
-          <td class="border border-gray-300 px-4 py-3 text-center">
-            {{ modulo.id }}
-          </td>
+        <tr *ngFor="let modulo of modulos" class="hover:bg-gray-100 transition duration-200">
+          <td class="border border-gray-300 px-4 py-3 text-center">{{ modulo.id }}</td>
           <td class="border border-gray-300 px-4 py-3">{{ modulo.nombre }}</td>
-          <td class="border border-gray-300 px-4 py-3 text-center">
-            {{ modulo.duracion_horas }}
-          </td>
+          <td class="border border-gray-300 px-4 py-3 text-center">{{ modulo.duracion_horas }}</td>
           <td class="border border-gray-300 px-4 py-3 text-center space-x-2">
-            <!-- Botón para ver detalles -->
             <button
               (click)="verDetalles(modulo)"
-              class="bg-green-500 text-white px-3 py-1 rounded-lg shadow-md hover:bg-green-700 transition duration-300"
+              class="bg-green-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-green-700 transition duration-300"
             >
-              🔍 Ver Detalles
+              Ver Detalles
             </button>
-            <!-- Botón para editar -->
             <button
               (click)="editarCurso(modulo)"
-              class="bg-blue-500 text-white px-3 py-1 rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
+              class="bg-blue-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
             >
-              ✏️ Editar
+              Editar
             </button>
-            <!-- Botón para eliminar -->
             <button
               (click)="eliminarCurso(modulo.id)"
-              class="bg-red-500 text-white px-3 py-1 rounded-lg shadow-md hover:bg-red-700 transition duration-300"
+              class="bg-red-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-red-700 transition duration-300"
             >
-              🗑️ Eliminar
+              Eliminar
             </button>
           </td>
         </tr>
@@ -68,13 +52,8 @@
   </div>
 
   <!-- Formulario para agregar curso -->
-  <div
-    *ngIf="mostrarFormulario"
-    class="bg-white p-8 rounded-lg shadow-lg border border-gray-200"
-  >
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">
-      📝 Registrar Nuevo Curso
-    </h2>
+  <div *ngIf="mostrarFormulario" class="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Registrar Nuevo Curso</h2>
     <form (ngSubmit)="agregarCurso()" #cursoForm="ngForm" class="space-y-6">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Área -->
@@ -87,9 +66,7 @@
             class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
           >
             <option value="" disabled>Seleccione Área</option>
-            <option *ngFor="let area of areas" [value]="area.id">
-              {{ area.nombre }}
-            </option>
+            <option *ngFor="let area of areas" [value]="area.id">{{ area.nombre }}</option>
           </select>
         </div>
 
@@ -102,15 +79,8 @@
             required
             class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
           >
-            <option value="" disabled>
-              Seleccione Especialidad
-            </option>
-            <option
-              *ngFor="let especialidad of especialidades"
-              [value]="especialidad.id"
-            >
-              {{ especialidad.nombre }}
-            </option>
+            <option value="" disabled>Seleccione Especialidad</option>
+            <option *ngFor="let especialidad of especialidades" [value]="especialidad.id">{{ especialidad.nombre }}</option>
           </select>
         </div>
 
@@ -124,9 +94,7 @@
             class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
           >
             <option value="" disabled>Seleccione Tipo</option>
-            <option *ngFor="let tipo of tiposCurso" [value]="tipo.id">
-              {{ tipo.nombre }}
-            </option>
+            <option *ngFor="let tipo of tiposCurso" [value]="tipo.id">{{ tipo.nombre }}</option>
           </select>
         </div>
 
@@ -181,10 +149,7 @@
           placeholder="Descripción del curso"
           #descripcion="ngModel"
         ></textarea>
-        <div
-          *ngIf="descripcion.invalid && descripcion.touched"
-          class="text-red-500 text-sm"
-        >
+        <div *ngIf="descripcion.invalid && descripcion.touched" class="text-red-500 text-sm">
           La descripción es obligatoria.
         </div>
       </div>
@@ -203,10 +168,7 @@
           <option value="Intermedio">Intermedio</option>
           <option value="Avanzado">Avanzado</option>
         </select>
-        <div
-          *ngIf="!nuevoCurso.nivel && cursoForm.submitted"
-          class="text-red-500 text-sm"
-        >
+        <div *ngIf="!nuevoCurso.nivel && cursoForm.submitted" class="text-red-500 text-sm">
           El nivel es obligatorio.
         </div>
       </div>
@@ -224,16 +186,11 @@
   </div>
 
   <!-- Modal de edición -->
-  <div
-    *ngIf="mostrarModal"
-    class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50"
-  >
+  <div *ngIf="mostrarModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
-      <h2 class="text-2xl font-bold mb-6">✏️ Editar Curso</h2>
+      <h2 class="text-2xl font-bold mb-6">Editar Curso</h2>
       <form (ngSubmit)="guardarEdicion()" #editarForm="ngForm" class="space-y-6">
-        <div
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <!-- Nombre del Curso -->
           <div>
             <label class="block text-sm font-medium">Nombre del Curso</label>
@@ -325,50 +282,19 @@
   </div>
 
   <!-- Modal de detalles del curso -->
-  <div
-    *ngIf="mostrarDetalleModal"
-    class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50"
-  >
+  <div *ngIf="mostrarDetalleModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
       <h2 class="text-2xl font-bold mb-6">Detalles del Curso</h2>
       <div class="space-y-4">
-        <p>
-          <strong>ID:</strong> {{ cursoDetalleSeleccionado?.id }}
-        </p>
-        <p>
-          <strong>Nombre:</strong> {{ cursoDetalleSeleccionado?.nombre }}
-        </p>
-        <p>
-          <strong>Clave:</strong> {{ cursoDetalleSeleccionado?.clave }}
-        </p>
-        <p>
-          <strong>Duración:</strong>
-          {{ cursoDetalleSeleccionado?.duracion_horas }} horas
-        </p>
-        <p>
-          <strong>Descripción:</strong>
-          {{ cursoDetalleSeleccionado?.descripcion }}
-        </p>
-        <p>
-          <strong>Nivel:</strong> {{ cursoDetalleSeleccionado?.nivel }}
-        </p>
-        <p>
-          <strong>Área:</strong>
-          {{ obtenerNombreArea(cursoDetalleSeleccionado?.area_id) }}
-        </p>
-        <p>
-          <strong>Especialidad:</strong>
-          {{
-            obtenerNombreEspecialidad(
-              cursoDetalleSeleccionado?.especialidad_id
-            )
-          }}
-        </p>
-        <p>
-          <strong>Tipo de Curso:</strong>
-          {{ obtenerNombreTipoCurso(cursoDetalleSeleccionado?.tipo_curso_id) }}
-        </p>
-        <!-- Puedes agregar más detalles si lo deseas -->
+        <p><strong>ID:</strong> {{ cursoDetalleSeleccionado?.id }}</p>
+        <p><strong>Nombre:</strong> {{ cursoDetalleSeleccionado?.nombre }}</p>
+        <p><strong>Clave:</strong> {{ cursoDetalleSeleccionado?.clave }}</p>
+        <p><strong>Duración:</strong> {{ cursoDetalleSeleccionado?.duracion_horas }} horas</p>
+        <p><strong>Descripción:</strong> {{ cursoDetalleSeleccionado?.descripcion }}</p>
+        <p><strong>Nivel:</strong> {{ cursoDetalleSeleccionado?.nivel }}</p>
+        <p><strong>Área:</strong> {{ obtenerNombreArea(cursoDetalleSeleccionado?.area_id) }}</p>
+        <p><strong>Especialidad:</strong> {{ obtenerNombreEspecialidad(cursoDetalleSeleccionado?.especialidad_id) }}</p>
+        <p><strong>Tipo de Curso:</strong> {{ obtenerNombreTipoCurso(cursoDetalleSeleccionado?.tipo_curso_id) }}</p>
       </div>
       <div class="flex justify-end mt-6">
         <button
