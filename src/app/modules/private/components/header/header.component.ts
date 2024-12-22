@@ -9,12 +9,13 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent {
 
-  constructor(private router: Router) {} // Inyecta Router como privado
+  constructor(private router: Router) { } // Inyecta Router como privado
 
   // Función para navegar a una ruta
   navigateTo(route: string): void {
-    this.router.navigate(['privado/',route]);
+    this.router.navigate(['privado/', route]);
   }
+
   logout(): void {
     const request = indexedDB.open('authDB'); // Nombre de la base de datos
 
@@ -40,4 +41,5 @@ export class HeaderComponent {
       console.error('Error al abrir la base de datos:', error);
     };
   }
+
 }

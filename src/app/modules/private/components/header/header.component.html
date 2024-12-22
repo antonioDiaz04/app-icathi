@@ -214,25 +214,10 @@
 
      
       <!-- Botón de Cerrar Sesión (Estático) -->
-      <li>
-        <a
-
-        (click)="logout()"
-          class="flex items-center p-2 text-gray-800 rounded-lg hover:bg-red-200 group"
-        >
-          <svg
-            class="flex-shrink-0 w-5 h-5 text-gray-600 transition duration-75 group-hover:text-gray-900"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              d="M10 2a1 1 0 0 1 1 1v3h4a1 1 0 0 1 0 2h-4v3a1 1 0 0 1-2 0v-3H5a1 1 0 0 1 0-2h4V3a1 1 0 0 1 1-1Z"
-            />
-          </svg>
-          <span class="flex-1 ms-3 whitespace-nowrap">Cerrar Sesión</span>
-        </a>
+      <li class="hover:text-[#F08762] transition-all duration-300">
+        <button (click)="logout()" class="block py-3 px-6 flex items-center text-gray-600 w-full border-2 border-[#44509D] rounded-md hover:bg-[#44509D] hover:text-white transition-all duration-300">
+          <i class="fas fa-sign-out-alt text-[#44509D] mr-3 hover:text-white"></i> Cerrar Sesión
+        </button>
       </li>
     </ul>
   </div>
