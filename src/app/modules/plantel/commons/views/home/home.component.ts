@@ -11,15 +11,17 @@ import { AuthService } from '../../../../../shared/services/auth.service';
 })
 export class HomeComponent implements OnInit {
   data: any = {};
-
+  loading:boolean=false
   constructor(private http: HttpClient, private auth: AuthService) {}
-
+  
   ngOnInit(): void {
+    this.loading=true
     this.auth.getIdFromToken().then((idPlantel) => {
       this.http
         .get<any>(`${environment.api}/plantelesCursos/info/${idPlantel}`)
         .subscribe((response) => {
           this.data= response;
+      this.loading=false
         });
     });
   }

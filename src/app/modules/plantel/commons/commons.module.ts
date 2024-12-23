@@ -19,10 +19,11 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { ImpartidosComponent } from './views/cursos/impartidos/impartidos.component';
 
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { HomeComponent } from './views/home/home.component';
 
 
 @NgModule({
-  declarations: [    FilterPipe,ListadoAlumnosComponent,ListadoCursosComponent,ListadoDocentesComponent, ListadoCursosAprovadosComponent, HistorialComponent, RegistroAlumnosComponent, RegistroDocenteComponent, ImpartidosComponent],
+  declarations: [    FilterPipe,ListadoAlumnosComponent,ListadoCursosComponent,HomeComponent,ListadoDocentesComponent, ListadoCursosAprovadosComponent, HistorialComponent, RegistroAlumnosComponent, RegistroDocenteComponent, ImpartidosComponent],
   imports: [PdfViewerModule,
     CommonModule,NzDatePickerModule,ReactiveFormsModule,FormsModule,RouterModule,
   ],
