@@ -242,7 +242,7 @@ export class ListadoCursosComponent implements OnInit {
           this.cursoForm.value.requisitos_extra
         );
         formData.append('fecha_inicio', this.cursoForm.value.fecha_inicio);
-        // formData.append('temario', this.selectedFile);
+        formData.append('temario', this.selectedFile);
         formData.append('fecha_fin', this.cursoForm.value.fecha_fin);
         console.log('Datos enviados al backend:', formData);
 
@@ -283,9 +283,9 @@ export class ListadoCursosComponent implements OnInit {
   }
 
   //*************************FILE */}
-  // selectedFile: File | any = null;
+  selectedFile: File | any = null;
   // isUploading = false;
-  // fileExtension: string = '';
+  fileExtension: string = '';
 
   // Evento cuando se selecciona un archivo
 
@@ -295,70 +295,70 @@ export class ListadoCursosComponent implements OnInit {
   // }
 
   // Eliminar archivo
-  // removeFile(): void {
-  //   this.url = '';
-  //   // this.selectedFile = null;
-  //   this.fileExtension = '';
-  // }
+  removeFile(): void {
+    this.url = '';
+    this.selectedFile = null;
+    this.fileExtension = '';
+  }
 
   // Obtener la extensión del archivo
-  // getFileExtension(fileName: string): string {
-  //   const ext = fileName.split('.').pop()?.toLowerCase() || '';
-  //   return ext;
-  // }
+  getFileExtension(fileName: string): string {
+    const ext = fileName.split('.').pop()?.toLowerCase() || '';
+    return ext;
+  }
 
   // Manejar eventos de arrastre
-  // onDragOver(event: DragEvent): void {
-  //   event.preventDefault();
-  // }
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+  }
 
-  // onDrop(event: DragEvent): void {
-  //   event.preventDefault();
-  //   const file = event.dataTransfer?.files[0];
-  //   if (file) {
-  //     this.selectedFile = file;
-  //     this.fileExtension = this.getFileExtension(file.name);
-  //     // this.uploadFile(file);
-  //   }
-  // }
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    const file = event.dataTransfer?.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.fileExtension = this.getFileExtension(file.name);
+      // this.uploadFile(file);
+    }
+  }
 
-  // onDragLeave(event: DragEvent): void {
-  //   // Se puede agregar algún efecto visual para cuando el archivo sale del área
-  // }
+  onDragLeave(event: DragEvent): void {
+    // Se puede agregar algún efecto visual para cuando el archivo sale del área
+  }
   url: any = '';
 
-  // onFileSelect(event: any): void {
-  //   const file = event.target.files[0];
-  //   if (file) {
-  //     // this.selectedFile = file;
-  //     this.fileExtension = this.getFileExtension(file.name);
+  onFileSelect(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.fileExtension = this.getFileExtension(file.name);
 
-  //     // For PDF files, load the file into the viewer
-  //     if (this.fileExtension === 'pdf') {
-  //       const reader = new FileReader();
-  //       reader.onload = () => {
-  //         this.url = reader.result as string; // This will hold the base64 string of the PDF
-  //       };
-  //       reader.readAsDataURL(file);
-  //     }
-  //   }
-  // }
+      // For PDF files, load the file into the viewer
+      if (this.fileExtension === 'pdf') {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.url = reader.result as string; // This will hold the base64 string of the PDF
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  }
 
   page: number = 1;
   totalPages!: number;
   isLoaded: boolean = false;
 
-  // callbackFn(pdf: PDFDocumentProxy) {
-  //   this.totalPages = pdf.numPages;
-  //   this.isLoaded = true;
-  // }
+  callbackFn(pdf: PDFDocumentProxy) {
+    this.totalPages = pdf.numPages;
+    this.isLoaded = true;
+  }
 
-  // nextTep() {
-  //   this.page++;
-  // }
-  // prevTep() {
-  //   this.page--;
-  // }
+  nextTep() {
+    this.page++;
+  }
+  prevTep() {
+    this.page--;
+  }
 
   // }
 }

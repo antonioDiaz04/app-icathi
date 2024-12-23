@@ -25,6 +25,10 @@ export class PlantelService {
     //   return this.http.get<any[]>(`${environment.api}/planteles-curso/plantelinfo/${idPlantelCurso}`);
     return this.http.get<{ alumnos: any[]; docentes: any[] ;curso:any[]}>(`${environment.api}/planteles-curso/plantelinfo/${idPlantelCurso}`);
   }
+  getInfoCursoPlantelByiD(idPlantelCurso: any): Observable<{ alumnos: any[]; docentes: any[] ;curso:any[]}> {
+    //   return this.http.get<any[]>(`${environment.api}/planteles-curso/plantelinfo/${idPlantelCurso}`);
+    return this.http.get<{ alumnos: any[]; docentes: any[] ;curso:any[]}>(`${environment.api}/planteles-curso/plantelinfoDetalle/${idPlantelCurso}`);
+  }
 
   // Método para obtener la lista de cursos
   getCursos(): Observable<any[]> {

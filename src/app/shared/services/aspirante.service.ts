@@ -16,6 +16,13 @@ export class AspiranteService {
     return this.http.post(this.apiUrl, JSON.stringify(data), { headers });
   }
 
+  registrarAspiranteByPllantel(data: any): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post(`${environment.api}/aspirante/registro/${data.plantel}`, JSON.stringify(data), { headers });
+  }
+
+
+
   getApirantes(): Observable<any> {
     return this.http.get(`${environment.api}/alumno`);
   }

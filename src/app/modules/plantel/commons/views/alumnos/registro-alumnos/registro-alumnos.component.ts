@@ -50,12 +50,20 @@ export class RegistroAlumnosComponent implements OnInit {
     private autService_: AuthService
   ) {}
 
-  ngOnInit() {
-    this.idPlantel = this.autService_.getIdFromToken();
-    this.loadInitialData();
-    // Asigna el idPlantel al campo plantel del formData
-    this.formData.plantel = this.idPlantel;
+  async ngOnInit() {
+    try {
+      const plantelId = await this.autService_.getIdFromToken();
+      this.formData.plantel = plantelId !== null ? plantelId.toString() : '';;
+
+      alert(this.formData.plantel);
+
+      // Carga los datos iniciales después de asignar el plantel
+      this.loadInitialData();
+    } catch (error) {
+      alert('Error obteniendo el plantel ID:'+error);
+    }
   }
+
 
   loadInitialData() {
     this.isLoading = true;
@@ -63,7 +71,12 @@ export class RegistroAlumnosComponent implements OnInit {
     // Cargar planteles (puedes sustituir por un servicio si es necesario)
 
     // Cargar áreas
-    this.areasService.getAreas().subscribe({
+
+
+this.autService_.getIdFromToken().then((idPlantel)=>{
+
+
+    this.areasService.getAreasByIdPlantel(idPlantel).subscribe({
       next: (areas) => {
         this.areas = areas;
         this.isLoading = false;
@@ -74,19 +87,18 @@ export class RegistroAlumnosComponent implements OnInit {
       },
     });
     // Cargar áreas
-    this.plantelesService.getPlanteles().subscribe({
-      next: (plantele) => {
-        this.planteles = plantele;
-        this.isLoading = false;
-      },
-      error: () => {
-        console.error('Error al cargar áreas');
-        this.isLoading = false;
-      },
-    });
+  })
+    // this.plantelesService.getPlanteles().subscribe({
+    //   next: (plantele) => {
+    //     this.planteles = plantele;
+    //     this.isLoading = false;
+    //   },
+    //   error: () => {
+    //     console.error('Error al cargar áreas');
+    //     this.isLoading = false;
+    //   },
+    // });
   }
-
-
 
   onAreaSelect(event: Event) {
     this.isLoading = true;
@@ -95,12 +107,12 @@ export class RegistroAlumnosComponent implements OnInit {
     this.area_id = Number(selectedAreaId);
 
     // Buscar el nombre del área seleccionada en la lista de áreas
-    const selectedArea = this.areas.find((area) => area.id === this.area_id);
+    const selectedArea = this.areas.find((area) => area.area_id === this.area_id);
 
     if (selectedArea) {
       this.isLoading = false;
-      console.log('Nombre del área seleccionada:', selectedArea.nombre);
-      this.formDataNAME.area = selectedArea.nombre;
+      console.log('Nombre del área seleccionada:', selectedArea.area_nombre);
+      this.formDataNAME.area = selectedArea.area_nombre;
     } else {
       console.error(
         'Área no encontrada para el ID seleccionado:',
@@ -108,18 +120,31 @@ export class RegistroAlumnosComponent implements OnInit {
       );
     }
 
+    this.autService_.getIdFromToken().then((idPlantel)=>{
+
     // Filtrar las especialidades basadas en el área seleccionada
-    this.especialidadesService.getEspecialidades().subscribe({
-      next: (especialidad) => {
-        this.especialidadesFiltradas = especialidad.filter(
-          (area: any) => area.area_id === this.area_id
-        );
-        console.log('Especialidades filtradas:', this.especialidadesFiltradas);
-        this.formData.area = this.area_id.toString();
+    this.especialidadesService.getEspecialidadesByIdPlantel(idPlantel).subscribe({
+      next: (response) => {
+        if (response && Object.values(response).length > 0) {
+          // Combinar todos los subarreglos en un solo arreglo plano
+          this.especialidadesFiltradas = Object.values(response).flat();
+    
+          console.log('Especialidades filtradas:', this.especialidadesFiltradas);
+    
+          // Si necesitas asignar algo al formulario
+          this.formData.area = this.area_id.toString();
+        } else {
+          // Mostrar un mensaje o realizar alguna acción cuando no hay especialidades
+          console.log('No hay especialidades disponibles para este plantel');
+        }
       },
       error: () => {
         console.error('Error al cargar especialidades');
       },
+    });
+    
+    
+    
     });
   }
 
@@ -129,25 +154,26 @@ export class RegistroAlumnosComponent implements OnInit {
 
     console.log('ID de especialidad seleccionada:', selectedEspecialidadId);
     const selectedEspecialidad = this.especialidadesFiltradas.find(
-      (especialidad) => especialidad.id === Number(selectedEspecialidadId)
+      (especialidad) => especialidad.especialidad_id === Number(selectedEspecialidadId)
     );
     console.log(selectedEspecialidad);
     if (selectedEspecialidad) {
       console.log(
         'Nombre del especialidad seleccionada:',
-        selectedEspecialidad.nombre
+        selectedEspecialidad.especialidad_nombre
       );
-      this.formDataNAME.especialidad = selectedEspecialidad.nombre;
+      this.formDataNAME.especialidad = selectedEspecialidad.especialidad_nombre;
     } else {
       console.error(
         'especialidad para el ID seleccionado:',
         selectedEspecialidadId
       );
     }
+this.autService_.getIdFromToken().then((idPlatel)=>{
 
-    // Filtrar los cursos basados en la especialidad seleccionada
-    this.cursosService.getCursos().subscribe({
-      next: (cursos) => {
+  // Filtrar los cursos basados en la especialidad seleccionada
+  this.cursosService.getCursosByIdPlatel(idPlatel).subscribe({
+    next: (cursos) => {
         // console.log("cursos",cursos)
         this.cursosFiltrados = cursos.filter(
           (curso: any) =>
@@ -159,6 +185,7 @@ export class RegistroAlumnosComponent implements OnInit {
         console.error('Error al cargar los cursos');
       },
     });
+      })
   }
   onCursoSelect(event: Event) {
     const selectedCursoId = (event.target as HTMLSelectElement).value;
@@ -188,6 +215,7 @@ export class RegistroAlumnosComponent implements OnInit {
     console.log('Datos confirmados, proceder');
     // Cambiar el paso en el formulario
     this.step = 1; // Por ejemplo, pasar al paso 4
+    this.submitForm();
   }
   // Abre el modal
   openModal() {
@@ -213,11 +241,11 @@ export class RegistroAlumnosComponent implements OnInit {
   submitForm() {
     console.log('Datos enviados:', this.formData);
 
-    this.aspiranteService.registrarAspirante(this.formData).subscribe(
+    this.aspiranteService.registrarAspiranteByPllantel(this.formData).subscribe(
       (response) => {
         console.log('Registro exitoso:', response);
         alert('Registro completado con éxito');
-        this.router.navigate(['/']); // Redirige a la ruta principal
+        this.router.navigate(['/plantel/listado-alumnos']); // Redirige a la ruta principal
       },
       (error) => {
         console.error('Error al registrar aspirante:', error);

@@ -1,13 +1,20 @@
 <!-- Contenido -->
-<div class="container mx-auto p-6">
+<div class="container mx-auto p-6" *ngIf="data; else loading">
+<!-- <div class="container mx-auto p-6"> -->
   <!-- Estadísticas -->
+    <!-- <p>Número de Docentes: {{ data.num_docentes }}</p>
+    <p>Número de Alumnos: {{ data.num_alumnos }}</p>
+    <p>Número de Cursos: {{ data.num_cursos }}</p>
+  </div> -->
+
+  
   <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
     <!-- Alumnos -->
     <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-[#F08762] hover:shadow-xl transition-all duration-300">
       <h3 class="text-lg font-semibold text-gray-700 flex items-center">
         <i class="fas fa-users text-[#F08762] mr-2"></i> Alumnos Registrados
       </h3>
-      <p class="text-gray-600 mt-2">Actualmente hay <strong class="text-gray-800">150</strong> alumnos registrados.</p>
+      <p class="text-gray-600 mt-2">Actualmente hay <strong class="text-gray-800">{{data.num_alumnos	}}</strong> alumnos registrados.</p>
     </div>
 
     <!-- Docentes -->
@@ -15,7 +22,7 @@
       <h3 class="text-lg font-semibold text-gray-700 flex items-center">
         <i class="fas fa-chalkboard-teacher text-[#44509D] mr-2"></i> Docentes Asignados
       </h3>
-      <p class="text-gray-600 mt-2">Actualmente hay <strong class="text-gray-800">20</strong> docentes asignados a los cursos.</p>
+      <p class="text-gray-600 mt-2">Actualmente hay <strong class="text-gray-800">{{data.num_docentes		}}</strong> docentes asignados a los cursos.</p>
     </div>
 
     <!-- Cursos -->
@@ -23,7 +30,7 @@
       <h3 class="text-lg font-semibold text-gray-700 flex items-center">
         <i class="fas fa-book text-[#D8566C] mr-2"></i> Cursos Activos
       </h3>
-      <p class="text-gray-600 mt-2">Actualmente se imparten <strong class="text-gray-800">12</strong> cursos este mes.</p>
+      <p class="text-gray-600 mt-2">Actualmente se imparten <strong class="text-gray-800">{{data.num_cursos	}}</strong> cursos este mes.</p>
     </div>
   </section>
 
@@ -95,3 +102,7 @@
     </div>
   </section>
 </div>
+
+<ng-template #loading>
+  <p>Cargando datos...</p>
+</ng-template>

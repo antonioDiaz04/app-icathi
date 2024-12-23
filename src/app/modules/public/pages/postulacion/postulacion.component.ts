@@ -80,7 +80,7 @@ export class PostulacionComponent {
             alert('Ocurrió un error al enviar el registro. Inténtalo nuevamente.');
           }
           alert('Ocurrió un error al enviar el registro. Inténtalo nuevamente.');
-          this.isLoading = false; 
+          this.isLoading = false;
         }
       });
     } else {

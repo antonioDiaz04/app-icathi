@@ -12,7 +12,6 @@
 
     <form class="mt-6 space-y-6" (ngSubmit)="submitForm()">
       <div class="grid grid-cols-2 gap-6">
-        <!-- Selección de plantel -->
         <!-- <div>
           <label for="plantel" class="block text-sm font-medium text-gray-700">
             Selecciona un plantel
@@ -22,7 +21,6 @@
             id="plantel"
             name="plantel"
             required
-            (change)="onPlantelSelected($event)"
             [(ngModel)]="formData.plantel"
             class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             [disabled]="isLoading">
@@ -45,8 +43,8 @@
             (change)="onAreaSelect($event)"
             class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
             <option value="">Selecciona un área</option>
-            <option *ngFor="let area of areas" [value]="area.id">
-              {{ area.nombre }}
+            <option *ngFor="let area of areas" [value]="area.area_id">
+              {{ area.area_nombre	 }}
             </option>
           </select>
         </div>
@@ -64,8 +62,8 @@
             (change)="onEspecialidadSelect($event)"
             class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
             <option value="">Selecciona una especialidad</option>
-            <option *ngFor="let especialidad of especialidadesFiltradas" [value]="especialidad.id">
-              {{ especialidad.nombre }}
+            <option *ngFor="let especialidad of especialidadesFiltradas" [value]="especialidad.especialidad_id">
+              {{ especialidad.especialidad_nombre	 }}
             </option>
           </select>
         </div>

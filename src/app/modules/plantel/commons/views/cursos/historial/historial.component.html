@@ -1,37 +1,54 @@
 <div class="container mx-auto px-4 py-6">
-  <h2 class="text-lg font-semibold text-gray-800 mb-6">Historial de Cursos Impartidos</h2>
-
-  <!-- Filtro de búsqueda -->
-  <div class="mb-4">
-    <input type="text" class="px-4 py-2 border rounded-md text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Buscar curso...">
+  <h2 class="text-lg font-semibold text-gray-800 mb-6">Status Cursos</h2>
+  <div *ngIf="isLoading" class="text-center text-gray-500 py-6">
+    <p>Cargando cursos....</p>
+  </div>
+  <!-- Si no hay cursos completados, muestra el mensaje -->
+  <div *ngIf="!isLoading &&!cursos || cursos.length === 0" class="text-center text-gray-500 py-6">
+    <p>No hay cursos completados aún.</p>
   </div>
 
-  <!-- Tabla de cursos -->
-  <div class="overflow-x-auto">
-    <table class="min-w-full bg-white shadow-sm rounded-md">
-      <thead>
-        <tr class="bg-gray-100">
-          <th class="px-4 py-2 text-left text-sm text-gray-600">Curso</th>
-          <th class="px-4 py-2 text-left text-sm text-gray-600">Docente</th>
-          <th class="px-4 py-2 text-left text-sm text-gray-600">Periodo</th>
-          <th class="px-4 py-2 text-left text-sm text-gray-600">Alumnos Inscritos</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="border-t hover:bg-gray-50">
-          <td class="px-4 py-2 text-sm text-gray-800">Introducción a la Programación</td>
-          <td class="px-4 py-2 text-sm text-gray-600">Juan Pérez</td>
-          <td class="px-4 py-2 text-sm text-gray-600">Enero - Junio 2023</td>
-          <td class="px-4 py-2 text-sm text-gray-600">25</td>
-        </tr>
-        <tr class="border-t hover:bg-gray-50">
-          <td class="px-4 py-2 text-sm text-gray-800">Matemáticas Avanzadas</td>
-          <td class="px-4 py-2 text-sm text-gray-600">María López</td>
-          <td class="px-4 py-2 text-sm text-gray-600">Agosto - Diciembre 2023</td>
-          <td class="px-4 py-2 text-sm text-gray-600">30</td>
-        </tr>
-        <!-- Más filas -->
-      </tbody>
-    </table>
-  </div>
+  <!-- Tabla de cursos solo si hay cursos completados -->
+  <table *ngIf="cursos && cursos.length > 0" class="min-w-full bg-white border border-gray-200">
+    <thead>
+      <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+        <th class="py-3 px-6 text-left">Área</th>
+        <th class="py-3 px-6 text-left">Especialidad</th>
+        <th class="py-3 px-6 text-left">Curso</th>
+        <th class="py-3 px-6 text-left">Estado</th>
+        <th class="py-3 px-6 text-left">Fecha de Inicio</th>
+        <th class="py-3 px-6 text-left">Fecha de Finalización</th>
+        <th class="py-3 px-6 text-left">Progreso</th>
+        <th class="py-3 px-6 text-left">Acciones</th>
+      </tr>
+    </thead>
+    <tbody class="text-gray-600 text-sm font-light">
+      <tr *ngFor="let curso of cursos" class="border-b border-gray-200 hover:bg-gray-100">
+        <td class="py-3 px-6">{{ curso.area_nombre }}</td>
+        <td class="py-3 px-6">{{ curso.especialidad_nombre }}</td>
+        <td class="py-3 px-6">{{ curso.curso_nombre }}</td>
+        <td class="py-3 px-6">
+          <span
+            class="inline-block px-2 py-1 text-xs font-semibold text-white rounded-md"
+            [ngClass]="{
+              'bg-gray-800': curso.estado === 'Pendiente',
+              'bg-yellow-500': curso.estado === 'En Proceso',
+              'bg-red-500': curso.estado === 'Cancelado',
+              'bg-green-500': curso.estado === 'Completado'
+            }"
+          >
+            <strong>{{ curso.estado }}</strong>
+          </span>
+        </td>
+        <td class="py-3 px-6">{{ curso.fecha_inicio | date: 'dd/MM/yyyy' }}</td>
+        <td class="py-3 px-6">{{ curso.fecha_fin | date: 'dd/MM/yyyy' }}</td>
+        <td class="py-3 px-6">{{ curso.porcentaje_progreso }}%</td>
+        <td class="py-3 px-6">
+          <button class="px-4 py-2 bg-indigo-500 text-white text-xs rounded-md hover:bg-indigo-600 focus:outline-none">
+            Ver Detalles
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
