@@ -5,9 +5,10 @@ import { AuthService } from '../../shared/services/auth.service';
 import { filter } from 'rxjs';
 
 @Component({
-  selector: 'app-alumno',
-  templateUrl: './alumno.component.html',
-  styleUrls: ['./alumno.component.scss']
+    selector: 'app-alumno',
+    templateUrl: './alumno.component.html',
+    styleUrls: ['./alumno.component.scss'],
+    standalone: false
 })
 export class AlumnoComponent implements OnInit {
   is_usuario_alumno: number | null = null; // ID del alumno a cargar

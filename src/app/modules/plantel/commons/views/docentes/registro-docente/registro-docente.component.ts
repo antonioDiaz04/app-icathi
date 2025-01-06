@@ -1,24 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PostulacionService } from '../../../../../../shared/services/postulacion.service';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../../../../environments/environment.prod';
+import { AuthService } from '../../../../../../shared/services/auth.service';
+import { response } from 'express';
+
 @Component({
   selector: 'app-registro-docente',
   templateUrl: './registro-docente.component.html',
   styles: ``,
+  standalone: false,
 })
-export class RegistroDocenteComponent {
+
+export class RegistroDocenteComponent implements OnInit {
   postulationForm: FormGroup;
   currentStep: number = 1;
   totalSteps: number = 4;
   username: string = ''; // Para mostrarlo tras el registro
   registroCompletado: boolean = false; // Indica si se completó el registro
   isLoading = false;
-
+especialidades:any
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private postulacionService: PostulacionService
+    private postulacionService: PostulacionService,
+    private http: HttpClient,
+    private authS_: AuthService
   ) {
     // Inyecta el servicio
     this.postulationForm = this.fb.group({
@@ -28,6 +37,22 @@ export class RegistroDocenteComponent {
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       specialty: ['', Validators.required],
+    });
+  }
+
+  ngOnInit(): void {
+    this.getEspecialidades();
+  }
+
+  getEspecialidades() {
+    this.authS_.getIdFromToken().then((idPlantel) => {
+      this.http.get<any>(
+        `${environment.api}/especialidades/ByIdPlantel/` + idPlantel
+      ).subscribe(response=>{
+       this.especialidades=response
+        console.log(response)
+      })
+
     });
   }
 

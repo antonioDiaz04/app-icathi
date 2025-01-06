@@ -22,7 +22,8 @@ interface PlantelCurso {
 @Component({
     selector: 'app-validador-cursos',
     templateUrl: './validador-cursos.component.html',
-    styleUrls: ['./validador-cursos.component.scss']
+    styleUrls: ['./validador-cursos.component.scss'],
+    standalone: false
 })
 export class ValidadorCursosComponent implements OnInit {
     

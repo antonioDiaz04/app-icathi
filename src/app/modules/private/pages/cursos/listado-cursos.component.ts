@@ -20,9 +20,10 @@ export interface Modulo {
 }
 
 @Component({
-  selector: 'app-listado-cursos',
-  templateUrl: './listado-cursos.component.html',
-  styleUrls: ['./listado-cursos.component.scss'],
+    selector: 'app-listado-cursos',
+    templateUrl: './listado-cursos.component.html',
+    styleUrls: ['./listado-cursos.component.scss'],
+    standalone: false
 })
 export class ListadoCursosComponent implements OnInit {
   modulos: Modulo[] = [];

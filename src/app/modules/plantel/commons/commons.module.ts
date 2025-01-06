@@ -15,7 +15,7 @@ import { RegistroAlumnosComponent } from './views/alumnos/registro-alumnos/regis
 // import { RegistroDeocen}teComponent } from './views/docentes/registro-deocente/registro-deocente.component';
 import { RegistroDocenteComponent } from './views/docentes/registro-docente/registro-docente.component';
 
-import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+// import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { ImpartidosComponent } from './views/cursos/impartidos/impartidos.component';
 
 import { PdfViewerModule } from 'ng2-pdf-viewer';
@@ -25,7 +25,7 @@ import { HomeComponent } from './views/home/home.component';
 @NgModule({
   declarations: [    FilterPipe,ListadoAlumnosComponent,ListadoCursosComponent,HomeComponent,ListadoDocentesComponent, ListadoCursosAprovadosComponent, HistorialComponent, RegistroAlumnosComponent, RegistroDocenteComponent, ImpartidosComponent],
   imports: [PdfViewerModule,
-    CommonModule,NzDatePickerModule,ReactiveFormsModule,FormsModule,RouterModule,
+    CommonModule,ReactiveFormsModule,FormsModule,RouterModule,
   ],
   providers:[AuthService,DocenteService,CursosdocentesService]
 })

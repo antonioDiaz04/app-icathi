@@ -7,11 +7,11 @@ import { AlertService } from './shared/services/alert.service';
 // import  } from '@angular/platform-browser/animations';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [ CommonModule,RouterLink, RouterOutlet,sharedComponentsModule,AsyncPipe],
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    standalone:true,
+    imports: [CommonModule, RouterOutlet, sharedComponentsModule, AsyncPipe],
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
   isCollapsed = false;

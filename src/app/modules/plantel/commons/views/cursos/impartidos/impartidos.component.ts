@@ -5,9 +5,10 @@ import { AuthService } from '../../../../../../shared/services/auth.service';
 import { response } from 'express';
 
 @Component({
-  selector: 'app-impartidos',
-  templateUrl: './impartidos.component.html',
-  styles: ``,
+    selector: 'app-impartidos',
+    templateUrl: './impartidos.component.html',
+    styles: ``,
+    standalone: false
 })
 export class ImpartidosComponent implements OnInit {
   idPlantel: any;

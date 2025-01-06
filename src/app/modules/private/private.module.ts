@@ -19,6 +19,7 @@ import { ListadoPlantelesComponent } from './pages/planteles/listado-planteles/l
 import { FrmPlantelComponent } from './pages/planteles/frm-plantel/frm-plantel.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { DocentesComponent } from './pages/docentes/docentes.component';
+import { PdfExampleComponent } from './pages/pdf-example/pdf-example.component';
 
 
 @NgModule({
@@ -37,6 +38,7 @@ import { DocentesComponent } from './pages/docentes/docentes.component';
     FrmPlantelComponent,
     UsuariosComponent,
     DocentesComponent,
+    PdfExampleComponent,
 
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

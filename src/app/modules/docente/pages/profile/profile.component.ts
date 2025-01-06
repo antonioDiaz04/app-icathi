@@ -19,9 +19,10 @@ interface Docente {
   cedula_file_url: string;
 }
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss'],
+    selector: 'app-profile',
+    templateUrl: './profile.component.html',
+    styleUrls: ['./profile.component.scss'],
+    standalone: false
 })
 export class ProfileComponent {
   especialidades: { id: number; nombre: string }[] = [];

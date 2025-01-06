@@ -6,9 +6,10 @@ import { ERol } from '../../../../shared/constants/rol.enum';
 import { AlertTaiwilService } from '../../../../shared/services/alert-taiwil.service';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    standalone: false
 })
 export class LoginComponent {
   loading: boolean = false;

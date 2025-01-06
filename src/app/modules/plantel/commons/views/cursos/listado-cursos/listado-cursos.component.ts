@@ -37,13 +37,14 @@ interface Docente {
 
 declare var $: any;
 @Component({
-  selector: 'app-listado-cursos',
-  templateUrl: './listado-cursos.component.html',
-  styles: `textarea{
+    selector: 'app-listado-cursos',
+    templateUrl: './listado-cursos.component.html',
+    styles: `textarea{
     field-sizing:content;
   }
 
   `,
+    standalone: false
 })
 export class ListadoCursosComponent implements OnInit {
   cursosByEspecialidad: any[] = [];
@@ -65,7 +66,7 @@ export class ListadoCursosComponent implements OnInit {
   curso_id!: number;
   cursoForm: FormGroup;
   private apiUrl = `${environment.api}`;
-
+  details:any;
   isLoading: boolean = false;
   isUploading: boolean = false; // Estado para saber si está cargando
   // progressPercent: number = 0;  // Porcentaje del progreso
@@ -273,9 +274,14 @@ export class ListadoCursosComponent implements OnInit {
 
   // Métodos para ver detalles
   verDetalles(curso: Modulo): void {
-    this.cursoDetalleSeleccionado = curso;
     this.mostrarDetalleModal = true;
+    this.cursoDetalleSeleccionado = curso;
+    this.http.get<any>(`${environment.api}/areas/deatilsById/${curso}`).subscribe(response=>{
+      this.details=response;
+    })
   }
+
+
 
   cerrarDetalleModal(): void {
     this.mostrarDetalleModal = false;

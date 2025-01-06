@@ -4,10 +4,10 @@ import { environment } from '../../../../../../../environments/environment.prod'
 import { AuthService } from '../../../../../../shared/services/auth.service';
 
 @Component({
-  selector: 'app-listado-docentes',
-  templateUrl: './listado-docentes.component.html',
-  styles: [
-    `
+    selector: 'app-listado-docentes',
+    templateUrl: './listado-docentes.component.html',
+    styles: [
+        `
       #addModal {
         animation: fadeIn 0.3s ease-in-out;
       }
@@ -23,7 +23,8 @@ import { AuthService } from '../../../../../../shared/services/auth.service';
         }
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class ListadoDocentesComponent implements OnInit{
   // Variables de filtro

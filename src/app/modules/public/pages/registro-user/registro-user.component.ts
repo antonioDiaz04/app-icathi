@@ -9,9 +9,10 @@ import { AlertTaiwilService } from '../../../../shared/services/alert-taiwil.ser
 import { ModalTaiwilService } from '../../../../shared/services/modal-taiwil.service';
 
 @Component({
-  selector: 'app-registro-user',
-  templateUrl: './registro-user.component.html',
-  styleUrls: ['./registro-user.component.scss'],
+    selector: 'app-registro-user',
+    templateUrl: './registro-user.component.html',
+    styleUrls: ['./registro-user.component.scss'],
+    standalone: false
 })
 export class RegistroUserComponent implements OnInit {
   step: number = 1;

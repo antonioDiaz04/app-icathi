@@ -8,8 +8,9 @@ import { AspiranteService } from '../../../../../../shared/services/aspirante.se
 import { AuthService } from '../../../../../../shared/services/auth.service';
 
 @Component({
-  selector: 'app-registro-alumnos',
-  templateUrl: './registro-alumnos.component.html',
+    selector: 'app-registro-alumnos',
+    templateUrl: './registro-alumnos.component.html',
+    standalone: false
 })
 export class RegistroAlumnosComponent implements OnInit {
   step: number = 1;

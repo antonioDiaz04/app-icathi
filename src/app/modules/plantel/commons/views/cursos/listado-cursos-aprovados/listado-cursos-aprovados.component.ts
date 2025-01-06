@@ -41,8 +41,9 @@ interface Docente {
 }
 
 @Component({
-  selector: 'app-listado-cursos-aprovados',
-  templateUrl: './listado-cursos-aprovados.component.html',
+    selector: 'app-listado-cursos-aprovados',
+    templateUrl: './listado-cursos-aprovados.component.html',
+    standalone: false
 })
 export class ListadoCursosAprovadosComponent implements OnInit {
   dateFormat = 'yyyy-MM-dd'; // Formato de fecha

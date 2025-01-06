@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-options-regiter',
-  template: `
+    selector: 'app-options-regiter',
+    template: `
     <div
       class="container mx-auto my-5  min-h-screen p-8"
     >
@@ -108,8 +108,9 @@ import { Component } from '@angular/core';
       </div>
     </div>
   `,
-  styles: `
+    styles: `
 
   `,
+    standalone: false
 })
 export class OptionsRegiterComponent {}

@@ -5,8 +5,8 @@ import { ModalTaiwilService } from '../../../../shared/services/modal-taiwil.ser
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({
-  selector: 'app-validar-correo',
-  template: `
+    selector: 'app-validar-correo',
+    template: `
     <div class="container mx-auto text-center mt-12">
       <!-- Mensaje de éxito -->
       <div *ngIf="!loading && mensaje" class="bg-[#D8566C] text-white p-6 rounded-lg shadow-lg">
@@ -22,7 +22,8 @@ import { isPlatformBrowser } from '@angular/common';
       </div>
     </div>
   `,
-  styles: [],
+    styles: [],
+    standalone: false
 })
 export class ValidarCorreoComponent implements OnInit {
   mensaje: string | null = null;

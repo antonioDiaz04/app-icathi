@@ -1,0 +1,101 @@
+// <style>
+// <style>
+            body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+              background-color:none;
+            }
+  
+            .header {
+              margin-top: 50px;
+              color: black;
+              text-align: center;
+              padding: 20px;
+            }
+  
+            .main {
+              background-image: url('https://res.cloudinary.com/dvvhnrvav/image/upload/v1736174056/icathi/tsi14aynpqjer8fthxtz.png');
+              background-size: cover;
+              background-position: center;
+              padding: 50px 20px;
+              min-height: 500px;
+            }
+  
+            .contenido {
+              background-color:none;
+              padding: 152px;
+              border-radius: 8px;
+              box-shadow: none;
+              text-align: center;
+            }
+  
+            /* .footer {
+              background-color: #333;
+              color: white;
+              padding: 10px;
+              text-align: center;
+            } */
+  
+            .note, .author, .reviewer, .approver {
+              font-style: italic;
+              margin: 10px 0;
+            }
+        //   </style>
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: none;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    border: none;
+    border-radius: 8px;
+    box-shadow: none;
+    background-color:none; /* Fondo claro para el contenido */
+  }
+
+  h3 {
+    color: #333; /* Color del texto */
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: #555; /* Color del texto */
+    line-height: 1.5; /* Espaciado entre líneas */
+    margin-bottom: 12px; /* Espacio inferior entre párrafos */
+  }
+
+  .italic {
+    font-style: italic; /* Estilo cursivo */
+  }
+
+  .flex {
+    display: flex;
+    justify-content: center; /* Centrar contenido */
+    align-items: center; /* Alinear verticalmente */
+    margin-top: 10px; /* Espacio superior */
+  }
+
+ 
+  .button {
+    background-color: #28a745; /* Color del botón verde */
+    color: white; /* Color del texto blanco */
+    border: none; /* Sin borde */
+    padding: 10px 20px; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambiar cursor al pasar por encima */
+    font-size: 16px; /* Tamaño de fuente del botón */
+    transition: background-color 0.3s ease; /* Transición suave para el hover */
+  }
+
+  .button:hover {
+    background-color: #218838; /* Color más oscuro al pasar el mouse sobre el botón */
+  }
+// </style>
+

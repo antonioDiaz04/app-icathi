@@ -5,9 +5,10 @@ import { ERol } from '../../../../shared/constants/rol.enum';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-creapassword',
-  templateUrl: './creapassword.component.html',
-  styleUrls: ['./creapassword.component.scss']
+    selector: 'app-creapassword',
+    templateUrl: './creapassword.component.html',
+    styleUrls: ['./creapassword.component.scss'],
+    standalone: false
 })
 export class CreapasswordComponent {
   public mostrarPassword: boolean = false;

@@ -7,9 +7,10 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../../../../shared/services/auth.service';
 
 @Component({
-  selector: 'app-docentes',
-  templateUrl: './docentes.component.html',
-  styleUrls: ['./docentes.component.scss']
+    selector: 'app-docentes',
+    templateUrl: './docentes.component.html',
+    styleUrls: ['./docentes.component.scss'],
+    standalone: false
 })
 export class DocentesComponent implements OnInit {
   docentes: Docente[] = [];

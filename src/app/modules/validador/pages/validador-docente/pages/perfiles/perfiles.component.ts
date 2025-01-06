@@ -7,9 +7,10 @@ import { AuthService } from '../../../../../../shared/services/auth.service';
 import { EspecialidadesDocentesService } from '../../../../../../shared/services/especialidades-docentes.service';
 
 @Component({
-  selector: 'app-perfiles',
-  templateUrl: './perfiles.component.html',
-  styleUrls: ['./perfiles.component.scss']
+    selector: 'app-perfiles',
+    templateUrl: './perfiles.component.html',
+    styleUrls: ['./perfiles.component.scss'],
+    standalone: false
 })
 export class PerfilesComponent implements OnInit {
   docenteId: string = ''; // ID del docente obtenido de la URL

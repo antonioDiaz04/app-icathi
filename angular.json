@@ -30,7 +30,6 @@
               }
             ],
             "styles": [
-                  "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
               "@angular/material/prebuilt-themes/magenta-violet.css",
               "src/styles.scss"
             ],
@@ -92,8 +91,7 @@
                 "input": "public"
               }
             ],
-            "styles": [ "node_modules/ng-zorro-antd/ng-zorro-antd.min.css"
-            ,
+            "styles": [
               "@angular/material/prebuilt-themes/magenta-violet.css",
               "src/styles.scss"
             ],

@@ -10,6 +10,8 @@ import { FormsModule } from '@angular/forms';
 import { NbThemeModule,NbCardModule, NbSelectModule } from '@nebular/theme';
 import { SafeUrlPipe } from '../../shared/pipes/safe-url.pipe';
 import { AlumnosCursosComponent } from './pages/alumnos/alumnos-cursos/alumnos-cursos.component';
+import { CursosComponent } from './pages/cursos/cursos.component';
+import { AistenciasComponent } from './pages/aistencias/aistencias.component';
 
 
 @NgModule({
@@ -18,7 +20,9 @@ import { AlumnosCursosComponent } from './pages/alumnos/alumnos-cursos/alumnos-c
     ProfileComponent,
     CoursesComponent,
     StatisticsComponent,
-    AlumnosCursosComponent
+    AlumnosCursosComponent,
+    CursosComponent,
+    AistenciasComponent
   ],
   imports: [
     NbThemeModule.forRoot(),

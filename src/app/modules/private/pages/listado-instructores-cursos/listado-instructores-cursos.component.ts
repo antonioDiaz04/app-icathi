@@ -7,9 +7,10 @@ export interface Instructor {
 }
 
 @Component({
-  selector: 'app-listado-instructores-cursos',
-  templateUrl: './listado-instructores-cursos.component.html',
-  styleUrl: './listado-instructores-cursos.component.scss'
+    selector: 'app-listado-instructores-cursos',
+    templateUrl: './listado-instructores-cursos.component.html',
+    styleUrl: './listado-instructores-cursos.component.scss',
+    standalone: false
 })
 export class ListadoInstructoresCursosComponent {
 
