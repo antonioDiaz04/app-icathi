@@ -149,7 +149,7 @@ export class PdfExampleComponent {
       const imgData = canvas.toDataURL('image/png'); // Convertir el contenido a imagen
       const pdf = new jsPDF();
   
-      // Agregar la imagen de fondo al PDF
+      // Agregar la imagen de fondo solo a la primera página
       pdf.addImage(
         'https://res.cloudinary.com/dvvhnrvav/image/upload/v1736174056/icathi/tsi14aynpqjer8fthxtz.png',
         'PNG',
@@ -163,13 +163,22 @@ export class PdfExampleComponent {
       const imgWidth = 190; // Ancho de la imagen del contenido
       const imgHeight = (canvas.height * imgWidth) / canvas.width; // Calcular la altura para mantener la proporción
       const xOffset = 10; // Desplazamiento en X
-      const yOffset = 10; // Desplazamiento en Y
+      const yOffset = 50; // Desplazamiento en Y
   
       pdf.addImage(imgData, 'PNG', xOffset, yOffset, imgWidth, imgHeight);
   
+      // Agregar páginas adicionales si el contenido excede una página
+      if (canvas.height > pdf.internal.pageSize.getHeight() - 50) {
+        const pagesCount = Math.ceil((canvas.height - 50) / (pdf.internal.pageSize.getHeight() - 50));
+        for (let i = 1; i < pagesCount; i++) {
+          pdf.addPage();
+          pdf.addImage(imgData, 'PNG', xOffset, 0, imgWidth, imgHeight);
+        }
+      }
+  
       // Guardar el PDF con un nombre específico
       pdf.save('curso-capacitacion.pdf');
-      
+  
       this.generando = false; // Indicar que ha terminado la generación del PDF
     }).catch((error) => {
       console.error("Error al generar el PDF:", error);
@@ -177,4 +186,4 @@ export class PdfExampleComponent {
     });
   }
   
-}
+}  

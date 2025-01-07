@@ -21,7 +21,6 @@ import { ImpartidosComponent } from './views/cursos/impartidos/impartidos.compon
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { HomeComponent } from './views/home/home.component';
 
-
 @NgModule({
   declarations: [    FilterPipe,ListadoAlumnosComponent,ListadoCursosComponent,HomeComponent,ListadoDocentesComponent, ListadoCursosAprovadosComponent, HistorialComponent, RegistroAlumnosComponent, RegistroDocenteComponent, ImpartidosComponent],
   imports: [PdfViewerModule,

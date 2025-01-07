@@ -32,6 +32,8 @@ export class ListadoCursosComponent implements OnInit {
   tiposCurso: any[] = [];
   mostrarFormulario = false;
   mostrarModal = false;
+  selectedCourse: string = 'curso1';
+  mostrarOpcionesCursosTipo :boolean= false;
   mostrarDetalleModal = false; // Nueva variable para el modal de detalles
   cursoSeleccionado: Modulo | null = null;
   cursoDetalleSeleccionado: Modulo | null = null; // Curso seleccionado para ver detalles
@@ -104,7 +106,8 @@ export class ListadoCursosComponent implements OnInit {
   }
 
   toggleFormulario(): void {
-    this.mostrarFormulario = !this.mostrarFormulario;
+    this.mostrarOpcionesCursosTipo = !this.mostrarOpcionesCursosTipo;//contipo de cursos
+    // this.mostrarFormulario = !this.mostrarFormulario;
   }
 
   agregarCurso(): void {

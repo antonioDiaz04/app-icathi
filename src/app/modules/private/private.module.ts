@@ -20,13 +20,18 @@ import { FrmPlantelComponent } from './pages/planteles/frm-plantel/frm-plantel.c
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { DocentesComponent } from './pages/docentes/docentes.component';
 import { PdfExampleComponent } from './pages/pdf-example/pdf-example.component';
+import { CursoModalidadCAEComponent } from './pages/cursos/typos-cursos/curso-modalidad-cae/curso-modalidad-cae.component';
+import { CursoModalidadVirtualComponent } from './pages/cursos/typos-cursos/curso-modalidad-virtual/curso-modalidad-virtual.component';
+import { CursoModalidadEscuelaComponent } from './pages/cursos/typos-cursos/curso-modalidad-escuela/curso-modalidad-escuela.component';
 
+ 
+  
 
 @NgModule({
   declarations: [
     PrivateComponent,
     HomeComponent,
-    HeaderComponent,
+    HeaderComponent,CursoModalidadCAEComponent,CursoModalidadVirtualComponent,CursoModalidadEscuelaComponent,
     ListadoInstructoresComponent,
     ListadoInstructoresCursosComponent,
     FormularioInstructorComponent,
