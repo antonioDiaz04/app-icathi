@@ -4,6 +4,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { IndexedService } from './indexed.service'; // Importamos IndexedService
+
 export interface LoginResponse {
   token: string;
 }
@@ -26,63 +27,88 @@ export class AuthService {
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/signin`, { email, password }).pipe(
       tap(response => {
-        const token = response.token;
-        if (token) {
-          // Guardar el token en IndexedDB
-          this.setToken(token);
+        try {
+          const token = response.token;
+          if (token) {
+            // Guardar el token en IndexedDB
+            this.setToken(token);
+          }
+        } catch (error) {
+          console.error('Error guardando el token:', error);
         }
       })
     );
   }
 
-
   // Guardar el token en IndexedDB
   async setToken(token: string): Promise<void> {
-    if (this.isBrowser()) {
-      await this.indexedService.storeToken(token);
+    try {
+      if (this.isBrowser()) {
+        await this.indexedService.storeToken(token);
+      }
+    } catch (error) {
+      console.error('Error guardando el token en IndexedDB:', error);
     }
   }
 
   async getToken(): Promise<string | null> {
-    if (this.isBrowser()) {
-      return await this.indexedService.getToken();
+    try {
+      if (this.isBrowser()) {
+        return await this.indexedService.getToken();
+      }
+    } catch (error) {
+      console.error('Error obteniendo el token de IndexedDB:', error);
     }
     return null;
   }
+
   // Limpiar el token de IndexedDB (logout)
   async clearToken(): Promise<void> {
-    await this.indexedService.clearToken();
+    try {
+      await this.indexedService.clearToken();
+    } catch (error) {
+      console.error('Error eliminando el token de IndexedDB:', error);
+    }
   }
 
   // Verificar si el token está expirado
   async isTokenExpired(): Promise<boolean> {
-    const token = await this.getToken();
-    if (token) {
-      return this.jwtHelper.isTokenExpired(token);
+    try {
+      const token = await this.getToken();
+      if (token) {
+        return this.jwtHelper.isTokenExpired(token);
+      }
+    } catch (error) {
+      console.error('Error verificando si el token está expirado:', error);
     }
     return true;
   }
+
   async getIdFromToken(): Promise<number | null> {
-    const token = await this.getToken();
-    if (token) {
-      const decodedToken = this.jwtHelper.decodeToken(token); // Decodificar el token
-      // Acceder al campo 'id' si existe
-      return decodedToken?.id || null;
+    try {
+      const token = await this.getToken();
+      if (token) {
+        const decodedToken = this.jwtHelper.decodeToken(token); // Decodificar el token
+        return decodedToken?.id || null;
+      }
+    } catch (error) {
+      console.error('Error obteniendo ID del token:', error);
     }
     return null;
   }
 
   async getRoleFromToken(): Promise<string | null> {
-    const token = await this.getToken();
-    if (token) {
-      const decodedToken = this.jwtHelper.decodeToken(token);  // Decodificamos el token
-      // console.log('Decoded token:', decodedToken);  // Para revisar la estructura del token
-      return decodedToken?.rol || null;  // Accedemos al rol
+    try {
+      const token = await this.getToken();
+      if (token) {
+        const decodedToken = this.jwtHelper.decodeToken(token); // Decodificamos el token
+        return decodedToken?.rol || null; // Accedemos al rol
+      }
+    } catch (error) {
+      console.error('Error obteniendo rol del token:', error);
     }
     return null;
   }
-
-
 
   async isAuthenticated(): Promise<boolean> {
     try {
@@ -94,19 +120,17 @@ export class AuthService {
     }
   }
 
-
-  // Decodificar el JWT y obtener su contenido
-  private decodeToken(token: string): any {
-    const decoded = this.jwtHelper.decodeToken(token);
-    return decoded;
-  }
   crearContraseña(email: string, nuevaContraseña: string): Observable<any> {
     const body = { email, nuevaContraseña };
     return this.http.post(`${this.apiUrl2}/postulacion/crear-password`, body);
   }
   private isBrowser(): boolean {
-    return typeof window !== 'undefined';
+    try {
+      return typeof window !== 'undefined';
+    } catch (error) {
+      console.error('Error al verificar el entorno del navegador:', error);
+      return false; // Asumimos que no estamos en un navegador si hay un error
+    }
   }
-
-
+  
 }
