@@ -64,6 +64,13 @@ export const routes: Routes = [
       import('./modules/private/private.module').then((m) => m.PrivateModule),
     canActivate: [RoleGuard],
     data: { role: 'ADMIN' },
+  }, 
+   {
+    path: 'oferta-educativa',
+    loadChildren: () =>
+      import('./modules/oferta-educativa/oferta-educativa.module').then((m) => m.OfertaEducativaModule),
+    canActivate: [RoleGuard],
+    data: { role: 'OFERTA_EDUCATIVA' },
   },
   {
     title:"home",

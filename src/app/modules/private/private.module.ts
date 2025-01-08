@@ -26,6 +26,8 @@ import { CursoModalidadEscuelaComponent } from './pages/cursos/typos-cursos/curs
 
  
   
+import { OfertaEducativaComponent } from '../oferta-educativa/oferta-educativa.component';
+
 
 @NgModule({
   declarations: [
@@ -44,6 +46,7 @@ import { CursoModalidadEscuelaComponent } from './pages/cursos/typos-cursos/curs
     UsuariosComponent,
     DocentesComponent,
     PdfExampleComponent,
+    OfertaEducativaComponent,
 
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
