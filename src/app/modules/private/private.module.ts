@@ -19,10 +19,14 @@ import { ListadoPlantelesComponent } from './pages/planteles/listado-planteles/l
 import { FrmPlantelComponent } from './pages/planteles/frm-plantel/frm-plantel.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { DocentesComponent } from './pages/docentes/docentes.component';
+// <<<<<<< HEAD
 import { PdfExampleComponent } from './pages/pdf-example/pdf-example.component';
 import { CursoModalidadCAEComponent } from './pages/cursos/typos-cursos/curso-modalidad-cae/curso-modalidad-cae.component';
 import { CursoModalidadVirtualComponent } from './pages/cursos/typos-cursos/curso-modalidad-virtual/curso-modalidad-virtual.component';
 import { CursoModalidadEscuelaComponent } from './pages/cursos/typos-cursos/curso-modalidad-escuela/curso-modalidad-escuela.component';
+// =======
+// import { OfertaEducativaComponent } from '../oferta-educativa/oferta-educativa.component';
+// >>>>>>> origin/padilla
 
  
   
@@ -44,6 +48,7 @@ import { CursoModalidadEscuelaComponent } from './pages/cursos/typos-cursos/curs
     UsuariosComponent,
     DocentesComponent,
     PdfExampleComponent,
+    // OfertaEducativaComponent,
 
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
