@@ -1,1 +1,344 @@
-<p>curso-modalidad-cae works!</p>
+<!-- Formulario para agregar curso -->
+<div class="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Informacrón del curso</h2>
+  <form (ngSubmit)="agregarCurso()" #cursoForm="ngForm" class="space-y-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Área -->
+      <div>
+        <label class="block text-sm font-medium">Área</label>
+        <select
+          [(ngModel)]="nuevoCurso.area_id"
+          name="area_id"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+        >
+          <option value="" disabled>Seleccione Área</option>
+          <option *ngFor="let area of areas" [value]="area.id">
+            {{ area.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Especialidad -->
+      <div>
+        <label class="block text-sm font-medium">Especialidad</label>
+        <select
+          [(ngModel)]="nuevoCurso.especialidad_id"
+          name="especialidad_id"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+        >
+          <option value="" disabled>Seleccione Especialidad</option>
+          <option
+            *ngFor="let especialidad of especialidades"
+            [value]="especialidad.id"
+          >
+            {{ especialidad.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Tipo de Curso -->
+      <div>
+        <label class="block text-sm font-medium">Tipo de Curso</label>
+        <select
+          [(ngModel)]="nuevoCurso.tipo_curso_id"
+          name="tipo_curso_id"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+        >
+          <option value="" disabled>Seleccione Tipo</option>
+          <option *ngFor="let tipo of tiposCurso" [value]="tipo.id">
+            {{ tipo.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Nombre del Curso -->
+      <div>
+        <label class="block text-sm font-medium">Nombre del Curso</label>
+        <input
+          type="text"
+          [(ngModel)]="nuevoCurso.nombre"
+          name="nombre"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+          placeholder="Nombre del curso"
+        />
+      </div>
+
+      <!-- Clave -->
+      <div>
+        <label class="block text-sm font-medium">Clave</label>
+        <input
+          type="text"
+          [(ngModel)]="nuevoCurso.clave"
+          name="clave"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+          placeholder="Clave"
+        />
+      </div>
+
+      <!-- Duración -->
+      <div>
+        <label class="block text-sm font-medium">Duración (Horas)</label>
+        <input
+          type="number"
+          [(ngModel)]="nuevoCurso.duracion_horas"
+          name="duracion_horas"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+          placeholder="Duración en horas"
+        />
+      </div>
+    </div>
+
+    <!-- Descripción -->
+    <div>
+      <label class="block text-sm font-medium">Descripción</label>
+      <textarea
+        [(ngModel)]="nuevoCurso.descripcion"
+        name="descripcion"
+        required
+        class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+        placeholder="Descripción del curso"
+        #descripcion="ngModel"
+      ></textarea>
+      <div
+        *ngIf="descripcion.invalid && descripcion.touched"
+        class="text-red-500 text-sm"
+      >
+        La descripción es obligatoria.
+      </div>
+    </div>
+
+    <!-- Nivel -->
+    <div>
+      <label class="block text-sm font-medium">Nivel</label>
+      <select
+        [(ngModel)]="nuevoCurso.nivel"
+        name="nivel"
+        required
+        class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+      >
+        <option value="" disabled>Seleccione Nivel</option>
+        <option value="Básico">Básico</option>
+        <option value="Intermedio">Intermedio</option>
+        <option value="Avanzado">Avanzado</option>
+      </select>
+      <div
+        *ngIf="!nuevoCurso.nivel && cursoForm.submitted"
+        class="text-red-500 text-sm"
+      >
+        El nivel es obligatorio.
+      </div>
+    </div>
+
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Objetivos del Curso</h2>
+
+    <!-- Tabla de objetivos -->
+    <div class="overflow-x-auto">
+      <!-- Tabla de objetivos del curso -->
+      <table class="w-full border-collapse border border-gray-300 mt-8">
+        <thead>
+          <tr class="bg-gray-100">
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold w-1/4"
+            >
+              Título
+            </th>
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold w-3/4"
+            >
+              Descripción
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+              OBJETIVO DEL CURSO
+            </td>
+            <td class="border border-gray-300 px-4 py-2 w-3/4">
+              <textarea
+                class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                rows="3"
+              >
+El alumno será capaz de implementar estrategias de enseñanza-aprendizaje
+a base en el estándar de competencia EC0647, propiciar el aprendizaje
+significativo en educación media superior y superior.
+        </textarea
+              >
+            </td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+              PERFIL DE INGRESO
+            </td>
+            <td class="border border-gray-300 px-4 py-2 w-3/4">
+              <textarea
+                class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                rows="4"
+              >
+- Docentes en educación media superior y superior.
+- Conocimientos básicos en computación y en el manejo de internet.
+        </textarea
+              >
+            </td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+              PERFIL DE EGRESO
+            </td>
+            <td class="border border-gray-300 px-4 py-2 w-3/4">
+              <textarea
+                class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                rows="5"
+              >
+- Planear secuencias didácticas.
+- Diseñar el plan de sesión.
+- Implementar estrategias de aprendizaje significativo en sus alumnos.
+- Asesorar el resultado del aprendizaje de los alumnos.
+        </textarea
+              >
+            </td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+              PERFIL DEL DOCENTE / INSTRUCTOR
+            </td>
+            <td class="border border-gray-300 px-4 py-2 w-3/4">
+              <textarea
+                class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                rows="6"
+              >
+- Estudios en áreas relacionadas con educación.
+- Experiencia en actividades docentes.
+- Documentos probatorios que acrediten su conocimiento en este programa de estudio.
+- Dominio de computación básica e internet.
+- Capacidad para asesorar en línea.
+        </textarea
+              >
+            </td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+              REQUISITOS TÉCNICOS
+            </td>
+            <td class="border border-gray-300 px-4 py-2 w-3/4">
+              <textarea
+                class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                rows="7"
+              >
+- Sistema operativo: Windows 7 o posterior, macOS 10.6 o posterior.
+- Navegadores: Firefox, Chrome, Edge en su última versión.
+- Memoria RAM: mínimo 3GB.
+- Conexión a internet de al menos 1Mbps de bajada.
+        </textarea
+              >
+            </td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+              RECONOCIMIENTO AL ALUMNO
+            </td>
+            <td class="border border-gray-300 px-4 py-2 w-3/4">
+              <textarea
+                class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                rows="3"
+              >
+Al finalizar y aprobar el curso, el alumno podrá obtener un certificado del ICAT.
+        </textarea
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Contenido Programático</h2>
+
+<!-- Tabla de contenido programático -->
+<div class="overflow-x-auto">
+  <table class="w-full border-collapse border border-gray-300 mt-8">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="border border-gray-300 px-4 py-2 text-left font-semibold w-1/12">
+          No.
+        </th>
+        <th class="border border-gray-300 px-4 py-2 text-left font-semibold w-2/12">
+          Nombre del Tema
+        </th>
+        <th class="border border-gray-300 px-4 py-2 text-left font-semibold w-1/12">
+          Tiempo (HRS)
+        </th>
+        <th class="border border-gray-300 px-4 py-2 text-left font-semibold w-2/12">
+          Criterios de Evaluación
+        </th>
+        <th class="border border-gray-300 px-4 py-2 text-left font-semibold w-2/12">
+          Evidencias
+        </th>
+        <th class="border border-gray-300 px-4 py-2 text-left font-semibold w-4/12">
+          Actividades de Enseñanza-Aprendizaje
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="border border-gray-300 px-4 py-2 text-center">1</td>
+        <td class="border border-gray-300 px-4 py-2">
+          Planear secuencias didácticas
+        </td>
+        <td class="border border-gray-300 px-4 py-2 text-center">20</td>
+        <td class="border border-gray-300 px-4 py-2">
+          Conocimiento <br /> Producto
+        </td>
+        <td class="border border-gray-300 px-4 py-2">
+          Cuestionario <br /> Lista de cotejo
+        </td>
+        <td class="border border-gray-300 px-4 py-2">
+          <strong>DOCENTE:</strong> Asesorará en la elaboración del plan de sesión del módulomateriaasignatura que imparte. Apoyará al participante en la aplicación de los principios de planeación didáctica. <br />
+          <strong>ALUMNO:</strong> Entregará un plan de sesión de su módulo/materia/asignatura que cumpla con los principios de planeación didáctica y los requisitos establecidos.
+        </td>
+      </tr>
+      <tr>
+        <td class="border border-gray-300 px-4 py-2 text-center">2</td>
+        <td class="border border-gray-300 px-4 py-2">
+          Propiciar ambientes de aprendizaje
+        </td>
+        <td class="border border-gray-300 px-4 py-2 text-center">20</td>
+        <td class="border border-gray-300 px-4 py-2">
+          Conocimiento <br /> Producto
+        </td>
+        <td class="border border-gray-300 px-4 py-2">
+          Cuestionario <br /> Lista de cotejo
+        </td>
+        <td class="border border-gray-300 px-4 py-2">
+          <strong>DOCENTE:</strong> Asesorará al alumno en la implementación de las estrategias de enseñanza-aprendizaje requeridas para el desarrollo de sesiones, así como en la evaluación de los alumnos. <br />
+          <strong>ALUMNO:</strong> Implementará las estrategias de aprendizaje requeridas para el desarrollo de sesiones, así como la evaluación de los alumnos, con base en el Plan de sesión/clase.
+        </td>
+      </tr>
+      <tr>
+        <td class="border border-gray-300 px-4 py-2 text-center" colspan="2">
+          Total Horas
+        </td>
+        <td class="border border-gray-300 px-4 py-2 text-center">40</td>
+        <td class="border border-gray-300 px-4 py-2" colspan="3"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+    <!-- Botón para guardar -->
+    <div class="flex justify-end">
+      <button
+        type="submit"
+        class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition duration-300"
+      >
+        Guardar Curso
+      </button>
+    </div>
+  </form>
+</div>
