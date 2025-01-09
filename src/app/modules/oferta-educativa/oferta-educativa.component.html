@@ -1,1 +1,16 @@
-<p>oferta-educativa works!</p>
+<!-- Contenedor principal en Flexbox -->
+<div class="flex min-h-screen">
+
+    <!-- Menú lateral o Header (a la izquierda) -->
+    <div class="w-1/6 flex bg-white text-white p-3">
+      <app-header class="bg-white border-b border-gray-200"></app-header> Borde debajo del header
+    </div>
+    
+    
+      <!-- Contenido (a la derecha) -->
+      <div class="flex-1 p-4 overflow-auto bg-gray-50">
+        <router-outlet></router-outlet>
+      </div>
+    
+    </div>
+    
