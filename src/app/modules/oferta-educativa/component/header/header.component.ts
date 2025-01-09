@@ -9,19 +9,41 @@ import { Router } from '@angular/router';
         <h1 class="text-xl font-bold text-gray-800 mb-4">Perfil Oferta Educativa</h1>
         <nav class="flex flex-col space-y-2">
           <a
-            *ngFor="let item of menuItems"
             class="flex items-center space-x-2 px-4 py-2 rounded-md"
-            [class.bg-blue-500]="selectedItem === item"
-            [class.text-white]="selectedItem === item"
-            [class.text-gray-800]="selectedItem !== item"
-            (click)="selectMenuItem(item)"
-            [routerLink]="item.link"
+            [ngClass]="{ 'bg-blue-500 text-white': selectedItem === 'Inicio', 'text-gray-800': selectedItem !== 'Inicio' }"
+            (click)="selectMenuItem('Inicio')"
+            [routerLink]="'/oferta-educativa/home'"
           >
-            <!-- Cambiar la clase a Font Awesome -->
-            <i class="fas" [ngClass]="item.icon"></i>
-            <span>{{ item.label }}</span>
+            <i class="fas fa-home"></i>
+            <span>Inicio</span>
           </a>
-          <!-- Cerrar sesión debajo de los enlaces -->
+          <a
+            class="flex items-center space-x-2 px-4 py-2 rounded-md"
+            [ngClass]="{ 'bg-blue-500 text-white': selectedItem === 'Cursos', 'text-gray-800': selectedItem !== 'Cursos' }"
+            (click)="selectMenuItem('Cursos')"
+            [routerLink]="'/oferta-educativa/cursos'"
+          >
+            <i class="fas fa-school"></i>
+            <span>Cursos</span>
+          </a>
+          <a
+            class="flex items-center space-x-2 px-4 py-2 rounded-md"
+            [ngClass]="{ 'bg-blue-500 text-white': selectedItem === 'Perfil', 'text-gray-800': selectedItem !== 'Perfil' }"
+            (click)="selectMenuItem('Perfil')"
+            [routerLink]="'/oferta-educativa/perfil'"
+          >
+            <i class="fas fa-user"></i>
+            <span>Perfil</span>
+          </a>
+          <a
+            class="flex items-center space-x-2 px-4 py-2 rounded-md"
+            [ngClass]="{ 'bg-blue-500 text-white': selectedItem === 'Cerrar sesión', 'text-gray-800': selectedItem !== 'Cerrar sesión' }"
+            (click)="selectMenuItem('Cerrar sesión')"
+            [routerLink]="'/oferta-educativa/cerrar-sesion'"
+          >
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Cerrar sesión</span>
+          </a>
           <li class="mt-4">
             <button (click)="logout()" class="block py-3 px-6 flex items-center text-gray-600 w-full border-2 border-[#44509D] rounded-md hover:bg-[#44509D] hover:text-white transition-all duration-300">
               <i class="fas fa-sign-out-alt text-[#44509D] mr-3 hover:text-white"></i> Cerrar Sesión
@@ -48,35 +70,27 @@ import { Router } from '@angular/router';
   ],
 })
 export class HeaderComponent {
-  menuItems = [
-    { label: 'Inicio', icon: 'fa-home', link: '/oferta-educativa/home' },  // Ruta para la página de inicio
-    { label: 'Cursos', icon: 'fa-school', link: '/oferta-educativa/cursos' },
-    { label: 'Perfil', icon: 'fa-user', link: '/oferta-educativa/perfil' }, // Icono de perfil
-    { label: 'Cerrar sesión', icon: 'fa-sign-out-alt', link: '/oferta-educativa/cerrar-sesion' }, // Icono de cerrar sesión
-  ];
-
-  selectedItem = this.menuItems[0];
-
-  selectMenuItem(item: { label: string; icon: string, link: string }) {
-    this.selectedItem = item;
-  }
+  selectedItem: string = 'Inicio'; // Inicializa el elemento seleccionado
 
   constructor(private router: Router) {}
 
+  selectMenuItem(item: string) {
+    this.selectedItem = item;
+  }
+
   logout(): void {
-    const request = indexedDB.open('authDB'); // Nombre de la base de datos
+    const request = indexedDB.open('authDB');
 
     request.onsuccess = () => {
       const db = request.result;
-      const transaction = db.transaction('tokens', 'readwrite'); // Nombre de la tabla/almacén
+      const transaction = db.transaction('tokens', 'readwrite');
       const store = transaction.objectStore('tokens');
 
-      // Eliminar el token
-      const deleteRequest = store.delete('authToken'); // Clave del token
+      const deleteRequest = store.delete('authToken');
 
       deleteRequest.onsuccess = () => {
         console.log('Token eliminado correctamente.');
-        this.router.navigate(['/']); // Redirige al login
+        this.router.navigate(['/']);
       };
 
       deleteRequest.onerror = (error) => {
