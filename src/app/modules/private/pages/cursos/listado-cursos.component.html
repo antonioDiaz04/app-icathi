@@ -1,7 +1,7 @@
 <div class="max-w-7xl mx-auto p-6 space-y-8">
   <!-- Título y botón para agregar curso -->
   <div class="flex justify-between items-center">
-    <h2 class="text-3xl font-bold text-gray-900">Listado de Cursos</h2>
+    <h2 class="text-3xl font-bold text-gray-900">{{ mostrarOpcionesCursosTipo ? 'Agregar Curso' : 'Listado de Cursos' }}</h2>
     <button
       (click)="toggleFormulario()"
       class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300"
@@ -54,7 +54,7 @@
 
 
   <div *ngIf="mostrarOpcionesCursosTipo" class="course-selector">
-    <label for="course-select">Selecciona un curso:</label>
+    <label for="course-select">Selecciona el tipo de  curso:</label>
     <select id="course-select" [(ngModel)]="selectedCourse">
     <option value="curso1">Curso Modalidad CAE</option>
     <option value="curso2">Curso Modalidad Virtual</option>
@@ -81,11 +81,6 @@
       </div>
     </div>
     
-
-
-
-
-
   <!-- Formulario para agregar curso -->
   <div *ngIf="mostrarFormulario" class="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
     <h2 class="text-2xl font-bold text-gray-800 mb-6">Registrar Nuevo Curso</h2>

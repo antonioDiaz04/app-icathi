@@ -5,6 +5,25 @@
 //   -moz-osx-font-smoothing: grayscale;
 // }
 
+.fixed {
+  position: fixed;
+  z-index: 9999;
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+button {
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #e65500;
+}
+
+
+
 .app-layout {
   height: 100vh;
 }

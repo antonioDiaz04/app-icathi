@@ -109,7 +109,7 @@ export class ListadoCursosComponent implements OnInit {
     this.mostrarOpcionesCursosTipo = !this.mostrarOpcionesCursosTipo;//contipo de cursos
     // this.mostrarFormulario = !this.mostrarFormulario;
   }
-
+// ! quitarla de este componente 
   agregarCurso(): void {
     console.log('Datos enviados al backend:', this.nuevoCurso); // Verifica el contenido
 
