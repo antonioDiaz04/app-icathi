@@ -15,6 +15,7 @@ export class UnauthorizedComponent {
   goBack() {
     if (window.history.length > 1) {
       this.location.back(); // Navega a la página anterior si hay historial
+
     } else {
       this.router.navigate(['/']); // Redirige al inicio si no hay historial
     }

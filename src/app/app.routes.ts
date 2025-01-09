@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router'
 import { RoleGuard } from './shared/guards/role-guard.guard'
-import { AlumnoModule } from './modules/alumno/alumno.module'
 
 export const routes: Routes = [
   {
