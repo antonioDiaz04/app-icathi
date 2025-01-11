@@ -1,16 +1,160 @@
-<!-- Contenedor principal en Flexbox -->
-<div class="flex min-h-screen">
-
-    <!-- Menú lateral o Header (a la izquierda) -->
-    <div class="w-1/6 flex bg-white text-white p-3">
-      <app-header class="bg-white border-b border-gray-200"></app-header> Borde debajo del header
-    </div>
-    
-    
-      <!-- Contenido (a la derecha) -->
-      <div class="flex-1 p-4 overflow-auto bg-gray-50">
-        <router-outlet></router-outlet>
+<div class="min-h-screen flex bg-gray-50">
+    <!-- Menú Lateral -->
+    <aside class="w-72 bg-white shadow-lg p-6">
+      <!-- Logo -->
+      <div class="flex items-center justify-center mb-8">
+        <img
+          src="https://www.icathi.edu.mx/img/ICATHI.png"
+          alt="ICATHI Logo"
+          class="w-20 h-auto"
+        />
       </div>
-    
+  
+      <!-- Título -->
+      <h1 class="text-xl font-bold text-center mb-6 text-gray-800 tracking-wide">
+        Validador de Cursos
+      </h1>
+  
+      <!-- Navegación -->
+      <nav>
+        <ul class="space-y-6">
+          <!-- Botón Cerrar Sesión -->
+          <li>
+            <button
+              (click)="logout()"
+              class="flex items-center justify-center w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold text-sm rounded-lg shadow-md hover:from-blue-600 hover:to-blue-800 hover:shadow-lg transition-all duration-300"
+            >
+              <i class="fas fa-sign-out-alt mr-2 text-lg"></i>
+              Cerrar Sesión
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </aside>  
+<div class="p-6 bg-gray-100">
+    <h1 class="text-xl font-bold text-gray-800 mb-4">CONSULTA OFERTA EDUCATIVA</h1>
+  
+    <!-- Filtros -->
+    <div class="flex flex-wrap gap-4 mb-6">
+      <div class="flex flex-col">
+        <label for="curso" class="mb-2 text-sm text-gray-600">Buscar por Nombre de Curso:</label>
+        <input
+          id="curso"
+          type="text"
+          [(ngModel)]="searchCurso"
+          class="px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+          placeholder="Nombre del curso"
+        />
+      </div>
+  
+      <div class="flex flex-col">
+        <label for="especialidad" class="mb-2 text-sm text-gray-600">Buscar Especialidad:</label>
+        <input
+          id="especialidad"
+          type="text"
+          [(ngModel)]="searchEspecialidad"
+          class="px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+          placeholder="Especialidad"
+        />
+      </div>
+  
+      <button
+        class="self-end px-6 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition"
+        (click)="filtrarCursos()"
+      >
+        Buscar
+      </button>
+  
+      <button
+        class="self-end px-6 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 transition"
+      >
+        Nuevo curso
+      </button>
     </div>
-    
+  
+    <!-- Tabla -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border rounded-md shadow-md">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">ESTADO</th>
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">ÁREA</th>
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">ESPECIALIDAD</th>
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">CLAVE</th>
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">NOMBRE</th>
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">TIPO</th>
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">HORAS</th>
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">DETALLES</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let curso of paginatedCursos" class="hover:bg-gray-100">
+            <td class="px-4 py-2 border text-center">
+              <button
+                [ngClass]="{
+                  'bg-green-500 text-white': curso.activo,
+                  'bg-red-500 text-white': !curso.activo
+                }"
+                class="px-4 py-1 rounded-md hover:opacity-90 transition"
+                (click)="toggleEstado(curso)"
+              >
+                {{ curso.activo ? 'Activo' : 'Inactivo' }}
+              </button>
+            </td>
+            <td class="px-4 py-2 border text-sm text-gray-800">{{ curso.area }}</td>
+            <td class="px-4 py-2 border text-sm text-gray-800">{{ curso.especialidad }}</td>
+            <td class="px-4 py-2 border text-sm text-gray-800">{{ curso.clave }}</td>
+            <td class="px-4 py-2 border text-sm text-gray-800">{{ curso.nombre }}</td>
+            <td class="px-4 py-2 border text-sm text-gray-800">{{ curso.tipo }}</td>
+            <td class="px-4 py-2 border text-sm text-gray-800">{{ curso.horas }}</td>
+            <td class="px-4 py-2 border text-center">
+              <button
+                class="px-4 py-1 text-white bg-teal-500 rounded-md hover:bg-teal-600 transition"
+              >
+                Detalle
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Paginador -->
+    <div class="flex justify-center items-center mt-4">
+      <button
+        class="px-4 py-2 mx-1 text-sm text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300"
+        [disabled]="currentPage === 1"
+        (click)="prevPage()"
+      >
+        Anterior
+      </button>
+      <span class="px-4 py-2 mx-1 text-sm font-medium text-gray-700">Página {{ currentPage }} de {{ totalPages }}</span>
+      <button
+        class="px-4 py-2 mx-1 text-sm text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300"
+        [disabled]="currentPage === totalPages"
+        (click)="nextPage()"
+      >
+        Siguiente
+      </button>
+    </div>
+  </div>
+<!-- Modal -->
+<div
+  *ngIf="showModal"
+  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+>
+  <div
+    class="p-6 rounded-lg shadow-lg text-center"
+    [ngClass]="{
+      'bg-green-500 text-white': modalType === 'success',
+      'bg-red-500 text-white': modalType === 'error'
+    }"
+    style="width: 300px;"
+  >
+    <h2 class="text-xl font-bold mb-4">
+      {{ modalType === 'success' ? '¡Éxito!' : '¡Error!' }}
+    </h2>
+    <p>{{ modalMessage }}</p>
+  </div>
+</div>
+  
