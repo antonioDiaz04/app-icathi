@@ -11,8 +11,7 @@ import { ListadoCursosComponent } from './views/cursos/listado-cursos.component'
 import { CursoModalidadCAEComponent } from './views/cursos/typos-cursos/curso-modalidad-cae/curso-modalidad-cae.component';
 import { CursoModalidadEscuelaComponent } from './views/cursos/typos-cursos/curso-modalidad-escuela/curso-modalidad-escuela.component';
 import { CursoModalidadVirtualComponent } from './views/cursos/typos-cursos/curso-modalidad-virtual/curso-modalidad-virtual.component';
-import { FormsModule } from '@angular/forms';
-
+  import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -20,7 +19,7 @@ import { FormsModule } from '@angular/forms';
   ],  
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [RouterModule,
-    CommonModule,FormsModule ,
+    CommonModule,FormsModule ,ReactiveFormsModule,
     OfertaEducativaRoutingModule
   ]
 })
