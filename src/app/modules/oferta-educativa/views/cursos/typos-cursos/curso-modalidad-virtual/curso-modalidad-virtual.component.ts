@@ -39,11 +39,7 @@ export interface Modulo {
 
 }
 
-export interface UnitOption {
-  value: string;
-  label: string;
-}
-
+ 
 @Component({
   selector: "app-curso-modalidad-virtual",
   templateUrl: "./curso-modalidad-virtual.component.html",
@@ -206,11 +202,7 @@ export class CursoModalidadVirtualComponent implements OnInit {
   }
 
 
-  unitOptions: UnitOption[] = [
-    { value: 'PIEZA', label: 'PIEZA' },
-    { value: 'OTRO', label: 'OTRO' },
-    { value: 'SERVICIO', label: 'SERVICIO' }
-  ];
+  
 
   showModal = false;
   newUnitName = '';

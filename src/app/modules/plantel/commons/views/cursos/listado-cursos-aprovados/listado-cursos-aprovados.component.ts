@@ -43,6 +43,8 @@ interface Docente {
   estatus_valor: boolean;
 }
 
+
+
 @Component({
     selector: 'app-listado-cursos-aprovados',
     templateUrl: './listado-cursos-aprovados.component.html',
@@ -71,6 +73,9 @@ export class ListadoCursosAprovadosComponent implements OnInit {
   cursosSolicitados: any;
   // dataCurso: any;
 
+
+
+  
   cursoDetails!: any;
   abrirModalDetalles(modulo: any) {
     this.cursoSeleccionado = { ...modulo };
@@ -121,7 +126,9 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     this.filtroDuracion = null;
   }
 
+  // cursosFiltrados!:Modulo;
   openModal(idPlantelCurso: any) {
+  alert(idPlantelCurso)
     this.mostrarFormulario = !this.mostrarFormulario;
     this.plantelService
       .getInfoCursoPlantel(idPlantelCurso)
@@ -185,7 +192,7 @@ export class ListadoCursosAprovadosComponent implements OnInit {
       return this.cursosSolicitados.filter(
         (curso: any) => !curso.curso_validado
       );
-    }
+    }   
     return this.cursosSolicitados;
   }
 
@@ -392,5 +399,46 @@ export class ListadoCursosAprovadosComponent implements OnInit {
           }
         );
     }
+  }
+
+
+
+
+
+  // Método para guardar cambios
+  guardarCambios() {
+    const cursoData = {
+      nombre: this.curso.nombre,
+      area_nombre: this.curso.area_nombre,
+      especialidad_nombre: this.curso.especialidad_nombre,
+      fecha_inicio: this.curso.fecha_inicio,
+      fecha_fin: this.curso.fecha_fin,
+      cupo_maximo: this.curso.cupo_maximo,
+      requisitos_extra: this.curso.requisitos_extra,
+      sector_atendido: this.curso.sector_atendido,
+      rango_edad: this.curso.rango_edad,
+      tipo_beca: this.curso.tipo_beca,
+      tipo_curso: this.curso.tipo_curso,
+      convenio_numero: this.curso.convenio_numero,
+      cruzada_contra_hambre: this.curso.cruzada_contra_hambre,
+      cuota_tipo: this.curso.cuota_tipo,
+      cuota_monto: this.curso.cuota_monto,
+      pagar_final: this.curso.pagar_final,
+      participantes: this.curso.participantes,
+      cant_instructores: this.curso.cant_instructores,
+      plantel: {
+        calle: this.curso.plantel.calle,
+        localidad: this.curso.plantel.localidad,
+        municipio: this.curso.plantel.municipio,
+        num_interior: this.curso.plantel.num_interior,
+        num_exterior: this.curso.plantel.num_exterior
+      },
+      horario: this.curso.horario,
+      docentes: this.docentes,
+      alumnos: this.alumnos
+    };
+
+    const jsonData = JSON.stringify(cursoData);
+    console.log(jsonData); // Aquí puedes enviar el JSON a tu API o donde lo necesites
   }
 }
