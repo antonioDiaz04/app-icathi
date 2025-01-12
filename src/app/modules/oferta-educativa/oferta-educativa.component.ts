@@ -18,7 +18,8 @@ export class OfertaEducativaComponent implements OnInit {
   selectedCourse: string = ''; // Variable para el curso seleccionado
   showOfertaEducativa = false; // Cambia a true para mostrar la sección
   isAddingCourse: boolean = false;
-  
+  selectedCourseDetails: any = null;
+
 
 
   searchCurso = '';
@@ -29,6 +30,10 @@ export class OfertaEducativaComponent implements OnInit {
   showModal = false;
   modalMessage = '';
   modalType: 'success' | 'error' = 'success'; // Tipo de mensaje (éxito o error)
+    // Para los detalles del curso
+    selectedCursoDetalle: any = null;
+    
+    showDetailModal: boolean = false;
 
   constructor(private http: HttpClient , private  router: Router) {}
 
@@ -135,6 +140,7 @@ export class OfertaEducativaComponent implements OnInit {
       };
     };
 
+
     request.onerror = (error) => {
       console.error('Error al abrir la base de datos:', error);
     };
@@ -153,6 +159,7 @@ export class OfertaEducativaComponent implements OnInit {
   cancelAddingCourse(): void {
     this.isAddingCourse = false;
   }
+
   toggleAddingCourse(): void {
     this.isAddingCourse = !this.isAddingCourse;
   }
@@ -160,7 +167,32 @@ export class OfertaEducativaComponent implements OnInit {
   regresar(): void {
     this.isAddingCourse = false;
   }
-  
-  
+  verDetalle(cursoId: number): void {
+    this.http.get<any>(`${this.apiUrl}/detalles/${cursoId}`).subscribe({
+      next: (cursoDetalle) => {
+        this.selectedCursoDetalle = cursoDetalle;
+        this.showDetailModal = true;
+      },
+      error: (err) => {
+        console.error('Error al obtener los detalles del curso:', err);
+        this.mostrarModal('Error al obtener los detalles del curso. Intenta más tarde.', 'error');
+      }
+    });
+  }
 
+  
+  closeCourseDetails() {
+    this.selectedCourseDetails = null;
+  }
+    // Método para mostrar los detalles del curso
+    showCourseDetails(id: number) {
+      this.http.get<any>(`${this.apiUrl}/detalles/${id}`).subscribe(
+        (data: any) => {
+          this.selectedCourseDetails = data;
+        },
+        (error) => {
+          console.error('Error al obtener los detalles del curso:', error);
+        }
+      );
+    }
 }
