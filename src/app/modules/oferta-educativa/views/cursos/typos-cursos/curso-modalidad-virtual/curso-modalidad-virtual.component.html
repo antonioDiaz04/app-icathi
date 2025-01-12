@@ -134,6 +134,50 @@
           El nivel es obligatorio.
         </div>
       </div>
+
+      <div class="flex space-x-4">
+        <!-- Vigencia Inicio -->
+        <div class="flex-1">
+          <label class="block text-sm font-medium">Vigencia Inicio</label>
+          <input
+            type="date"
+            [(ngModel)]="nuevoCurso.vigencia_inicio"
+            name="vigencia_inicio"
+            required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+            placeholder="Vigencia inicio"
+          />
+        </div>
+      
+        <!-- Fecha de Publicación -->
+        <div class="flex-1">
+          <label class="block text-sm font-medium">Fecha de Publicación</label>
+          <input
+            type="date"
+            [(ngModel)]="nuevoCurso.fecha_publicacion"
+            name="fecha_publicacion"
+            required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+            placeholder="Fecha de publicación"
+          />
+        </div>
+      
+        <!-- Costo -->
+        <div class="flex-1">
+          <label class="block text-sm font-medium">Costo</label>
+          <input
+            type="number"
+            [(ngModel)]="nuevoCurso.costo"
+            name="costo"
+            required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+            placeholder="Costo del curso"
+          />
+        </div>
+      </div>
+      
+  
+  
       
       <h2 class="text-2xl font-bold text-gray-800 mb-6">Objetivos del Curso</h2>
   
@@ -158,8 +202,8 @@
           </td>
           <td class="border border-gray-300 px-4 py-2 w-3/4">
             <textarea
-              [(ngModel)]="nuevoCurso.objetivos.curso"
-              name="curso"
+              [(ngModel)]="nuevoCurso.objetivos.objetivo"
+              name="objetivo"
               class="w-full border border-gray-300 rounded-md p-2 resize-none"
               rows="3"
             ></textarea>
@@ -171,8 +215,8 @@
           </td>
           <td class="border border-gray-300 px-4 py-2 w-3/4">
             <textarea
-              [(ngModel)]="nuevoCurso.objetivos.perfilIngreso"
-              name="perfilIngreso"
+              [(ngModel)]="nuevoCurso.objetivos.perfil_ingreso"
+              name="perfil_ingreso"
               class="w-full border border-gray-300 rounded-md p-2 resize-none"
               rows="4"
             ></textarea>
@@ -184,8 +228,8 @@
           </td>
           <td class="border border-gray-300 px-4 py-2 w-3/4">
             <textarea
-              [(ngModel)]="nuevoCurso.objetivos.perfilEgreso"
-              name="perfilEgreso"
+              [(ngModel)]="nuevoCurso.objetivos.perfil_egreso"
+              name="perfil_egreso"
               class="w-full border border-gray-300 rounded-md p-2 resize-none"
               rows="5"
             ></textarea>
@@ -197,8 +241,8 @@
           </td>
           <td class="border border-gray-300 px-4 py-2 w-3/4">
             <textarea
-              [(ngModel)]="nuevoCurso.objetivos.perfilDocente"
-              name="perfilDocente"
+              [(ngModel)]="nuevoCurso.objetivos.perfil_del_docente"
+              name="perfil_del_docente"
               class="w-full border border-gray-300 rounded-md p-2 resize-none"
               rows="6"
             ></textarea>
