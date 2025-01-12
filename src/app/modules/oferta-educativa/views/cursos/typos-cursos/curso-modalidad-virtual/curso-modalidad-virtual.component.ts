@@ -18,10 +18,10 @@ export interface Modulo {
   fecha_publicacion?: string | undefined; // Fecha de publicación puede estar indefinida
   ultima_actualizacion?: string | undefined; // Última actualización puede estar indefinida
   objetivos: {
-    curso: string | undefined; // Objetivo del curso puede estar indefinido
-    perfilIngreso: string | undefined; // Perfil de ingreso
-    perfilEgreso: string | undefined; // Perfil de egreso
-    perfilDocente: string | undefined; // Perfil del docente
+    objetivo: string | undefined; // Objetivo del curso puede estar indefinido
+    perfil_ingreso: string | undefined; // Perfil de ingreso
+    perfil_egreso: string | undefined; // Perfil de egreso
+    perfil_del_docente: string | undefined; // Perfil del docente
     metodologia: string | undefined; // Metodología de capacitación
     bibliografia: string | undefined; // Bibliografía
     criteriosAcreditacion: string | undefined; // Criterios de acreditación
@@ -36,31 +36,7 @@ export interface Modulo {
       actividades: string | undefined; // Actividades pueden estar indefinidas
     }>;
   };
-  materiales: Array<{
-    descripcion: string;
-    unidad_de_medida: string | undefined; // Unidad puede estar indefinida
-    cantidad: number;
-    cantidad10?: number | undefined; // Cantidad para 10 puede estar indefinida
-    cantidad15?: number | undefined; // Cantidad para 15 puede estar indefinida
-    cantidad20?: number | undefined; // Cantidad para 20 puede estar indefinida
-  }>;
-  equipamiento: Array<{
-    descripcion: string;
-    unidad_de_medida: string | undefined; // Unidad puede estar indefinida
-    cantidad: number;
-    cantidad10?: number | undefined; // Cantidad para 10 puede estar indefinida
-    cantidad15?: number | undefined; // Cantidad para 15 puede estar indefinida
-  }>;
-}
 
-export interface EquipmentItem {
-  description: string;
-  unitOfMeasure?: string | undefined; // Unidad de medida puede estar indefinida
-  customUnitOfMeasure?: string | undefined; // Unidad de medida personalizada puede estar indefinida
-  quantity: number;
-  quantity10?: number | undefined; // Cantidad para 10 puede estar indefinida
-  quantity15?: number | undefined; // Cantidad para 15 puede estar indefinida
-  quantity20?: number | undefined; // Cantidad para 20 puede estar indefinida
 }
 
 export interface UnitOption {
@@ -90,18 +66,18 @@ export class CursoModalidadVirtualComponent implements OnInit {
     especialidad_id: undefined,
     tipo_curso_id: undefined,
     objetivos: {
-      curso: '',
-      perfilIngreso: '',
-      perfilEgreso: '',
-      perfilDocente: '',
+      objetivo: '',
+      perfil_ingreso: '',
+      perfil_egreso: '',
+      perfil_del_docente: '',
       metodologia: '',
       bibliografia: '',
       criteriosAcreditacion: '',
       reconocimiento: ''
     },
     contenidoProgramatico: { temas: [] },
-    materiales: [],
-    equipamiento: []
+    // materiales: [],
+    // equipamiento: []
   };
 
   private apiUrl = `${environment.api}`;
@@ -154,28 +130,30 @@ export class CursoModalidadVirtualComponent implements OnInit {
     });
   }
 
-  agregarCurso(): void {
-    this.isSaving = true;
-    this.alertMessage = null; // Reset previous alert
-
-    this.http.post<Modulo>(`${this.apiUrl}/cursos`, this.nuevoCurso).subscribe({
-      next: (cursoCreado) => {
-        this.modulos.push(cursoCreado);
-        this.resetNuevoCurso();
-        this.alertMessage = 'Curso agregado correctamente.';
-        this.alertTitle = 'Éxito';
-        this.alertType = 'success';
-      },
-      error: (err) => {
-        this.alertMessage = 'Error al agregar el curso.';
-        this.alertTitle = 'Error';
-        this.alertType = 'error';
-      },
-      complete: () => {
-        this.isSaving = false;
-      }
-    });
-  }
+   agregarCurso(): void {
+     this.isSaving = true;
+     this.alertMessage = null; // Reset previous alert
+ 
+     this.http.post<Modulo>(`${this.apiUrl}/cursos`, this.nuevoCurso).subscribe({
+       next: (cursoCreado) => {
+         this.isSaving = false; // Termina el estado de carga
+         this.modulos.push(cursoCreado);
+         this.resetNuevoCurso();
+         this.alertMessage = 'Curso agregado correctamente.';
+         this.alertTitle = 'Éxito';
+         this.alertType = 'success';
+       },
+       error: (err) => {
+         this.isSaving = false; // Termina el estado de carga
+         this.alertMessage = 'Error al agregar el curso.';
+         this.alertTitle = 'Error';
+         this.alertType = 'error';
+       },
+       complete: () => {
+         this.isSaving = false;
+       }
+     });
+   }
 
   resetNuevoCurso(): void {
     this.nuevoCurso = {
@@ -189,18 +167,19 @@ export class CursoModalidadVirtualComponent implements OnInit {
       especialidad_id: undefined,
       tipo_curso_id: undefined,
       objetivos: {
-        curso: '',
-        perfilIngreso: '',
-        perfilEgreso: '',
-        perfilDocente: '',
+      
+        objetivo: '',
+        perfil_ingreso: '',
+        perfil_egreso: '',
+        perfil_del_docente: '',
         metodologia: '',
         bibliografia: '',
         criteriosAcreditacion: '',
         reconocimiento: ''
       },
       contenidoProgramatico: { temas: [] },
-      materiales: [],
-      equipamiento: []
+      // materiales: [],
+      // equipamiento: []
     };
   }
 
@@ -219,64 +198,13 @@ export class CursoModalidadVirtualComponent implements OnInit {
     this.nuevoCurso.contenidoProgramatico.temas.splice(index, 1);
   }
 
-  // Métodos para agregar y eliminar materiales
-  agregarMaterial(): void {
-    this.nuevoCurso.materiales.push({
-      descripcion: '',
-      unidad_de_medida: undefined,
-      cantidad: 0,
-      cantidad10: undefined,
-      cantidad15: undefined,
-      cantidad20: undefined
-    });
-  }
 
-  eliminarMaterial(index: number): void {
-    this.nuevoCurso.materiales.splice(index, 1);
-  }
-
-  // Métodos para agregar y eliminar equipamiento
-  agregarEquipamiento(): void {
-    this.nuevoCurso.equipamiento.push({
-      descripcion: '',
-      unidad_de_medida: undefined,
-      cantidad: 0,
-      cantidad10: undefined,
-      cantidad15: undefined
-    });
-  }
-
-  eliminarEquipamiento(index: number): void {
-    this.nuevoCurso.equipamiento.splice(index, 1);
-  }
 
   // Método para calcular total de horas
   calcularTotalHoras(): number {
     return this.nuevoCurso.contenidoProgramatico.temas.reduce((total, tema) => total + tema.tiempo, 0);
   }
 
-  // Equipamiento y opciones de unidad_de_medida
-  equipmentData: EquipmentItem[] = [
-    {
-      description: 'PIZARRÓN',
-      unitOfMeasure: 'PIEZA',
-      customUnitOfMeasure: '',
-      quantity: 1,
-      quantity10: 1,
-      quantity15: 1,
-      quantity20: 1
-    },
-    {
-      description: 'PROYECTOR',
-      unitOfMeasure: 'PIEZA',
-      customUnitOfMeasure: '',
-      quantity: 1,
-      quantity10: 1,
-      quantity15: 1,
-      quantity20: 1
-    },
-    // Agrega más elementos de equipamiento aquí
-  ];
 
   unitOptions: UnitOption[] = [
     { value: 'PIEZA', label: 'PIEZA' },
