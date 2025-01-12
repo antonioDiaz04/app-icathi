@@ -15,6 +15,11 @@ export class OfertaEducativaComponent implements OnInit {
   itemsPerPage = 10;
   currentPage = 1;
   totalPages = 0;
+  selectedCourse: string = ''; // Variable para el curso seleccionado
+  showOfertaEducativa = false; // Cambia a true para mostrar la sección
+  isAddingCourse: boolean = false;
+  
+
 
   searchCurso = '';
   searchEspecialidad = '';
@@ -134,5 +139,28 @@ export class OfertaEducativaComponent implements OnInit {
       console.error('Error al abrir la base de datos:', error);
     };
   }
+
+  verOfertaEducativa(): void {
+    this.isAddingCourse = true;
+  }
+  
+  toggleAddCourse() {
+    this.showOfertaEducativa = !this.showOfertaEducativa;
+    console.log('Vista activada:', this.showOfertaEducativa);
+  }
+  
+  
+  cancelAddingCourse(): void {
+    this.isAddingCourse = false;
+  }
+  toggleAddingCourse(): void {
+    this.isAddingCourse = !this.isAddingCourse;
+  }
+  
+  regresar(): void {
+    this.isAddingCourse = false;
+  }
+  
+  
 
 }
