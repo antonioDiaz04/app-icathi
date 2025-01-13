@@ -1,11 +1,263 @@
-<div class="flex h-screen">
-  <!-- Header column -->
-  <div class="fixed top-0 left-0 h-100 w-1/5 bg-white border-r border-gray-200">
-    <app-header class="p-4"></app-header>
+<div class="min-h-screen flex bg-gray-50">
+  <!-- Menú lateral -->
+  <aside class="w-72 bg-white shadow-lg p-6">
+    <!-- Logo -->
+    <div class="flex items-center justify-center mb-8">
+      <img src="https://www.icathi.edu.mx/img/ICATHI.png" alt="ICATHI Logo" class="w-20 h-auto" />
+    </div>
+    <!-- Título -->
+    <h1 class="text-xl font-bold text-center mb-6 text-gray-800 tracking-wide">Validador de Cursos</h1>
+    <!-- Navegación -->
+    <nav>
+      <ul class="space-y-6">
+        <li>
+          <button
+            (click)="logout()"
+            class="flex items-center justify-center w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold text-sm rounded-lg shadow-md hover:from-blue-600 hover:to-blue-800 hover:shadow-lg transition-all duration-300"
+          >
+            <i class="fas fa-sign-out-alt mr-2 text-lg"></i>
+            Cerrar Sesión
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <div *ngIf="!isAddingCourse" class="p-6 bg-gray-100">
+    <h1 class="text-xl font-bold text-gray-800 mb-4">CONSULTA OFERTA EDUCATIVA</h1>
+
+    <!-- Filtros -->
+    <div class="flex flex-wrap gap-4 mb-6">
+      <div class="flex flex-col">
+        <label for="curso" class="mb-2 text-sm text-gray-600">Buscar por Nombre de Curso:</label>
+        <input
+          id="curso"
+          type="text"
+          [(ngModel)]="searchCurso"
+          class="px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+          placeholder="Nombre del curso"
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label for="especialidad" class="mb-2 text-sm text-gray-600">Buscar Especialidad:</label>
+        <input
+          id="especialidad"
+          type="text"
+          [(ngModel)]="searchEspecialidad"
+          class="px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+          placeholder="Especialidad"
+        />
+      </div>
+
+      <button
+        class="self-end px-6 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition"
+        (click)="filtrarCursos()"
+      > 
+        Buscar
+      </button>
+
+      <!-- Botón para agregar curso -->
+      <button
+        (click)="toggleAddingCourse()"
+        class="self-end px-6 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 transition"
+      >
+        <i class="fas fa-plus mr-2 text-lg"></i>
+        Agregar Curso
+      </button>
+    </div>
+
+    <!-- Tabla -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border rounded-md shadow-md">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">ESTADO</th>
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">ÁREA</th>
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">ESPECIALIDAD</th>
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">CLAVE</th>
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">NOMBRE</th>
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">TIPO</th>
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">HORAS</th>
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">DETALLES</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let curso of paginatedCursos" class="hover:bg-gray-100">
+            <td class="px-4 py-2 border text-center">
+              <button
+                [ngClass]="{
+                  'bg-green-500 text-white': curso.activo,
+                  'bg-red-500 text-white': !curso.activo
+                }"
+                class="px-4 py-1 rounded-md hover:opacity-90 transition"
+                (click)="toggleEstado(curso)"
+              >
+                {{ curso.activo ? 'Activo' : 'Inactivo' }}
+              </button>
+            </td>
+            <td class="px-4 py-2 border text-sm text-gray-800">{{ curso.area }}</td>
+            <td class="px-4 py-2 border text-sm text-gray-800">{{ curso.especialidad }}</td>
+            <td class="px-4 py-2 border text-sm text-gray-800">{{ curso.clave }}</td>
+            <td class="px-4 py-2 border text-sm text-gray-800">{{ curso.nombre }}</td>
+            <td class="px-4 py-2 border text-sm text-gray-800">{{ curso.tipo }}</td>
+            <td class="px-4 py-2 border text-sm text-gray-800">{{ curso.horas }}</td>
+            <td class="px-4 py-2 border text-center">
+              <button
+              class="px-4 py-1 text-white bg-teal-500 rounded-md hover:bg-teal-600 transition"
+              (click)="showCourseDetails(curso.id)"
+            >
+              Detalle
+            </button>
+            
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Modal de Detalle del Curso -->
+    <div *ngIf="selectedCourseDetails" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+      <div class="bg-white p-6 rounded-md shadow-lg w-1/2">
+        <h2 class="text-2xl font-bold mb-4">Detalles del Curso</h2>
+        <p><strong>Nombre:</strong> {{ selectedCourseDetails.nombre }}</p>
+        <p><strong>Especialidad:</strong> {{ selectedCourseDetails.especialidad }}</p>
+        <p><strong>Horas:</strong> {{ selectedCourseDetails.horas }}</p>
+        <button class="mt-4 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" (click)="closeCourseDetails()">Cerrar</button>
+      </div>
+    </div>
+
+    <!-- Paginador -->
+    <div class="flex justify-center items-center mt-4">
+      <button
+        class="px-4 py-2 mx-1 text-sm text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300"
+        [disabled]="currentPage === 1"
+        (click)="prevPage()"
+      >
+        Anterior
+      </button>
+      <span class="px-4 py-2 mx-1 text-sm font-medium text-gray-700">Página {{ currentPage }} de {{ totalPages }}</span>
+      <button
+        class="px-4 py-2 mx-1 text-sm text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300"
+        [disabled]="currentPage === totalPages"
+        (click)="nextPage()"
+      >
+        Siguiente
+      </button>
+    </div>
   </div>
-  
-  <!-- Router outlet column -->
-  <div class="flex-1 ml-[20%]">
-    <router-outlet></router-outlet>
+
+  <!-- Vista de agregar curso -->
+  <div *ngIf="isAddingCourse" class="bg-white p-6 rounded-lg shadow-md">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-3xl font-bold text-gray-900">Agregar Curso</h2>
+      <button
+        (click)="regresar()"
+        class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 transition"
+      >
+        Regresar
+      </button>
+    </div>
+
+    <!-- Selector de tipo de curso -->
+    <div class="course-selector mb-6">
+      <label for="course-select" class="block mb-2 text-gray-700 font-medium">Selecciona el tipo de curso:</label>
+      <select
+        id="course-select"
+        [(ngModel)]="selectedCourse"
+        class="w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+      >
+        <option value="" disabled>Seleccione una opción</option>
+        <option value="curso1">Curso Modalidad CAE</option>
+        <option value="curso2">Curso Modalidad Virtual</option>
+        <option value="curso3">Curso Modalidad Escuela</option>
+      </select>
+    </div>
+
+    <!-- Contenido dinámico basado en la selección -->
+    <div class="course-content">
+      <ng-container [ngSwitch]="selectedCourse">
+        <ng-container *ngSwitchCase="'curso1'">
+          <app-curso-modalidad-cae></app-curso-modalidad-cae>
+        </ng-container>
+        <ng-container *ngSwitchCase="'curso2'">
+          <app-curso-modalidad-virtual></app-curso-modalidad-virtual>
+        </ng-container>
+        <ng-container *ngSwitchCase="'curso3'">
+          <app-curso-modalidad-escuela></app-curso-modalidad-escuela>
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
+            <p class="font-bold">Opciones de Cursos</p>
+            <p>Selecciona un curso de la lista desplegable.</p>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
   </div>
 </div>
+
+<!-- Modal de Detalle del Curso -->
+<div *ngIf="selectedCourseDetails" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+  <div class="bg-white p-6 rounded-md shadow-lg w-3/4 max-h-[90vh] overflow-auto">
+    <h2 class="text-2xl font-bold mb-4">Detalles del Curso</h2>
+
+    <!-- Información general del curso -->
+    <p><strong>Nombre:</strong> {{ selectedCourseDetails.nombre }}</p>
+    <p><strong>Clave:</strong> {{ selectedCourseDetails.clave }}</p>
+    <p><strong>Duración (Horas):</strong> {{ selectedCourseDetails.duracion_horas }}</p>
+    <p><strong>Descripción:</strong> {{ selectedCourseDetails.descripcion }}</p>
+    <p><strong>Nivel:</strong> {{ selectedCourseDetails.nivel }}</p>
+
+    <!-- Ficha técnica -->
+    <h3 class="text-xl font-semibold mt-4 mb-2">Ficha Técnica</h3>
+    <p><strong>Objetivo:</strong> {{ selectedCourseDetails.fichaTecnica.objetivo }}</p>
+    <p><strong>Perfil de Ingreso:</strong> {{ selectedCourseDetails.fichaTecnica.perfil_ingreso }}</p>
+    <p><strong>Perfil de Egreso:</strong> {{ selectedCourseDetails.fichaTecnica.perfil_egreso }}</p>
+    <p><strong>Perfil del Docente:</strong> {{ selectedCourseDetails.fichaTecnica.perfil_del_docente }}</p>
+    <p><strong>Metodología:</strong> {{ selectedCourseDetails.fichaTecnica.metodologia }}</p>
+    <p><strong>Bibliografía:</strong> {{ selectedCourseDetails.fichaTecnica.bibliografia }}</p>
+    <p><strong>Criterios de Acreditación:</strong> {{ selectedCourseDetails.fichaTecnica.criterios_acreditacion }}</p>
+    <p><strong>Reconocimiento:</strong> {{ selectedCourseDetails.fichaTecnica.reconocimiento }}</p>
+
+    <!-- Materiales -->
+    <h3 class="text-xl font-semibold mt-4 mb-2">Materiales</h3>
+    <ul>
+      <li *ngFor="let material of selectedCourseDetails.materiales">
+        <p>{{ material.descripcion }} ({{ material.unidad_de_medida }}) - 
+        Cantidad para 10: {{ material.cantidad_10 }}, 
+        Cantidad para 15: {{ material.cantidad_15 }}, 
+        Cantidad para 20: {{ material.cantidad_20 }}</p>
+      </li>
+    </ul>
+
+    <!-- Equipamiento -->
+    <h3 class="text-xl font-semibold mt-4 mb-2">Equipamiento</h3>
+    <ul>
+      <li *ngFor="let equipo of selectedCourseDetails.equipamiento">
+        <p>{{ equipo.descripcion }} ({{ equipo.unidad_de_medida }}) - 
+        Cantidad para 10: {{ equipo.cantidad_10 }}, 
+        Cantidad para 15: {{ equipo.cantidad_15 }}, 
+        Cantidad para 20: {{ equipo.cantidad_20 }}</p>
+      </li>
+    </ul>
+
+    <button class="mt-4 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" (click)="closeCourseDetails()">
+      Cerrar
+    </button>
+
+
+<!-- boton  para generar pdf  -->
+<button (click)="generarPDF()" [class.loading]="generando" class="ui primary button">
+  <i class="spinner loading icon" *ngIf="generando"></i>
+  Crear PDF
+</button>
+
+
+
+
+
+
+  </div>
+</div>
+
