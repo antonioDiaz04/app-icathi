@@ -35,7 +35,7 @@ import { Router } from '@angular/router';
         top: 0;
         z-index: 50;
         
-        with: 50px; /* Limitar la altura máxima del header */
+        width: 50px; /* Limitar la altura máxima del header */
       }
       i {
         font-size: 1.25rem;

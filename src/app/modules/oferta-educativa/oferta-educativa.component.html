@@ -245,6 +245,19 @@
     <button class="mt-4 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" (click)="closeCourseDetails()">
       Cerrar
     </button>
+
+
+<!-- boton  para generar pdf  -->
+<button (click)="generarPDF()" [class.loading]="generando" class="ui primary button">
+  <i class="spinner loading icon" *ngIf="generando"></i>
+  Crear PDF
+</button>
+
+
+
+
+
+
   </div>
 </div>
 
