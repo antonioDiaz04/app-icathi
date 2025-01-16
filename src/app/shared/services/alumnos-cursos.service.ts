@@ -18,4 +18,14 @@ export class AlumnosCursosService {
     const url = `${this.baseUrl}/${alumnoId}`;
     return this.http.get<any>(url);
   }
+    /**
+   * Obtener la información de un curso específico de un alumno
+   * @param alumnoId ID del alumno
+   * @param cursoId ID del curso
+   * @returns Observable con los datos del curso
+   */
+    getCursoByAlumnoAndCurso(alumnoId: number, cursoId: number): Observable<any> {
+      const url = `${this.baseUrl}/${alumnoId}/curso/${cursoId}`;
+      return this.http.get<any>(url);
+    } 
 }
