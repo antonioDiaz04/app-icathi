@@ -1,31 +1,39 @@
 <div class="min-h-screen flex bg-gray-50">
-  <!-- Menú lateral -->
-  <aside class="w-72 bg-white shadow-lg p-6">
-    <!-- Logo -->
-    <div class="flex items-center justify-center mb-8">
-      <img src="https://www.icathi.edu.mx/img/ICATHI.png" alt="ICATHI Logo" class="w-20 h-auto" />
-    </div>
-    <!-- Título -->
-    <h1 class="text-xl font-bold text-center mb-6 text-gray-800 tracking-wide">Validador de Cursos</h1>
-    <!-- Navegación -->
-    <nav>
-      <ul class="space-y-6">
-        <li>
-          <button
-            (click)="logout()"
-            class="flex items-center justify-center w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold text-sm rounded-lg shadow-md hover:from-blue-600 hover:to-blue-800 hover:shadow-lg transition-all duration-300"
-          >
-            <i class="fas fa-sign-out-alt mr-2 text-lg"></i>
-            Cerrar Sesión
-          </button>
-        </li>
-      </ul>
-    </nav>
-  </aside>
-
-  <div *ngIf="!isAddingCourse" class="p-6 bg-gray-100">
+    <!-- Menú Lateral -->
+    <aside class="w-72 bg-white shadow-lg p-6">
+      <!-- Logo -->
+      <div class="flex items-center justify-center mb-8">
+        <img
+          src="https://www.icathi.edu.mx/img/ICATHI.png"
+          alt="ICATHI Logo"
+          class="w-20 h-auto"
+        />
+      </div>
+  
+      <!-- Título -->
+      <h1 class="text-xl font-bold text-center mb-6 text-gray-800 tracking-wide">
+        Validador de Cursos
+      </h1>
+  
+      <!-- Navegación -->
+      <nav>
+        <ul class="space-y-6">
+          <!-- Botón Cerrar Sesión -->
+          <li>
+            <button
+              (click)="logout()"
+              class="flex items-center justify-center w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold text-sm rounded-lg shadow-md hover:from-blue-600 hover:to-blue-800 hover:shadow-lg transition-all duration-300"
+            >
+              <i class="fas fa-sign-out-alt mr-2 text-lg"></i>
+              Cerrar Sesión
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </aside>  
+<div class="p-6 bg-gray-100">
     <h1 class="text-xl font-bold text-gray-800 mb-4">CONSULTA OFERTA EDUCATIVA</h1>
-
+  
     <!-- Filtros -->
     <div class="flex flex-wrap gap-4 mb-6">
       <div class="flex flex-col">
@@ -38,7 +46,7 @@
           placeholder="Nombre del curso"
         />
       </div>
-
+  
       <div class="flex flex-col">
         <label for="especialidad" class="mb-2 text-sm text-gray-600">Buscar Especialidad:</label>
         <input
@@ -49,24 +57,21 @@
           placeholder="Especialidad"
         />
       </div>
-
+  
       <button
         class="self-end px-6 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition"
         (click)="filtrarCursos()"
-      > 
+      >
         Buscar
       </button>
-
-      <!-- Botón para agregar curso -->
+  
       <button
-        (click)="toggleAddingCourse()"
         class="self-end px-6 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 transition"
       >
-        <i class="fas fa-plus mr-2 text-lg"></i>
-        Agregar Curso
+        Nuevo curso
       </button>
     </div>
-
+  
     <!-- Tabla -->
     <div class="overflow-x-auto">
       <table class="min-w-full bg-white border rounded-md shadow-md">
@@ -104,29 +109,16 @@
             <td class="px-4 py-2 border text-sm text-gray-800">{{ curso.horas }}</td>
             <td class="px-4 py-2 border text-center">
               <button
-              class="px-4 py-1 text-white bg-teal-500 rounded-md hover:bg-teal-600 transition"
-              (click)="showCourseDetails(curso.id)"
-            >
-              Detalle
-            </button>
-            
+                class="px-4 py-1 text-white bg-teal-500 rounded-md hover:bg-teal-600 transition"
+              >
+                Detalle
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-
-    <!-- Modal de Detalle del Curso -->
-    <div *ngIf="selectedCourseDetails" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div class="bg-white p-6 rounded-md shadow-lg w-1/2">
-        <h2 class="text-2xl font-bold mb-4">Detalles del Curso</h2>
-        <p><strong>Nombre:</strong> {{ selectedCourseDetails.nombre }}</p>
-        <p><strong>Especialidad:</strong> {{ selectedCourseDetails.especialidad }}</p>
-        <p><strong>Horas:</strong> {{ selectedCourseDetails.horas }}</p>
-        <button class="mt-4 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" (click)="closeCourseDetails()">Cerrar</button>
-      </div>
-    </div>
-
+  
     <!-- Paginador -->
     <div class="flex justify-center items-center mt-4">
       <button
@@ -146,118 +138,23 @@
       </button>
     </div>
   </div>
-
-  <!-- Vista de agregar curso -->
-  <div *ngIf="isAddingCourse" class="bg-white p-6 rounded-lg shadow-md">
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-3xl font-bold text-gray-900">Agregar Curso</h2>
-      <button
-        (click)="regresar()"
-        class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 transition"
-      >
-        Regresar
-      </button>
-    </div>
-
-    <!-- Selector de tipo de curso -->
-    <div class="course-selector mb-6">
-      <label for="course-select" class="block mb-2 text-gray-700 font-medium">Selecciona el tipo de curso:</label>
-      <select
-        id="course-select"
-        [(ngModel)]="selectedCourse"
-        class="w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-      >
-        <option value="" disabled>Seleccione una opción</option>
-        <option value="curso1">Curso Modalidad CAE</option>
-        <option value="curso2">Curso Modalidad Virtual</option>
-        <option value="curso3">Curso Modalidad Escuela</option>
-      </select>
-    </div>
-
-    <!-- Contenido dinámico basado en la selección -->
-    <div class="course-content">
-      <ng-container [ngSwitch]="selectedCourse">
-        <ng-container *ngSwitchCase="'curso1'">
-          <app-curso-modalidad-cae></app-curso-modalidad-cae>
-        </ng-container>
-        <ng-container *ngSwitchCase="'curso2'">
-          <app-curso-modalidad-virtual></app-curso-modalidad-virtual>
-        </ng-container>
-        <ng-container *ngSwitchCase="'curso3'">
-          <app-curso-modalidad-escuela></app-curso-modalidad-escuela>
-        </ng-container>
-        <ng-container *ngSwitchDefault>
-          <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
-            <p class="font-bold">Opciones de Cursos</p>
-            <p>Selecciona un curso de la lista desplegable.</p>
-          </div>
-        </ng-container>
-      </ng-container>
-    </div>
+<!-- Modal -->
+<div
+  *ngIf="showModal"
+  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+>
+  <div
+    class="p-6 rounded-lg shadow-lg text-center"
+    [ngClass]="{
+      'bg-green-500 text-white': modalType === 'success',
+      'bg-red-500 text-white': modalType === 'error'
+    }"
+    style="width: 300px;"
+  >
+    <h2 class="text-xl font-bold mb-4">
+      {{ modalType === 'success' ? '¡Éxito!' : '¡Error!' }}
+    </h2>
+    <p>{{ modalMessage }}</p>
   </div>
 </div>
-
-<!-- Modal de Detalle del Curso -->
-<div *ngIf="selectedCourseDetails" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-  <div class="bg-white p-6 rounded-md shadow-lg w-3/4 max-h-[90vh] overflow-auto">
-    <h2 class="text-2xl font-bold mb-4">Detalles del Curso</h2>
-
-    <!-- Información general del curso -->
-    <p><strong>Nombre:</strong> {{ selectedCourseDetails.nombre }}</p>
-    <p><strong>Clave:</strong> {{ selectedCourseDetails.clave }}</p>
-    <p><strong>Duración (Horas):</strong> {{ selectedCourseDetails.duracion_horas }}</p>
-    <p><strong>Descripción:</strong> {{ selectedCourseDetails.descripcion }}</p>
-    <p><strong>Nivel:</strong> {{ selectedCourseDetails.nivel }}</p>
-
-    <!-- Ficha técnica -->
-    <h3 class="text-xl font-semibold mt-4 mb-2">Ficha Técnica</h3>
-    <p><strong>Objetivo:</strong> {{ selectedCourseDetails.fichaTecnica.objetivo }}</p>
-    <p><strong>Perfil de Ingreso:</strong> {{ selectedCourseDetails.fichaTecnica.perfil_ingreso }}</p>
-    <p><strong>Perfil de Egreso:</strong> {{ selectedCourseDetails.fichaTecnica.perfil_egreso }}</p>
-    <p><strong>Perfil del Docente:</strong> {{ selectedCourseDetails.fichaTecnica.perfil_del_docente }}</p>
-    <p><strong>Metodología:</strong> {{ selectedCourseDetails.fichaTecnica.metodologia }}</p>
-    <p><strong>Bibliografía:</strong> {{ selectedCourseDetails.fichaTecnica.bibliografia }}</p>
-    <p><strong>Criterios de Acreditación:</strong> {{ selectedCourseDetails.fichaTecnica.criterios_acreditacion }}</p>
-    <p><strong>Reconocimiento:</strong> {{ selectedCourseDetails.fichaTecnica.reconocimiento }}</p>
-
-    <!-- Materiales -->
-    <h3 class="text-xl font-semibold mt-4 mb-2">Materiales</h3>
-    <ul>
-      <li *ngFor="let material of selectedCourseDetails.materiales">
-        <p>{{ material.descripcion }} ({{ material.unidad_de_medida }}) - 
-        Cantidad para 10: {{ material.cantidad_10 }}, 
-        Cantidad para 15: {{ material.cantidad_15 }}, 
-        Cantidad para 20: {{ material.cantidad_20 }}</p>
-      </li>
-    </ul>
-
-    <!-- Equipamiento -->
-    <h3 class="text-xl font-semibold mt-4 mb-2">Equipamiento</h3>
-    <ul>
-      <li *ngFor="let equipo of selectedCourseDetails.equipamiento">
-        <p>{{ equipo.descripcion }} ({{ equipo.unidad_de_medida }}) - 
-        Cantidad para 10: {{ equipo.cantidad_10 }}, 
-        Cantidad para 15: {{ equipo.cantidad_15 }}, 
-        Cantidad para 20: {{ equipo.cantidad_20 }}</p>
-      </li>
-    </ul>
-
-    <button class="mt-4 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" (click)="closeCourseDetails()">
-      Cerrar
-    </button>
-
-
-<!-- boton  para generar pdf  -->
-<button (click)="generarPDF()" [class.loading]="generando" class="ui primary button">
-  <i class="spinner loading icon" *ngIf="generando"></i>
-  Crear PDF
-</button>
-
-
-
-
-
-
-  </div>
-</div>
-
+  
