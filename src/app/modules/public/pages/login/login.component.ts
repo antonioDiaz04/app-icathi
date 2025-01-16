@@ -105,7 +105,7 @@ export class LoginComponent {
         this.router.navigate(['plantel/home']);
         break;
       case ERol.OFERTA_EDUCATIVA:
-        this.router.navigate(['oferta-educativa/']);
+        this.router.navigate(['oferta-educativa/home']);
         break;
       default:
         this.router.navigate(['/public/login']); // Ruta por defecto
