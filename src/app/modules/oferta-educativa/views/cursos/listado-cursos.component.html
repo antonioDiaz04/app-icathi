@@ -1,235 +1,340 @@
-
-
-<div  class="p-6 bg-gray-100">
-  <!-- <h1 class="text-xl font-bold text-gray-800 mb-4">
-    CONSULTA OFERTA EDUCATIVA
-  </h1> -->
-  <h2 class="text-3xl font-bold text-gray-900">
-    {{ mostrarOpcionesCursosTipo ? "Agregar Curso" : "Listado de Cursos" }}
-  </h2>
+<div class="max-w-7xl mx-auto p-6 space-y-8">
+  <!-- Título y botón para agregar curso -->
   <div class="flex justify-between items-center">
-     
+    <h2 class="text-3xl font-bold text-gray-900">{{ mostrarOpcionesCursosTipo ? 'Agregar Curso' : 'Listado de Cursos' }}</h2>
     <button
       (click)="toggleFormulario()"
       class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300"
     >
-      {{ mostrarOpcionesCursosTipo ? "Cancelar" : "Agregar Curso" }}
+      {{ mostrarOpcionesCursosTipo ? 'Cancelar' : 'Agregar Curso' }}
     </button>
   </div>
 
-<div class="flex justify-center mt-5">
-  <h2 *ngIf="mostrarOpcionesCursosTipo && isLoading" class="text-xl font-semibold">Cargando cursos...</h2>
-</div>
-
-
-  <!-- Filtros -->
-  <div   class="flex flex-wrap gap-4 mb-6">
-    <div  *ngIf="!mostrarOpcionesCursosTipo" class="flex flex-col">
-      <label for="curso" class="mb-2 text-sm text-gray-600"
-        >Buscar por Nombre de Curso:</label
-      >
-      <input
-        id="curso"
-        type="text"
-        [(ngModel)]="searchCurso"
-        class="px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-        placeholder="Nombre del curso"
-      />
-    </div>
-
-    <div  *ngIf="!mostrarOpcionesCursosTipo" class="flex flex-col">
-      <label for="especialidad" class="mb-2 text-sm text-gray-600"
-        >Buscar Especialidad:</label
-      >
-      <input
-        id="especialidad"
-        type="text"
-        [(ngModel)]="searchEspecialidad"
-        class="px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-        placeholder="Especialidad"
-      />
-    </div>
-
-    <button  *ngIf="!mostrarOpcionesCursosTipo"
-      class="self-end px-6 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition"
-      (click)="filtrarCursos()"
-    >
-      Buscar
-    </button>
-    <button *ngIf="isLoading" class="ui loading button self-end px-6 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition" (click)="cargarCursos()">
-    Recargar
-</button>
-   
-    <!-- Tabla -->
-    <div *ngIf="!mostrarOpcionesCursosTipo" class="overflow-x-auto">
-      <table class="min-w-full bg-white border rounded-md shadow-md">
-        <thead class="bg-gray-200">
-          <tr>
-            <th
-              class="px-4 py-2 border text-left text-sm font-semibold text-gray-600"
-            >
-              ESTADO
-            </th>
-            <th
-              class="px-4 py-2 border text-left text-sm font-semibold text-gray-600"
-            >
-              ÁREA
-            </th>
-            <th
-              class="px-4 py-2 border text-left text-sm font-semibold text-gray-600"
-            >
-              ESPECIALIDAD
-            </th>
-            <th
-              class="px-4 py-2 border text-left text-sm font-semibold text-gray-600"
-            >
-              CLAVE
-            </th>
-            <th
-              class="px-4 py-2 border text-left text-sm font-semibold text-gray-600"
-            >
-              NOMBRE
-            </th>
-            <th
-              class="px-4 py-2 border text-left text-sm font-semibold text-gray-600"
-            >
-              TIPO
-            </th>
-            <th
-              class="px-4 py-2 border text-left text-sm font-semibold text-gray-600"
-            >
-              HORAS
-            </th>
-            <th
-              class="px-4 py-2 border text-left text-sm font-semibold text-gray-600"
-            >
-              DETALLES
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let curso of paginatedCursos" class="hover:bg-gray-100">
-            <td class="px-4 py-2 border text-center">
-              <button
-                [ngClass]="{
-                  'bg-green-500 text-white': curso.activo,
-                  'bg-red-500 text-white': !curso.activo
-                }"
-                class="px-4 py-1 rounded-md hover:opacity-90 transition"
-                (click)="toggleEstado(curso)"
-              >
-                {{ curso.activo ? "Activo" : "Inactivo" }}
-              </button>
-            </td>
-            <td class="px-4 py-2 border text-sm text-gray-800">
-              {{ curso.area }}
-            </td>
-            <td class="px-4 py-2 border text-sm text-gray-800">
-              {{ curso.especialidad }}
-            </td>
-            <td class="px-4 py-2 border text-sm text-gray-800">
-              {{ curso.clave }}
-            </td>
-            <td class="px-4 py-2 border text-sm text-gray-800">
-              {{ curso.nombre }}
-            </td>
-            <td class="px-4 py-2 border text-sm text-gray-800">
-              {{ curso.tipo }}
-            </td>
-            <td class="px-4 py-2 border text-sm text-gray-800">
-              {{ curso.horas }}
-            </td>
-            <td class="px-4 py-2 border text-center">
-              <button
-                class="px-4 py-1 text-white bg-teal-500 rounded-md hover:bg-teal-600 transition"
-              >
-                Detalle
-              </button>
-           
-
+  <!-- Tabla de cursos -->
+  <div *ngIf="!mostrarOpcionesCursosTipo">
+    <table class="min-w-full border border-gray-300 shadow-lg rounded-lg overflow-hidden">
+      <thead>
+        <tr class="bg-gradient-to-r from-gray-800 to-gray-900 text-white">
+          <th class="border border-gray-300 px-4 py-3">ID</th>
+          <th class="border border-gray-300 px-4 py-3">Nombre del Curso</th>
+          <th class="border border-gray-300 px-4 py-3">Duración (Horas)</th>
+          <th class="border border-gray-300 px-4 py-3">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let modulo of modulos" class="hover:bg-gray-100 transition duration-200">
+          <td class="border border-gray-300 px-4 py-3 text-center">{{ modulo.id }}</td>
+          <td class="border border-gray-300 px-4 py-3">{{ modulo.nombre }}</td>
+          <td class="border border-gray-300 px-4 py-3 text-center">{{ modulo.duracion_horas }}</td>
+          <td class="border border-gray-300 px-4 py-3 text-center space-x-2">
             <button
-              type="button"
-              (click)="generarReportePDF(curso.id)"
-              class="px-4 py-1 text-white bg-red-600 rounded-md hover:bg-teal-600 transition"
-              >
-              <i class="fas fa-file-pdf"></i>
+              (click)="verDetalles(modulo)"
+              class="bg-green-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-green-700 transition duration-300"
+            >
+              Ver Detalles
+            </button>
+            <button
+              (click)="editarCurso(modulo)"
+              class="bg-blue-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
+            >
+              Editar
+            </button>
+            <button
+              (click)="eliminarCurso(modulo.id)"
+              class="bg-red-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-red-700 transition duration-300"
+            >
+              Eliminar
             </button>
           </td>
         </tr>
       </tbody>
     </table>
-    </div>
-    <!-- Paginador -->
-    <div   *ngIf="!mostrarOpcionesCursosTipo" class="flex justify-center items-center mt-4">
-      <button
-        class="px-4 py-2 mx-1 text-sm text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300"
-        [disabled]="currentPage === 1"
-        (click)="prevPage()"
-      >
-        Anterior
-      </button>
-      <span class="px-4 py-2 mx-1 text-sm font-medium text-gray-700"
-        >Página {{ currentPage }} de {{ totalPages }}</span
-      >
-      <button
-        class="px-4 py-2 mx-1 text-sm text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300"
-        [disabled]="currentPage === totalPages"
-        (click)="nextPage()"
-      >
-        Siguiente
-      </button>
-    </div>
   </div>
-  <!-- Modal -->
-  <div
-    *ngIf="showModal"
-    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-  >
-    <div
-      class="p-6 rounded-lg shadow-lg text-center"
-      [ngClass]="{
-        'bg-green-500 text-white': modalType === 'success',
-        'bg-red-500 text-white': modalType === 'error'
-      }"
-      style="width: 300px"
-    >
-      <h2 class="text-xl font-bold mb-4">
-        {{ modalType === "success" ? "¡Éxito!" : "¡Error!" }}
-      </h2>
-      <p>{{ modalMessage }}</p>
-    </div>
-  </div>
+
+
 
   <div *ngIf="mostrarOpcionesCursosTipo" class="course-selector">
-    <label for="course-select">Selecciona el tipo de curso:</label>
+    <label for="course-select">Selecciona el tipo de  curso:</label>
     <select id="course-select" [(ngModel)]="selectedCourse">
-      <option value="curso1">Curso Modalidad CAE</option>
-      <option value="curso2">Curso Modalidad Virtual</option>
-      <option value="curso3">Curso Modalidad Escuela</option>
+    <option value="curso1">Curso Modalidad CAE</option>
+    <option value="curso2">Curso Modalidad Virtual</option>
+    <option value="curso3">Curso Modalidad Escuela </option>
     </select>
+    
+      <div class="course-content">
+        <div  class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
+          <p class="font-bold">Opciones de Cursos</p>
+          <p>Selecciona un curso de la lista desplegable.</p>
+        </div>
+    
+        <ng-container [ngSwitch]="selectedCourse">
+          <ng-container *ngSwitchCase="'curso1'">
+            <app-curso-modalidad-cae></app-curso-modalidad-cae>
+          </ng-container>
+          <ng-container *ngSwitchCase="'curso2'">
+            <app-curso-modalidad-virtual></app-curso-modalidad-virtual>
+          </ng-container>
+          <ng-container *ngSwitchCase="'curso3'">
+            <app-curso-modalidad-escuela></app-curso-modalidad-escuela>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+    
+  <!-- Formulario para agregar curso -->
+  <div *ngIf="mostrarFormulario" class="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Registrar Nuevo Curso</h2>
+    <form (ngSubmit)="agregarCurso()" #cursoForm="ngForm" class="space-y-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Área -->
+        <div>
+          <label class="block text-sm font-medium">Área</label>
+          <select
+            [(ngModel)]="nuevoCurso.area_id"
+            name="area_id"
+            required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+          >
+            <option value="" disabled>Seleccione Área</option>
+            <option *ngFor="let area of areas" [value]="area.id">{{ area.nombre }}</option>
+          </select>
+        </div>
 
-    <div class="course-content">
-      <div
-        class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4"
-        role="alert"
-      >
-        <p class="font-bold">Opciones de Cursos</p>
-        <p>Selecciona un curso de la lista desplegable.</p>
+        <!-- Especialidad -->
+        <div>
+          <label class="block text-sm font-medium">Especialidad</label>
+          <select
+            [(ngModel)]="nuevoCurso.especialidad_id"
+            name="especialidad_id"
+            required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+          >
+            <option value="" disabled>Seleccione Especialidad</option>
+            <option *ngFor="let especialidad of especialidades" [value]="especialidad.id">{{ especialidad.nombre }}</option>
+          </select>
+        </div>
+
+        <!-- Tipo de Curso -->
+        <div>
+          <label class="block text-sm font-medium">Tipo de Curso</label>
+          <select
+            [(ngModel)]="nuevoCurso.tipo_curso_id"
+            name="tipo_curso_id"
+            required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+          >
+            <option value="" disabled>Seleccione Tipo</option>
+            <option *ngFor="let tipo of tiposCurso" [value]="tipo.id">{{ tipo.nombre }}</option>
+          </select>
+        </div>
+
+        <!-- Nombre del Curso -->
+        <div>
+          <label class="block text-sm font-medium">Nombre del Curso</label>
+          <input
+            type="text"
+            [(ngModel)]="nuevoCurso.nombre"
+            name="nombre"
+            required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+            placeholder="Nombre del curso"
+          />
+        </div>
+
+        <!-- Clave -->
+        <div>
+          <label class="block text-sm font-medium">Clave</label>
+          <input
+            type="text"
+            [(ngModel)]="nuevoCurso.clave"
+            name="clave"
+            required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+            placeholder="Clave"
+          />
+        </div>
+
+        <!-- Duración -->
+        <div>
+          <label class="block text-sm font-medium">Duración (Horas)</label>
+          <input
+            type="number"
+            [(ngModel)]="nuevoCurso.duracion_horas"
+            name="duracion_horas"
+            required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+            placeholder="Duración en horas"
+          />
+        </div>
       </div>
 
-      <ng-container [ngSwitch]="selectedCourse">
-        <ng-container *ngSwitchCase="'curso1'">
-          <app-curso-modalidad-cae></app-curso-modalidad-cae>
-        </ng-container>
-        <ng-container *ngSwitchCase="'curso2'">
-          <app-curso-modalidad-virtual></app-curso-modalidad-virtual>
-        </ng-container>
-        <ng-container *ngSwitchCase="'curso3'">
-          <app-curso-modalidad-escuela></app-curso-modalidad-escuela>
-        </ng-container>
-      </ng-container>
+      <!-- Descripción -->
+      <div>
+        <label class="block text-sm font-medium">Descripción</label>
+        <textarea
+          [(ngModel)]="nuevoCurso.descripcion"
+          name="descripcion"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+          placeholder="Descripción del curso"
+          #descripcion="ngModel"
+        ></textarea>
+        <div *ngIf="descripcion.invalid && descripcion.touched" class="text-red-500 text-sm">
+          La descripción es obligatoria.
+        </div>
+      </div>
+
+      <!-- Nivel -->
+      <div>
+        <label class="block text-sm font-medium">Nivel</label>
+        <select
+          [(ngModel)]="nuevoCurso.nivel"
+          name="nivel"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+        >
+          <option value="" disabled>Seleccione Nivel</option>
+          <option value="Básico">Básico</option>
+          <option value="Intermedio">Intermedio</option>
+          <option value="Avanzado">Avanzado</option>
+        </select>
+        <div *ngIf="!nuevoCurso.nivel && cursoForm.submitted" class="text-red-500 text-sm">
+          El nivel es obligatorio.
+        </div>
+      </div>
+
+      <!-- Botón para enviar el formulario -->
+      <div class="flex justify-end">
+        <button
+          type="submit"
+          class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition duration-300"
+        >
+          Guardar Curso
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Modal de edición -->
+  <div *ngIf="mostrarModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
+      <h2 class="text-2xl font-bold mb-6">Editar Curso</h2>
+      <form (ngSubmit)="guardarEdicion()" #editarForm="ngForm" class="space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Nombre del Curso -->
+          <div>
+            <label class="block text-sm font-medium">Nombre del Curso</label>
+            <input
+              [(ngModel)]="cursoSeleccionado!.nombre"
+              name="nombre"
+              required
+              type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+            />
+          </div>
+
+          <!-- Duración -->
+          <div>
+            <label class="block text-sm font-medium">Duración (Horas)</label>
+            <input
+              [(ngModel)]="cursoSeleccionado!.duracion_horas"
+              name="duracion_horas"
+              required
+              type="number"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+            />
+          </div>
+
+          <!-- Nivel -->
+          <div>
+            <label class="block text-sm font-medium">Nivel</label>
+            <select
+              [(ngModel)]="cursoSeleccionado!.nivel"
+              name="nivel"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+            >
+              <option value="Básico">Básico</option>
+              <option value="Intermedio">Intermedio</option>
+              <option value="Avanzado">Avanzado</option>
+            </select>
+          </div>
+
+          <!-- Descripción -->
+          <div class="col-span-2">
+            <label class="block text-sm font-medium">Descripción</label>
+            <textarea
+              [(ngModel)]="cursoSeleccionado!.descripcion"
+              name="descripcion"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+            ></textarea>
+          </div>
+
+          <!-- Costo -->
+          <div>
+            <label class="block text-sm font-medium">Costo</label>
+            <input
+              [(ngModel)]="cursoSeleccionado!.costo"
+              name="costo"
+              type="number"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+            />
+          </div>
+
+          <!-- Requisitos -->
+          <div class="col-span-2">
+            <label class="block text-sm font-medium">Requisitos</label>
+            <textarea
+              [(ngModel)]="cursoSeleccionado!.requisitos"
+              name="requisitos"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+            ></textarea>
+          </div>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button
+            type="button"
+            (click)="cerrarModal()"
+            class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-lg shadow-md mr-4"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow-md"
+          >
+            Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal de detalles del curso -->
+  <div *ngIf="mostrarDetalleModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
+      <h2 class="text-2xl font-bold mb-6">Detalles del Curso</h2>
+      <div class="space-y-4">
+        <p><strong>ID:</strong> {{ cursoDetalleSeleccionado?.id }}</p>
+        <p><strong>Nombre:</strong> {{ cursoDetalleSeleccionado?.nombre }}</p>
+        <p><strong>Clave:</strong> {{ cursoDetalleSeleccionado?.clave }}</p>
+        <p><strong>Duración:</strong> {{ cursoDetalleSeleccionado?.duracion_horas }} horas</p>
+        <p><strong>Descripción:</strong> {{ cursoDetalleSeleccionado?.descripcion }}</p>
+        <p><strong>Nivel:</strong> {{ cursoDetalleSeleccionado?.nivel }}</p>
+        <p><strong>Área:</strong> {{ obtenerNombreArea(cursoDetalleSeleccionado?.area_id) }}</p>
+        <p><strong>Especialidad:</strong> {{ obtenerNombreEspecialidad(cursoDetalleSeleccionado?.especialidad_id) }}</p>
+        <p><strong>Tipo de Curso:</strong> {{ obtenerNombreTipoCurso(cursoDetalleSeleccionado?.tipo_curso_id) }}</p>
+      </div>
+      <div class="flex justify-end mt-6">
+        <button
+          type="button"
+          (click)="cerrarDetalleModal()"
+          class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-lg shadow-md"
+        >
+          Cerrar
+        </button>
+      </div>
     </div>
   </div>
 </div>
-<app-pdf-example [id]="cursoId" *ngIf="mostrarModalPdf" (cerrarModalEvent)="cerrarModalPdf($event)">
-</app-pdf-example>
