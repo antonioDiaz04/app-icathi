@@ -3,7 +3,40 @@
   <h2 class="text-2xl font-bold text-gray-800 mb-6">Información del Curso</h2>
   <form (ngSubmit)="agregarCurso()" #cursoForm="ngForm" class="space-y-6">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      
+      <!-- Área -->
+      <div>
+        <label class="block text-sm font-medium">Área</label>
+        <select
+          [(ngModel)]="nuevoCurso.area_id"
+          name="area_id"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+        >
+          <option value="" disabled>Seleccione Área</option>
+          <option *ngFor="let area of areas" [value]="area.id">
+            {{ area.nombre }}
+          </option>
+        </select>
+      </div>
+    
+      <!-- Especialidad -->
+      <div>
+        <label class="block text-sm font-medium">Especialidad</label>
+        <select
+          [(ngModel)]="nuevoCurso.especialidad_id"
+          name="especialidad_id"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+        >
+          <option value="" disabled>Seleccione Especialidad</option>
+          <option
+            *ngFor="let especialidad of especialidades"
+            [value]="especialidad.id"
+          >
+            {{ especialidad.nombre }}
+          </option>
+        </select>
+      </div>
     
       <!-- Tipo de Curso -->
       <div>
@@ -101,51 +134,7 @@
         El nivel es obligatorio.
       </div>
     </div>
-
-
-    <div class="flex space-x-4">
-      <!-- Vigencia Inicio -->
-      <div class="flex-1">
-        <label class="block text-sm font-medium">Vigencia Inicio</label>
-        <input
-          type="date"
-          [(ngModel)]="nuevoCurso.vigencia_inicio"
-          name="vigencia_inicio"
-          required
-          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-          placeholder="Vigencia inicio"
-        />
-      </div>
     
-      <!-- Fecha de Publicación -->
-      <div class="flex-1">
-        <label class="block text-sm font-medium">Fecha de Publicación</label>
-        <input
-          type="date"
-          [(ngModel)]="nuevoCurso.fecha_publicacion"
-          name="fecha_publicacion"
-          required
-          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-          placeholder="Fecha de publicación"
-        />
-      </div>
-    
-      <!-- Costo -->
-      <div class="flex-1">
-        <label class="block text-sm font-medium">Costo</label>
-        <input
-          type="number"
-          [(ngModel)]="nuevoCurso.costo"
-          name="costo"
-          required
-          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-          placeholder="Costo del curso"
-        />
-      </div>
-    </div>
-
-
-
     <h2 class="text-2xl font-bold text-gray-800 mb-6">Objetivos del Curso</h2>
 
    <!-- Tabla de objetivos -->
@@ -169,8 +158,8 @@
         </td>
         <td class="border border-gray-300 px-4 py-2 w-3/4">
           <textarea
-            [(ngModel)]="nuevoCurso.objetivos.objetivo"
-            name="objetivo"
+            [(ngModel)]="nuevoCurso.objetivos.curso"
+            name="curso"
             class="w-full border border-gray-300 rounded-md p-2 resize-none"
             rows="3"
           ></textarea>
@@ -182,8 +171,8 @@
         </td>
         <td class="border border-gray-300 px-4 py-2 w-3/4">
           <textarea
-            [(ngModel)]="nuevoCurso.objetivos.perfil_ingreso"
-            name="perfil_ingreso"
+            [(ngModel)]="nuevoCurso.objetivos.perfilIngreso"
+            name="perfilIngreso"
             class="w-full border border-gray-300 rounded-md p-2 resize-none"
             rows="4"
           ></textarea>
@@ -195,8 +184,8 @@
         </td>
         <td class="border border-gray-300 px-4 py-2 w-3/4">
           <textarea
-            [(ngModel)]="nuevoCurso.objetivos.perfil_egreso"
-            name="perfil_egreso"
+            [(ngModel)]="nuevoCurso.objetivos.perfilEgreso"
+            name="perfilEgreso"
             class="w-full border border-gray-300 rounded-md p-2 resize-none"
             rows="5"
           ></textarea>
@@ -208,8 +197,8 @@
         </td>
         <td class="border border-gray-300 px-4 py-2 w-3/4">
           <textarea
-            [(ngModel)]="nuevoCurso.objetivos.perfil_del_docente"
-            name="perfil_del_docente"
+            [(ngModel)]="nuevoCurso.objetivos.perfilDocente"
+            name="perfilDocente"
             class="w-full border border-gray-300 rounded-md p-2 resize-none"
             rows="6"
           ></textarea>
@@ -496,14 +485,6 @@
                 type="number"
                 [(ngModel)]="equipamiento.cantidad10"
                 name="cantidad10{{k}}"
-                class="border border-gray-300 rounded-md px-2 py-1 w-full"
-              />
-            </td>
-            <td class="border border-gray-300 px-4 py-2">
-              <input
-                type="number"
-                [(ngModel)]="equipamiento.cantidad15"
-                name="cantidad15{{k}}"
                 class="border border-gray-300 rounded-md px-2 py-1 w-full"
               />
             </td>
