@@ -40,6 +40,18 @@ export class CursosService {
     return this.http.get<Curso[]>(this.cursosApiUrl2+idPlantel);
   }
 
+
+
+    /**
+   * Obtiene un curso por su ID
+   * @param idCurso El ID del curso
+   * @returns Un observable con los detalles del curso
+   */
+    getCursoById(idCurso: number): Observable<Curso> {
+      const url = `${this.cursosApiUrl}/${idCurso}`; // Construcción dinámica de la URL
+      return this.http.get<Curso>(url);
+    }
+  
   getEspecialidadesByAreaId(areaId: number): Observable<any[]> {
     const url = `${environment.api}/especialidades/byAreaId/${areaId}/`;
     return this.http.get<any>(url);
