@@ -20,7 +20,10 @@ export class DocenteService {
   return this.http.put<any>(`${environment.api}/${this.url}/${id}`, docenteData);
 }
 
-
+  // Método para obtener un docente por ID de usuario
+  getDocenteById(id: number): Observable<any> {
+    return this.http.get<any>(`${environment.api}/${this.url}/usuario/${id}`);
+  }
 
 
 }
