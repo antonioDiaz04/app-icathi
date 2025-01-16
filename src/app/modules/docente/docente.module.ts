@@ -12,6 +12,7 @@ import { SafeUrlPipe } from '../../shared/pipes/safe-url.pipe';
 import { AlumnosCursosComponent } from './pages/alumnos/alumnos-cursos/alumnos-cursos.component';
 import { CursosComponent } from './pages/cursos/cursos.component';
 import { AistenciasComponent } from './pages/aistencias/aistencias.component';
+import { CursosDocenteComponent } from './pages/cursos-docente/cursos-docente.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { AistenciasComponent } from './pages/aistencias/aistencias.component';
     StatisticsComponent,
     AlumnosCursosComponent,
     CursosComponent,
-    AistenciasComponent
+    AistenciasComponent,
+    CursosDocenteComponent
   ],
   imports: [
     NbThemeModule.forRoot(),
