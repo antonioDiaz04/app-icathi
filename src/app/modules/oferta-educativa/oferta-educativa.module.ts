@@ -12,14 +12,13 @@ import { CursoModalidadCAEComponent } from './views/cursos/typos-cursos/curso-mo
 import { CursoModalidadEscuelaComponent } from './views/cursos/typos-cursos/curso-modalidad-escuela/curso-modalidad-escuela.component';
 import { CursoModalidadVirtualComponent } from './views/cursos/typos-cursos/curso-modalidad-virtual/curso-modalidad-virtual.component';
   import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PdfExampleComponent } from './views/pdf-example/pdf-example.component';
 
 @NgModule({
-  declarations: [PdfExampleComponent,
+  declarations: [
     HomeComponent,CursoModalidadCAEComponent,CursoModalidadEscuelaComponent,CursoModalidadVirtualComponent,OfertaEducativaComponent, HeaderComponent,ListadoCursosComponent
   ],  
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  imports: [RouterModule,HttpClientModule,
+  imports: [RouterModule,
     CommonModule,FormsModule ,ReactiveFormsModule,
     OfertaEducativaRoutingModule
   ]
