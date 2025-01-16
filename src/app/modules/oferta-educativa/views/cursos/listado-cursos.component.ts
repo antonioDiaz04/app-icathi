@@ -1,14 +1,6 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-} from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { environment } from "../../../../../environments/environment.prod";
-import { jsPDF } from "jspdf";
-import { Router } from "@angular/router";
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../../environments/environment.prod';
 
 export interface Modulo {
   id: number;
@@ -28,169 +20,194 @@ export interface Modulo {
 }
 
 @Component({
-  selector: "app-listado-cursos",
-  templateUrl: "./listado-cursos.component.html",
-  styleUrls: ["./listado-cursos.component.scss"],
-  standalone: false,
+    selector: 'app-listado-cursos',
+    templateUrl: './listado-cursos.component.html',
+    styleUrls: ['./listado-cursos.component.scss'],
+    standalone: false
 })
-export class ListadoCursosComponent implements OnInit, OnChanges {
-  cursos: any[] = [];
-  filteredCursos: any[] = [];
-  itemsPerPage = 10;
-  currentPage = 1;
-  totalPages = 0;
-  searchCurso = '';
-  searchEspecialidad = '';
-  private apiUrl = `${environment.api}/cursos`;
+export class ListadoCursosComponent implements OnInit {
+  modulos: Modulo[] = [];
+  areas: any[] = [];
+  especialidades: any[] = [];
+  tiposCurso: any[] = [];
+  mostrarFormulario = false;
+  mostrarModal = false;
+  selectedCourse: string = 'curso1';
+  mostrarOpcionesCursosTipo :boolean= false;
+  mostrarDetalleModal = false; // Nueva variable para el modal de detalles
+  cursoSeleccionado: Modulo | null = null;
+  cursoDetalleSeleccionado: Modulo | null = null; // Curso seleccionado para ver detalles
 
-    areas: any[] = [];
-    especialidades: any[] = [];
-    tiposCurso: any[] = [];
-    mostrarFormulario = false;
-    // mostrarModal = false;
-  
-     mostrarModalPdf!: boolean;
-    // @Input() mostrarModalPdf1!: boolean;
-    selectedCourse: string = "curso1";
-    mostrarOpcionesCursosTipo: boolean = false;
-    mostrarDetalleModal = false;
-    // cursoSeleccionado: Modulo | null = null;
-    // cursoDetalleSeleccionado: Modulo | null = null;
-    cursoId!: number;
+  nuevoCurso: Modulo = {
+    id: 0,
+    nombre: '',
+    duracion_horas: 0,
+    descripcion: '',
+    nivel: '', // Inicializado como cadena vacía
+    clave: '',
+    area_id: undefined,
+    especialidad_id: undefined,
+    tipo_curso_id: undefined,
+  };
+  // `${environment.api}/user`;
+  private apiUrl =  `${environment.api}`;
 
-
-
-
-  showModal = false;
-  modalMessage = '';
-  modalType: 'success' | 'error' = 'success'; // Tipo de mensaje (éxito o error)
-  isLoading: boolean = false; // Cambia según tu lógica
-
-  constructor(private http: HttpClient , private  router: Router) {}
+  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.cargarCursos();
+    this.cargarModulos();
+    this.cargarAreas();
+    this.cargarEspecialidades();
+    this.cargarTiposCurso();
   }
 
-  cargarCursos(): void {
-   this.isLoading=true
-    this.http.get<any[]>(`${this.apiUrl}/cursos/detallados`).subscribe({
+  cargarModulos(): void {
+    this.http.get<Modulo[]>(`${this.apiUrl}/cursos`).subscribe({
       next: (data) => {
-   this.isLoading=false
-     
-        this.cursos = data.map((curso) => ({
-          id: curso.id,
-          activo: curso.estatus,
-          area: curso.area_nombre,
-          especialidad: curso.especialidad_nombre,
-          clave: curso.clave,
-          nombre: curso.curso_nombre,
-          tipo: curso.tipo_curso_nombre,
-          horas: curso.horas,
-          detalles: curso.detalles,
-        }));
-        this.filteredCursos = [...this.cursos];
-        this.totalPages = Math.ceil(this.filteredCursos.length / this.itemsPerPage);
-        
+        this.modulos = data;
       },
       error: (err) => {
-        console.error('Error al cargar los cursos:', err);
-        this.mostrarModal('Error al cargar los cursos. Intenta más tarde.', 'error');
-      }
+        console.error('Error al cargar los módulos:', err);
+      },
+    });
+  }
+
+  cargarAreas(): void {
+    this.http.get<any[]>(`${this.apiUrl}/areas`).subscribe({
+      next: (data) => {
+        this.areas = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar áreas:', err);
+      },
+    });
+  }
+
+  cargarEspecialidades(): void {
+    this.http.get<any[]>(`${this.apiUrl}/especialidades`).subscribe({
+      next: (data) => {
+        this.especialidades = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar especialidades:', err);
+      },
+    });
+  }
+
+  cargarTiposCurso(): void {
+    this.http.get<any[]>(`${this.apiUrl}/tiposCurso`).subscribe({
+      next: (data) => {
+        this.tiposCurso = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar tipos de curso:', err);
+      },
     });
   }
 
   toggleFormulario(): void {
-    this.mostrarOpcionesCursosTipo = !this.mostrarOpcionesCursosTipo;
-
-
-    if(!this.mostrarOpcionesCursosTipo){
-
-      this.cargarCursos()
-      
-    }
-
-
+    this.mostrarOpcionesCursosTipo = !this.mostrarOpcionesCursosTipo;//contipo de cursos
+    // this.mostrarFormulario = !this.mostrarFormulario;
   }
+// ! quitarla de este componente 
+  agregarCurso(): void {
+    console.log('Datos enviados al backend:', this.nuevoCurso); // Verifica el contenido
 
-  filtrarCursos(): void {
-    this.filteredCursos = this.cursos.filter((curso) =>
-      curso.nombre.toLowerCase().includes(this.searchCurso.toLowerCase()) &&
-      curso.especialidad.toLowerCase().includes(this.searchEspecialidad.toLowerCase())
-    );
-    this.currentPage = 1;
-    this.totalPages = Math.ceil(this.filteredCursos.length / this.itemsPerPage);
-  }
-
-  get paginatedCursos() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.filteredCursos.slice(startIndex, startIndex + this.itemsPerPage);
-  }
-
-  prevPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
-
-  nextPage() {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-    }
-  }
-
-  toggleEstado(curso: any) {
-    const nuevoEstado = !curso.activo;
-
-    this.http.patch(`${this.apiUrl}/${curso.id}/estatus`, { estatus: nuevoEstado }).subscribe({
-      next: () => {
-        curso.activo = nuevoEstado;
-        this.mostrarModal(
-          `El curso "${curso.nombre}" se actualizó a ${nuevoEstado ? 'Activo' : 'Inactivo'}.`,
-          'success'
-        );
+    this.http.post<Modulo>(`${this.apiUrl}/cursos`, this.nuevoCurso).subscribe({
+      next: (cursoCreado) => {
+        this.modulos.push(cursoCreado);
+        this.nuevoCurso = {
+          id: 0,
+          nombre: '',
+          duracion_horas: 0,
+          descripcion: '',
+          nivel: '', // Reinicia el campo después de enviar
+          clave: '',
+          area_id: undefined,
+          especialidad_id: undefined,
+          tipo_curso_id: undefined,
+        };
+        this.mostrarFormulario = false;
+        console.log('Curso agregado correctamente');
       },
       error: (err) => {
-        console.error(`Error al actualizar el estado del curso con ID ${curso.id}:`, err);
-        this.mostrarModal('Error al actualizar el estado del curso. Intenta más tarde.', 'error');
-      }
+        console.error('Error al agregar el curso:', err);
+      },
     });
   }
 
-  mostrarModal(message: string, type: 'success' | 'error') {
-    this.modalMessage = message;
-    this.modalType = type;
-    this.showModal = true;
-
-    // Cierra automáticamente el modal después de 3 segundos
-    setTimeout(() => {
-      this.showModal = false;
-    }, 3000);
+  editarCurso(curso: Modulo): void {
+    this.cursoSeleccionado = { ...curso };
+    this.mostrarModal = true;
   }
-  
 
- ngOnChanges(changes: SimpleChanges): void {
-    this.cargarCursos()
-    if (changes["mostrarModalPdf"] && changes["mostrarModalPdf"].currentValue) {
-      // this.abrirModal();
-      console.log(
-        "Nuevo ID recibido:",
-        changes["mostrarModalPdf"].currentValue
-      );
-      this.mostrarModalPdf = changes["mostrarModalPdf"].currentValue;
+  guardarEdicion(): void {
+    if (this.cursoSeleccionado) {
+      const index = this.modulos.findIndex((m) => m.id === this.cursoSeleccionado!.id);
+      if (index !== -1) {
+        this.modulos[index] = { ...this.cursoSeleccionado };
+      }
+
+      this.http.put(`${this.apiUrl}/cursos/${this.cursoSeleccionado.id}`, this.cursoSeleccionado).subscribe({
+        next: () => {
+          console.log('Curso actualizado correctamente');
+        },
+        error: (err) => {
+          console.error('Error al actualizar el curso:', err);
+        },
+      });
+
+      this.cerrarModal();
     }
   }
 
+  eliminarCurso(id: number): void {
+    if (confirm('¿Estás seguro de que deseas eliminar este curso?')) {
+      this.http.delete(`${this.apiUrl}/cursos/${id}`).subscribe({
+        next: () => {
+          this.modulos = this.modulos.filter((m) => m.id !== id); // Elimina el curso del array local
+          console.log('Curso eliminado correctamente');
+        },
+        error: (err) => {
+          console.error('Error al eliminar el curso:', err); // Log del error
+        },
+      });
+    }
+  }
+
+  cerrarModal(): void {
+    this.mostrarModal = false;
+    this.cursoSeleccionado = null;
+  }
+
+  // Métodos para ver detalles
+  verDetalles(curso: Modulo): void {
+    this.cursoDetalleSeleccionado = curso;
+    this.mostrarDetalleModal = true;
+  }
+
+  cerrarDetalleModal(): void {
+    this.mostrarDetalleModal = false;
+    this.cursoDetalleSeleccionado = null;
+  }
+
+  // Métodos para obtener nombres a partir de IDs
+  obtenerNombreArea(areaId: number | undefined): string {
+    const area = this.areas.find(a => a.id === areaId);
+    return area ? area.nombre : 'N/A';
+  }
+
+  obtenerNombreEspecialidad(especialidadId: number | undefined): string {
+    const especialidad = this.especialidades.find(e => e.id === especialidadId);
+    return especialidad ? especialidad.nombre : 'N/A';
+  }
+
+  obtenerNombreTipoCurso(tipoCursoId: number | undefined): string {
+    const tipoCurso = this.tiposCurso.find(t => t.id === tipoCursoId);
+    return tipoCurso ? tipoCurso.nombre : 'N/A';
+  }
+  // M
+
 
   
-  cerrarModalPdf(event: boolean) {
-    this.mostrarModalPdf = event; // Cierra el modal
-  }
-  // Función para generar el reporte PDF
-  generarReportePDF(id: number): void {
-    this.cursoId = id;
-    this.mostrarModalPdf = true;
-    // alert("abrio ")
-  }
-
 }
