@@ -10,58 +10,55 @@
 </div>
 
 <!-- Información del curso -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+<div class="ui grid stackable mt-4">
   <!-- Columna izquierda -->
-  <div class="p-4 bg-white shadow-lg rounded-lg">
-    <h4 class="text-lg font-semibold text-orange-500 mb-4">Detalles del Curso</h4>
-    <ul class="space-y-2">
-      <li class="flex items-center">
-        <i class="key icon text-orange-500 mr-2"></i>
-        <span class="font-semibold">Clave:</span> <span class="ml-2">{{ curso?.clave }}</span>
-      </li>
-      <li class="flex items-center">
-        <i class="clock  icon text-orange-500 mr-2"></i>
-        <span class="font-semibold">Duración:</span> <span class="ml-2">{{ curso?.duracion_horas }} horas</span>
-      </li>
-      <li class="flex items-center">
-        <i class="info circle icon text-orange-500 mr-2"></i>
-        <span class="font-semibold">Descripción:</span> <span class="ml-2">{{ curso?.descripcion }}</span>
-      </li>
-    </ul>
+  <div class="eight wide column">
+    <div class="ui list">
+      <div class="item">
+        <i class="key icon" style="color: #F08762;"></i>
+        <div class="content">
+          <strong>Clave:</strong> {{ curso?.clave }}
+        </div>
+      </div>
+      <div class="item">
+        <i class="clock icon" style="color: #F08762;"></i>
+        <div class="content">
+          <strong>Duración:</strong> {{ curso?.duracion_horas }} horas
+        </div>
+      </div>
+      <div class="item">
+        <i class="info circle icon" style="color: #F08762;"></i>
+        <div class="content">
+          <strong>Descripción:</strong> {{ curso?.descripcion }}
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Columna derecha -->
-  <div class="p-4 bg-white shadow-lg rounded-lg">
-    <h4 class="text-lg font-semibold text-pink-600 mb-4">Información Adicional</h4>
-    <ul class="space-y-2">
-      <li class="flex items-center">
-        <i class="tag icon text-pink-600 mr-2"></i>
-        <span class="font-semibold">Área:</span> <span class="ml-2">{{ curso?.area_nombre }}</span>
-      </li>
-      <li class="flex items-center">
-        <i class="graduation cap icon text-pink-600 mr-2"></i>
-        <span class="font-semibold">Especialidad:</span> <span class="ml-2">{{ curso?.especialidad_nombre }}</span>
-      </li>
-      <li class="flex items-center">
-        <i class="clipboard list icon text-pink-600 mr-2"></i>
-        <span class="font-semibold">Tipo de Curso:</span> <span class="ml-2">{{ curso?.tipo_curso_nombre }}</span>
-      </li>
-    </ul>
-  </div>
-
-  <!-- Información adicional -->
-  <div class="col-span-1 lg:col-span-2 p-4 bg-orange-50 border-l-4 border-orange-500 mt-4 rounded-lg">
-    <p class="font-semibold">
-      Este curso tiene: 
-      <span class="text-xl font-bold text-orange-500">
-        {{ calcularSesiones() }}
-      </span>
-      sesiones.
-    </p>
+  <div class="eight wide column">
+    <div class="ui list">
+      <div class="item">
+        <i class="tag icon" style="color: #D8566C;"></i>
+        <div class="content">
+          <strong>Área:</strong> {{ curso?.area_nombre }}
+        </div>
+      </div>
+      <div class="item">
+        <i class="graduation cap icon" style="color: #D8566C;"></i>
+        <div class="content">
+          <strong>Especialidad:</strong> {{ curso?.especialidad_nombre }}
+        </div>
+      </div>
+      <div class="item">
+        <i class="clipboard list icon" style="color: #D8566C;"></i>
+        <div class="content">
+          <strong>Tipo de Curso:</strong> {{ curso?.tipo_curso_nombre }}
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-
-
 
 <!-- Mostrar mensaje de carga -->
 <div *ngIf="loading" class="text-center text-gray-500">
@@ -74,7 +71,7 @@
 
 
 
-<table *ngIf="!loading" class="table-auto border-collapse border border-gray-300 w-full rounded-lg shadow-md mt-4">
+<table *ngIf="!loading" class="table-auto border-collapse border border-gray-300 w-full rounded-lg shadow-md">
   <thead class="bg-gray-600 text-gray-100">
     <tr>
       <th class="border border-gray-300 px-4 py-2 text-left rounded-tl-lg">#</th>
@@ -107,8 +104,7 @@
         />
       </td>
       <td class="border border-gray-300 px-4 py-2 text-center">
-        <span>{{ calcularPorcentajeAsistencia(alumno.asistencia) | number: '1.2-2' }}%</span>
-
+        <span>{{ calcularPorcentajeAsistencia(alumno) }}%</span>
       </td>
       <td class="border border-gray-300 px-4 py-2 text-center">
         {{ alumno.calificacion_final }}
