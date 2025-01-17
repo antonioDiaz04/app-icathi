@@ -1,0 +1,42 @@
+<!-- cursos-docente.component.html -->
+<div class="bg-gray-100 min-h-screen">
+    <!-- Navbar con Semantic UI -->
+    <div class="ui menu bg-blue-600 text-white p-4">
+      <a class="item" href="#">Inicio</a>
+      <a class="item" href="#">Cursos</a>
+      <a class="item" href="#">Docentes</a>
+      <a class="item" href="#">Configuraciones</a>
+    </div>
+  
+    <!-- Título y descripción -->
+    <div class="text-center my-8">
+      <h1 class="text-4xl font-bold text-gray-800">Cursos Asignados</h1>
+      <p class="text-lg text-gray-600 mt-2">Los siguientes cursos están asignados al docente.</p>
+    </div>
+  
+    <!-- Contenedor de los cursos -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-6">
+      <div *ngFor="let curso of cursosAsignados" class="ui card">
+        <div class="content">
+          <div class="header text-xl font-semibold">{{ curso.curso_nombre }}</div>
+          <div class="meta text-gray-600">{{ curso.curso_clave }}</div>
+          <div class="description mt-2">
+            <p><strong>Descripción:</strong> {{ curso.curso_descripcion }}</p>
+            <p><strong>Duración:</strong> {{ curso.curso_duracion_horas }} horas</p>
+            <p><strong>Área:</strong> {{ curso.area_nombre }}</p>
+            <p><strong>Especialidad:</strong> {{ curso.especialidad_nombre }}</p>
+            <p><strong>Tipo de curso:</strong> {{ curso.tipo_curso_nombre }}</p>
+          </div>
+        </div>
+        <div class="extra content text-center">
+          <button class="ui button primary">Ver detalles</button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Paginación o enlaces adicionales -->
+    <div class="text-center mt-8">
+      <a href="#" class="ui blue button">Ver más cursos</a>
+    </div>
+  </div>
+  

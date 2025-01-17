@@ -57,6 +57,17 @@ export class CursosService {
 
 
 
+    /**
+   * Obtiene un curso por su ID
+   * @param idCurso El ID del curso
+   * @returns Un observable con los detalles del curso
+   */
+    getCursoById(idCurso: number): Observable<Curso> {
+      const url = `${this.cursosApiUrl}/${idCurso}`; // Construcción dinámica de la URL
+      return this.http.get<Curso>(url);
+    }
+  
+
 
   // Método para obtener los alumnos inscritos en un curso de un plantel
   getAlumnosCurso(idPlantel: any, idCurso: any): Observable<any[]> {
