@@ -14,39 +14,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="border-b hover:bg-gray-50">
-          <td class="px-6 py-3 text-sm text-gray-700">Curso de Programación Web</td>
-          <td class="px-6 py-3 text-sm text-gray-700">Lunes y Miércoles - 10:00 AM a 12:00 PM</td>
+        <tr *ngFor="let course of courses" class="border-b hover:bg-gray-50">
+          <td class="px-6 py-3 text-sm text-gray-700">{{ course.nombre }}</td>
+          <td class="px-6 py-3 text-sm text-gray-700">{{ course.horario }}</td>
           <td class="px-6 py-3 text-sm text-blue-500">
-            <a href="/courses/web-development" target="_blank">Acceder</a>
+            <a [href]="course.enlace" target="_blank">Acceder</a>
           </td>
           <td class="px-6 py-3 text-sm text-gray-700">
-            <button class="px-4 py-2 bg-[#44509D] text-white rounded-full hover:bg-[#34458c]">
-              Marcar Asistencia
-            </button>
-
-          </td>
-        </tr>
-        <tr class="border-b hover:bg-gray-50">
-          <td class="px-6 py-3 text-sm text-gray-700">Curso de Marketing Digital</td>
-          <td class="px-6 py-3 text-sm text-gray-700">Martes y Jueves - 2:00 PM a 4:00 PM</td>
-          <td class="px-6 py-3 text-sm text-blue-500">
-            <a href="/courses/digital-marketing" target="_blank">Acceder</a>
-          </td>
-          <td class="px-6 py-3 text-sm text-gray-700">
-            <button class="px-4 py-2 bg-[#44509D] text-white rounded-full hover:bg-[#34458c]" >
-              Marcar Asistencia
-            </button>
-          </td>
-        </tr>
-        <tr class="border-b hover:bg-gray-50">
-          <td class="px-6 py-3 text-sm text-gray-700">Curso de Inglés Intermedio</td>
-          <td class="px-6 py-3 text-sm text-gray-700">Viernes - 9:00 AM a 1:00 PM</td>
-          <td class="px-6 py-3 text-sm text-blue-500">
-            <a href="/courses/intermediate-english" target="_blank">Acceder</a>
-          </td>
-          <td class="px-6 py-3 text-sm text-gray-700">
-            <button class="px-4 py-2 bg-[#44509D] text-white rounded-full hover:bg-[#34458c]" >
+            <button (click)="markAttendance(course.id)" class="px-4 py-2 bg-[#44509D] text-white rounded-full hover:bg-[#34458c]">
               Marcar Asistencia
             </button>
           </td>

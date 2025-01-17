@@ -1,0 +1,68 @@
+<div class="container mx-auto px-4 py-2">
+  <h2 class="text-2xl font-semibold mb-2">Calificaciones del Curso</h2>
+
+  <div class="mb-4">
+    <select
+      class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+      [(ngModel)]="selectedCourse"
+      (change)="onCourseChange($event)"
+    >
+      <option *ngFor="let course of cursos" [value]="course.curso_id">
+        {{ course.curso_nombre }} ({{ course.plantel_nombre }})
+      </option>
+    </select>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="w-full table-auto" *ngIf="filteredStudents.length > 0">
+      <thead>
+        <tr>
+          <th class="text-left py-2">Nombre</th>
+          <th class="text-left py-2">Apellido</th>
+          <th class="text-left py-2">Email</th>
+          <!-- <th class="text-left py-2">Plantel</th> -->
+          <th class="text-center py-2">Promedio</th>
+          <th class="text-center py-2">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let student of filteredStudents" class="hover:bg-gray-50">
+          <td class="py-2">{{ student.alumno_nombre }}</td>
+          <td class="py-2">{{ student.alumno_apellidos }}</td>
+          <td class="py-2">{{ student.alumno_email }}</td>
+          <!-- <td class="py-2">{{ selectedCoursePlantel }}</td> -->
+          <td class="py-2 text-center">
+            <input
+              type="number"
+              class="w-full p-1 border border-gray-200 rounded-md focus:outline-none focus:ring focus:ring-blue-100"
+              [(ngModel)]="student.calificacion"
+              [disabled]="!isModifying || student.alumno_id !== selectedStudent?.alumno_id"
+            />
+          </td>
+
+
+          
+          <td class="py-2 text-center">
+            <button
+              class="px-2 py-1 bg-gray-200 text-gray-600 rounded-md hover:bg-gray-300 focus:outline-none focus:ring focus:ring-gray-100"
+              [hidden]="isModifying && student.alumno_id === selectedStudent?.alumno_id"
+              (click)="modifyGrade(student)"
+            >
+              Modificar
+            </button>
+            <button
+              class="px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-100"
+              [hidden]="!isModifying || student.alumno_id !== selectedStudent?.alumno_id"
+              (click)="saveGrade(student)"
+            >
+              Guardar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="filteredStudents.length === 0" class="py-2">
+      <p class="text-gray-600">No hay alumnos inscritos en este curso.</p>
+    </div>
+  </div>
+</div>

@@ -5,9 +5,10 @@ import { AspiranteService } from '../../../../shared/services/aspirante.service'
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({
-  selector: 'app-create-password-alumno',
-  templateUrl: './create-password-alumno.component.html',
-  styleUrls: ['./create-password-alumno.component.scss'],
+    selector: 'app-create-password-alumno',
+    templateUrl: './create-password-alumno.component.html',
+    styleUrls: ['./create-password-alumno.component.scss'],
+    standalone: false
 })
 export class CreatePasswordAlumnoComponent implements OnInit {
   aviso: string | null = null;

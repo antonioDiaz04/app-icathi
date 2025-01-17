@@ -20,9 +20,10 @@ export interface Modulo {
 }
 
 @Component({
-  selector: 'app-listado-cursos',
-  templateUrl: './listado-cursos.component.html',
-  styleUrls: ['./listado-cursos.component.scss'],
+    selector: 'app-listado-cursos',
+    templateUrl: './listado-cursos.component.html',
+    styleUrls: ['./listado-cursos.component.scss'],
+    standalone: false
 })
 export class ListadoCursosComponent implements OnInit {
   modulos: Modulo[] = [];
@@ -31,6 +32,8 @@ export class ListadoCursosComponent implements OnInit {
   tiposCurso: any[] = [];
   mostrarFormulario = false;
   mostrarModal = false;
+  selectedCourse: string = 'curso1';
+  mostrarOpcionesCursosTipo :boolean= false;
   mostrarDetalleModal = false; // Nueva variable para el modal de detalles
   cursoSeleccionado: Modulo | null = null;
   cursoDetalleSeleccionado: Modulo | null = null; // Curso seleccionado para ver detalles
@@ -103,9 +106,10 @@ export class ListadoCursosComponent implements OnInit {
   }
 
   toggleFormulario(): void {
-    this.mostrarFormulario = !this.mostrarFormulario;
+    this.mostrarOpcionesCursosTipo = !this.mostrarOpcionesCursosTipo;//contipo de cursos
+    // this.mostrarFormulario = !this.mostrarFormulario;
   }
-
+// ! quitarla de este componente 
   agregarCurso(): void {
     console.log('Datos enviados al backend:', this.nuevoCurso); // Verifica el contenido
 

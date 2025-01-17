@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router'
 import { RoleGuard } from './shared/guards/role-guard.guard'
-import { AlumnoModule } from './modules/alumno/alumno.module'
 
 export const routes: Routes = [
   {
@@ -65,6 +64,13 @@ export const routes: Routes = [
       import('./modules/private/private.module').then((m) => m.PrivateModule),
     canActivate: [RoleGuard],
     data: { role: 'ADMIN' },
+  }, 
+   {
+    path: 'oferta-educativa',
+    loadChildren: () =>
+      import('./modules/oferta-educativa/oferta-educativa.module').then((m) => m.OfertaEducativaModule),
+    canActivate: [RoleGuard],
+    data: { role: 'OFERTA_EDUCATIVA' },
   },
   {
     title:"home",

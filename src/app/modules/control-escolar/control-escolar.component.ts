@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-control-escolar',
-  standalone: true,
-  imports: [],
-  templateUrl: './control-escolar.component.html',
-  styleUrl: './control-escolar.component.scss'
+    selector: 'app-control-escolar',
+    // imports: [],
+    templateUrl: './control-escolar.component.html',
+    styleUrl: './control-escolar.component.scss'
 })
 export class ControlEscolarComponent {
 

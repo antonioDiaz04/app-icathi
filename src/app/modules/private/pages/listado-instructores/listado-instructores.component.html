@@ -1,68 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Instructores ICATI</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100">
-  <div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold text-center mb-6">Instructores ICATI</h1>
-    <div class="flex justify-center mb-6">
-      <input
-        type="text"
-        placeholder="Buscar por nombre"
-        class="w-full max-w-md p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-    </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      <!-- Card 1 -->
-      <div class="bg-white rounded-lg shadow-md p-4">
-        <div class="h-40 bg-gray-300 flex items-center justify-center rounded-md">
-          300 x 200
-        </div>
-        <h2 class="text-lg font-semibold mt-4">Juan Pérez</h2>
-        <span class="inline-block bg-green-500 text-white text-sm px-2 py-1 rounded-md mt-2">Vigente</span>
-        <a href="#" class="text-blue-500 text-sm mt-2 block">Detalle</a>
+<div class="container mx-auto p-4">
+  <h1 class="text-2xl font-bold text-center mb-6">Instructores ICATI</h1>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div *ngFor="let docente of docentes" class="bg-white rounded-lg shadow-md p-4">
+      <div class="h-40 bg-gray-300 flex items-center justify-center rounded-md">
+        <img *ngIf="docente.foto_url" [src]="docente.foto_url" alt="{{ docente.nombre }}" class="h-full w-full object-cover rounded-md" />
+        <span *ngIf="!docente.foto_url" class="text-gray-500">Sin Imagen</span>
       </div>
-      <!-- Card 2 -->
-      <div class="bg-white rounded-lg shadow-md p-4">
-        <div class="h-40 bg-gray-300 flex items-center justify-center rounded-md">
-          300 x 200
-        </div>
-        <h2 class="text-lg font-semibold mt-4">María López</h2>
-        <span class="inline-block bg-red-500 text-white text-sm px-2 py-1 rounded-md mt-2">No Vigente</span>
-        <a href="#" class="text-blue-500 text-sm mt-2 block">Detalle</a>
-      </div>
-      <!-- Card 3 -->
-      <div class="bg-white rounded-lg shadow-md p-4">
-        <div class="h-40 bg-gray-300 flex items-center justify-center rounded-md">
-          300 x 200
-        </div>
-        <h2 class="text-lg font-semibold mt-4">Carlos Rodríguez</h2>
-        <span class="inline-block bg-green-500 text-white text-sm px-2 py-1 rounded-md mt-2">Vigente</span>
-        <a href="#" class="text-blue-500 text-sm mt-2 block">Detalle</a>
-      </div>
-      <!-- Card 4 -->
-      <div class="bg-white rounded-lg shadow-md p-4">
-        <div class="h-40 bg-gray-300 flex items-center justify-center rounded-md">
-          300 x 200
-        </div>
-        <h2 class="text-lg font-semibold mt-4">Laura Fernández</h2>
-        <span class="inline-block bg-red-500 text-white text-sm px-2 py-1 rounded-md mt-2">No Vigente</span>
-        <a href="#" class="text-blue-500 text-sm mt-2 block">Detalle</a>
-      </div>
-      <!-- Card 5 -->
-      <div class="bg-white rounded-lg shadow-md p-4">
-        <div class="h-40 bg-gray-300 flex items-center justify-center rounded-md">
-          300 x 200
-        </div>
-        <h2 class="text-lg font-semibold mt-4">Ricardo Martínez</h2>
-        <span class="inline-block bg-green-500 text-white text-sm px-2 py-1 rounded-md mt-2">Vigente</span>
-        <a href="#" class="text-blue-500 text-sm mt-2 block">Detalle</a>
-      </div>
+      <h2 class="text-lg font-semibold mt-4">{{ docente.nombre }} {{ docente.apellidos }}</h2>
+      <button 
+        [ngClass]="{
+          'bg-green-500': docente.estatus_valor === 'Activo',
+          'bg-red-500': docente.estatus_valor === 'Inactivo',
+          'bg-yellow-500': docente.estatus_valor === 'Pendiente',
+          'bg-blue-500': docente.estatus_valor === 'Aprobado',
+          'bg-gray-500': docente.estatus_valor === 'Rechazado',
+          'bg-orange-500': docente.estatus_valor === 'Pendiente de validación',
+          'bg-purple-500': docente.estatus_valor === 'Suspendido'
+        }"
+        class="text-white font-medium py-1 px-3 rounded mt-2"
+      >
+        {{ docente.estatus_valor }}
+      </button>
+      <button (click)="verDetalles(docente)" class="text-blue-500 text-sm mt-2 block">Detalle</button>
     </div>
   </div>
-</body>
-</html>
+
+  <!-- Modal de Detalle del Docente -->
+  <div *ngIf="mostrarDetalleModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl h-auto max-h-[90vh] overflow-y-auto">
+      <h2 class="text-2xl font-bold mb-6">Detalles de {{ docenteSeleccionado?.nombre }}</h2>
+      <p><strong>Nombre:</strong> {{ docenteSeleccionado?.nombre }} {{ docenteSeleccionado?.apellidos }}</p>
+      <p><strong>Email:</strong> {{ docenteSeleccionado?.email }}</p>
+      <p><strong>Teléfono:</strong> {{ docenteSeleccionado?.telefono }}</p>
+      <p><strong>Especialidad:</strong> {{ docenteSeleccionado?.especialidad || 'No disponible' }}</p>
+      <p>
+        <strong>Cédula Profesional:</strong>
+        <a *ngIf="docenteSeleccionado?.cedula_profesional" 
+           [href]="docenteSeleccionado?.cedula_profesional" 
+           target="_blank" 
+           class="text-blue-500 hover:underline">
+          Ver Cédula
+        </a>
+        <span *ngIf="!docenteSeleccionado?.cedula_profesional">No disponible</span>
+      </p>
+      <p>
+        <strong>Curriculum:</strong>
+        <a *ngIf="docenteSeleccionado?.curriculum_url" 
+           [href]="docenteSeleccionado?.curriculum_url" 
+           target="_blank" 
+           class="text-blue-500 hover:underline">
+          Ver Curriculum
+        </a>
+      </p>
+      <p>
+        <strong>Documento de Identificación:</strong>
+        <a *ngIf="docenteSeleccionado?.documento_identificacion" 
+           [href]="docenteSeleccionado?.documento_identificacion" 
+           target="_blank" 
+           class="text-blue-500 hover:underline">
+          Ver Documento
+        </a>
+      </p>
+      <p><strong>Estado:</strong> {{ docenteSeleccionado?.estatus_tipo }} - {{ docenteSeleccionado?.estatus_valor }}</p>
+      <button (click)="cerrarDetalleModal()" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-lg shadow-md mt-4">
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>

@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 export class CalificacionesComponent {
   // Datos de materias disponibles
   materias = ['Matemáticas', 'Ciencias', 'Historia', 'Lengua y Literatura'];
-  
+
   // Datos de estudiantes con sus calificaciones y promedios
   estudiantes = [
     { nombre: 'Juan Pérez', calificacion: 9, promedio: 8.5 },

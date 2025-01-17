@@ -25,6 +25,7 @@ interface Curso {
 })
 export class CursosService {
   private cursosApiUrl = `${environment.api}/cursos`;
+  private cursosApiUrl2 = `${environment.api}/cursos/ByIdPlantel/`;
 
   constructor(private http: HttpClient) {}
 
@@ -35,14 +36,49 @@ export class CursosService {
   getCursos(): Observable<Curso[]> {
     return this.http.get<Curso[]>(this.cursosApiUrl);
   }
+  getCursosByIdPlatel(idPlantel:any): Observable<Curso[]> {
+    return this.http.get<Curso[]>(this.cursosApiUrl2+idPlantel);
+  }
 
   getEspecialidadesByAreaId(areaId: number): Observable<any[]> {
     const url = `${environment.api}/especialidades/byAreaId/${areaId}/`;
     return this.http.get<any>(url);
   }
 
-  getCursosByEspecialidadId(especialidadId: number): Observable<Curso[]> {
-    const url = `${environment.api}/cursos/byEspecialidadId/${especialidadId}/`;
+  getCursosByEspecialidadId(especialidadId: number,plantelId:number): Observable<Curso[]> {
+// router.get('/byEspecialidadId/:especialidadId/plantelId/:plantelId', CursosController.getCursosByEspecialidadId);//obtiene cursos por especialidad seleccionada
+
+    const url = `${environment.api}/cursos/byEspecialidadId/${especialidadId}/plantelId/${plantelId}`;
     return this.http.get<Curso[]>(url);
+  }
+
+
+
+
+
+
+    /**
+   * Obtiene un curso por su ID
+   * @param idCurso El ID del curso
+   * @returns Un observable con los detalles del curso
+   */
+    getCursoById(idCurso: number): Observable<Curso> {
+      const url = `${this.cursosApiUrl}/${idCurso}`; // Construcción dinámica de la URL
+      return this.http.get<Curso>(url);
+    }
+  
+
+
+  // Método para obtener los alumnos inscritos en un curso de un plantel
+  getAlumnosCurso(idPlantel: any, idCurso: any): Observable<any[]> {
+    return this.http.get<any[]>(
+      `/alumnos-cursos?plantel_id=${idPlantel}&curso_id=${idCurso}`
+    );
+  }
+
+
+  // Método para obtener los docentes asignados a un curso
+  getDocentesCurso(idCurso: any): Observable<any[]> {
+    return this.http.get<any[]>(`/cursos-docentes?curso_id=${idCurso}`);
   }
 }

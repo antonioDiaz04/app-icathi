@@ -1,0 +1,226 @@
+<!-- Encabezado -->
+<div class="ui segment" style="background-color: #bfc4e3; color: white; border-radius: 8px;">
+  <h1 class="ui header" style="margin: 0; padding: 10px;">
+    <i class="book icon"></i>
+    <div class="content">
+      Curso: {{ curso?.nombre }}
+      <div class="sub header">Información detallada del curso</div>
+    </div>
+  </h1>
+</div>
+
+<!-- Información del curso -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+  <!-- Columna izquierda -->
+  <div class="p-4 bg-white shadow-lg rounded-lg">
+    <h4 class="text-lg font-semibold text-orange-500 mb-4">Detalles del Curso</h4>
+    <ul class="space-y-2">
+      <li class="flex items-center">
+        <i class="key icon text-orange-500 mr-2"></i>
+        <span class="font-semibold">Clave:</span> <span class="ml-2">{{ curso?.clave }}</span>
+      </li>
+      <li class="flex items-center">
+        <i class="clock  icon text-orange-500 mr-2"></i>
+        <span class="font-semibold">Duración:</span> <span class="ml-2">{{ curso?.duracion_horas }} horas</span>
+      </li>
+      <li class="flex items-center">
+        <i class="info circle icon text-orange-500 mr-2"></i>
+        <span class="font-semibold">Descripción:</span> <span class="ml-2">{{ curso?.descripcion }}</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Columna derecha -->
+  <div class="p-4 bg-white shadow-lg rounded-lg">
+    <h4 class="text-lg font-semibold text-pink-600 mb-4">Información Adicional</h4>
+    <ul class="space-y-2">
+      <li class="flex items-center">
+        <i class="tag icon text-pink-600 mr-2"></i>
+        <span class="font-semibold">Área:</span> <span class="ml-2">{{ curso?.area_nombre }}</span>
+      </li>
+      <li class="flex items-center">
+        <i class="graduation cap icon text-pink-600 mr-2"></i>
+        <span class="font-semibold">Especialidad:</span> <span class="ml-2">{{ curso?.especialidad_nombre }}</span>
+      </li>
+      <li class="flex items-center">
+        <i class="clipboard list icon text-pink-600 mr-2"></i>
+        <span class="font-semibold">Tipo de Curso:</span> <span class="ml-2">{{ curso?.tipo_curso_nombre }}</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Información adicional -->
+  <div class="col-span-1 lg:col-span-2 p-4 bg-orange-50 border-l-4 border-orange-500 mt-4 rounded-lg">
+    <p class="font-semibold">
+      Este curso tiene: 
+      <span class="text-xl font-bold text-orange-500">
+        {{ calcularSesiones() }}
+      </span>
+      sesiones.
+    </p>
+  </div>
+</div>
+
+
+
+<!-- Mostrar mensaje de carga -->
+<div *ngIf="loading" class="text-center text-gray-500">
+  Cargando datos...
+</div>
+
+
+
+<!-- ::::::::::::::::::::::::::::::: +++++ TALBLA ++++++ :::::::::::::::::::::::::::::::::: -->
+
+
+
+<table *ngIf="!loading" class="table-auto border-collapse border border-gray-300 w-full rounded-lg shadow-md mt-4">
+  <thead class="bg-gray-600 text-gray-100">
+    <tr>
+      <th class="border border-gray-300 px-4 py-2 text-left rounded-tl-lg">#</th>
+      <th class="border border-gray-300 px-4 py-2 text-left">Nombre del Alumno</th>
+      <th class="border border-gray-300 px-4 py-2 text-center">Número de Asistencias</th>
+      <th class="border border-gray-300 px-4 py-2 text-center">Porcentaje</th>
+      <th class="border border-gray-300 px-4 py-2 text-center">Calificación Final</th>
+      <th class="border border-gray-300 px-4 py-2 text-center">Observaciones</th>
+      <th class="border border-gray-300 px-4 py-2 text-center rounded-tr-lg">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="let alumno of alumnosConAsistencias; let i = index"
+      [ngClass]="{
+        'bg-gray-100': i % 2 === 0,
+        'bg-white': i % 2 !== 0
+      }"
+    >
+      <td class="border border-gray-300 px-4 py-2">{{ i + 1 }}</td>
+      <td class="border border-gray-300 px-4 py-2">{{ alumno.alumno_nombre }} {{ alumno.alumno_apellidos }}</td>
+      <td class="border border-gray-300 px-4 py-2 text-center">
+        <input
+          type="number"
+          class="ui input w-full text-center"
+          [(ngModel)]="alumno.asistencia"
+          placeholder="Número de asistencias"
+          [disabled]="!isModifying || alumno.alumno_id !== alumnoSeleccionado?.alumno_id"
+          min="0"
+        />
+      </td>
+      <td class="border border-gray-300 px-4 py-2 text-center">
+        <span>{{ calcularPorcentajeAsistencia(alumno.asistencia) | number: '1.2-2' }}%</span>
+
+      </td>
+      <td class="border border-gray-300 px-4 py-2 text-center">
+        {{ alumno.calificacion_final }}
+      </td>
+      <td class="border border-gray-300 px-4 py-2 text-center">
+        <textarea
+          class="ui textarea w-full"
+          [(ngModel)]="alumno.observaciones"
+          placeholder="Observaciones"
+          [disabled]="!isModifying || alumno.alumno_id !== alumnoSeleccionado?.alumno_id"
+        ></textarea>
+      </td>
+      
+      <td class="border border-gray-300 px-4 py-2 text-center">
+        <!-- Botón Condicional -->
+        <!-- <button
+        *ngIf="alumno.asistencia === null || alumno.asistencia === 0 || alumno.observaciones === null || alumno.asistencia < 1 " -->
+        <button
+        [hidden]="isModifying && alumno.alumno_id === alumnoSeleccionado?.alumno_id"
+        class="px-2 py-1 bg-gray-200 text-gray-600 rounded-md hover:bg-gray-300 focus:outline-none focus:ring focus:ring-gray-100"
+
+        (click)="modifyGrade(alumno)"
+        >
+        <i class="edit icon"></i> Capturar
+      </button>
+      
+    <button
+    [hidden]="!isModifying || alumno.alumno_id !== alumnoSeleccionado?.alumno_id"
+    class="px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-100"
+    (click)="guardarCambios(alumno)"
+  >
+    <i class="save icon"></i> Guardar
+  </button>
+  
+    
+      </td>
+
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+<!-- --------------------------------------   MODALES  -------------------------------------- -->
+<!-- <div *ngIf="modalVisible" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
+    <h2 class="text-lg font-bold mb-4">Capturar Asistencia</h2>
+    <div>
+      <label class="block text-sm font-medium mb-2">Alumno:</label>
+      <p class="mb-4">{{ alumnoSeleccionado.alumno_nombre }} {{ alumnoSeleccionado.alumno_apellidos }}</p>
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-2">Número de Asistencias:</label>
+      <input
+        type="number"
+        class="ui input w-full"
+        [(ngModel)]="alumnoSeleccionado.asistencia"
+        placeholder="Número de asistencias"
+        min="0"
+      />
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-2 mt-4">Observaciones:</label>
+      <textarea
+        class="ui textarea w-full"
+        [(ngModel)]="alumnoSeleccionado.observaciones"
+        placeholder="Observaciones"
+      ></textarea>
+    </div>
+    <div class="mt-6 flex justify-end">
+      <button class="ui green button mr-2" (click)="guardarCambios(alumnoSeleccionado)">Guardar</button>
+      <button class="ui red button" (click)="cerrarModal()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="modalEditarVisible" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
+    <h2 class="text-lg font-bold mb-4">Capturar Asistencia</h2>
+    <div>
+      <label class="block text-sm font-medium mb-2">Alumno:</label>
+      <p class="mb-4">{{ alumnoSeleccionado.alumno_nombre }} {{ alumnoSeleccionado.alumno_apellidos }}</p>
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-2">Número de Asistencias:</label>
+      <input
+        type="number"
+        class="ui input w-full"
+        [(ngModel)]="alumnoSeleccionado.asistencia"
+        placeholder="Número de asistencias"
+        min="0"
+      />
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-2 mt-4">Observaciones:</label>
+      <textarea
+        class="ui textarea w-full"
+        [(ngModel)]="alumnoSeleccionado.observaciones"
+        placeholder="Observaciones"
+      ></textarea>
+    </div>
+    <div class="mt-6 flex justify-end">
+      <button class="ui green button mr-2" (click)="actualizarAsistencia(alumnoSeleccionado)">Guardar</button>
+      <button class="ui red button" (click)="cerrarModal()">Cerrar</button>
+    </div>
+  </div>
+</div> -->

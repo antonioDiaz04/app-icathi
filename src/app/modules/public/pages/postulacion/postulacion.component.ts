@@ -3,9 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PostulacionService } from '../../../../shared/services/postulacion.service';
 import { Router } from '@angular/router';
 @Component({
-  selector: 'app-postulacion',
-  templateUrl: './postulacion.component.html',
-  styleUrls: ['./postulacion.component.scss']
+    selector: 'app-postulacion',
+    templateUrl: './postulacion.component.html',
+    styleUrls: ['./postulacion.component.scss'],
+    standalone: false
 })
 export class PostulacionComponent {
   postulationForm: FormGroup;
@@ -80,7 +81,7 @@ export class PostulacionComponent {
             alert('Ocurrió un error al enviar el registro. Inténtalo nuevamente.');
           }
           alert('Ocurrió un error al enviar el registro. Inténtalo nuevamente.');
-          this.isLoading = false; 
+          this.isLoading = false;
         }
       });
     } else {

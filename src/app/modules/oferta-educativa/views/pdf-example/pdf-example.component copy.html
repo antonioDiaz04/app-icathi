@@ -1,0 +1,119 @@
+generarPDF() {
+  this.generando = true;
+
+  const doc = new jsPDF();
+
+  // Agregar imagen de fondo solo en la primera página
+  const imageUrl = 'https://res.cloudinary.com/dvvhnrvav/image/upload/v1736174056/icathi/tsi14aynpqjer8fthxtz.png';
+  doc.addImage(imageUrl, 'PNG', 0, 0, doc.internal.pageSize.width, doc.internal.pageSize.height);
+
+  // Mostrar los primeros datos
+  doc.setFontSize(16);
+  doc.text('DATOS GENERALES DEL CURSO', 10, 20);
+  doc.setFontSize(12);
+  doc.text(`CLAVE: ${this.cursoData?.CLAVE || 'No disponible'}`, 10, 30);
+  doc.text(`DURACIÓN EN HORAS: ${this.cursoData?.DURACION_HORAS || 'No disponible'}`, 10, 40);
+  doc.text(`DESCRIPCIÓN: ${this.cursoData?.DESCRIPCION || 'No disponible'}`, 10, 50);
+  doc.text(`ÁREA ID: ${this.cursoData?.AREA_ID || 'No disponible'}`, 10, 60);
+  doc.text(`ESPECIALIDAD ID: ${this.cursoData?.ESPECIALIDAD_ID || 'No disponible'}`, 10, 70);
+
+  // Mover "Ficha Técnica" a otra página y usar tabla
+  doc.addPage();
+  doc.setFontSize(16);
+  doc.text('FICHA TÉCNICA', 10, 20);
+
+  const fichaTecnica = [
+    ['Objetivo', this.cursoData?.FICHA_TECNICA?.OBJETIVO || 'No disponible'],
+    ['Perfil de ingreso', this.cursoData?.FICHA_TECNICA?.PERFIL_INGRESO || 'No disponible'],
+    ['Perfil de egreso', this.cursoData?.FICHA_TECNICA?.PERFIL_EGRESO || 'No disponible'],
+    ['Perfil del docente', this.cursoData?.FICHA_TECNICA?.PERFIL_DEL_DOCENTE || 'No disponible'],
+    ['Metodología', this.cursoData?.FICHA_TECNICA?.METODOLOGIA || 'No disponible'],
+    ['Bibliografía', this.cursoData?.FICHA_TECNICA?.BIBLIOGRAFIA || 'No disponible'],
+    ['Criterios de acreditación', this.cursoData?.FICHA_TECNICA?.CRITERIOS_ACREDITACION || 'No disponible']
+  ];
+
+  doc.autoTable({
+    startY: 30,
+    body: fichaTecnica,
+    theme: 'grid',
+    headStyles: { fillColor: [0, 102, 204], textColor: [255, 255, 255], fontSize: 12 }, // Encabezado azul
+    alternateRowStyles: { fillColor: [220, 230, 241] }, // Filas alternas en gris claro
+    bodyStyles: { fontSize: 10 },
+    columnStyles: {
+      0: { halign: 'left', fontStyle: 'bold' }, // Primera columna: negrita
+      1: { halign: 'left' } // Segunda columna
+    },
+  });
+
+  // Agregar materiales en tabla
+  doc.addPage();
+  doc.setFontSize(16);
+  doc.text('MATERIALES', 10, 20);
+
+  const materials = this.cursoData?.MATERIALES || [];
+  const materialsTable = [
+    ['Descripción', 'Unidad de medida', 'Cantidad 10', 'Cantidad 15', 'Cantidad 20'], // Headers
+    ...materials.map((item: any) => [
+      item.material_descripcion,
+      item.material_unidad_de_medida,
+      item.material_cantidad_10,
+      item.material_cantidad_15,
+      item.material_cantidad_20
+    ])
+  ];
+
+  doc.autoTable({
+    startY: 30,
+    head: materialsTable.slice(0, 1),
+    body: materialsTable.slice(1),
+    theme: 'grid',
+    headStyles: { fillColor: [0, 102, 204], textColor: [255, 255, 255], fontSize: 12 },
+    alternateRowStyles: { fillColor: [220, 230, 241] },
+    bodyStyles: { fontSize: 10 },
+    columnStyles: {
+      0: { halign: 'left' },
+      1: { halign: 'center' },
+      2: { halign: 'center' },
+      3: { halign: 'center' },
+      4: { halign: 'center' },
+    },
+  });
+
+  // Agregar equipamiento en tabla
+  doc.addPage();
+  doc.setFontSize(16);
+  doc.text('EQUIPAMIENTO', 10, 20);
+
+  const equipment = this.cursoData?.EQUIPAMIENTO || [];
+  const equipmentTable = [
+    ['Descripción', 'Unidad de medida', 'Cantidad 10', 'Cantidad 15', 'Cantidad 20'], // Headers
+    ...equipment.map((item: any) => [
+      item.equipamiento_descripcion,
+      item.equipamiento_unidad_de_medida,
+      item.equipamiento_cantidad_10,
+      item.equipamiento_cantidad_15,
+      item.equipamiento_cantidad_20
+    ])
+  ];
+
+  doc.autoTable({
+    startY: 30,
+    head: equipmentTable.slice(0, 1),
+    body: equipmentTable.slice(1),
+    theme: 'grid',
+    headStyles: { fillColor: [0, 102, 204], textColor: [255, 255, 255], fontSize: 12 },
+    alternateRowStyles: { fillColor: [220, 230, 241] },
+    bodyStyles: { fontSize: 10 },
+    columnStyles: {
+      0: { halign: 'left' },
+      1: { halign: 'center' },
+      2: { halign: 'center' },
+      3: { halign: 'center' },
+      4: { halign: 'center' },
+    },
+  });
+
+  // Guardar el PDF
+  doc.save('curso.pdf');
+  this.generando = false;
+}

@@ -15,4 +15,10 @@ export class CursosdocentesService {
       { docenteId, cursoId }
     );
   }
+  
+  obtenerCursosAsignados(docenteId: number) {
+    return this.http.get(
+      `${environment.api}/${this.url}/asignados/${docenteId}`
+    );
+  }
 }

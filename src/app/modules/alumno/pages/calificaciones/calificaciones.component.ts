@@ -5,9 +5,10 @@ import { AspiranteService } from '../../../../shared/services/aspirante.service'
 import { AlumnosCursosService } from '../../../../shared/services/alumnos-cursos.service';
 
 @Component({
-  selector: 'app-calificaciones',
-  templateUrl: './calificaciones.component.html',
-  styleUrls: ['./calificaciones.component.scss']
+    selector: 'app-calificaciones',
+    templateUrl: './calificaciones.component.html',
+    styleUrls: ['./calificaciones.component.scss'],
+    standalone: false
 })
 export class CalificacionesComponent implements OnInit {
 

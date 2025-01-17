@@ -5,8 +5,8 @@ import { ModalTaiwilService } from '../../../../shared/services/modal-taiwil.ser
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({
-  selector: 'app-validar-correo',
-  template: `
+    selector: 'app-validar-correo',
+    template: `
     <div class="container mx-auto text-center mt-12">
       <!-- Mensaje de éxito -->
       <div *ngIf="!loading && mensaje" class="bg-[#D8566C] text-white p-6 rounded-lg shadow-lg">
@@ -22,7 +22,8 @@ import { isPlatformBrowser } from '@angular/common';
       </div>
     </div>
   `,
-  styles: [],
+    styles: [],
+    standalone: false
 })
 export class ValidarCorreoComponent implements OnInit {
   mensaje: string | null = null;
@@ -55,22 +56,30 @@ export class ValidarCorreoComponent implements OnInit {
           this.loading = false;
           this.mensaje = response.message;
 
-          if (typeof window !== 'undefined' && window.sessionStorage) {
-            sessionStorage.setItem('userId', response.userId);
-            sessionStorage.setItem('userEmail', response.userEmail);
-            sessionStorage.setItem('userRole', response.role); // Guardar el rol
+          try {
+            if (typeof window !== 'undefined' && window.sessionStorage) {
+              sessionStorage.setItem('userId', response.userId);
+              sessionStorage.setItem('userEmail', response.userEmail);
+              sessionStorage.setItem('userRole', response.role); // Guardar el rol
+            }
+          } catch (error) {
+            console.error('Error al acceder a sessionStorage:', error);
           }
 
           // Mostrar modal de éxito
           this.modalTaiwilService.showModal('Redirigiéndote a la creación de contraseña...');
           setTimeout(() => {
-            const role = sessionStorage.getItem('userRole');
-            if (role === 'DOCENTE') {
-              this.router.navigate(['public/crear-password']);
-            } else if (role === 'ALUMNO') {
-              this.router.navigate(['public/alumnos-crear-password']);
-            } else {
-              this.router.navigate(['public/crear-password']);
+            try {
+              const role = sessionStorage.getItem('userRole');
+              if (role === 'DOCENTE') {
+                this.router.navigate(['public/crear-password']);
+              } else if (role === 'ALUMNO') {
+                this.router.navigate(['public/alumnos-crear-password']);
+              } else {
+                this.router.navigate(['public/crear-password']);
+              }
+            } catch (error) {
+              console.error('Error durante la redirección:', error);
             }
           }, 5000);
         },

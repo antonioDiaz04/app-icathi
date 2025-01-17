@@ -5,9 +5,10 @@ import { ValidadorDocenteService } from '../validador/commons/services/validador
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-docente',
-  templateUrl: './docente.component.html',
-  styleUrls: ['./docente.component.scss']
+    selector: 'app-docente',
+    templateUrl: './docente.component.html',
+    styleUrls: ['./docente.component.scss'],
+    standalone: false
 })
 export class DocenteComponent implements OnInit {
   id: number | null = null; // ID del usuario

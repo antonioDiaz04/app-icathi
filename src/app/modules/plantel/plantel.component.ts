@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-plantel',
-  templateUrl: './plantel.component.html',
-  styleUrl: './plantel.component.scss'
+    selector: 'app-plantel',
+    templateUrl: './plantel.component.html',
+    styleUrl: './plantel.component.scss',
+    standalone: false
 })
 export class PlantelComponent {
 

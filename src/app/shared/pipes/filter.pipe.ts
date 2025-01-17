@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'filter'
+    name: 'filter',
+    standalone: false
 })
 export class FilterPipe implements PipeTransform {
   transform(modulos: any[], filtroId: string, filtroNombre: string, filtroNivel: string, filtroDuracion: number | null): any[] {

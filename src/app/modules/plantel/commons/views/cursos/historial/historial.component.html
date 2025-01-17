@@ -1,1 +1,248 @@
-<p>historial works!</p>
+<div class="container mx-auto px-4 py-6">
+  <h2 class="text-lg font-semibold text-gray-800 mb-6">Historial  de Cursos</h2>
+
+  <!-- Botones de filtrado -->
+  <!-- <div class="flex justify-end mb-4 space-x-2">
+    <button
+      (click)="filtrarEstado('Todos')"
+      class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none"
+    >
+      Todos
+    </button>
+    <button
+      (click)="filtrarEstado('Pendientes')"
+      class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none"
+    >
+      Pendientes
+    </button>
+    <button
+      (click)="filtrarEstado('En Proceso')"
+      class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none"
+    >
+      En Proceso
+    </button>
+    <button
+      (click)="filtrarEstado('Completados')"
+      class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none"
+    >
+      Completados
+    </button>
+    <button
+      (click)="filtrarEstado('Cancelados')"
+      class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none"
+    >
+      Cancelados
+    </button>
+  </div> -->
+
+  <!-- Filtrado por fechas -->
+  <div class="flex justify-end mb-4 space-x-2">
+    <select
+      [(ngModel)]="filtroMes"
+      (change)="filtrarPorFecha()"
+      class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+    >
+      <option value="" selected>Mes</option>
+      <option *ngFor="let mes of meses" [value]="mes.valor">
+        {{ mes.nombre }}
+      </option>
+    </select>
+    <select
+      [(ngModel)]="filtroAnio"
+      (change)="filtrarPorFecha()"
+      class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+    >
+      <option value="" selected>Año</option>
+      <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
+    </select>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center text-gray-500 py-6">
+    <p>Cargando cursos....</p>
+  </div>
+  <!-- Tarjetas de cursos agrupados por estado -->
+  <div  *ngIf="!isLoading"
+    class="grid grid-cols-1 bg-white md:grid-cols-2 p-5 shadow-md-r overflow-hidden border border-gray-200 lg:grid-cols-3 gap-4"
+  >
+    <!-- Tarjetas de cursos pendientes -->
+    <div
+      *ngIf="cursosPendiente && cursosPendiente.length > 0"
+      class="bg-gray-50 rounded-lg shadow-md-r overflow-hidden border-gfiray-500 mb-4"
+    >
+      <div class="px-4 py-3">
+        <h3 class="text-lg font-semibold text-gray-800">Pendientes</h3>
+      </div>
+      <div class="px-4 py-3 border-r-gray-500">
+        <div
+          *ngFor="let curso of cursosPendiente"
+          class="bg-white border border-gray-200 rounded-lg p-5 mb-4"
+        >
+          <h4 class="text-lg font-medium text-gray-900">
+            {{ curso.curso_nombre }}
+          </h4>
+          <p class="text-gray-600">
+            {{ curso.area_nombre }} - {{ curso.especialidad_nombre }}
+          </p>
+          <p class="text-gray-500 text-sm">
+            <strong>Inicia:</strong>
+            {{ curso.fecha_inicio | date : "longDate" }} <br />
+            <strong>Finaliza:</strong> {{ curso.fecha_fin | date : "longDate" }}
+          </p>
+          <div class="px-4 py-2">
+            <span
+              class="inline-block px-2 py-1 text-xs font-semibold text-white rounded-md bg-gray-500"
+            >
+              <strong>{{ curso.estado }}</strong>
+            </span>
+          </div>
+          <div class="mt-2">
+            <div class="flex items-center">
+              <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div
+                  class="bg-gray-500 h-2.5 rounded-full"
+                  [style.width.%]="curso.porcentaje_progreso"
+                ></div>
+              </div>
+              <span class="ml-2 text-xs text-gray-600"
+                >{{ curso.porcentaje_progreso }}%</span
+              >
+            </div>
+          </div>
+          <div class="mt-2">
+            <button
+              class="px-4 py-2 bg-indigo-500 text-white text-xs rounded-md hover:bg-indigo-600 focus:outline-none"
+            >
+              Ver Detalles
+            </button>
+          </div>
+        </div>
+        <div
+        *ngIf="cursosPendiente.length === 0"
+        class="text-start text-gray-500 py-6"
+      >
+        <p>No hay cursos pendientes aún.</p>
+      </div>
+      </div>
+    </div>
+
+    <!-- Tarjetas de cursos en proceso -->
+    <div
+      *ngIf="cursosProceso && cursosProceso.length > 0"
+      class="bg-gray-50 rounded-lg shadow-md-r overflow-hidden border-gray-500 mb-4"
+    >
+      <div class="px-4 py-3">
+        <h3 class="text-lg font-semibold text-gray-800">En Proceso</h3>
+      </div>
+      <div class="px-4 py-3 border-r-gray-500">
+        <div
+          *ngFor="let curso of cursosProceso"
+          class="bg-white border border-gray-200 rounded-lg p-5 mb-4"
+        >
+          <h4 class="text-lg font-medium text-gray-900">
+            {{ curso.curso_nombre }}
+          </h4>
+          <p class="text-gray-600">
+            {{ curso.area_nombre }} - {{ curso.especialidad_nombre }}
+          </p>
+          <p class="text-gray-500 text-sm">
+            <strong>Inicia:</strong>
+            {{ curso.fecha_inicio | date : "longDate" }} <br />
+            <strong>Finaliza:</strong> {{ curso.fecha_fin | date : "longDate" }}
+          </p>
+          <div class="px-4 py-2">
+            <span
+              class="inline-block px-2 py-1 text-xs font-semibold text-white rounded-md bg-yellow-500"
+            >
+              <strong>{{ curso.estado }}</strong>
+            </span>
+          </div>
+          <div class="mt-2">
+            <div class="flex items-center">
+              <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div
+                  class="bg-indigo-600 h-2.5 rounded-full"
+                  [style.width.%]="curso.porcentaje_progreso"
+                ></div>
+              </div>
+              <span class="ml-2 text-xs text-gray-600"
+                >{{ curso.porcentaje_progreso }}%</span
+              >
+            </div>
+          </div>
+          <div class="mt-2">
+            <button
+              class="px-4 py-2 bg-indigo-500 text-white text-xs rounded-md hover:bg-indigo-600 focus:outline-none"
+            >
+              Ver Detalles
+            </button>
+          </div>
+        </div>
+        <div
+        *ngIf="cursosProceso.length === 0"
+        class="text-start text-gray-500 py-6"
+      >
+        <p>No hay cursos en proceso aún.</p>
+      </div>
+      </div>
+    </div>
+
+      <!-- Tarjetas de cursos completados -->
+      <div class="bg-gray-50 rounded-lg border-gray-500 mb-4">
+        <div class="px-4 py-3">
+          <h3 class="text-lg font-semibold text-gray-800">Completados</h3>
+        </div>
+        <div class="px-4 py-3">
+          <div
+            *ngFor="let curso of cursosCompletado"
+            class="bg-white border border-gray-200 rounded-lg p-5 mb-4"
+          >
+            <h4 class="text-lg font-medium text-gray-900">
+              {{ curso.curso_nombre }}
+            </h4>
+            <p class="text-gray-600">
+              {{ curso.area_nombre }} - {{ curso.especialidad_nombre }}
+            </p>
+            <p class="text-gray-500 text-sm">
+              <strong>Inicia:</strong> {{ curso.fecha_inicio | date : "longDate" }}
+              <br />
+              <strong>Finaliza:</strong> {{ curso.fecha_fin | date : "longDate" }}
+            </p>
+            <div class="px-4 py-2">
+              <span
+                class="inline-block px-2 py-1 text-xs font-semibold text-white rounded-md bg-green-500"
+              >
+                <strong>{{ curso.estado }}</strong>
+              </span>
+            </div>
+            <div class="mt-2">
+              <button
+                class="px-4 py-2 bg-indigo-500 text-white text-xs rounded-md hover:bg-indigo-600 focus:outline-none"
+              >
+                Ver Detalles
+              </button>
+            </div>
+          </div>
+          <!-- Si no hay cursos completados, muestra el mensaje -->
+          <div
+            *ngIf="cursosCompletado.length === 0"
+            class="text-start text-gray-500 py-6"
+          >
+            <p>No hay cursos completados aún.</p>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <!-- Si no hay cursos completados, muestra el mensaje -->
+  <div
+    *ngIf="
+      !isLoading &&
+      (!cursosCompletado || cursosCompletado.length === 0) &&
+      (!cursosPendiente || cursosPendiente.length === 0) &&
+      (!cursosProceso || cursosProceso.length === 0)
+    "
+    class="text-center text-gray-500 py-6"
+  >
+    <p>No hay cursos aún.</p>
+  </div>
+</div>

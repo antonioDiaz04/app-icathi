@@ -1,0 +1,130 @@
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4"
+>
+  <!-- Contenido del Modal -->
+  <div class="bg-white p-6 rounded-2xl shadow-lg w-full max-w-4xl relative">
+    <!-- Botón Cerrar Modal -->
+    <button
+      type="button"
+      class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-2xl font-bold"
+      (click)="cerrarModal()"
+    >
+      &times;
+    </button>
+
+    <!-- Header del Modal -->
+    <div class="header text-center mb-6">
+      <h1 class="text-2xl font-bold">
+        {{ cursoData?.titulo || "Curso de Capacitación" }}
+      </h1>
+      <p class="text-gray-600">
+        {{ cursoData?.modalidad || "Modalidad de Educación Virtual" }}
+      </p>
+    </div>
+
+    <!-- Detalles del Curso -->
+    <h2 class="text-xl font-semibold mb-4">Detalles del Curso</h2>
+    <div class="grid grid-cols-2 gap-6 mb-6">
+      <div>
+        <h3 class="font-medium">ÁREA OCUPACIONAL:</h3>
+        <p class="text-gray-700">{{ cursoData?.area || "No disponible" }}</p>
+      </div>
+      <div>
+        <h3 class="font-medium">ESPECIALIDAD:</h3>
+        <p class="text-gray-700">
+          {{ cursoData?.especialidad || "No disponible" }}
+        </p>
+      </div>
+      <div>
+        <h3 class="font-medium">CURSO:</h3>
+        <p class="text-gray-700">{{ cursoData?.curso || "No disponible" }}</p>
+      </div>
+      <div>
+        <h3 class="font-medium">CLAVE DEL CURSO:</h3>
+        <p class="text-gray-700">{{ cursoData?.clave || "No disponible" }}</p>
+      </div>
+      <div>
+        <h3 class="font-medium">DURACIÓN:</h3>
+        <p class="text-gray-700">
+          {{ cursoData?.duracion || "No disponible" }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Ficha Financiera -->
+    <div class="mb-6">
+      <h2 class="text-xl font-semibold mb-4">Ficha Financiera</h2>
+      <table class="table-auto w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="px-4 py-2">Concepto</th>
+            <th class="px-4 py-2">Cantidad</th>
+            <th class="px-4 py-2">Costo Unitario</th>
+            <th class="px-4 py-2">Costo Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let item of cursoData?.fichaFinanciera || []"
+            class="border-b"
+          >
+            <td class="px-4 py-2">{{ item.concepto }}</td>
+            <td class="px-4 py-2">{{ item.cantidad }}</td>
+            <td class="px-4 py-2">{{ item.costoUnitario | currency }}</td>
+            <td class="px-4 py-2">{{ item.costoTotal | currency }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Material -->
+    <div class="mb-6">
+      <h2 class="text-xl font-semibold mb-4">Material</h2>
+      <ul class="list-disc pl-6">
+        <li
+          *ngFor="let material of cursoData?.material || []"
+          class="text-gray-700"
+        >
+          {{ material }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Equipamiento -->
+    <div class="mb-6">
+      <h2 class="text-xl font-semibold mb-4">Equipamiento</h2>
+      <ul class="list-disc pl-6">
+        <li
+          *ngFor="let equipo of cursoData?.equipamiento || []"
+          class="text-gray-700"
+        >
+          {{ equipo }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Elaborado, Revisado y Autorizado -->
+    <div class="flex flex-col space-y-4">
+      <p>
+        <strong>Elaborado por:</strong> {{ cursoData?.elaboradoPor || "N/A" }}
+      </p>
+      <p>
+        <strong>Revisado por:</strong> {{ cursoData?.revisadoPor || "N/A" }}
+      </p>
+      <p>
+        <strong>Autorizado por:</strong> {{ cursoData?.autorizadoPor || "N/A" }}
+      </p>
+    </div>
+
+    <!-- Botón Generar PDF -->
+    <div class="mt-6 flex justify-center">
+      <button
+        (click)="generarPDF()"
+        class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded shadow focus:outline-none flex items-center"
+      >
+        <i *ngIf="generando" class="animate-spin mr-2">🔄</i>
+        Crear PDF
+      </button>
+    </div>
+  </div>
+</div>

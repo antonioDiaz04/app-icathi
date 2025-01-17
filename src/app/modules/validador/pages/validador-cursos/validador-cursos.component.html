@@ -9,9 +9,10 @@
     </h1>
     <nav>
       <ul class="space-y-4">
-        <li class="flex items-center space-x-3 p-3 hover:bg-blue-700 rounded-lg transition duration-300 cursor-pointer">
-          <i class="fas fa-sign-out-alt"></i>
-          <a href="#" class="text-lg font-medium">Cerrar Sesión</a>
+        <li class="hover:text-[#F08762] transition-all duration-300">
+          <button (click)="logout()" class="block py-3 px-6 flex items-center text-gray-600 w-full border-2 border-[#44509D] rounded-md hover:bg-[#44509D] hover:text-white transition-all duration-300">
+            <i class="fas fa-sign-out-alt text-[#44509D] mr-3 hover:text-white"></i> Cerrar Sesión
+          </button>
         </li>
       </ul>
     </nav>

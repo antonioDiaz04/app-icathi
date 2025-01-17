@@ -1,64 +1,79 @@
 <div class="flex min-h-screen bg-gray-50">
   <!-- Menú lateral -->
-  <aside class="w-64 bg-[#44509D] text-white flex flex-col">
+  <aside class="w-64 bg-white text-[#44509D] flex flex-col">
     <div class="px-6 py-4 text-center text-lg font-bold bg-[#F08762]">
       Panel Admin
     </div>
-    <nav class="flex-1">
+    <nav class="flex-1 p-6">
       <ul>
-        <li class="hover:bg-[#F08762] transition-all duration-300">
+        <li class="hover:text-[#F08762] transition-all duration-300">
           <a
             (click)="redirecto('home')"
-            class="block py-3 px-6 flex items-center"
+            class="block py-3 px-6 flex items-center text-gray-600 hover:text-[#F08762]"
           >
-            <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+            <i class="fas fa-tachometer-alt text-[#44509D] mr-3"></i> Dashboard
           </a>
         </li>
-        <li class="hover:bg-[#F08762] transition-all duration-300">
+        <li class="hover:text-[#F08762] transition-all duration-300">
           <a
             (click)="redirecto('listado-alumnos')"
-            class="block py-3 px-6 flex items-center"
+            class="block py-3 px-6 flex items-center text-gray-600 hover:text-[#F08762]"
           >
-            <i class="fas fa-users mr-3"></i> Listado de Alumnos
+            <i class="fas fa-users text-[#44509D] mr-3"></i> Alumnos
           </a>
         </li>
 
-        <li class="hover:bg-[#F08762] transition-all duration-300">
+        <li class="hover:text-[#F08762] transition-all duration-300">
           <a
             (click)="redirecto('listado-docentes')"
-            class="block py-3 px-6 flex items-center"
+            class="block py-3 px-6 flex items-center text-gray-600 hover:text-[#F08762]"
           >
-            <i class="fas fa-chalkboard-teacher mr-3"></i> Listado de Docentes
+            <i class="fas fa-chalkboard-teacher text-[#44509D] mr-3"></i> Docentes
           </a>
         </li>
 
-        <li class="hover:bg-[#F08762] transition-all duration-300">
+        <li class="hover:text-[#F08762] transition-all duration-300">
           <a
             (click)="redirecto('listado-cursos')"
-            class="block py-3 px-6 flex items-center"
+            class="block py-3 px-6 flex items-center text-gray-600 hover:text-[#F08762]"
           >
-            <i class="fas fa-book mr-3"></i> Listado de Cursos
+            <i class="fas fa-book text-[#44509D] mr-3"></i> Cursos
           </a>
         </li>
-        <li class="hover:bg-[#F08762] transition-all duration-300">
+        <li class="hover:text-[#F08762] transition-all duration-300">
           <a
             (click)="redirecto('listado-cursos-solicitados')"
-            class="block py-3 px-6 flex items-center"
+            class="block py-3 px-6 flex items-center text-gray-600 hover:text-[#F08762]"
           >
-            <i class="fas fa-book mr-3"></i> Listado de Cursos solicitados
+            <i class="fas fa-paper-plane text-[#44509D] mr-3"></i>  Cursos solicitados
+          </a>
+        </li>
+        <!-- <li class="hover:text-[#F08762] transition-all duration-300">
+          <a
+            (click)="redirecto('Impartidos')"
+            class="block py-3 px-6 flex items-center text-gray-600 hover:text-[#F08762]"
+          >
+            <i class="fas fa-check-circle text-[#44509D] mr-3"></i>Status Cursos
+          </a>
+        </li> -->
+        <li class="hover:text-[#F08762] transition-all duration-300">
+          <a
+            (click)="redirecto('Historial')"
+            class="block py-3 px-6 flex items-center text-gray-600 hover:text-[#F08762]"
+          >
+            <i class="fas fa-folder-open text-[#44509D] mr-3"></i> Historial Cursos
           </a>
         </li>
 
-        <li class="hover:bg-[#F08762] transition-all duration-300">
-          <a (click)="logout()" class="block py-3 px-6 flex items-center">
-            <i class="fas fa-sign-out-alt mr-3"></i> Cerrar Sesión
-          </a>
+        <li class="hover:text-[#F08762] transition-all duration-300">
+          <button (click)="logout()" class="block py-3 px-6 flex items-center text-gray-600 w-full border-2 border-[#44509D] rounded-md hover:bg-[#44509D] hover:text-white transition-all duration-300">
+            <i class="fas fa-sign-out-alt text-[#44509D] mr-3 hover:text-white"></i> Cerrar Sesión
+          </button>
         </li>
       </ul>
     </nav>
     <div class="bg-[#D8566C] px-6 py-4 text-sm text-center">© 2024 Admin</div>
   </aside>
-  <!-- </div> -->
 
   <!-- Contenido principal -->
   <main class="flex-1">
@@ -66,14 +81,9 @@
     <header
       class="sticky top-0 bg-white shadow-md px-6 py-4 flex justify-between items-center z-10"
     >
-      <h1 class="text-2xl font-bold text-gray-800 flex items-center">
+      <h1 class="text-2xl font-bold text-[#44509D] flex items-center">
         <i class="fas fa-school text-[#44509D] mr-2"></i>Plantel
       </h1>
-      <!-- <button
-        class="flex items-center px-4 py-2 bg-[#D8566C] text-white rounded-md hover:bg-[#F08762] transition-all duration-300"
-      >
-        <i class="fas fa-plus-circle mr-2"></i> Añadir Plantel
-      </button> -->
     </header>
 
     <router-outlet></router-outlet>

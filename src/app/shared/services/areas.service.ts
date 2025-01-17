@@ -13,6 +13,7 @@ interface Area {
 })
 export class AreasService {
   private areasApiUrl = `${environment.api}/areas`;
+  private areasApiUrl2 = `${environment.api}/areas/byIdPlantel/`;
 
   constructor(private http: HttpClient) {}
 
@@ -22,6 +23,9 @@ export class AreasService {
    */
   getAreas(): Observable<Area[]> {
     return this.http.get<Area[]>(this.areasApiUrl);
+  }
+  getAreasByIdPlantel(idPlantel:any): Observable<Area[]> {
+    return this.http.get<Area[]>(this.areasApiUrl2+idPlantel);
   }
 
 }

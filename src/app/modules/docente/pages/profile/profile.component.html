@@ -68,9 +68,6 @@
     </div>
   </div>
 </div>
-
-
-
   <!-- Estado del Perfil -->
   <div class="mt-8">
     <h3 class="text-xl font-semibold text-center text-[#44509D] mb-4 animate__animated animate__fadeIn">Estado del Perfil</h3>
@@ -133,7 +130,7 @@
       <i class="exclamation circle icon" style="color: #D8566C;"></i>
       Asignación de validador pendiente
     </li>
-    
+
     <li
       *ngIf="docenteData.usuario_validador_id"
       class="text-[#4CAF50] font-medium flex items-center gap-2 animate__animated animate__fadeIn"
@@ -141,7 +138,7 @@
       <i class="check circle icon" style="color: #4CAF50;"></i>
       {{ getValidadorStatus(docenteData.usuario_validador_id) }}
     </li>
-    
+
     </ul>
   </div>
 

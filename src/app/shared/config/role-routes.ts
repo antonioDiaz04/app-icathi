@@ -12,4 +12,7 @@ export const RoleRoutes: Record<ERol, string> = {
   [ERol.VALIDA_CURSO]: 'validador/curso',
   [ERol.VALIDA_PLANTEL]: 'validador/plantel',
   [ERol.VALIDA_DOCENTE]: 'validador/docente',
-};
+  [ERol.OFERTA_EDUCATIVA]: "oferta-educativa"
+}
+  
+;
