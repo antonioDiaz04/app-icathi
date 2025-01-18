@@ -42,8 +42,6 @@ export class ValidadorCursosComponent implements OnInit {
 
     constructor(private http: HttpClient, sanitizer: DomSanitizer, private  router: Router) { 
         this.sanitizer = sanitizer; // Asigna el sanitizer en el constructor
-        
-        
     }
 
     ngOnInit(): void {
