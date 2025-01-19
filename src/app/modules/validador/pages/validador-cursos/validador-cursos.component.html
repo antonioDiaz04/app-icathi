@@ -1,17 +1,22 @@
 <div class="min-h-screen flex bg-gray-50">
   <!-- Menú Lateral -->
-  <aside class="w-72 bg-gradient-to-b from-blue-800 to-blue-600 text-white p-6 shadow-lg">
+  <aside class="w-72 bg-white shadow-lg p-6">
+    <!-- Logo -->
     <div class="flex items-center justify-center mb-8">
-      <img src="https://www.icathi.edu.mx/img/ICATHI.png" alt="ICATHI Logo" class="w-16 h-auto" />
+      <img src="https://www.icathi.edu.mx/img/ICATHI.png" alt="ICATHI Logo" class="w-20 h-auto" />
     </div>
-    <h1 class="text-2xl font-bold text-center mb-6 tracking-wider">
-      Validador de Cursos
-    </h1>
+    <!-- Título -->
+    <h1 class="text-xl font-bold text-center mb-6 text-gray-800 tracking-wide">Validador de Cursos</h1>
+    <!-- Navegación -->
     <nav>
-      <ul class="space-y-4">
-        <li class="hover:text-[#F08762] transition-all duration-300">
-          <button (click)="logout()" class="block py-3 px-6 flex items-center text-gray-600 w-full border-2 border-[#44509D] rounded-md hover:bg-[#44509D] hover:text-white transition-all duration-300">
-            <i class="fas fa-sign-out-alt text-[#44509D] mr-3 hover:text-white"></i> Cerrar Sesión
+      <ul class="space-y-6">
+        <li>
+          <button
+            (click)="logout()"
+            class="flex items-center justify-center w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold text-sm rounded-lg shadow-md hover:from-blue-600 hover:to-blue-800 hover:shadow-lg transition-all duration-300"
+          >
+            <i class="fas fa-sign-out-alt mr-2 text-lg"></i>
+            Cerrar Sesión
           </button>
         </li>
       </ul>
@@ -21,113 +26,163 @@
   <!-- Contenido Principal -->
   <main class="flex-1 p-10">
     <header class="flex justify-between items-center mb-10">
-      <h2 class="text-4xl font-extrabold text-blue-800">Panel de Validaciones</h2>
+      <h2 class="text-4xl font-extrabold text-[#44509D]">Panel de Validaciones</h2>
     </header>
 
     <!-- Lista de Planteles -->
-    <section class="mb-12">
-      <h3 class="text-2xl font-semibold text-blue-800 mb-6">Lista de Planteles</h3>
+    <section *ngIf="!mostrarDetalleModal" class="mb-12">
+      <h3 class="text-2xl font-semibold text-[#44509D] mb-6">Lista de Planteles</h3>
       <ul class="bg-white shadow-lg rounded-lg divide-y divide-gray-200">
-        <li
-          *ngFor="let pc of plantelesCursosNoValidados"
-          class="flex justify-between items-center p-6 hover:bg-gray-100 transition duration-300 cursor-pointer"
-        >
-          <span class="text-lg font-medium text-gray-800">{{ pc.plantel_nombre }}</span>
-          <button
-            (click)="verDetallesCurso(pc)"
-            class="bg-orange-500 text-white py-2 px-6 rounded-md hover:bg-orange-600 transition duration-300"
-          >
-            Ver Detalles
+        <li *ngFor="let plantel of plantelesUnicos"
+          class="flex justify-between items-center p-6 hover:bg-gray-100 transition duration-300 cursor-pointer">
+          <span class="text-lg font-medium text-black">{{ plantel.plantel_nombre }}</span>
+          <button (click)="cargarCursosPorPlantel(plantel.plantel_id)"
+            class="bg-[#44509D] text-white py-2 px-6 rounded-md hover:bg-[#F08762] transition duration-300">
+            Ver Cursos
           </button>
         </li>
       </ul>
     </section>
 
-    <!-- Lista de Planteles con Cursos Validados -->
-    <section>
-      <h3 class="text-2xl font-semibold text-blue-800 mb-6">Planteles con Cursos Validados</h3>
-      <ul class="bg-white shadow-lg rounded-lg divide-y divide-gray-200">
-        <li
-          *ngFor="let plantel of plantelesConCursosValidados"
-          class="p-6 flex justify-between items-center hover:bg-gray-100 transition duration-300"
-        >
-          <div>
-            <p class="text-gray-800"><strong>Plantel:</strong> {{ plantel.plantel_nombre }}</p>
-            <p class="text-gray-800"><strong>Curso:</strong> {{ plantel.curso_nombre }}</p>
-            <p class="text-sm text-gray-600">
-              <strong>Estatus:</strong> {{ plantel.curso_validado ? 'Validado' : 'No Validado' }}
-            </p>
-          </div>
-          <button
-            (click)="verDetallesCurso(plantel)"
-            class="bg-orange-500 text-white py-2 px-6 rounded-md hover:bg-orange-600 transition duration-300"
-          >
-            Ver Detalles
-          </button>
-        </li>
-        <li
-          *ngIf="plantelesConCursosValidados.length === 0"
-          class="p-6 text-center text-gray-500"
-        >
-          No hay planteles con cursos validados.
-        </li>
-      </ul>
+    
+    <!-- Cursos del Plantel Seleccionado -->
+    <section *ngIf="cursosSolicitados.length > 0 && !mostrarDetalleModal" class="mb-12">
+      <h3 class="text-2xl font-semibold text-[#44509D] mb-6">
+        Cursos del Plantel Seleccionado
+      </h3>
+      <table class="min-w-full bg-white shadow-lg rounded-lg">
+        <thead>
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre del Curso</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <tr *ngFor="let curso of cursosSolicitados" class="hover:bg-gray-100 transition duration-300 cursor-pointer">
+            <td class="px-6 py-4 text-lg font-medium text-black">{{ curso.curso_nombre }}</td>
+            <td class="px-6 py-4 text-lg font-medium text-black">{{ curso.estatus ? 'Activo' : 'Inactivo' }}</td>
+            <td class="px-6 py-4">
+              <button (click)="verDetallesCurso(curso)"
+                class="bg-[#F08762] text-white py-2 px-6 rounded-md hover:bg-[#D8566C] transition duration-300">
+                Ver Detalles
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    
+    <!-- Detalles del Curso -->
+    <section *ngIf="mostrarDetalleModal" class="mb-12">
+      <h2 class="text-3xl font-bold mb-6 text-[#44509D]">
+        Detalles del Curso: {{ cursoSeleccionado?.curso_nombre }}
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white shadow-lg rounded-lg p-6">
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Plantel:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.plantel_nombre }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Curso:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.curso_nombre }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Tipo de Curso:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.tipo_curso_nombre }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Horario:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.horario }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Cupo Máximo:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.cupo_maximo }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Requisitos Extra:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.requisitos_extra }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Fecha de Inicio:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.fecha_inicio | date:'short' }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Fecha de Fin:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.fecha_fin | date:'short' }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Estatus:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.estatus ? 'Activo' : 'Inactivo' }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Temario URL:</p>
+          <p class="mb-4"><a [href]="cursoSeleccionado?.temario_url" target="_blank">{{ cursoSeleccionado?.temario_url }}</a></p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Cantidad de Instructores:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.cant_instructores }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Sector Atendido:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.sector_atendido }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Rango de Edad:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.rango_edad }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Cruzada Contra el Hambre:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.cruzada_contra_hambre ? 'Sí' : 'No' }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Tipo de Beca:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.tipo_beca }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Participantes:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.participantes }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Cuota Tipo:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.cuota_tipo }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Cuota Monto:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.cuota_monto }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Pagar al Final:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.pagar_final ? 'Sí' : 'No' }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Número de Convenio:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.convenio_numero }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Equipo Necesario:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.equipo_necesario ? 'Sí' : 'No' }}</p>
+        </div>
+        <div class="col-span-1">
+          <p class="font-medium text-gray-900">Tipos de Curso:</p>
+          <p class="mb-4">{{ cursoSeleccionado?.tipos_curso }}</p>
+        </div>
+        <div class="col-span-2">
+          <p class="font-medium text-gray-900">Dejar Sugerencias:</p>
+          <textarea [(ngModel)]="sugerencia" class="form-control w-full h-32 p-2 border border-gray-300 rounded-md"></textarea>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end space-x-4">
+        <button (click)="cerrarDetalleModal()" class="bg-[#44509D] text-white py-2 px-6 rounded-md hover:bg-[#F08762] transition duration-300">
+          Regresar
+        </button>
+        <button (click)="validarCurso()" class="bg-green-500 text-white py-2 px-6 rounded-md hover:bg-green-700 transition duration-300">
+          {{ cursoSeleccionado?.estatus ? 'Desvalidar' : 'Validar' }}
+        </button>
+        <button (click)="enviarSugerencia()" class="bg-yellow-500 text-white py-2 px-6 rounded-md hover:bg-yellow-700 transition duration-300">
+          Dejar Sugerencias
+        </button>
+      </div>
     </section>
   </main>
-</div>
-
-<!-- Modal de Detalles del Curso -->
-<div
-  *ngIf="mostrarDetalleModal"
-  class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50"
->
-  <div class="bg-white rounded-lg shadow-lg w-full max-w-3xl p-8 h-auto max-h-[90vh] overflow-y-auto">
-    <h2 class="text-3xl font-bold mb-6 text-blue-800">
-      Detalles del Curso: {{ cursoSeleccionado?.curso_nombre }}
-    </h2>
-    <div class="space-y-4 text-gray-800">
-      <p><strong>Plantel:</strong> {{ cursoSeleccionado?.plantel_nombre }}</p>
-      <p><strong>Curso:</strong> {{ cursoSeleccionado?.curso_nombre }}</p>
-      <p><strong>Horario:</strong> {{ cursoSeleccionado?.horario }}</p>
-      <p><strong>Cupo Máximo:</strong> {{ cursoSeleccionado?.cupo_maximo }}</p>
-      <p><strong>Requisitos Extra:</strong> {{ cursoSeleccionado?.requisitos_extra }}</p>
-      <p><strong>Fecha de Inicio:</strong> {{ cursoSeleccionado?.fecha_inicio | date:'short' }}</p>
-      <p><strong>Fecha de Fin:</strong> {{ cursoSeleccionado?.fecha_fin | date:'short' }}</p>
-      <p><strong>Estatus:</strong> {{ cursoSeleccionado?.estatus ? 'Activo' : 'Inactivo' }}</p>
-
-      <!-- Previsualización del Temario -->
-      <h3 class="text-xl font-semibold text-blue-800 mb-4">Temario del Curso</h3>
-      <iframe
-        *ngIf="cursoSeleccionado?.temario_url"
-        [src]="sanitizer.bypassSecurityTrustResourceUrl(cursoSeleccionado?.temario_url || '')"
-        class="w-full h-96 border border-gray-300 rounded-md"
-      ></iframe>
-      <p *ngIf="!cursoSeleccionado?.temario_url" class="text-red-500">No hay temario disponible.</p>
-
-      <!-- Botones -->
-      <div class="flex justify-between mt-8">
-        <button
-          *ngIf="cursoSeleccionado"
-          (click)="actualizarEstatusSolicitud(cursoSeleccionado.id, !cursoSeleccionado.estatus, 'Cambio de estatus')"
-          class="bg-orange-500 text-white py-2 px-6 rounded-md hover:bg-orange-600 transition duration-300"
-        >
-          {{ cursoSeleccionado.estatus ? 'Desvalidar Curso' : 'Validar Curso' }}
-        </button>
-        <button
-          (click)="cerrarDetalleModal()"
-          class="bg-gray-500 text-white py-2 px-6 rounded-md hover:bg-gray-600 transition duration-300"
-        >
-          Cerrar
-        </button>
-        <a
-          *ngIf="cursoSeleccionado?.temario_url"
-          [href]="cursoSeleccionado?.temario_url"
-          target="_blank"
-          class="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 transition duration-300"
-        >
-          Ver Temario
-        </a>
-      </div>
-    </div>
-  </div>
 </div>
