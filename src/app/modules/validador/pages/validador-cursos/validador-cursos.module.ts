@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { ValidadorCursosRoutingModule } from './validador-cursos-routing.module';
 import { ValidadorCursosComponent } from './validador-cursos.component';
@@ -11,7 +12,9 @@ import { ValidadorCursosComponent } from './validador-cursos.component';
   ],
   imports: [
     CommonModule,
-    ValidadorCursosRoutingModule
+    ValidadorCursosRoutingModule,
+    FormsModule
+    
   ]
 })
 export class ValidadorCursosModule { }

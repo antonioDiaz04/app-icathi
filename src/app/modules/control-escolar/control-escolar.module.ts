@@ -1,19 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { ControlEscolarRoutingModule } from './control-escolar-routing.module';
-import { InicioComponent } from './pages/inicio/inicio.component';
-import { ListPlantelComponent } from './pages/list-plantel/list-plantel.component';
-
+import { ControlEscolarComponent } from './control-escolar.component';
 
 @NgModule({
-  declarations: [
-    InicioComponent,
-    ListPlantelComponent
-  ],
   imports: [
     CommonModule,
-    ControlEscolarRoutingModule
-  ]
+    ControlEscolarComponent, // Importar el componente standalone
+  ],
 })
-export class ControlEscolarModule { }
+export class ControlEscolarModule {}
