@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { environment } from '../../../../../environments/environment.prod';
 import { ActivatedRoute } from '@angular/router';
 import { CursosService } from '../../../../shared/services/cursos.service';
@@ -70,10 +70,25 @@ export class AistenciasComponent implements OnInit {
     }
     return (asistencia / totalSesiones) * 100; // Calcula el porcentaje
   }
-  
+    // Detectar tamaño de pantalla
+    @HostListener('window:resize', [])
+    detectScreenSize(): void {
+      this.isMobile = window.innerWidth < 767; // Pantallas menores a 768px se consideran móviles
+    }
   // Método para registrar la asistencia de un alumno
 
+  isModalOpen = false;
+  isMobile = false;
+  openModal(alumno: any): void {
+    this.alumnoSeleccionado = alumno;
+    this.isModalOpen = true;
+  }
 
+  // Guardar cambios (ejemplo básico)
+  // guardarCambios(alumno: any): void {
+  //   console.log('Cambios guardados para:', alumno);
+  //   // Implementar lógica adicional aquí
+  // }
   // Método para obtener los alumnos con asistencia
   getAlumnosConAsistencias(): void {
     this.route.paramMap.subscribe((params) => {
@@ -139,7 +154,7 @@ export class AistenciasComponent implements OnInit {
   // Guardar los cambios en el backend
   guardarCambios(alumno: any): void {
     alumno.editable = false; // Desactiva la edición
- 
+
 
     console.log("guardar ---",alumno)
     this.alumnosCursosService.getCursoByAlumnoAndCurso(alumno.alumno_id, Number(this.curso_id))

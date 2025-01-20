@@ -8,8 +8,14 @@
 })
 export class HeaderComponent {
   sidebarVisible: boolean = false;
+  visible: boolean = false;
+
   show() {
     this.sidebarVisible = true;
+  }
+
+  closeDrawer() {
+    this.visible = false;
   }
 
 }

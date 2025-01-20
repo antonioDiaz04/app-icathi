@@ -72,155 +72,165 @@
 
 <!-- ::::::::::::::::::::::::::::::: +++++ TALBLA ++++++ :::::::::::::::::::::::::::::::::: -->
 
+<div class="overflow-x-auto">
+  <table
+    *ngIf="!loading"
+    class="table-auto border-collapse border border-gray-300 w-full rounded-lg shadow-md mt-4"
+  >
+    <thead class="bg-gray-600 text-gray-100">
+      <tr>
+        <th class="border border-gray-300 px-4 py-2 text-left rounded-tl-lg">#</th>
+        <th class="border border-gray-300 px-4 py-2 text-left">Nombre</th>
+        <th class="border border-gray-300 px-4 py-2 text-center hidden lg:table-cell">
+          Asistencias
+        </th>
+        <th class="border border-gray-300 px-4 py-2 text-center hidden lg:table-cell">
+          Porcentaje
+        </th>
+        <th class="border border-gray-300 px-4 py-2 text-center hidden lg:table-cell">
+          Calificación
+        </th>
+        <th class="border border-gray-300 px-4 py-2 text-center hidden lg:table-cell">
+          Observaciones
+        </th>
+        <th class="border border-gray-300 px-4 py-2 text-center rounded-tr-lg">
+          Acciones
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let alumno of alumnosConAsistencias; let i = index"
+        [ngClass]="{
+          'bg-gray-100': i % 2 === 0,
+          'bg-white': i % 2 !== 0
+        }"
+        class="text-sm lg:text-base"
+      >
+        <td class="border border-gray-300 px-4 py-2">{{ i + 1 }}</td>
+        <td class="border border-gray-300 px-4 py-2">
+          <div class="font-medium">{{ alumno.alumno_nombre }} {{ alumno.alumno_apellidos }}</div>
+          <div class="lg:hidden text-sm text-gray-500 mt-1">
+            <span>Asistencias:</span> {{ alumno.asistencia || '-' }}
+          </div>
+          <div class="lg:hidden text-sm text-gray-500">
+            <span>Porcentaje:</span> {{ calcularPorcentajeAsistencia(alumno.asistencia) | number: '1.2-2' }}%
+          </div>
+          <div class="lg:hidden text-sm text-gray-500">
+            <span>Calificación:</span> {{ alumno.calificacion_final || '-' }}
+          </div>
+          <div class="lg:hidden text-sm text-gray-500">
+            <span>Observaciones:</span> {{ alumno.observaciones || '-' }}
+          </div>
+        </td>
+        <td class="border border-gray-300 px-4 py-2 text-center hidden lg:table-cell">
+          <input
+            type="number"
+            class="ui input w-full text-center"
+            [(ngModel)]="alumno.asistencia"
+            placeholder="Asistencias"
+            [disabled]="!isModifying || alumno.alumno_id !== alumnoSeleccionado?.alumno_id"
+            min="0"
+          />
+        </td>
+        <td class="border border-gray-300 px-4 py-2 text-center hidden lg:table-cell">
+          {{ calcularPorcentajeAsistencia(alumno.asistencia) | number: '1.2-2' }}%
+        </td>
+        <td class="border border-gray-300 px-4 py-2 text-center hidden lg:table-cell">
+          {{ alumno.calificacion_final }}
+        </td>
+        <td class="border border-gray-300 px-4 py-2 text-center hidden lg:table-cell">
+          <textarea
+            class="ui textarea w-full"
+            [(ngModel)]="alumno.observaciones"
+            placeholder="Observaciones"
+            [disabled]="!isModifying || alumno.alumno_id !== alumnoSeleccionado?.alumno_id"
+          ></textarea>
+        </td>
+<!-- Tabla con botones -->
+<td class="border border-gray-300 px-4 py-2 text-center">
+  <!-- Botón para escritorio (modo web) -->
+  <button
+    [hidden]="isMobile || isModifying" 
+    class="px-2 py-1 bg-gray-200 text-gray-600 rounded-md hover:bg-gray-300 focus:outline-none"
+    (click)="modifyGrade(alumno)"
+  >
+    <i class="edit icon"></i> Capturar
+  </button>
 
-
-<table *ngIf="!loading" class="table-auto border-collapse border border-gray-300 w-full rounded-lg shadow-md mt-4">
-  <thead class="bg-gray-600 text-gray-100">
-    <tr>
-      <th class="border border-gray-300 px-4 py-2 text-left rounded-tl-lg">#</th>
-      <th class="border border-gray-300 px-4 py-2 text-left">Nombre del Alumno</th>
-      <th class="border border-gray-300 px-4 py-2 text-center">Número de Asistencias</th>
-      <th class="border border-gray-300 px-4 py-2 text-center">Porcentaje</th>
-      <th class="border border-gray-300 px-4 py-2 text-center">Calificación Final</th>
-      <th class="border border-gray-300 px-4 py-2 text-center">Observaciones</th>
-      <th class="border border-gray-300 px-4 py-2 text-center rounded-tr-lg">Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr
-      *ngFor="let alumno of alumnosConAsistencias; let i = index"
-      [ngClass]="{
-        'bg-gray-100': i % 2 === 0,
-        'bg-white': i % 2 !== 0
-      }"
-    >
-      <td class="border border-gray-300 px-4 py-2">{{ i + 1 }}</td>
-      <td class="border border-gray-300 px-4 py-2">{{ alumno.alumno_nombre }} {{ alumno.alumno_apellidos }}</td>
-      <td class="border border-gray-300 px-4 py-2 text-center">
-        <input
-          type="number"
-          class="ui input w-full text-center"
-          [(ngModel)]="alumno.asistencia"
-          placeholder="Número de asistencias"
-          [disabled]="!isModifying || alumno.alumno_id !== alumnoSeleccionado?.alumno_id"
-          min="0"
-        />
-      </td>
-      <td class="border border-gray-300 px-4 py-2 text-center">
-        <span>{{ calcularPorcentajeAsistencia(alumno.asistencia) | number: '1.2-2' }}%</span>
-
-      </td>
-      <td class="border border-gray-300 px-4 py-2 text-center">
-        {{ alumno.calificacion_final }}
-      </td>
-      <td class="border border-gray-300 px-4 py-2 text-center">
-        <textarea
-          class="ui textarea w-full"
-          [(ngModel)]="alumno.observaciones"
-          placeholder="Observaciones"
-          [disabled]="!isModifying || alumno.alumno_id !== alumnoSeleccionado?.alumno_id"
-        ></textarea>
-      </td>
-      
-      <td class="border border-gray-300 px-4 py-2 text-center">
-        <!-- Botón Condicional -->
-        <!-- <button
-        *ngIf="alumno.asistencia === null || alumno.asistencia === 0 || alumno.observaciones === null || alumno.asistencia < 1 " -->
-        <button
-        [hidden]="isModifying && alumno.alumno_id === alumnoSeleccionado?.alumno_id"
-        class="px-2 py-1 bg-gray-200 text-gray-600 rounded-md hover:bg-gray-300 focus:outline-none focus:ring focus:ring-gray-100"
-
-        (click)="modifyGrade(alumno)"
-        >
-        <i class="edit icon"></i> Capturar
-      </button>
-      
-    <button
-    [hidden]="!isModifying || alumno.alumno_id !== alumnoSeleccionado?.alumno_id"
-    class="px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-100"
+  <!-- Botón de guardar cambios, visible solo si se está modificando -->
+  <button
+    [hidden]="!isModifying || isMobile"  
+    class="px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none"
     (click)="guardarCambios(alumno)"
   >
     <i class="save icon"></i> Guardar
   </button>
-  
+
+  <!-- Botón para móvil (abre el modal) -->
+  <button
+    [hidden]="!isMobile"
+    class="px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none"
+    (click)="openModal(alumno)"
+  >
+    <i class="edit icon"></i> Detalles
+  </button>
+</td>
+
+    </tbody>
+  </table>
+</div>
+
+
+
+<!-- Fondo borroso del modal -->
+<div *ngIf="isModalOpen" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-lg z-10"></div>
+
+<!-- Modal para modo móvil con Tailwind -->
+<div *ngIf="isModalOpen" class="fixed inset-0 flex justify-center items-center z-20">
+  <div class="bg-white rounded-lg shadow-lg w-11/12 sm:w-96 p-6">
+    <h2 class="text-xl font-semibold text-gray-900 mb-4">Detalles del Alumno</h2>
     
-      </td>
-
-    </tr>
-  </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-<!-- --------------------------------------   MODALES  -------------------------------------- -->
-<!-- <div *ngIf="modalVisible" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-  <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
-    <h2 class="text-lg font-bold mb-4">Capturar Asistencia</h2>
-    <div>
-      <label class="block text-sm font-medium mb-2">Alumno:</label>
-      <p class="mb-4">{{ alumnoSeleccionado.alumno_nombre }} {{ alumnoSeleccionado.alumno_apellidos }}</p>
+    <div class="space-y-4">
+      <p><strong class="text-gray-800">Nombre:</strong> {{ alumnoSeleccionado.alumno_nombre }} {{ alumnoSeleccionado.alumno_apellidos }}</p>
+      
+      <div>
+        <label for="asistencia" class="block text-gray-800">Asistencias:</label>
+        <input
+          id="asistencia"
+          type="number"
+          class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          [(ngModel)]="alumnoSeleccionado.asistencia"
+          placeholder="Número de asistencias"
+          min="0"
+        />
+      </div>
+      
+      <div>
+        <label for="observaciones" class="block text-gray-800">Observaciones:</label>
+        <textarea
+          id="observaciones"
+          class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          [(ngModel)]="alumnoSeleccionado.observaciones"
+          placeholder="Añade observaciones"
+        ></textarea>
+      </div>
     </div>
-    <div>
-      <label class="block text-sm font-medium mb-2">Número de Asistencias:</label>
-      <input
-        type="number"
-        class="ui input w-full"
-        [(ngModel)]="alumnoSeleccionado.asistencia"
-        placeholder="Número de asistencias"
-        min="0"
-      />
-    </div>
-    <div>
-      <label class="block text-sm font-medium mb-2 mt-4">Observaciones:</label>
-      <textarea
-        class="ui textarea w-full"
-        [(ngModel)]="alumnoSeleccionado.observaciones"
-        placeholder="Observaciones"
-      ></textarea>
-    </div>
-    <div class="mt-6 flex justify-end">
-      <button class="ui green button mr-2" (click)="guardarCambios(alumnoSeleccionado)">Guardar</button>
-      <button class="ui red button" (click)="cerrarModal()">Cerrar</button>
+
+    <!-- Botones -->
+    <div class="mt-4 flex justify-end space-x-2">
+      <button
+        class="px-4 py-2 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300 transition"
+        (click)="isModalOpen = false"
+      >
+        Cancelar
+      </button>
+      <button
+        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+        (click)="guardarCambios(alumnoSeleccionado); isModalOpen = false"
+      >
+        Guardar Cambios
+      </button>
     </div>
   </div>
 </div>
-
-<div *ngIf="modalEditarVisible" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-  <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
-    <h2 class="text-lg font-bold mb-4">Capturar Asistencia</h2>
-    <div>
-      <label class="block text-sm font-medium mb-2">Alumno:</label>
-      <p class="mb-4">{{ alumnoSeleccionado.alumno_nombre }} {{ alumnoSeleccionado.alumno_apellidos }}</p>
-    </div>
-    <div>
-      <label class="block text-sm font-medium mb-2">Número de Asistencias:</label>
-      <input
-        type="number"
-        class="ui input w-full"
-        [(ngModel)]="alumnoSeleccionado.asistencia"
-        placeholder="Número de asistencias"
-        min="0"
-      />
-    </div>
-    <div>
-      <label class="block text-sm font-medium mb-2 mt-4">Observaciones:</label>
-      <textarea
-        class="ui textarea w-full"
-        [(ngModel)]="alumnoSeleccionado.observaciones"
-        placeholder="Observaciones"
-      ></textarea>
-    </div>
-    <div class="mt-6 flex justify-end">
-      <button class="ui green button mr-2" (click)="actualizarAsistencia(alumnoSeleccionado)">Guardar</button>
-      <button class="ui red button" (click)="cerrarModal()">Cerrar</button>
-    </div>
-  </div>
-</div> -->

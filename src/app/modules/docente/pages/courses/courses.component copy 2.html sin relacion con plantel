@@ -1,0 +1,117 @@
+<div class="max-w-7xl mx-auto p-6 space-y-12">
+  <div class="card flex justify-center">
+    <p-breadcrumb class="max-w-full" [model]="items">
+        <ng-template #item let-item>
+            <ng-container *ngIf="item.route; else elseBlock">
+                <a [routerLink]="item.route" class="p-breadcrumb-item-link">
+                    <span [ngClass]="[item.icon ? item.icon : '', 'text-color']"></span>
+                    <span class="text-primary font-semibold">{{ item.label }}</span>
+                </a>
+            </ng-container>
+            <ng-template #elseBlock>
+                <a [href]="item.url">
+                    <span class="text-color">{{ item.label }}</span>
+                </a>
+            </ng-template>
+        </ng-template>
+    </p-breadcrumb>
+</div>
+  <!-- Encabezado -->
+  <div class="text-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-800">Panel de Control Docente</h1>
+    <p class="text-sm text-gray-600">Bienvenido, {{ docenteData.nombre }}</p>
+  </div>
+
+  <!-- Sección de Cursos -->
+  <div>
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center">
+      <i class="book icon text-[#44509D] mr-2"></i> Cursos Asignados
+    </h2>
+    <div class="overflow-x-auto bg-white rounded-lg shadow">
+      <table class="min-w-full table-auto border border-gray-300">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="px-6 py-3 text-left text-sm text-gray-600">Curso</th>
+            <th class="px-6 py-3 text-left text-sm text-gray-600">Asistencia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let course of courses" class="border-b hover:bg-gray-50">
+            <td class="px-6 py-3 text-sm text-gray-700">{{ course.curso_nombre }}</td>
+            <td class="px-6 py-3">
+              <button
+                (click)="markAttendance(course.curso_id)"
+                class="px-4 py-2 bg-[#44509D] text-white rounded-full hover:bg-[#34458c] transition"
+              >
+                <i class="check icon mr-2"></i> Marcar Asistencia
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Enlaces Importantes -->
+  <div>
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center">
+      <i class="linkify icon text-[#F08762] mr-2"></i> Enlaces Importantes
+    </h2>
+    <ul class="space-y-4">
+      <li>
+        <a
+          routerLink="/docente/alumnos-cursos"
+          class="flex items-center text-sm text-[#44509D] hover:text-[#F08762] transition"
+        >
+          <i class="search icon text-lg mr-3"></i> Búsqueda de Alumnos por Curso
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="/docente/mis-cursos"
+          class="flex items-center text-sm text-[#44509D] hover:text-[#F08762] transition"
+        >
+          <i class="clipboard list icon text-lg mr-3"></i> Clases Asignadas
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="/docente/perfil"
+          class="flex items-center text-sm text-[#44509D] hover:text-[#F08762] transition"
+        >
+          <i class="user icon text-lg mr-3"></i> Perfil Docente
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Consultas -->
+  <div>
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center">
+      <i class="info circle icon text-[#2D9CDB] mr-2"></i> Consultas
+    </h2>
+    <ul class="space-y-4">
+      <li>
+        <a
+          routerLink="/docente/consultas"
+          class="flex items-center text-sm text-[#44509D] hover:text-[#F08762] transition"
+        >
+          <i class="question icon text-lg mr-3"></i> Consultas de Docente
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="bg-gray-100 p-6 rounded-xl">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center">
+      <i class="chart bar icon text-[#D8566C] mr-2"></i> Estadísticas
+    </h2>
+    <p class="text-sm text-gray-600">
+      Asistencia: <span class="font-semibold">{{ attendancePercentage }}%</span>
+    </p>
+    <p class="text-sm text-gray-600">
+      Promedio de Calificaciones: <span class="font-semibold">{{ averageGrade }}</span>
+    </p>
+  </div>
+</div>

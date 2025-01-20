@@ -15,6 +15,8 @@ export class CursosDocenteComponent implements OnInit {
   filtro: string = ''; // Texto de búsqueda para filtrar cursos
   selectedCurso: any = null; // Curso seleccionado para mostrar detalles
   showModal: boolean = false; // Estado del modal
+  mostrarBuscador: boolean = false;  // Nueva variable para controlar la visibilidad del buscador
+  mensajeError: string | null = null;  // Variable para mostrar el mensaje de error
 
   constructor(
     private docenteService: DocenteService,
@@ -52,23 +54,33 @@ export class CursosDocenteComponent implements OnInit {
       console.error('Error al obtener ID del token:', error);
     }
   }
-
   obtenerCursosAsignados(docenteId: number): void {
     this.cursosDocentesService.obtenerCursosAsignados(Number(docenteId)).subscribe({
-      next: (cursosResponse: any) => {  // Usamos "any" para no restringir el tipo
+      next: (cursosResponse: any) => {
         if (Array.isArray(cursosResponse)) {
-          this.cursosAsignados = cursosResponse;
-          console.log('Cursos asignados:', this.cursosAsignados);
+          if (cursosResponse.length === 0) {
+            this.cursosAsignados = [];
+            this.mensajeError = "No se encontraron cursos asignados para este docente";
+            this.mostrarBuscador = false;  // Ocultar el buscador si no hay cursos
+          } else {
+            this.cursosAsignados = cursosResponse;
+            this.mensajeError = "";  // Limpiar el mensaje de error
+            this.mostrarBuscador = true;  // Mostrar el buscador si hay cursos
+          }
         } else {
           console.error('La respuesta no es un arreglo de cursos:', cursosResponse);
+          this.mensajeError = "Error al obtener los cursos asignados.";
+          this.mostrarBuscador = false;  // Ocultar el buscador en caso de error
         }
       },
       error: (error) => {
         console.error('Error al obtener los cursos asignados:', error);
+        this.mensajeError = "Error al obtener los cursos asignados.";
+        this.mostrarBuscador = false;  // Ocultar el buscador en caso de error
       }
     });
-  
   }
+  
 
   // Método para abrir el modal y mostrar los detalles del curso seleccionado
   verDetalles(curso: any): void {

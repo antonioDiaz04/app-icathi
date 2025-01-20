@@ -387,47 +387,51 @@
 
 
 
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
-    <div class="mb-6">
-      <label for="documento_identificacion_file" class="block font-bold text-gray-700 mb-2">Documento de Identificación (Archivo):</label>
-
-      <div *ngIf="docenteData?.documento_identificacion; else noDocIdentificacion">
-        <div class="flex flex-col items-center p-6 bg-white border border-gray-300 rounded-lg shadow-lg transition-transform transform hover:scale-105">
-
-          <iframe
-            [src]="docenteData.documento_identificacion | safeUrl"
-            class="border border-gray-300 rounded-lg shadow-sm"
-            title="Vista Previa del Documento"
-            width="180"
-            height="240"
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div class="mb-6">
+        <label for="documento_identificacion_file" class="block font-bold text-gray-700 mb-2">
+          Documento de Identificación (Archivo):
+        </label>
+    
+        <div *ngIf="docenteData?.documento_identificacion; else noDocIdentificacion">
+          <div
+            class="flex flex-col items-center p-4 sm:p-6 bg-white border border-gray-300 rounded-lg shadow-lg transition-transform transform hover:scale-105"
           >
-            Este navegador no soporta iframes.
-          </iframe>
-
-          <div class="flex flex-col items-center mt-4">
-            <a
-              [href]="docenteData.documento_identificacion"
-              target="_blank"
-              class="text-indigo-600 hover:text-indigo-800 font-semibold text-lg mb-2 transition-colors duration-200"
-              aria-label="Ver documento de identificación"
+            <iframe
+              [src]="docenteData.documento_identificacion | safeUrl"
+              class="border border-gray-300 rounded-lg shadow-sm"
+              title="Vista Previa del Documento"
+              width="100%"
+              height="auto"
             >
-              <span class="flex items-center">
-                <i class="file alternate icon mr-2"></i>
-                Ver  Identificación
-              </span>
-            </a>
-            <p class="text-gray-600 text-sm italic text-center">Haz clic para abrir el documento completo.</p>
+              Este navegador no soporta iframes.
+            </iframe>
+    
+            <div class="flex flex-col items-center mt-4">
+              <a
+                [href]="docenteData.documento_identificacion"
+                target="_blank"
+                class="text-indigo-600 hover:text-indigo-800 font-semibold text-lg mb-2 transition-colors duration-200"
+                aria-label="Ver documento de identificación"
+              >
+                <span class="flex items-center">
+                  <i class="file alternate icon mr-2"></i>
+                  Ver Identificación
+                </span>
+              </a>
+              <p class="text-gray-600 text-sm italic text-center">
+                Haz clic para abrir el documento completo.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-
-
-
+    
         <ng-template #noDocIdentificacion>
           <p class="text-sm text-gray-500 italic">No hay documento de identificación disponible.</p>
         </ng-template>
-
-
+      <!-- </div>
+    </div> -->
+    
 
 
 

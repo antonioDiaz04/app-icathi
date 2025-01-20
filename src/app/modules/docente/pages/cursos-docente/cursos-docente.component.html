@@ -1,6 +1,6 @@
 <div class="bg-gray-100 min-h-screen p-6">
   <!-- Título y descripción -->
-  <div class="text-center mb-8">
+  <div *ngIf="mostrarBuscador" class="text-center mb-8">
     <h1 class="text-4xl font-bold text-indigo-700">
       <i class="book icon"></i> Cursos Asignados
     </h1>
@@ -10,7 +10,7 @@
   </div>
 
   <!-- Barra de búsqueda -->
-  <div class="mb-6 flex justify-center">
+  <div   *ngIf="mostrarBuscador" class="mb-6 flex justify-center">
     <input
       type="text"
       placeholder="Buscar cursos por nombre, clave o área..."
@@ -19,12 +19,79 @@
     />
   </div>
 
+
+  <div 
+  *ngIf="mensajeError" 
+  class="ui negative message relative transition-all duration-500 ease-in-out mb-6 opacity-100 shadow-lg border border-red-500 rounded-lg overflow-hidden"
+  [class.hidden]="!mensajeError"
+  [class.translate-y-0]="mensajeError"
+  [class.opacity-0]="!mensajeError"
+>
+  <!-- Contenedor principal -->
+  <div class="flex items-start md:items-center p-4">
+    <!-- Icono animado -->
+    <div class="flex items-center justify-center bg-red-500 text-white rounded-full w-14 h-14 mr-4 animate-bounce">
+      <svg 
+        class="w-8 h-8" 
+        fill="currentColor" 
+        xmlns="http://www.w3.org/2000/svg" 
+        viewBox="0 0 20 20" 
+        aria-hidden="true"
+      >
+        <path 
+          fill-rule="evenodd" 
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zm0 2a10 10 0 110-20 10 10 0 010 20z" 
+          clip-rule="evenodd"
+        ></path>
+      </svg>
+    </div>
+
+    <!-- Contenido del mensaje -->
+    <div class="content">
+      <div class="header text-red-700 font-semibold text-lg md:text-xl">
+        ¡Tu perfil está en revisión!
+      </div>
+      <p class="text-gray-700 mt-2 text-sm md:text-base">
+        No te preocupes, solo necesitamos un poco más de información para completar tu registro. Llena los datos necesarios y asegúrate de que todo esté correcto. 
+        <br />
+        <span class="font-bold text-red-600">Es importante</span> para que podamos verificar y activar tu cuenta lo antes posible.
+      </p>
+    </div>
+
+    <!-- Botón de cierre -->
+    <button 
+      class="absolute top-2 right-2 text-red-700 hover:text-red-900 focus:outline-none transform hover:scale-110 transition-transform duration-300" 
+      (click)="mensajeError = null" 
+      aria-label="Cerrar mensaje"
+    >
+      <svg 
+        xmlns="http://www.w3.org/2000/svg" 
+        fill="none" 
+        viewBox="0 0 24 24" 
+        stroke="currentColor" 
+        class="w-6 h-6"
+      >
+        <path 
+          stroke-linecap="round" 
+          stroke-linejoin="round" 
+          stroke-width="2" 
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+  </div>
+</div>
+
+  
+  
+
   <!-- Lista de cursos filtrados -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4" *ngIf="!mensajeError">
     <div
       *ngFor="let curso of cursosFiltrados"
       class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
     >
+
       <!-- Cabecera del curso -->
       <div class="p-4 bg-indigo-700 text-white">
         <h2 class="text-xl font-semibold">{{ curso.curso_nombre }}</h2>
