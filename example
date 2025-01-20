@@ -1,0 +1,72 @@
+{
+  "id": 1,
+  "nombre": "Curso de JavaScript Avanzado",
+  "clave": "JSAV2025",
+  "duracion_horas": 40,
+  "descripcion": "Curso intensivo sobre técnicas avanzadas en JavaScript.",
+  "nivel": "Avanzado",
+  "costo": 2000,
+  "requisitos": "Conocimiento básico de JavaScript",
+  "area_id": 3,
+  "especialidad_id": 5,
+  "tipo_curso_id": 2,
+  "vigencia_inicio": "2025-03-01",
+  "fecha_publicacion": "2025-01-01",
+  "ultima_actualizacion": "2025-01-10",
+  "elaborado_por": 1,
+  "Autorizado_por": 2,
+  "Revisado_por": 3,
+  "objetivos": {
+    "objetivo": "Dominar conceptos avanzados de JavaScript.",
+    "perfil_ingreso": "Conocimientos básicos de programación.",
+    "perfil_egreso": "Capaz de desarrollar aplicaciones complejas en JavaScript.",
+    "perfil_del_docente": "Experto en JavaScript y desarrollo web.",
+    "metodologia": "Clases teóricas y ejercicios prácticos.",
+    "bibliografia": "Eloquent JavaScript, 3rd Edition",
+    "criteriosAcreditacion": "Superar las evaluaciones prácticas y el examen final.",
+    "reconocimiento": "Diploma de participación."
+  },
+  "contenidoProgramatico": {
+    "temas": [
+      {
+        "nombre": "Introducción a las funciones avanzadas",
+        "tiempo": 5,
+        "competencias": "Comprender el uso de funciones de orden superior.",
+        "evaluacion": "Examen teórico y práctico.",
+        "actividades": "Resolución de ejercicios prácticos."
+      },
+      {
+        "nombre": "Programación asincrónica",
+        "tiempo": 10,
+        "competencias": "Dominar las promesas y async/await.",
+        "evaluacion": "Ejercicios prácticos y quiz.",
+        "actividades": "Desarrollo de proyectos pequeños."
+      }
+    ]
+  },
+  "materiales": [
+    {
+      "descripcion": "Laptop",
+      "unidad_de_medida": "Unidad",
+      "cantidad": 1,
+      "cantidad10": 1
+    },
+    {
+      "descripcion": "Proyector",
+      "unidad_de_medida": "Unidad",
+      "cantidad": 1
+    }
+  ],
+  "equipamiento": [
+    {
+      "descripcion": "Pizarra",
+      "unidad_de_medida": "Unidad",
+      "cantidad": 1
+    },
+    {
+      "descripcion": "Micrófono inalámbrico",
+      "unidad_de_medida": "Unidad",
+      "cantidad": 1
+    }
+  ]
+}

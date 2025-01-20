@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../../../environments/environment.prod';
 import { AuthService } from '../../../../../../shared/services/auth.service';
@@ -8,6 +8,9 @@ import { CursosdocentesService } from '../../../../../../shared/services/cursosd
 import { AspiranteService } from '../../../../../../shared/services/aspirante.service';
 import { PlantelService } from '../../../../../../shared/services/plantel.service';
 // import { response } from 'express';
+import localeEs from '@angular/common/locales/es';
+import { registerLocaleData } from '@angular/common';
+registerLocaleData(localeEs, 'es');
 
 export interface Modulo {
   plantel: string;
@@ -43,7 +46,8 @@ interface Docente {
 @Component({
     selector: 'app-listado-cursos-aprovados',
     templateUrl: './listado-cursos-aprovados.component.html',
-    standalone: false
+    standalone: false,
+    providers: [{ provide: LOCALE_ID, useValue: 'es' }]
 })
 export class ListadoCursosAprovadosComponent implements OnInit {
   dateFormat = 'yyyy-MM-dd'; // Formato de fecha
@@ -87,36 +91,8 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     private cursoDocenteS_: CursosdocentesService,
     private fb: FormBuilder
   ) {
-    // this.cursoForm = this.fb.group({
-    //   plantel_curso_id: [''],
-    //   plantel_id: [''],
-    //   plantel_nombre: [''],
-    //   curso_id: [''],
-    //   curso_nombre: [''],
-    //   fecha_inicio: [''],
-    //   fecha_fin: [''],
-    //   area_id: [''],
-    //   area_nombre: [''],
-    //   especialidad_id: [''],
-    //   especialidad_nombre: [''],
-    //   alumnos: this.fb.array([]),
-    // });
-
-  // this.cursoForm = this.fb.group({
-    // area_id: ['', Validators.required],
-      // especialidad_id: ['', Validators.required],
-      // tipo_curso_id: ['', Validators.required],
-      // nombre: ['', [Validators.required, Validators.maxLength(100)]],
-      // clave: ['', Validators.required],
-      // duracion_horas: ['', [Validators.required, Validators.min(1)]],
-      // descripcion: ['', [Validators.required, Validators.maxLength(500)]],
-      // nivel: ['', Validators.required],
-    // });
   }
 
-      // get alumnos(): FormArray {
-      //   return this.cursoForm.get('alumnos') as FormArray;
-      // }
 
   ngOnInit(): void {
     this.cargarCursosByIdPlantel();

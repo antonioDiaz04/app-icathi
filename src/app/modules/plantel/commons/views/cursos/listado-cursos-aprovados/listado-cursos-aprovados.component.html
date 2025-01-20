@@ -1,292 +1,188 @@
 <!-- Tabla de cursos solicitados -->
 <div *ngIf="!mostrarFormulario" class="container mx-auto p-4">
-  <h1 class="font-semibold text-md mb-2">Cursos solicitados</h1>
-  <div>
+  <p class="font-bold text-xl text-slate-500 mb-2">Cursos solicitados</p>
 
+  <div class="mb-4">
     <h2 class="font-semibold text-md mb-2">Filtrar Estatus</h2>
     <div class="flex space-x-2">
       <button
-        class="text-green-600 border border-green-600 px-2 py-1 text-sm rounded hover:bg-green-100"
+        class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
         (click)="filtrarCursos('validados')"
       >
         <i class="fas fa-check-circle mr-1"></i> Validados
       </button>
       <button
-        class="text-red-600 border border-red-600 px-2 py-1 text-sm rounded hover:bg-red-100"
+        class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
         (click)="filtrarCursos('no-validados')"
       >
         <i class="fas fa-times-circle mr-1"></i> No validados
       </button>
       <button
-        class="text-gray-600 border border-gray-600 px-2 py-1 text-sm rounded hover:bg-gray-100"
+        class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
         (click)="filtrarCursos('todos')"
       >
         <i class="fas fa-list mr-1"></i> Todos
       </button>
     </div>
   </div>
+  
+  <div
+    class="bg-white rounded-lg border border-gray-300 p-4 w-full max-w-screen-xl"
+  >
+    <table class="min-w-full table-auto">
+      <thead>
+        <tr>
+          <th class="px-4 py-2 text-left text-[#44509D] font-semibold">ID</th>
+          <th class="px-4 py-2 text-left text-[#44509D] font-semibold">AREA</th>
+          <th class="px-4 py-2 text-left text-[#44509D] font-semibold">ESPECIALIDAD</th>
+          <th class="px-4 py-2 text-left text-[#44509D] font-semibold">NOMBRE DEL CURSO</th>
+          <th class="px-4 py-2 text-left text-[#44509D] font-semibold">FECHA SOLICITADO</th>
+          <th class="px-4 py-2 text-left text-[#44509D] font-semibold">Estatus</th>
+          <th class="px-4 py-2 text-left text-[#44509D] font-semibold">Seleccionar Docente</th>
+          <th class="px-4 py-2 text-left text-[#44509D] font-semibold">ACCIONES</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let modulo of cursosFiltrados">
+          <td class="px-2 py-1 text-sm">{{ modulo.id }}</td>
+          <td class="px-2 py-1 text-sm">{{ modulo.area_nombre }}</td>
+          <td class="px-2 py-1 text-sm">{{ modulo.especialidad_nombre }}</td>
+          <td class="px-2 py-1 text-sm">{{ modulo.curso_nombre }}</td>
+          <td class="px-2 py-1 text-sm">{{ modulo.created_at | date:'EEEE, d \'de\' MMMM \'de\' y' }}</td>
 
-  <table class="mt-4 min-w-full table-auto bg-white rounded-lg shadow-md overflow-hidden">
-    <thead class="bg-gray-100">
-      <tr>
-        <th class="px-2 py-1 text-left text-sm">ID</th>
-        <th class="px-2 py-1 text-left text-sm">AREA</th>
-        <th class="px-2 py-1 text-left text-sm">ESPECIALIDAD</th>
-        <th class="px-2 py-1 text-left text-sm">NOMBRE DEL CURSO</th>
-        <th class="px-2 py-1 text-left text-sm">Estatus</th>
-        <th class="px-2 py-1 text-left text-sm">Seleccionar Docente</th>
-        <th class="px-2 py-1 text-left text-sm">ACCIONES</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let modulo of cursosFiltrados">
-        <td class="px-2 py-1 text-sm">{{ modulo.id }}</td>
-        <td class="px-2 py-1 text-sm">{{ modulo.area_nombre }}</td>
-        <td class="px-2 py-1 text-sm">{{ modulo.especialidad_nombre }}</td>
-        <td class="px-2 py-1 text-sm">{{ modulo.curso_nombre }}</td>
-        <td
+          <td
           class="px-2 py-1 text-sm"
           [ngClass]="{
-            'text-green-600 hover:bg-green-100': modulo.curso_validado,
-            'text-red-600 hover:bg-red-100': !modulo.curso_validado
+            'hover:bg-green-100': modulo.curso_validado,
+            'hover:bg-red-100': !modulo.curso_validado
           }"
         >
           <i
             *ngIf="modulo.curso_validado"
-            class="fas fa-check-circle mr-1"
+            class="fas fa-check-circle text-green-600 mr-1"
           ></i>
-          {{ modulo.curso_validado ? "Curso Validado" : "Curso no Validado" }}
+          <i
+            *ngIf="!modulo.curso_validado"
+            class="fas fa-times-circle text-red-600 mr-1"
+          ></i>
+          <span class="text-black">
+            {{ modulo.curso_validado ? "Curso Validado" : "Curso no Validado" }}
+          </span>
         </td>
         <td class="px-2 py-1 text-sm">
           <div *ngIf="modulo.curso_validado">
-            <ng-container *ngIf="modulo.docente_asignado !== 'Asignación pendiente'; else noDocente">
-              <span class="text-green-600 font-medium">
-                <i class="fas fa-user-check mr-1"></i>
+            <ng-container
+              *ngIf="
+                modulo.docente_asignado !== 'Asignación pendiente';
+                else noDocente
+              "
+            >
+              <span class="font-medium text-black">
+                <i class="fas fa-user-check text-green-600 mr-1"></i>
                 {{ modulo.docente_asignado }}
               </span>
             </ng-container>
-
+        
             <ng-template #noDocente>
               <button
-                class="text-blue-600 border border-blue-600 px-2 py-1 text-sm rounded hover:bg-blue-100"
+                class="px-4 py-2 bg-white border border-blue-600 rounded-[20px] shadow-md text-blue-600 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
                 (click)="openModal(modulo.id)"
               >
-                <i class="fas fa-user-plus mr-1"></i> Asignar Docente y alumnos
+                <i class="fas fa-user-plus text-blue-600 mr-1"></i> Asignar Docente y
+                alumnos
               </button>
             </ng-template>
           </div>
-          <span *ngIf="!modulo.curso_validado" class="text-red-600">
-            <i class="fas fa-times-circle mr-1"></i> No Validado
+          <span *ngIf="!modulo.curso_validado" class="text-black">
+            <i class="fas fa-times-circle text-red-600 mr-1"></i> No Validado
           </span>
         </td>
+        
+        <td class="px-2 py-1 text-sm relative">
+          <div class="group relative">
+            <button
+              type="button"
+              (click)="eliminarSolicitudCurso(modulo.id)"
+              class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
+            >
+              <i class="fas fa-trash-alt mr-1"></i> Cancelar Solicitud
+            </button>
+          </div>
+        
+          <button
+          class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
+          (click)="openModal(modulo.id)"
 
-        <td class="px-2 py-1 text-sm">
-          <button
-            type="button"
-            (click)="eliminarSolicitudCurso(modulo.id)"
-            class="text-orange-600 border border-orange-600 px-2 py-1 rounded-lg hover:bg-orange-100"
           >
-            <i class="fas fa-trash-alt mr-1"></i> Cancelar Solicitud
-          </button>
-        <!-- </td> -->
-        <!-- <td class="px-2 py-1 text-sm"> -->
-          <button
-            class="text-blue-600 border border-blue-600 px-2 py-1 text-sm rounded hover:bg-blue-100"
-            (click)="verDetalles(modulo.id)"
-          >
+          <!-- (click)="verDetalles(modulo.id)" -->
             <i class="fas fa-info-circle mr-1"></i> Ver Detalles
           </button>
         </td>
-      </tr>
-    </tbody>
-  </table>
+        
+        
+          
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
-
 
 <div *ngIf="isLoading" class="text-center py-4">
   <p>Cargando cursos...</p>
 </div>
 <!-- <pre>{{cursoDetails|json}}</pre> -->
 <!-- <div class="container mx-auto p-6"> -->
-<div *ngIf="mostrarFormulario" class="container mx-auto p-6">
-  <!-- Detalles del Curso -->
-  <div class="mb-4 p-4 border border-gray-300 rounded-lg bg-gray-50 shadow-md">
-    <h3 class="text-lg font-semibold text-gray-800 mb-4">
-      Detalles del Curso : {{ curso.nombre }}
-    </h3>
-    <div class="grid grid-cols-2 gap-4">
-      <div>
-        <p><strong>Área:</strong> {{ curso.area_nombre }}</p>
-      </div>
-
-      <div>
-        <p><strong>Especialidad:</strong> {{ curso.especialidad_nombre }}</p>
-      </div>
-      <div>
-        <p>
-          <strong>Fecha de Inicio:</strong>
-          {{ curso.fecha_inicio | date : "dd/MM/yyyy" }}
-        </p>
-      </div>
-      <div>
-        <p>
-          <strong>Fecha de Finalización:</strong>
-          {{ curso.fecha_fin | date : "dd/MM/yyyy" }}
-        </p>
+  <div *ngIf="mostrarFormulario" class="container mx-auto p-6">
+    <!-- Detalles del Curso -->
+    <div class="mb-4 p-4 border border-purple-600 rounded-lg bg-gray-50 shadow-md">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">
+        Detalles del Curso: {{ curso?.nombre }}
+      </h3>
+      <div class="grid grid-cols-2 gap-4">
+        <div><p><strong>Área:</strong> {{ curso?.area_nombre }}</p></div>
+        <div><p><strong>Especialidad:</strong> {{ curso?.especialidad_nombre }}</p></div>
+        <div><p><strong>Fecha de Inicio:</strong> {{ curso?.fecha_inicio | date : "dd/MM/yyyy" }}</p></div>
+        <div><p><strong>Fecha de Finalización:</strong> {{ curso?.fecha_fin | date : "dd/MM/yyyy" }}</p></div>
       </div>
     </div>
-  </div>
-
-  <h2 class="text-lg font-semibold text-gray-800 mb-4">Asignar Docente</h2>
-  <div class="mb-4">
-    <label for="docente" class="block text-sm font-medium text-gray-700 mb-1">
-      Docente
-    </label>
-    <input type="text" [(ngModel)]="textoBusqueda" placeholder="Buscar por nombre o apellido" class="p-2 border rounded-md w-1/4" />
-
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th
-              scope="col"
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
-              Nombre
-            </th>
-            <th
-              scope="col"
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
-              Apellidos
-            </th>
-            <th
-              scope="col"
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
-              Especialidad
-            </th>
-            <th
-              scope="col"
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
-              Certificado Profesional
-            </th>
-            <th
-              scope="col"
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
-              Cédula Profesional
-            </th>
-            <th
-              scope="col"
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
-              Seleccionar
-            </th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <tr *ngFor="let docente of docentesFiltrados()">
-            <td class="px-6 py-4 whitespace-nowrap">
-              <div class="flex items-center">
-                <div class="ml-4">
-                  <div class="text-sm font-medium text-gray-900">
-                    {{ docente.nombre }}
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <div class="text-sm text-gray-900">{{ docente.apellidos }}</div>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <div class="text-sm text-gray-900">
-                {{ docente.especialidades[0] }}
-              </div>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <span
-                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
-                *ngIf="docente.certificado_profesional"
-              >
-                Sí
-              </span>
-              <span
-                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"
-                *ngIf="!docente.certificado_profesional"
-              >
-                No
-              </span>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <div class="text-sm text-gray-900">
-                {{ docente.cedula_profesional }}
-              </div>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <div class="flex items-center justify-end">
-                <input
-                  type="radio"
-                  name="docente"
-                  [value]="docente.id"
-                  #docenteInput
-                  class="h-4 w-4 text-blue-600 focus:ring-blue-500"
-                />
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  
+    <!-- Información del Plantel -->
+    <div class="mb-4 p-4 border border-blue-600 rounded-lg bg-gray-50 shadow-md">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Información del Plantel</h3>
+      <div class="grid grid-cols-2 gap-4">
+        <div><p><strong>Calle:</strong> {{ curso?.calle }}</p></div>
+        <div><p><strong>Localidad:</strong> {{ curso?.localidad }}</p></div>
+        <div><p><strong>Municipio:</strong> {{ curso?.municipio }}</p></div>
+        <div><p><strong>Número Interior:</strong> {{ curso?.num_interior }}</p></div>
+        <div><p><strong>Número Exterior:</strong> {{ curso?.num_exterior }}</p></div>
+      </div>
+    </div>
+  
+    <!-- Información del Horario -->
+    <div class="mb-4 p-4 border border-green-600 rounded-lg bg-gray-50 shadow-md">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Horario del Curso</h3>
+      <div class="grid grid-cols-2 gap-4">
+        <div><p><strong>Lunes:</strong> {{ curso?.lunes_inicio }} - {{ curso?.lunes_fin }}</p></div>
+        <div><p><strong>Martes:</strong> {{ curso?.martes_inicio }} - {{ curso?.martes_fin }}</p></div>
+        <div><p><strong>Miércoles:</strong> {{ curso?.miercoles_inicio }} - {{ curso?.miercoles_fin }}</p></div>
+        <div><p><strong>Jueves:</strong> {{ curso?.jueves_inicio }} - {{ curso?.jueves_fin }}</p></div>
+        <div><p><strong>Viernes:</strong> {{ curso?.viernes_inicio }} - {{ curso?.viernes_fin }}</p></div>
+        <div><p><strong>Sábado:</strong> {{ curso?.sabado_inicio }} - {{ curso?.sabado_fin }}</p></div>
+        <div><p><strong>Domingo:</strong> {{ curso?.domingo_inicio }} - {{ curso?.domingo_fin }}</p></div>
+      </div>
+    </div>
+  
+    <!-- Información del Instructor -->
+    <div class="mb-4 p-4 border border-yellow-600 rounded-lg bg-gray-50 shadow-md">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Información del Instructor</h3>
+      <p><strong>Nombre del Instructor:</strong> {{ curso?.nombre }}</p>
     </div>
   </div>
-
-  <!-- Información de Alumnos -->
-  <div class="mb-4">
-    <h3 class="text-lg font-semibold text-gray-800 mb-4">
-      Alumnos Inscritos en área:Tecnologías de la Información
-    </h3>
-    <!-- <h3 class="text-lg font-semibold text-gray-800 mb-4">Alumnos Inscritos en {{ alumnos.nombrecurso}}</h3> -->
-
-    <table class="min-w-full bg-white border border-gray-300 shadow-md">
-      <thead>
-        <tr class="bg-gray-200">
-          <th class="py-2 px-4 border-b text-left">Nombre</th>
-          <th class="py-2 px-4 border-b text-left">Apellidos</th>
-          <th class="py-2 px-4 border-b text-left">Email</th>
-          <th class="py-2 px-4 border-b text-left">Curso</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let alumno of alumnos">
-          <td class="py-2 px-4 border-b">{{ alumno.nombre }}</td>
-          <td class="py-2 px-4 border-b">{{ alumno.apellidos }}</td>
-          <td class="py-2 px-4 border-b">{{ alumno.email }}</td>
-          <td class="py-2 px-4 border-b">{{ alumno.nombrecurso }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Botones -->
-  <div class="flex justify-end space-x-4">
-    <button
-      class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition"
-      (click)="closeModal()"
-    >
-      Cancelar
-    </button>
-    <button
-      type="button"
-      class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
-      (click)="asignarDocente()"
-    >
-      Guardar
-    </button>
-  </div>
-</div>
-
-<div *ngIf="mostrarDetalleModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+  
+<div
+  *ngIf="mostrarDetalleModal"
+  class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50"
+>
   <div class="bg-white rounded-lg shadow-lg w-3/4 p-6">
     <div class="flex justify-between items-center">
       <h3 class="text-lg font-semibold">Detalles del Curso</h3>
@@ -298,34 +194,53 @@
     <div class="grid grid-cols-2 gap-4">
       <div>
         <label class="block font-semibold">Docente asignado:</label>
-        <p class="border rounded px-2 py-1">{{ cursoDetails[0].docente_actual.docente_nombre }}{{ cursoDetails[0].docente_actual.docente_apellidos }}</p>
+        <p class="border rounded px-2 py-1">
+          {{ cursoDetails[0].docente_actual.docente_nombre
+          }}{{ cursoDetails[0].docente_actual.docente_apellidos }}
+        </p>
       </div>
       <div>
         <label class="block font-semibold">Nombre del Curso:</label>
-        <p class="border rounded px-2 py-1">{{ cursoDetails[0].curso_nombre }}</p>
+        <p class="border rounded px-2 py-1">
+          {{ cursoDetails[0].curso_nombre }}
+        </p>
       </div>
       <div>
         <label class="block font-semibold">Fecha de Inicio:</label>
-        <p class="border rounded px-2 py-1">{{ cursoDetails[0].fecha_inicio | date: 'dd/MM/yyyy' }}</p>
+        <p class="border rounded px-2 py-1">
+          {{ cursoDetails[0].fecha_inicio | date : "dd/MM/yyyy" }}
+        </p>
       </div>
       <div>
         <label class="block font-semibold">Fecha de Fin:</label>
-        <p class="border rounded px-2 py-1">{{ cursoDetails[0].fecha_fin | date: 'dd/MM/yyyy' }}</p>
+        <p class="border rounded px-2 py-1">
+          {{ cursoDetails[0].fecha_fin | date : "dd/MM/yyyy" }}
+        </p>
       </div>
       <div>
         <label class="block font-semibold">Área:</label>
-        <p class="border rounded px-2 py-1">{{ cursoDetails[0].area_nombre }}</p>
+        <p class="border rounded px-2 py-1">
+          {{ cursoDetails[0].area_nombre }}
+        </p>
       </div>
       <div>
         <label class="block font-semibold">Especialidad:</label>
-        <p class="border rounded px-2 py-1">{{ cursoDetails[0].especialidad_nombre }}</p>
+        <p class="border rounded px-2 py-1">
+          {{ cursoDetails[0].especialidad_nombre }}
+        </p>
       </div>
     </div>
 
     <h4 class="text-lg font-semibold mt-4">Alumnos Inscritos</h4>
     <div *ngIf="cursoDetails[0]?.alumnos?.length > 0; else noAlumnos">
-      <div *ngFor="let alumno of cursoDetails[0].alumnos" class="border p-2 rounded mb-2">
-        <p><strong>Nombre:</strong> {{ alumno.alumno_nombre }} {{ alumno.alumno_apellidos }}</p>
+      <div
+        *ngFor="let alumno of cursoDetails[0].alumnos"
+        class="border p-2 rounded mb-2"
+      >
+        <p>
+          <strong>Nombre:</strong> {{ alumno.alumno_nombre }}
+          {{ alumno.alumno_apellidos }}
+        </p>
         <p><strong>Email:</strong> {{ alumno.alumno_email }}</p>
         <p><strong>Teléfono:</strong> {{ alumno.alumno_telefono }}</p>
       </div>
@@ -335,7 +250,13 @@
     </ng-template>
 
     <div class="mt-4 flex justify-end">
-      <button type="button" class="text-gray-600 border px-4 py-2 rounded" (click)="cerrarModal()">Cerrar</button>
+      <button
+        type="button"
+        class="text-gray-600 border px-4 py-2 rounded"
+        (click)="cerrarModal()"
+      >
+        Cerrar
+      </button>
     </div>
   </div>
 </div>
