@@ -5,6 +5,7 @@ import { InicioComponent } from './pages/inicio/inicio.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
 import { ClasesComponent } from './pages/clases/clases.component';
 import { CalificacionesComponent } from './pages/calificaciones/calificaciones.component';
+import { OfertaEducativaComponent } from './pages/oferta-educativa/oferta-educativa.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,10 @@ const routes: Routes = [
       {
         path: 'calificaciones',
         component: CalificacionesComponent,
+      },
+      {
+        path: 'oferta',
+        component: OfertaEducativaComponent,
       },
 
     ],
