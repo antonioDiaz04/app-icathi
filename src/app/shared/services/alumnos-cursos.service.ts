@@ -9,9 +9,9 @@ import { environment } from '../../../environments/environment.prod';
 export class AlumnosCursosService {
   // private baseUrl = 'http://localhost:3000/alumnos-cursos'; // URL base del API
   // private baseUrl = 'http://localhost:3000/alumnos-cursos'; // URL base del API
-  private baseUrl = `${environment.api}/alumnos-cursos`;
+    private baseUrl = `${environment.api}/alumnos-cursos`;
 
-  constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {}
 
   // Método para obtener información de un curso específico por su ID
   getCursoById_Alumno(alumnoId: number): Observable<any> {

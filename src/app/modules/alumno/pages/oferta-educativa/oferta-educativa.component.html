@@ -1,1 +1,95 @@
-<p>oferta-educativa works!</p>
+<div class="p-6 bg-gray-100 min-h-screen">
+    <h1 class="text-2xl lg:text-4xl font-bold text-center text-[#44509D] mb-6">
+      Oferta Educativa - Cursos Disponibles
+    </h1>
+  
+    <!-- Contenedor de Cursos -->
+    <div *ngIf="ofertaEducativa.length; else noData" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div 
+        *ngFor="let curso of ofertaEducativa" 
+        class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:scale-105 flex flex-col"
+      >
+        <!-- Título y Descripción -->
+        <div class="p-4 flex-1">
+          <h2 class="text-lg lg:text-xl font-semibold text-[#44509D] mb-3">
+            {{ curso.curso_nombre }}
+          </h2>
+          <p class="text-gray-700 mb-3">{{ curso.curso_descripcion }}</p>
+          <ul class="text-sm text-gray-600 space-y-1 mb-4">
+            <li><strong>Duración:</strong> {{ curso.duracion_horas }} horas</li>
+            <li><strong>Modalidad:</strong> {{ curso.modalidad }}</li>
+            <li><strong>Instructores:</strong> {{ curso.cant_instructores }}</li>
+            <li><strong>Fecha de inicio:</strong> {{ curso.fecha_inicio | date }}</li>
+            <li><strong>Fecha de fin:</strong> {{ curso.fecha_fin | date }}</li>
+          </ul>
+        </div>
+  
+        <!-- Opciones de Acción -->
+        <div class="bg-gray-100 p-4 flex justify-between items-center">
+          <button 
+            (click)="inscribirse(curso)"
+            class="bg-[#F08762] text-white px-4 py-2 rounded-lg shadow hover:bg-[#D8566C] transition-colors duration-300"
+          >
+            Inscribirse
+          </button>
+          <a 
+            [href]="curso.temario_url" 
+            target="_blank" 
+            class="text-[#44509D] underline text-sm hover:text-[#D8566C]"
+          >
+            Ver Temario
+          </a>
+          <button 
+            (click)="verDetalles(curso)" 
+            class="text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <i class="icon info circle"></i> Detalles
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Si no hay datos -->
+    <ng-template #noData>
+      <div class="text-center text-gray-500">
+        <p>No hay oferta educativa disponible actualmente.</p>
+      </div>
+    </ng-template>
+  
+    <!-- Modal de Detalles -->
+    <div *ngIf="modalCurso" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6">
+        <button 
+          (click)="cerrarModal()"
+          class="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+        >
+          ✖️
+        </button>
+        <h2 class="text-xl font-bold text-[#44509D] mb-4">
+          {{ modalCurso.curso_nombre }}
+        </h2>
+        <p class="text-gray-700 mb-4">{{ modalCurso.curso_descripcion }}</p>
+        <ul class="text-sm text-gray-600 space-y-1">
+          <li><strong>Duración:</strong> {{ modalCurso.duracion_horas }} horas</li>
+          <li><strong>Modalidad:</strong> {{ modalCurso.modalidad }}</li>
+          <li><strong>Fecha de inicio:</strong> {{ modalCurso.fecha_inicio | date }}</li>
+          <li><strong>Fecha de fin:</strong> {{ modalCurso.fecha_fin | date }}</li>
+        </ul>
+        <div class="flex justify-end mt-6">
+          <button 
+            (click)="inscribirse(modalCurso)"
+            class="bg-[#F08762] text-white px-4 py-2 rounded-lg shadow hover:bg-[#D8566C] transition-colors duration-300 mr-3"
+          >
+            Inscribirse
+          </button>
+          <button 
+            (click)="cerrarModal()"
+            class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg shadow hover:bg-gray-300 transition-colors duration-300"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
