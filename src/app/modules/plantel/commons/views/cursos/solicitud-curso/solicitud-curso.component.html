@@ -55,7 +55,7 @@
     </div> -->
     <div>
       <!-- Contenido debajo de los tabs -->
-      <!-- 
+      <!--
     <div>
       <p class="text-gray-600">
         Selecciona una opción arriba para ver el contenido correspondiente.
@@ -182,59 +182,58 @@
         </div>
 
         <!-- INFORMACIÓN DEL INSTRUCTOR   👍 -->
-<div class="mb-4">
-  <h1 class="text-center text-lg font-semibold text-gray-800 mb-4">
-    INFORMACIÓN DEL INSTRUCTOR
-  </h1>
+        <div class="mb-4">
+          <h1 class="text-center text-lg font-semibold text-gray-800 mb-4">
+            INFORMACIÓN DEL INSTRUCTOR
+          </h1>
 
-  <!-- Número de Instructores -->
-  <div class="mb-4">
-    <label class="block mb-2 text-sm text-gray-700">
-      Número de Instructores
-    </label>
-    <div class="flex gap-4">
-      <div class="flex items-center gap-2">
-        <input
-          type="radio"
-          id="uno"
-          formControlName="num_instructores"
-          value="1"
-          class="focus:ring focus:ring-sky-200 focus:outline-none focus:ring-offset-2"
-        />
-        <label for="1" class="text-sm text-gray-700">Uno</label>
-      </div>
-      <div class="flex items-center gap-2">
-        <input
-          type="radio"
-          id="2"
-          formControlName="num_instructores"
-          value="2"
-          class="focus:ring focus:ring-sky-200 focus:outline-none focus:ring-offset-2"
-        />
-        <label for="2" class="text-sm text-gray-700">Más de Uno</label>
-      </div>
-    </div>
-  </div>
+          <!-- Número de Instructores -->
+          <div class="mb-4">
+            <label class="block mb-2 text-sm text-gray-700">
+              Número de Instructores
+            </label>
+            <div class="flex gap-4">
+              <div class="flex items-center gap-2">
+                <input
+                  type="radio"
+                  id="uno"
+                  formControlName="num_instructores"
+                  value="1"
+                  class="focus:ring focus:ring-sky-200 focus:outline-none focus:ring-offset-2"
+                />
+                <label for="1" class="text-sm text-gray-700">Uno</label>
+              </div>
+              <div class="flex items-center gap-2">
+                <input
+                  type="radio"
+                  id="2"
+                  formControlName="num_instructores"
+                  value="2"
+                  class="focus:ring focus:ring-sky-200 focus:outline-none focus:ring-offset-2"
+                />
+                <label for="2" class="text-sm text-gray-700">Más de Uno</label>
+              </div>
+            </div>
+          </div>
 
-  <!-- Instructores -->
-  <div>
-    <label class="block mb-2 text-sm text-gray-700">
-      Instructor(es)
-    </label>
-    <select
-      formControlName="instructor"
-      class="w-full p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
-    >
-      <option value="" disabled selected>
-        Selecciona un instructor
-      </option>
-      <option *ngFor="let docente of docentes" [value]="docente.id">
-        {{ docente.nombre }}
-      </option>
-    </select>
-  </div>
-</div>
-
+          <!-- Instructores -->
+          <div>
+            <label class="block mb-2 text-sm text-gray-700">
+              Instructor(es)
+            </label>
+            <select
+              formControlName="instructor"
+              class="w-full p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
+            >
+              <option value="" disabled selected>
+                Selecciona un instructor
+              </option>
+              <option *ngFor="let docente of docentes" [value]="docente.id">
+                {{ docente.nombre }}
+              </option>
+            </select>
+          </div>
+        </div>
 
         <!-- direccion  👍 -->
         <div>
@@ -393,32 +392,35 @@
         </div>
 
         <!-- Tipo de Horario  👍 -->
-<div class="mb-4">
-  <p class="text-sm font-medium text-gray-700">Tipo de Horario</p>
-  <div class="flex items-center space-x-4">
-    <div>
-      <input
-        type="radio"
-        id="regular"
-        formControlName="tipo_horario"
-        value="regular"
-        class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-      />
-      <label for="regular" class="ml-2 text-sm text-gray-700">Regular</label>
-    </div>
-    <div>
-      <input
-        type="radio"
-        id="irregular"
-        formControlName="tipo_horario"
-        value="irregular"
-        class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-      />
-      <label for="irregular" class="ml-2 text-sm text-gray-700">Irregular</label>
-    </div>
-  </div>
-</div>
-
+        <div class="mb-4">
+          <p class="text-sm font-medium text-gray-700">Tipo de Horario</p>
+          <div class="flex items-center space-x-4">
+            <div>
+              <input
+                type="radio"
+                id="regular"
+                formControlName="tipo_horario"
+                value="regular"
+                class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+              />
+              <label for="regular" class="ml-2 text-sm text-gray-700"
+                >Regular</label
+              >
+            </div>
+            <div>
+              <input
+                type="radio"
+                id="irregular"
+                formControlName="tipo_horario"
+                value="irregular"
+                class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+              />
+              <label for="irregular" class="ml-2 text-sm text-gray-700"
+                >Irregular</label
+              >
+            </div>
+          </div>
+        </div>
 
         <!-- Días de la Semana -->
         <div class="mb-4">
@@ -426,7 +428,9 @@
             Seleccione el día de la semana:
           </p>
           <div class="overflow-x-auto">
-            <table class="border border-gray-300 w-full text-sm text-left text-gray-700">
+            <table
+              class="border border-gray-300 w-full text-sm text-left text-gray-700"
+            >
               <thead class="bg-blue-100 text-red-600">
                 <tr>
                   <th class="border border-gray-300 px-4 py-2">Día</th>
@@ -441,7 +445,9 @@
               </thead>
               <tbody>
                 <tr>
-                  <td class="border border-gray-300 px-4 py-2 font-medium">Inicia</td>
+                  <td class="border border-gray-300 px-4 py-2 font-medium">
+                    Inicia
+                  </td>
                   <td class="border border-gray-300 px-4 py-2">
                     <input
                       type="time"
@@ -500,7 +506,9 @@
                   </td>
                 </tr>
                 <tr>
-                  <td class="border border-gray-300 px-4 py-2 font-medium">Termina</td>
+                  <td class="border border-gray-300 px-4 py-2 font-medium">
+                    Termina
+                  </td>
                   <td class="border border-gray-300 px-4 py-2">
                     <input
                       type="time"
@@ -562,7 +570,6 @@
             </table>
           </div>
         </div>
-        
 
         <!-- Sector inicial 👍-->
         <div class="mb-4">
@@ -606,7 +613,6 @@
             </label>
           </div>
         </div>
-        
 
         <!-- Rango de Edad 👍 -->
         <div class="mb-4">
@@ -632,7 +638,7 @@
             </label>
           </div>
         </div>
-        
+
         <!-- Cruzada contra el hambre  👍-->
         <div class="mb-4">
           <label class="block font-medium mb-2"
@@ -640,10 +646,22 @@
           >
           <div class="flex gap-4">
             <label class="flex items-center">
-              <input type="radio" formControlName="cruzada_contra_hambre" value="Sí" class="mr-2" /> Sí
+              <input
+                type="radio"
+                formControlName="cruzada_contra_hambre"
+                value="Sí"
+                class="mr-2"
+              />
+              Sí
             </label>
             <label class="flex items-center">
-              <input type="radio" formControlName="cruzada_contra_hambre" value="No" class="mr-2" /> No
+              <input
+                type="radio"
+                formControlName="cruzada_contra_hambre"
+                value="No"
+                class="mr-2"
+              />
+              No
             </label>
           </div>
         </div>
@@ -651,14 +669,16 @@
         <!-- Tipo de Beca 👍-->
         <div class="mb-4">
           <label class="block font-medium mb-2">Tipo de Beca:</label>
-          <select class="w-full p-2 border rounded-md" formControlName="tipo_beca">
+          <select
+            class="w-full p-2 border rounded-md"
+            formControlName="tipo_beca"
+          >
             <option value="Ninguna">Ninguna</option>
             <option value="Inscripción">Inscripción</option>
             <option value="Beca Capacitación">Beca Capacitación</option>
             <option value="Becas para el empleo">Becas para el empleo</option>
           </select>
         </div>
-        
 
         <!-- Participantes 👍 -->
         <div class="mb-4">
@@ -674,81 +694,78 @@
             espacios en blanco):
           </label>
         </div>
-        
-
-            
 
         <!-- Cuota de inscripción 👍-->
-<div class="mb-4">
-  <label class="block font-medium mb-2">Cuota de inscripción:</label>
-  <div class="flex gap-4">
-    <label class="flex items-center">
-      <input
-        type="radio"
-        formControlName="cuota_tipo"
-        value="Por Grupo"
-        class="mr-2"
-      />
-      Por Grupo
-    </label>
-    <label class="flex items-center">
-      <input
-        type="radio"
-        formControlName="cuota_tipo"
-        value="Por Alumno"
-        class="mr-2"
-      />
-      Por Alumno
-    </label>
-  </div>
-</div>
+        <div class="mb-4">
+          <label class="block font-medium mb-2">Cuota de inscripción:</label>
+          <div class="flex gap-4">
+            <label class="flex items-center">
+              <input
+                type="radio"
+                formControlName="cuota_tipo"
+                value="Por Grupo"
+                class="mr-2"
+              />
+              Por Grupo
+            </label>
+            <label class="flex items-center">
+              <input
+                type="radio"
+                formControlName="cuota_tipo"
+                value="Por Alumno"
+                class="mr-2"
+              />
+              Por Alumno
+            </label>
+          </div>
+        </div>
 
-<!-- Monto 👍 -->
-<div class="mb-4">
-  <label class="block font-medium mb-2">Monto:</label>
-  <input
-    type="text"
-    formControlName="cuota_monto"
-    class="w-full p-2 border rounded-md"
-  />
-</div>
+        <!-- Monto 👍 -->
+        <div class="mb-4">
+          <label class="block font-medium mb-2">Monto:</label>
+          <input
+            type="text"
+            formControlName="cuota_monto"
+            class="w-full p-2 border rounded-md"
+          />
+        </div>
 
-<!-- pagar_al_final 👍-->
-<div class="mb-4">
-  <label class="block font-medium mb-2">Pagar al final:</label>
-  <div class="flex gap-4">
-    <label class="flex items-center">
-      <input
-        type="radio"
-        formControlName="pagar_final"
-        value="Sí"
-        class="mr-2"
-      />
-      Sí
-    </label>
-    <label class="flex items-center">
-      <input
-        type="radio"
-        formControlName="pagar_final"
-        value="No"
-        class="mr-2"
-      />
-      No
-    </label>
-  </div>
-</div>
+        <!-- pagar_al_final 👍-->
+        <div class="mb-4">
+          <label class="block font-medium mb-2">Pagar al final:</label>
+          <div class="flex gap-4">
+            <label class="flex items-center">
+              <input
+                type="radio"
+                formControlName="pagar_final"
+                value="Sí"
+                class="mr-2"
+              />
+              Sí
+            </label>
+            <label class="flex items-center">
+              <input
+                type="radio"
+                formControlName="pagar_final"
+                value="No"
+                class="mr-2"
+              />
+              No
+            </label>
+          </div>
+        </div>
 
-<!-- Número de Convenio u Oficio 👍-->
-<div class="mb-4">
-  <label class="block font-medium mb-2">Número de Convenio u Oficio:</label>
-  <input
-    type="text"
-    formControlName="convenio_numero"
-    class="w-full p-2 border rounded-md"
-  />
-</div>
-
-
+        <!-- Número de Convenio u Oficio 👍-->
+        <div class="mb-4">
+          <label class="block font-medium mb-2"
+            >Número de Convenio u Oficio:</label
+          >
+          <input
+            type="text"
+            formControlName="convenio_numero"
+            class="w-full p-2 border rounded-md"
+          />
+        </div>
 
         <!-- 4 seccion -->
 
@@ -767,15 +784,30 @@
           </div>
         </div>
 
-       <!-- Tipo de Curso 👍 -->
-<div class="mb-4">
-  <label class="block font-medium mb-2">Tipo de Curso:</label>
-  <select formControlName="tipo_curso" class="w-full p-2 border rounded-md">
-    <option value="En Línea">En Línea</option>
-    <option value="Presencial">Presencial</option>
-  </select>
-</div>
-
+        <!-- Tipo de Curso 👍 -->
+        <div class="mb-4">
+          <label class="block font-medium mb-2">Tipo de Curso:</label>
+          <div class="flex items-center gap-4">
+            <label class="flex items-center">
+              <input
+                type="radio"
+                formControlName="tipo_curso"
+                value="1"
+                class="mr-2"
+              />
+              En Línea
+            </label>
+            <label class="flex items-center">
+              <input
+                type="radio"
+                formControlName="tipo_curso"
+                value="0"
+                class="mr-2"
+              />
+              Presencial
+            </label>
+          </div>
+        </div>
 
         <!-- Botón para cerrar el modal -->
         <button
@@ -788,11 +820,7 @@
 
         <!-- Botón para enviar solicitud -->
         <div class="flex justify-end">
-          <button
-            type="submit"
-            class="ui blue button"
-            [disabled]="isLoading"
-          >
+          <button type="submit" class="ui blue button" [disabled]="isLoading">
             <i *ngIf="isLoading" class="notched circle loading icon"></i>
             {{
               isLoading
