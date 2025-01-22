@@ -34,6 +34,11 @@ export class FrmPlantelComponent {
     });
   }
 
+  regresar() {
+    
+    // Navegar a la ruta de detalles del curso pasando el id como parámetro
+    this.router.navigate([`/privado/lista-planteles`]);
+  }
   guardarPlantel() {
     alert('pasa en funsion guardar');
     if (this.formPlantel.valid) {

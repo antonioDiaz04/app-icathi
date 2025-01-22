@@ -1,195 +1,235 @@
 <div class="max-w-7xl mx-auto p-6 space-y-8">
   <!-- Botón para agregar nuevo plantel -->
-  <div class="flex justify-between items-center mb-4">
-    <h2 class="text-3xl font-bold text-gray-900">Listado de Planteles</h2>
-    <button
-      (click)="navigateTo('frm-plantel')"
-      class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition duration-300"
-    >
-      Nuevo Plantel
-    </button>
-  </div>
+<!-- Botón para agregar nuevo plantel -->
+<!-- Botón para agregar nuevo plantel -->
+<div class="flex justify-between items-center mb-6">
+  <h2 class="text-3xl font-bold text-[#44509D]">Listado de Planteles</h2>
+  <button
+    (click)="navigateTo('frm-plantel')"
+    class="rounded bg-[#F08762] px-5 py-2 text-white hover:bg-[#d87552] transition duration-300"
+  >
+    <i class="plus icon"></i> Nuevo Plantel
+  </button>
+</div>
 
-  <!-- Tabla de planteles -->
-  <div class="overflow-x-auto">
-    <table class="min-w-full border-collapse border border-gray-200 bg-white shadow-md rounded-lg">
-      <thead>
-        <tr class="bg-gray-100">
-          <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">ID</th>
-          <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Nombre</th>
-          <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Dirección</th>
-          <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Teléfono</th>
-          <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Email</th>
-          <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Director</th>
-          <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Capacidad</th>
-          <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Estado</th>
-          <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Municipio</th>
-          <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-600">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of planteles" class="hover:bg-gray-50 transition duration-200">
-          <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ item.id }}</td>
-          <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ item.nombre }}</td>
-          <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ item.direccion }}</td>
-          <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ item.telefono }}</td>
-          <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ item.email }}</td>
-          <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ item.director }}</td>
-          <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ item.capacidad_alumnos }}</td>
-          <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ item.estado }}</td>
-          <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ item.municipio }}</td>
-          <td class="border border-gray-300 px-4 py-2 text-sm text-center">
-            <button (click)="mostrarModal(item.id)" class="rounded bg-red-500 px-2 py-1 text-xs text-white hover:bg-red-600 transition duration-300">Eliminar</button>
-            <button (click)="openModal(item.id)" class="rounded bg-blue-500 px-2 py-1 text-xs text-white hover:bg-blue-600 transition duration-300">Editar</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Modal de edición -->
-  <div *ngIf="isModalOpen" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
-    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-3xl">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-bold text-gray-800">Editar Datos</h2>
-        <button class="text-gray-600 hover:text-gray-900" (click)="closeModal()">✖</button>
-      </div>
+<div class="overflow-x-auto rounded-lg shadow-md">
+  <table class="min-w-full border-collapse bg-white">
+    <thead class="bg-[#44509D] text-white">
+      <tr>
+        <th class="px-4 py-3 text-left text-sm font-medium"><i class="hashtag icon"></i> ID</th>
+        <th class="px-4 py-3 text-left text-sm font-medium"><i class="address book icon"></i> Nombre</th>
+        <th class="px-4 py-3 text-left text-sm font-medium"><i class="map marker alternate icon"></i> Dirección</th>
+        <th class="px-4 py-3 text-left text-sm font-medium"><i class="phone icon"></i> Teléfono</th>
+        <th class="px-4 py-3 text-left text-sm font-medium"><i class="envelope icon"></i> Email</th>
+        <th class="px-4 py-3 text-left text-sm font-medium"><i class="user icon"></i> Director</th>
+        <th class="px-4 py-3 text-left text-sm font-medium"><i class="users icon"></i> Capacidad</th>
+        <th class="px-4 py-3 text-left text-sm font-medium"><i class="globe icon"></i> Estado</th>
+        <th class="px-4 py-3 text-left text-sm font-medium"><i class="map  icon"></i> Municipio</th>
+        <th class="px-4 py-3 text-left text-sm font-medium"><i class="book icon"></i> Cursos</th>
+        <th class="px-4 py-3 text-left text-sm font-medium"><i class="graduation cap icon"></i> Alumnos</th>
+        <th class="px-4 py-3 text-left text-sm font-medium text-center"><i class="settings icon"></i> Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let item of planteles"
+        class="border-b hover:bg-[#F5F5F5] transition duration-200"
+      >
+        <td class="px-4 py-3 text-sm text-gray-700"><i class="hashtag icon"></i> {{ item.id }}</td>
+        <td class="px-4 py-3 text-sm text-gray-700"><i class="address book  icon"></i> {{ item.nombre }}</td>
+        <td class="px-4 py-3 text-sm text-gray-700"><i class="map marker alternate icon"></i> {{ item.direccion }}</td>
+        <td class="px-4 py-3 text-sm text-gray-700"><i class="phone icon"></i> {{ item.telefono }}</td>
+        <td class="px-4 py-3 text-sm text-gray-700"><i class="envelope icon"></i> {{ item.email }}</td>
+        <td class="px-4 py-3 text-sm text-gray-700"><i class="user icon"></i> {{ item.director }}</td>
+        <td 
+          class="px-4 py-3 text-sm" 
+          [ngClass]="{'text-green-600': item.capacidad_alumnos > 50, 'text-red-600': item.capacidad_alumnos <= 50}"
+        >
+          <i class="users icon"></i> {{ item.capacidad_alumnos }}
+        </td>
+        <td class="px-4 py-3 text-sm text-gray-700"><i class="globe icon"></i> {{ item.estado }}</td>
+        <td class="px-4 py-3 text-sm text-gray-700"><i class="map  icon"></i> {{ item.municipio }}</td>
+        <td 
+        class="px-4 py-3 text-sm text-center"
+        [ngClass]="{'bg-blue-100 text-blue-600': item.total_cursos > 0, 'bg-red-100 text-red-600': item.total_cursos == 0}"
+      >
+        <i class="book icon"></i> 
+        <button 
+          *ngIf="item.total_cursos > 0"
+          (click)="verDetalleCursos(item.id)"
+          class="underline text-blue-600 hover:text-blue-800 transition duration-200"
+        >
+          {{ item.total_cursos }}
+        </button>
+        <span *ngIf="item.total_cursos == 0">N/A</span>
+      </td>
       
-      <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
-        <!-- Nombre -->
-        <div>
-          <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
-          <input
-            type="text"
-            id="nombre"
-            formControlName="nombre"
-            maxlength="100"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          />
-        </div>
-
-        <!-- Dirección -->
-        <div>
-          <label for="direccion" class="block text-sm font-medium text-gray-700">Dirección</label>
-          <textarea
-            id="direccion"
-            formControlName="direccion"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          ></textarea>
-        </div>
-
-        <!-- Teléfono -->
-        <div>
-          <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
-          <input
-            type="text"
-            id="telefono"
-            formControlName="telefono"
-            maxlength="15"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          />
-        </div>
-
-        <!-- Email -->
-        <div>
-          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-          <input
-            type="email"
-            id="email"
-            formControlName="email"
-            maxlength="100"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          />
-        </div>
-
-        <!-- Director -->
-        <div>
-          <label for="director" class="block text-sm font-medium text-gray-700">Director</label>
-          <input
-            type="text"
-            id="director"
-            formControlName="director"
-            maxlength="100"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          />
-        </div>
-
-        <!-- Capacidad de Alumnos -->
-        <div>
-          <label for="capacidad_alumnos" class="block text-sm font-medium text-gray-700">Capacidad de Alumnos</label>
-          <input
-            type="number"
-            id="capacidad_alumnos"
-            formControlName="capacidad_alumnos"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          />
-        </div>
-
-        <!-- Estatus -->
-        <div class="flex items-center">
-          <input
-            type="checkbox"
-            id="estatus"
-            formControlName="estatus"
-            class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-          />
-          <label for="estatus" class="ml-2 block text-sm text-gray-700">Estatus</label>
-        </div>
-
-        <!-- Usuario Gestor ID -->
-        <div>
-          <label for="usuario_gestor_id" class="block text-sm font-medium text-gray-700">Usuario Gestor ID</label>
-          <input
-            type="number"
-            id="usuario_gestor_id"
-            formControlName="usuario_gestor_id"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          />
-        </div>
-
-        <!-- Estado -->
-        <div>
-          <label for="estado" class="block text-sm font-medium text-gray-700">Estado</label>
-          <input
-            type="text"
-            id="estado"
-            formControlName="estado"
-            maxlength="50"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          />
-        </div>
-
-        <!-- Municipio -->
-        <div>
-          <label for="municipio" class="block text-sm font-medium text-gray-700">Municipio</label>
-          <input
-            type="text"
-            id="municipio"
-            formControlName="municipio"
-            maxlength="50"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          />
-        </div>
-
-        <!-- Botones -->
-        <div class="flex justify-end space-x-4 mt-4">
+      
+        <td 
+          class="px-4 py-3 text-sm text-center"
+          [ngClass]="{'bg-green-100 text-green-600': item.total_alumnos > 0, 'bg-yellow-100 text-yellow-600': item.total_alumnos == 0}"
+        >
+          <i class="graduation cap icon"></i> {{ item.total_alumnos || 'N/A' }}
+        </td>
+        <td class="px-4 py-3 text-sm text-center">
           <button
-            type="button"
-            class="px-4 py-2 bg-gray-300 rounded-md text-gray-700 hover:bg-gray-400 transition duration-300"
-            (click)="closeModal()"
+            (click)="mostrarModal(item.id)"
+            class="rounded px-2 py-1 text-sm text-white bg-[#F08762] hover:bg-[#d87552] transition duration-300"
           >
-            Cancelar
+            <i class="trash alternate icon"></i>
           </button>
           <button
-            type="submit"
-            class="px-4 py-2 bg-blue-600 rounded-md text-white hover:bg-blue-700 transition duration-300"
+            (click)="openModal(item.id)"
+            class="rounded px-2 py-1 text-sm text-white bg-[#44509D] hover:bg-[#364075] transition duration-300"
           >
-            Guardar
+            <i class="edit  icon"></i>
           </button>
-        </div>
-      </form>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal de edición -->
+<div *ngIf="isModalOpen" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+  <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-3xl">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold text-gray-800">
+        <i class="edit icon text-[#44509D]"></i> Editar Datos
+      </h2>
+      <button class="text-gray-600 hover:text-gray-900" (click)="closeModal()">
+        ✖
+      </button>
     </div>
+
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+      <!-- Nombre -->
+      <div class="mb-4">
+        <label for="nombre" class="block text-sm font-medium text-[#44509D]">
+          <i class="user icon"></i> Nombre
+        </label>
+        <input
+          type="text"
+          id="nombre"
+          formControlName="nombre"
+          maxlength="100"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#44509D] focus:border-[#44509D] sm:text-sm"
+        />
+      </div>
+
+      <!-- Dirección -->
+      <div class="mb-4">
+        <label for="direccion" class="block text-sm font-medium text-[#44509D]">
+          <i class="map marker alternate icon"></i> Dirección
+        </label>
+        <textarea
+          id="direccion"
+          formControlName="direccion"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#44509D] focus:border-[#44509D] sm:text-sm"
+        ></textarea>
+      </div>
+
+      <!-- Teléfono -->
+      <div class="mb-4">
+        <label for="telefono" class="block text-sm font-medium text-[#44509D]">
+          <i class="phone icon"></i> Teléfono
+        </label>
+        <input
+          type="text"
+          id="telefono"
+          formControlName="telefono"
+          maxlength="15"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#44509D] focus:border-[#44509D] sm:text-sm"
+        />
+      </div>
+
+      <!-- Email -->
+      <div class="mb-4">
+        <label for="email" class="block text-sm font-medium text-[#44509D]">
+          <i class="envelope icon"></i> Email
+        </label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          maxlength="100"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#44509D] focus:border-[#44509D] sm:text-sm"
+        />
+      </div>
+
+      <!-- Director -->
+      <div class="mb-4">
+        <label for="director" class="block text-sm font-medium text-[#44509D]">
+          <i class="user tie icon"></i> Director
+        </label>
+        <input
+          type="text"
+          id="director"
+          formControlName="director"
+          maxlength="100"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#44509D] focus:border-[#44509D] sm:text-sm"
+        />
+      </div>
+
+      <!-- Capacidad de Alumnos -->
+      <div class="mb-4">
+        <label for="capacidad_alumnos" class="block text-sm font-medium text-[#44509D]">
+          <i class="users icon"></i> Capacidad de Alumnos
+        </label>
+        <input
+          type="number"
+          id="capacidad_alumnos"
+          formControlName="capacidad_alumnos"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#44509D] focus:border-[#44509D] sm:text-sm"
+        />
+      </div>
+
+      <!-- Estatus -->
+      <div class="mb-4 flex items-center">
+        <input
+          type="checkbox"
+          id="estatus"
+          formControlName="estatus"
+          class="h-4 w-4 text-[#44509D] border-gray-300 rounded focus:ring-[#44509D]"
+        />
+        <label for="estatus" class="ml-2 block text-sm text-gray-700">
+          <i class="check circle icon"></i> Estatus
+        </label>
+      </div>
+
+      <!-- Usuario Gestor ID -->
+      <div class="mb-4">
+        <label for="usuario_gestor_id" class="block text-sm font-medium text-[#44509D]">
+          <i class="id badge icon"></i> Usuario Gestor ID
+        </label>
+        <input
+          type="number"
+          id="usuario_gestor_id"
+          formControlName="usuario_gestor_id"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#44509D] focus:border-[#44509D] sm:text-sm"
+        />
+      </div>
+
+      <!-- Botones -->
+      <div class="flex justify-end space-x-4 mt-6">
+        <button
+          type="button"
+          class="px-4 py-2 bg-gray-300 rounded-md text-gray-700 hover:bg-gray-400 transition duration-300"
+          (click)="closeModal()"
+        >
+          <i class="times icon"></i> Cancelar
+        </button>
+        <button
+          type="submit"
+          class="px-4 py-2 bg-[#44509D] rounded-md text-white hover:bg-[#364075] transition duration-300"
+        >
+          <i class="save icon"></i> Guardar
+        </button>
+      </div>
+    </form>
   </div>
+</div>
+
 
   <!-- Modal de Confirmación -->
   <div class="ui basic modal" #confirmModal>
@@ -209,6 +249,111 @@
         <i class="checkmark icon"></i>
         Sí
       </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal de Cursos -->
+<div 
+  *ngIf="isModalOpenverDetalleCursos" 
+  class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 backdrop-blur-sm"
+
+>
+  <div class="bg-white rounded-lg shadow-lg w-3/4 md:w-1/2 lg:w-1/3">
+    <!-- Header -->
+    <div class="flex items-center justify-between px-6 py-4" [style.backgroundColor]="'#44509D'">
+      <h2 class="text-xl font-semibold text-white">Detalle de Cursos</h2>
+      <button 
+        (click)="cerrarModal()" 
+        class="text-white hover:text-gray-300"
+      >
+        <i class="close icon"></i>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="p-6">
+      <table class="w-full border-collapse border border-gray-300">
+        <thead>
+          <tr [style.backgroundColor]="'#F08762'" class="text-white">
+            <th class="border border-gray-300 px-4 py-2 text-left">ID</th>
+            <th class="border border-gray-300 px-4 py-2 text-left">Nombre</th>
+            <th class="border border-gray-300 px-4 py-2 text-left">Duración</th>
+            <th class="border border-gray-300 px-4 py-2 text-left">Nivel</th>
+            <th class="border border-gray-300 px-4 py-2 text-center">Alumnos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let curso of cursos">
+            <td class="border border-gray-300 px-4 py-2">{{ curso.curso_id }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ curso.curso_nombre }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ curso.duracion_horas }} horas</td>
+            <td class="border border-gray-300 px-4 py-2">{{ curso.nivel }}</td>
+            <td class="border border-gray-300 px-4 py-2 text-center">
+              <button 
+                class="bg-[#D8566C] text-white px-3 py-1 rounded hover:bg-red-600"
+                (click)="verAlumnosCurso(id_pplantel,curso.curso_id)"
+              >
+                <i class="users icon"></i> Ver Alumnos
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Footer -->
+    <div class="flex justify-end px-6 py-4 border-t">
+      <button 
+        (click)="cerrarModal()" 
+        class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"
+      >
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Alumnos -->
+<div 
+  *ngIf="isModalAlumnosOpen" 
+  class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 backdrop-blur-sm"
+
+>
+  <div class="bg-white rounded-lg shadow-lg w-3/4 md:w-1/2 lg:w-1/3">
+    <!-- Header -->
+    <div class="flex items-center justify-between px-6 py-4" [style.backgroundColor]="'#44509D'">
+      <h2 class="text-xl font-semibold text-white">Lista de Alumnos</h2>
+      <button 
+        (click)="cerrarModalAlumnos()" 
+        class="text-white hover:text-gray-300"
+      >
+        <i class="close icon"></i>
+      </button>
+    </div>
+    <div *ngIf="alumnos.length === 0">No hay alumnos inscritos en este curso y plantel.</div>
+
+    <!-- Body -->
+    <div class="p-6">
+      <ul class="list-disc list-inside">
+        <li 
+          *ngFor="let alumno of alumnos"
+          class="py-2 text-gray-700"
+        >
+          <i class="user icon"></i> {{ alumno.nombre }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Footer -->
+    <div class="flex justify-end px-6 py-4 border-t">
+      <button 
+        (click)="cerrarModalAlumnos()" 
+        class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"
+      >
+        Cerrar
+      </button>
     </div>
   </div>
 </div>

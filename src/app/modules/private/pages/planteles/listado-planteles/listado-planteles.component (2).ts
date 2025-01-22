@@ -6,9 +6,10 @@
 // declare var $: any;
 
 // @Component({
-//   selector: 'app-listado-planteles',
-//   templateUrl: './listado-planteles.component.html',
-//   styleUrls: ['./listado-planteles.component.scss'],
+//     selector: 'app-listado-planteles',
+//     templateUrl: './listado-planteles.component.html',
+//     styleUrls: ['./listado-planteles.component.scss'],
+//     standalone: false
 // })
 // export class ListadoPlantelesComponent implements OnInit {
 //   planteles: any; // Lista de planteles
@@ -19,8 +20,10 @@
 
 //   @ViewChild('confirmModal') confirmModal!: ElementRef; // Referencia al modal de confirmación
 
+
 //   constructor(
 //     private fb: FormBuilder,
+    
 //     private router: Router,
 //     private plantelService_: PlantelesService
 //   ) {
