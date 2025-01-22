@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+ import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../../../environments/environment.prod";
 import { jsPDF } from "jspdf";

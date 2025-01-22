@@ -20,9 +20,10 @@ import { ImpartidosComponent } from './views/cursos/impartidos/impartidos.compon
 
 // import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { HomeComponent } from './views/home/home.component';
+import { SolicitudCursoComponent } from './views/cursos/solicitud-curso/solicitud-curso.component';
 
 @NgModule({
-  declarations: [    FilterPipe,ListadoAlumnosComponent,ListadoCursosComponent,HomeComponent,ListadoDocentesComponent, ListadoCursosAprovadosComponent, HistorialComponent, RegistroAlumnosComponent, RegistroDocenteComponent, ImpartidosComponent],
+  declarations: [    FilterPipe,ListadoAlumnosComponent,ListadoCursosComponent,HomeComponent,ListadoDocentesComponent, ListadoCursosAprovadosComponent, HistorialComponent, RegistroAlumnosComponent, RegistroDocenteComponent, ImpartidosComponent, SolicitudCursoComponent],
   imports: [
     CommonModule,ReactiveFormsModule,FormsModule,RouterModule,
   ],

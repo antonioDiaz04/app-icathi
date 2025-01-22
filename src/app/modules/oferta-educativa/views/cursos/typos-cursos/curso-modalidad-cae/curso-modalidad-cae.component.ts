@@ -68,7 +68,7 @@ export interface UnitOption {
   styles: ``
 })
 export class CursoModalidadCAEComponent implements OnInit {
-  areas: any[] = [];
+   areas: any[] = [];
   especialidades: any[] = [];
   tiposCurso: any[] = [];
   modulos: Modulo[] = [];
@@ -109,6 +109,7 @@ export class CursoModalidadCAEComponent implements OnInit {
   
   constructor(private http: HttpClient) {}
 
+
   ngOnInit(): void {
     this.cargarAreas();
     this.cargarEspecialidades();
@@ -125,6 +126,7 @@ export class CursoModalidadCAEComponent implements OnInit {
       },
     });
   }
+
 
   cargarEspecialidades(): void {
     this.http.get<any[]>(`${this.apiUrl}/especialidades`).subscribe({
@@ -147,7 +149,6 @@ export class CursoModalidadCAEComponent implements OnInit {
       },
     });
   }
-
   agregarCurso(): void {
     this.isSaving = true;
     this.alertMessage = null; // Reset previous alert

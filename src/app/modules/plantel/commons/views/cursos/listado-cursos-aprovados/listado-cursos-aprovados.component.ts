@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../../../environments/environment.prod';
 import { AuthService } from '../../../../../../shared/services/auth.service';
@@ -8,6 +8,9 @@ import { CursosdocentesService } from '../../../../../../shared/services/cursosd
 import { AspiranteService } from '../../../../../../shared/services/aspirante.service';
 import { PlantelService } from '../../../../../../shared/services/plantel.service';
 // import { response } from 'express';
+import localeEs from '@angular/common/locales/es';
+import { registerLocaleData } from '@angular/common';
+registerLocaleData(localeEs, 'es');
 
 export interface Modulo {
   plantel: string;
@@ -40,10 +43,13 @@ interface Docente {
   estatus_valor: boolean;
 }
 
+
+
 @Component({
     selector: 'app-listado-cursos-aprovados',
     templateUrl: './listado-cursos-aprovados.component.html',
-    standalone: false
+    standalone: false,
+    providers: [{ provide: LOCALE_ID, useValue: 'es' }]
 })
 export class ListadoCursosAprovadosComponent implements OnInit {
   dateFormat = 'yyyy-MM-dd'; // Formato de fecha
@@ -67,6 +73,9 @@ export class ListadoCursosAprovadosComponent implements OnInit {
   cursosSolicitados: any;
   // dataCurso: any;
 
+
+
+  
   cursoDetails!: any;
   abrirModalDetalles(modulo: any) {
     this.cursoSeleccionado = { ...modulo };
@@ -87,36 +96,8 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     private cursoDocenteS_: CursosdocentesService,
     private fb: FormBuilder
   ) {
-    // this.cursoForm = this.fb.group({
-    //   plantel_curso_id: [''],
-    //   plantel_id: [''],
-    //   plantel_nombre: [''],
-    //   curso_id: [''],
-    //   curso_nombre: [''],
-    //   fecha_inicio: [''],
-    //   fecha_fin: [''],
-    //   area_id: [''],
-    //   area_nombre: [''],
-    //   especialidad_id: [''],
-    //   especialidad_nombre: [''],
-    //   alumnos: this.fb.array([]),
-    // });
-
-  // this.cursoForm = this.fb.group({
-    // area_id: ['', Validators.required],
-      // especialidad_id: ['', Validators.required],
-      // tipo_curso_id: ['', Validators.required],
-      // nombre: ['', [Validators.required, Validators.maxLength(100)]],
-      // clave: ['', Validators.required],
-      // duracion_horas: ['', [Validators.required, Validators.min(1)]],
-      // descripcion: ['', [Validators.required, Validators.maxLength(500)]],
-      // nivel: ['', Validators.required],
-    // });
   }
 
-      // get alumnos(): FormArray {
-      //   return this.cursoForm.get('alumnos') as FormArray;
-      // }
 
   ngOnInit(): void {
     this.cargarCursosByIdPlantel();
@@ -145,7 +126,9 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     this.filtroDuracion = null;
   }
 
+  // cursosFiltrados!:Modulo;
   openModal(idPlantelCurso: any) {
+  alert(idPlantelCurso)
     this.mostrarFormulario = !this.mostrarFormulario;
     this.plantelService
       .getInfoCursoPlantel(idPlantelCurso)
@@ -209,7 +192,7 @@ export class ListadoCursosAprovadosComponent implements OnInit {
       return this.cursosSolicitados.filter(
         (curso: any) => !curso.curso_validado
       );
-    }
+    }   
     return this.cursosSolicitados;
   }
 
@@ -416,5 +399,46 @@ export class ListadoCursosAprovadosComponent implements OnInit {
           }
         );
     }
+  }
+
+
+
+
+
+  // Método para guardar cambios
+  guardarCambios() {
+    const cursoData = {
+      nombre: this.curso.nombre,
+      area_nombre: this.curso.area_nombre,
+      especialidad_nombre: this.curso.especialidad_nombre,
+      fecha_inicio: this.curso.fecha_inicio,
+      fecha_fin: this.curso.fecha_fin,
+      cupo_maximo: this.curso.cupo_maximo,
+      requisitos_extra: this.curso.requisitos_extra,
+      sector_atendido: this.curso.sector_atendido,
+      rango_edad: this.curso.rango_edad,
+      tipo_beca: this.curso.tipo_beca,
+      tipo_curso: this.curso.tipo_curso,
+      convenio_numero: this.curso.convenio_numero,
+      cruzada_contra_hambre: this.curso.cruzada_contra_hambre,
+      cuota_tipo: this.curso.cuota_tipo,
+      cuota_monto: this.curso.cuota_monto,
+      pagar_final: this.curso.pagar_final,
+      participantes: this.curso.participantes,
+      cant_instructores: this.curso.cant_instructores,
+      plantel: {
+        calle: this.curso.plantel.calle,
+        localidad: this.curso.plantel.localidad,
+        municipio: this.curso.plantel.municipio,
+        num_interior: this.curso.plantel.num_interior,
+        num_exterior: this.curso.plantel.num_exterior
+      },
+      horario: this.curso.horario,
+      docentes: this.docentes,
+      alumnos: this.alumnos
+    };
+
+    const jsonData = JSON.stringify(cursoData);
+    console.log(jsonData); // Aquí puedes enviar el JSON a tu API o donde lo necesites
   }
 }
