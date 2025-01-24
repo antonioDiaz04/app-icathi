@@ -200,18 +200,22 @@
                   formControlName="num_instructores"
                   value="1"
                   class="focus:ring focus:ring-sky-200 focus:outline-none focus:ring-offset-2"
+                  (change)="updateSelectionMode()"
                 />
-                <label for="1" class="text-sm text-gray-700">Uno</label>
+                <label for="uno" class="text-sm text-gray-700">Uno</label>
               </div>
               <div class="flex items-center gap-2">
                 <input
                   type="radio"
-                  id="2"
+                  id="masDeUno"
                   formControlName="num_instructores"
                   value="2"
                   class="focus:ring focus:ring-sky-200 focus:outline-none focus:ring-offset-2"
+                  (change)="updateSelectionMode()"
                 />
-                <label for="2" class="text-sm text-gray-700">Más de Uno</label>
+                <label for="masDeUno" class="text-sm text-gray-700"
+                  >Más de Uno</label
+                >
               </div>
             </div>
           </div>
@@ -221,17 +225,46 @@
             <label class="block mb-2 text-sm text-gray-700">
               Instructor(es)
             </label>
-            <select
-              formControlName="instructor"
-              class="w-full p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
-            >
-              <option value="" disabled selected>
-                Selecciona un instructor
-              </option>
-              <option *ngFor="let docente of docentes" [value]="docente.id">
-                {{ docente.nombre }}
-              </option>
-            </select>
+            <table class="w-full border-collapse border border-gray-300">
+              <thead>
+                <tr>
+                  <th class="border border-gray-300 px-4 py-2 text-left">
+                    Seleccionar
+                  </th>
+                  <th class="border border-gray-300 px-4 py-2 text-left">
+                    Nombre
+                  </th>
+                  <th class="border border-gray-300 px-4 py-2 text-left">
+                    Apellidos
+                  </th>
+                  <th class="border border-gray-300 px-4 py-2 text-left">
+                    Especialidad
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let docente of docentes">
+                  <td class="border border-gray-300 px-4 py-2 text-center">
+                    <input
+                      type="checkbox"
+                      [value]="docente.id"
+                      [checked]="isSelected(docente.id)"
+                      [disabled]="isSelectionDisabled(docente.id)"
+                      (change)="toggleSelection($event, docente.id)"
+                    />
+                  </td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    {{ docente.nombre }}
+                  </td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    {{ docente.apellidos }}
+                  </td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    {{ docente.especialidad }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 

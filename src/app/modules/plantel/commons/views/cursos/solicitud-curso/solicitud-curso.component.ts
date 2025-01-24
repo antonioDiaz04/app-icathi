@@ -86,7 +86,9 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
 
       // int
       num_instructores: ["uno", Validators.required], // Número de instructores (obligatorio)
-      instructor: ["", Validators.required], // Instructor(es) (obligatorio)
+      // instructor: ["", Validators.required], // Instructor(es) (obligatorio)
+     instructor: [[]], // Para almacenar los IDs de los instructores seleccionados
+      
       municipio: ["", Validators.required],
       localidad: ["", Validators.required],
       calle: ["", Validators.required],
@@ -169,6 +171,67 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
   close(): void {
     this.mostrarFormularioChange.emit(false); // Emitir el valor booleano
   }
+
+
+
+
+
+
+    selectedInstructors: number[] = [];
+    isMultipleSelection = false;
+  
+    // constructor(private fb: FormBuilder) {
+    //   this.form = this.fb.group({
+    //     num_instructores: [''],
+    //     instructor: [[]], // Para almacenar los IDs de los instructores seleccionados
+    //   });
+    // }
+  
+    updateSelectionMode() {
+      const numInstructores = this.cursoForm.get('num_instructores')?.value;
+      this.isMultipleSelection = numInstructores === '2';
+      if (!this.isMultipleSelection && this.selectedInstructors.length > 1) {
+        // Si cambia a "Uno", conserva solo el primer seleccionado
+        this.selectedInstructors = [this.selectedInstructors[0]];
+        this.cursoForm.get('instructor')?.setValue(this.selectedInstructors);
+      }
+    }
+  
+    toggleSelection(event: Event, id: number) {
+      const checked = (event.target as HTMLInputElement).checked;
+      if (checked) {
+        if (!this.isMultipleSelection && this.selectedInstructors.length >= 1) {
+          // Si es selección única, reemplaza el seleccionado
+          this.selectedInstructors = [id];
+        } else {
+          // Agregar a la selección
+          this.selectedInstructors.push(id);
+        }
+      } else {
+        // Remover de la selección
+        this.selectedInstructors = this.selectedInstructors.filter((instructorId) => instructorId !== id);
+      }
+      this.cursoForm.get('instructor')?.setValue(this.selectedInstructors);
+    }
+  
+    isSelected(id: number): boolean {
+      return this.selectedInstructors.includes(id);
+    }
+  
+    isSelectionDisabled(id: number): boolean {
+      // Si es selección única y ya hay uno seleccionado, desactiva los demás
+      return !this.isMultipleSelection && this.selectedInstructors.length >= 1 && !this.selectedInstructors.includes(id);
+    }
+  
+
+
+
+
+
+
+
+
+
 
   resetFilters() {
     // this.filtroId = '';

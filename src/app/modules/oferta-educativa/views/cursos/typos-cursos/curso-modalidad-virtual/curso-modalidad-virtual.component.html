@@ -97,7 +97,7 @@
       <!-- Descripción -->
       <div>
         <label class="block text-sm font-medium">Descripción</label>
-        <textarea
+        <textarea pTextarea  [autoResize]="true"
           [(ngModel)]="nuevoCurso.descripcion"
           name="descripcion"
           required
@@ -201,7 +201,7 @@
             OBJETIVO DEL CURSO
           </td>
           <td class="border border-gray-300 px-4 py-2 w-3/4">
-            <textarea
+            <textarea pTextarea  [autoResize]="true"
               [(ngModel)]="nuevoCurso.objetivos.objetivo"
               name="objetivo"
               class="w-full border border-gray-300 rounded-md p-2 resize-none"
@@ -214,7 +214,7 @@
             PERFIL DE INGRESO
           </td>
           <td class="border border-gray-300 px-4 py-2 w-3/4">
-            <textarea
+            <textarea pTextarea  [autoResize]="true"
               [(ngModel)]="nuevoCurso.objetivos.perfil_ingreso"
               name="perfil_ingreso"
               class="w-full border border-gray-300 rounded-md p-2 resize-none"
@@ -227,7 +227,7 @@
             PERFIL DE EGRESO
           </td>
           <td class="border border-gray-300 px-4 py-2 w-3/4">
-            <textarea
+            <textarea pTextarea  [autoResize]="true"
               [(ngModel)]="nuevoCurso.objetivos.perfil_egreso"
               name="perfil_egreso"
               class="w-full border border-gray-300 rounded-md p-2 resize-none"
@@ -240,7 +240,7 @@
             PERFIL DEL DOCENTE / INSTRUCTOR
           </td>
           <td class="border border-gray-300 px-4 py-2 w-3/4">
-            <textarea
+            <textarea pTextarea  [autoResize]="true"
               [(ngModel)]="nuevoCurso.objetivos.perfil_del_docente"
               name="perfil_del_docente"
               class="w-full border border-gray-300 rounded-md p-2 resize-none"
@@ -253,7 +253,7 @@
             METODOLOGÍA DE CAPACITACIÓN
           </td>
           <td class="border border-gray-300 px-4 py-2 w-3/4">
-            <textarea
+            <textarea pTextarea  [autoResize]="true"
               [(ngModel)]="nuevoCurso.objetivos.metodologia"
               name="metodologia"
               class="w-full border border-gray-300 rounded-md p-2 resize-none"
@@ -266,7 +266,7 @@
             BIBLIOGRAFÍA
           </td>
           <td class="border border-gray-300 px-4 py-2 w-3/4">
-            <textarea
+            <textarea pTextarea  [autoResize]="true"
               [(ngModel)]="nuevoCurso.objetivos.bibliografia"
               name="bibliografia"
               class="w-full border border-gray-300 rounded-md p-2 resize-none"
@@ -279,7 +279,7 @@
             CRITERIOS DE ACREDITACIÓN
           </td>
           <td class="border border-gray-300 px-4 py-2 w-3/4">
-            <textarea
+            <textarea pTextarea  [autoResize]="true"
               [(ngModel)]="nuevoCurso.objetivos.criteriosAcreditacion"
               name="criteriosAcreditacion"
               class="w-full border border-gray-300 rounded-md p-2 resize-none"
@@ -292,7 +292,7 @@
             RECONOCIMIENTO AL ALUMNO
           </td>
           <td class="border border-gray-300 px-4 py-2 w-3/4">
-            <textarea
+            <textarea pTextarea  [autoResize]="true"
               [(ngModel)]="nuevoCurso.objetivos.reconocimiento"
               name="reconocimiento"
               class="w-full border border-gray-300 rounded-md p-2 resize-none"
@@ -340,19 +340,19 @@
             <tr *ngFor="let tema of nuevoCurso.contenidoProgramatico.temas; let i = index">
               <td class="border border-gray-300 px-4 py-2 text-center">{{ i + 1 }}</td>
               <td class="border border-gray-300 px-4 py-2">
-                <textarea [(ngModel)]="tema.nombre" name="nombre_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="2"></textarea>
+                <textarea pTextarea  [autoResize]="true" [(ngModel)]="tema.nombre" name="nombre_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="2"></textarea>
               </td>
               <td class="border border-gray-300 px-4 py-2 text-center">
                 <input type="number" [(ngModel)]="tema.tiempo" name="tiempo_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" />
               </td>
               <td class="border border-gray-300 px-4 py-2">
-                <textarea [(ngModel)]="tema.competencias" name="competencias_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="2"></textarea>
+                <textarea pTextarea  [autoResize]="true" [(ngModel)]="tema.competencias" name="competencias_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="2"></textarea>
               </td>
               <td class="border border-gray-300 px-4 py-2">
-                <textarea [(ngModel)]="tema.evaluacion" name="evaluacion_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="2"></textarea>
+                <textarea pTextarea  [autoResize]="true" [(ngModel)]="tema.evaluacion" name="evaluacion_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="2"></textarea>
               </td>
               <td class="border border-gray-300 px-4 py-2">
-                <textarea [(ngModel)]="tema.actividades" name="actividades_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="3"></textarea>
+                <textarea pTextarea  [autoResize]="true" [(ngModel)]="tema.actividades" name="actividades_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="3"></textarea>
               </td>
               <td class="border border-gray-300 px-4 py-2 text-center">
                 <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" (click)="eliminarTema(i)">

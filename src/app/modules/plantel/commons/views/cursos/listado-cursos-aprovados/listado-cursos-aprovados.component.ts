@@ -236,47 +236,6 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     this.mostrarFormulario = !this.mostrarFormulario;
   }
 
-  // agregarCurso(): void {
-  //   this.authService
-  //     .getIdFromToken()
-  //     .then((plantelId) => {
-  //       console.log('Plantel ID:', plantelId);
-
-  //       if (!plantelId) {
-  //         console.error('No se pudo obtener el ID del plantel');
-  //         return;
-  //       }
-
-  //       const cursoData = {
-  //         id: 0,
-  //         nombre: this.cursoForm.get('nombre')?.value,
-  //         duracion_horas: this.cursoForm.get('duracion_horas')?.value,
-  //         descripcion: this.cursoForm.get('descripcion')?.value,
-  //         nivel: this.cursoForm.get('nivel')?.value,
-  //         clave: this.cursoForm.get('clave')?.value,
-  //         area_id: this.cursoForm.get('area_id')?.value,
-  //         especialidad_id: this.cursoForm.get('especialidad_id')?.value,
-  //         tipo_curso_id: this.cursoForm.get('tipo_curso_id')?.value,
-  //         plantel_id: plantelId,
-  //       };
-
-  //       console.log('Datos enviados al backend:', cursoData);
-
-  //       this.http.post<Modulo>(`${this.apiUrl}/cursos`, cursoData).subscribe({
-  //         next: (cursoCreado) => {
-  //           this.modulos.push(cursoCreado);
-  //           this.mostrarFormulario = false;
-  //           console.log('Curso agregado correctamente');
-  //         },
-  //         error: (err) => {
-  //           console.error('Error al agregar el curso:', err);
-  //         },
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error al obtener el ID del plantel:', error);
-  //     });
-  // }
 
   editarCurso(curso: Modulo): void {
     this.cursoSeleccionado = { ...curso };
@@ -441,4 +400,160 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     const jsonData = JSON.stringify(cursoData);
     console.log(jsonData); // Aquí puedes enviar el JSON a tu API o donde lo necesites
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ modalVisibleInstructor: boolean = false;
+ modalVisibleAlumno: boolean = false;
+    tituloModal: string = '';
+    tablaData: any[] = [];
+
+    // Datos de ejemplo
+    alumnosNuevos = [
+        { nombre: 'Carlos', apellido: 'Hernández', selected: false},
+        { nombre: 'María', apellido: 'López' ,selected: false},
+        { nombre: 'Luis', apellido: 'González',selected: false }
+    ];
+
+    // Datos de instructores
+    instructores = [
+      { nombre: 'Ana', apellido: 'Martínez', selected: false },
+      { nombre: 'Pedro', apellido: 'Rodríguez', selected: true },
+      { nombre: 'Sofía', apellido: 'Torres', selected: false },
+      { nombre: 'Luis', apellido: 'Gómez', selected: false },
+      { nombre: 'pepe', apellido: 'Gómez', selected: false },
+      { nombre: 'Luis', apellido: 'Gómez', selected: false },
+      { nombre: 'antonio', apellido: 'Gómez', selected: false },
+      { nombre: 'raul', apellido: 'Gómez', selected: false },
+      { nombre: 'juan', apellido: 'Gómez', selected: false },
+      { nombre: 'mario', apellido: 'Gómez', selected: false },
+      { nombre: 'María', apellido: 'Fernández', selected: false }
+    ];
+
+    // Método para abrir el modal con la tabla específica
+   
+   
+    
+    agregarAlumno(){
+      this.modalVisibleAlumno = true;
+  
+    }
+    agregarInstructor() {
+        this.modalVisibleInstructor = true;
+    }
+
+    // Método para cerrar el modal
+    closeModalInstructures() {
+        this.modalVisibleInstructor = false;
+        this.tituloModal = '';
+        this.tablaData = [];
+    }
+    closeModalAlumnos() {
+        this.modalVisibleAlumno = false;
+        this.tituloModal = '';
+        this.tablaData = [];
+    }
+    isModalVisible = false;
+    // tituloModal = 'Lista de Usuarios';
+   
+    rowsPerPage = 10;
+    currentPage = 1;
+
+    // Paginación
+  // currentPage = 1;
+  // itemsPerPage = 3;
+
+    
+     // Obtener datos paginados solo de instructores
+  get paginatedData() {
+    const startIndex = (this.currentPage - 1) * this.rowsPerPage;
+    return this.instructores.slice(startIndex, startIndex + this.rowsPerPage);
+  }
+    
+    get totalPages() {
+      return Math.ceil(this.instructores.length / this.rowsPerPage);
+    }
+    
+    toggleSelectAll(event: Event) {
+      const checked = (event.target as HTMLInputElement).checked;
+      this.instructores.forEach(item => (item.selected = checked));
+    }
+    
+    get allSelected() {
+      return this.instructores.every(item => item.selected);
+    }
+    
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+    }
+    
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+      }
+    }
+
+
+ // Configuración para manejar los alumnos
+
+// Obtener datos paginados solo de alumnos
+get paginatedDataAlumno() {
+  const startIndex = (this.currentPage - 1) * this.rowsPerPage;
+  return this.alumnosNuevos.slice(startIndex, startIndex + this.rowsPerPage);
+}
+
+// Calcular el total de páginas para los alumnos
+get totalPagesAlumnos() {
+  return Math.ceil(this.alumnosNuevos.length / this.rowsPerPage);
+}
+
+// Seleccionar o deseleccionar todos los alumnos
+toggleSelectAllAlumnos(event: Event) {
+  const checked = (event.target as HTMLInputElement).checked;
+  this.alumnosNuevos.forEach(item => (item.selected = checked));
+}
+
+// Verificar si todos los alumnos están seleccionados
+get allSelectedAlumnos() {
+  return this.alumnosNuevos.every(item => item.selected);
+}
+
+// Navegar a la página anterior para alumnos
+prevPageAlumnos() {
+  if (this.currentPage > 1) {
+    this.currentPage--;
+  }
+}
+
+// Navegar a la página siguiente para alumnos
+nextPageAlumnos() {
+  if (this.currentPage < this.totalPagesAlumnos) {
+    this.currentPage++;
+  }
+}
+
+
+
+
+  
 }
