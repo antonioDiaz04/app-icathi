@@ -2,7 +2,7 @@ import { Component, ElementRef, LOCALE_ID, OnInit, ViewChild } from '@angular/co
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../../../environments/environment.prod';
 import { AuthService } from '../../../../../../shared/services/auth.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DocenteService } from '../../../../../../shared/services/docente.service';
 import { CursosdocentesService } from '../../../../../../shared/services/cursosdocentes.service';
 import { AspiranteService } from '../../../../../../shared/services/aspirante.service';
@@ -87,6 +87,12 @@ export class ListadoCursosAprovadosComponent implements OnInit {
   filtro: 'todos' | 'validados' | 'no-validados' = 'todos';
   @ViewChild('docenteInput') docenteInput!: ElementRef;
 
+
+  cursoForm!: FormGroup;
+
+
+
+
   constructor(
     private docenteService: DocenteService,
     private http: HttpClient,
@@ -94,8 +100,54 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     private plantelService: PlantelService,
     private authService: AuthService,
     private cursoDocenteS_: CursosdocentesService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+  
   ) {
+  
+
+    this.cursoForm = this.fb.group({
+      nombre: [''],
+      area_nombre: [''],
+      especialidad_nombre: [''],
+      fecha_inicio: [''],
+      fecha_fin: [''],
+      cupo_maximo: [''],
+      requisitos_extra: [''],
+      sector_atendido: [''],
+      rango_edad: [''],
+      tipo_beca: [''],
+      tipo_curso: [''],
+      convenio_numero: [''],
+      cruzada_contra_hambre: [''],
+      cuota_tipo: [''],
+      cuota_monto: [''],
+      pagar_final: [false],
+      participantes: [''],
+      cant_instructores: [''],
+      calle: [''],
+        localidad: [''],
+        municipio: [''],
+        num_interior: [''],
+        num_exterior: [''],
+      
+        lunes_inicio: [''],
+        lunes_fin: [''],
+        martes_inicio: [''],
+        martes_fin: [''],
+        miercoles_inicio: [''],
+        miercoles_fin: [''],
+        jueves_inicio: [''],
+        jueves_fin: [''],
+        viernes_inicio: [''],
+        viernes_fin: [''],
+        sabado_inicio: [''],
+        sabado_fin: [''],
+        domingo_inicio: [''],
+        domingo_fin: ['']
+    ,
+      docentes: this.fb.array([]),
+      alumnos: this.fb.array([])
+    });
   }
 
 
@@ -128,22 +180,97 @@ export class ListadoCursosAprovadosComponent implements OnInit {
 
   // cursosFiltrados!:Modulo;
   openModal(idPlantelCurso: any) {
-  alert(idPlantelCurso)
+    alert(idPlantelCurso);
     this.mostrarFormulario = !this.mostrarFormulario;
-    this.plantelService
-      .getInfoCursoPlantel(idPlantelCurso)
-      .subscribe((response) => {
-        this.alumnos = response.alumnos;
-        this.docentes = response.docentes;
-        this.curso = response.curso;
-
-        // Acceder directamente al id del curso
-        const curso = response.curso; // Cambiado de response.curso[0].id a response.curso.id
-        this.curso = curso; // Asignar el idCurso a this.idCUrso
-
-        console.log(curso); // Imprimir el id del curso
+  
+    this.plantelService.getInfoCursoPlantel(idPlantelCurso).subscribe((response:any) => {
+      this.alumnos = response.alumnos;
+      this.docentes = response.docentes;
+      this.curso = response.curso;
+      const cursohorario = response.curso.horario;
+  
+      // Cargar la información del curso en el formulario
+      this.cursoForm.patchValue({
+        nombre: this.curso.nombre,
+        area_nombre: this.curso.area_nombre,
+        especialidad_nombre: this.curso.especialidad_nombre,
+        fecha_inicio:this.formatDate(this.curso.fecha_inicio),
+        fecha_fin:   this.formatDate(this.curso.fecha_fin),
+        cupo_maximo: this.curso.cupo_maximo,
+        requisitos_extra: this.curso.requisitos_extra,
+        sector_atendido: this.curso.sector_atendido,
+        rango_edad: this.curso.rango_edad,
+        tipo_beca: this.curso.tipo_beca,
+        tipo_curso: this.curso.tipo_curso,
+        convenio_numero: this.curso.convenio_numero,
+        cruzada_contra_hambre: this.curso.cruzada_contra_hambre,
+        cuota_tipo: this.curso.cuota_tipo,
+        cuota_monto: this.curso.cuota_monto,
+        pagar_final: this.curso.pagar_final,
+        participantes: this.curso.participantes,
+        cant_instructores: this.curso.cant_instructores,
+        // plantel: {
+          calle: this.curso.plantel.calle,
+          localidad: this.curso.plantel.localidad,
+          municipio: this.curso.plantel.municipio,
+          num_interior: this.curso.plantel.num_interior,
+          num_exterior: this.curso.plantel.num_exterior,
+        // },
+      
+          lunes_inicio: cursohorario.lunes_inicio,
+          lunes_fin: cursohorario.lunes_fin,
+          martes_inicio: cursohorario.martes_inicio,
+          martes_fin: cursohorario.martes_fin,
+          miercoles_inicio: cursohorario.miercoles_inicio,
+          miercoles_fin: cursohorario.miercoles_fin,
+          jueves_inicio: cursohorario.jueves_inicio,
+          jueves_fin: cursohorario.jueves_fin,
+          viernes_inicio: cursohorario.viernes_inicio,
+          viernes_fin: cursohorario.viernes_fin,
+          sabado_inicio: cursohorario.sabado_inicio,
+          sabado_fin: cursohorario.sabado_fin,
+          domingo_inicio: cursohorario.domingo_inicio,
+          domingo_fin: cursohorario.domingo_fin
+        
       });
+
+
+  
+      // Limpiar los arrays de docentes y alumnos
+      this.cursoForm.setControl('docentes', this.fb.array([]));
+      this.cursoForm.setControl('alumnos', this.fb.array([]));
+  
+      // Cargar los docentes en el FormArray
+      const docentesArray = this.cursoForm.get('docentes') as FormArray;
+      this.docentes.forEach(docente => {
+        docentesArray.push(this.fb.group({
+          nombre: docente.nombre,
+          docente_apellidos: docente.docente_apellidos,
+          email: docente.email,
+          telefono: docente.telefono
+        }));
+      });
+  
+      // Cargar los alumnos en el FormArray
+      const alumnosArray = this.cursoForm.get('alumnos') as FormArray;
+      this.alumnos.forEach((alumno:any) => {
+        alumnosArray.push(this.fb.group({
+          nombre: alumno.nombre,
+          apellidos: alumno.apellidos,
+          email: alumno.email,
+          telefono: alumno.telefono
+        }));
+      });
+  
+      console.log(this.cursoForm.value); // Para verificar que los datos se han cargado correctamente
+    });
   }
+
+  formatDate(date: string): string {
+    const d = new Date(date);
+    return d.toISOString().split('T')[0]; // Retorna solo la parte de fecha en formato YYYY-MM-DD
+  }
+  
 
   closeModal() {
     this.mostrarFormulario = !this.mostrarFormulario;
@@ -285,24 +412,7 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     });
   }
 
-  // verDetalles(plantelCurso: any): void {
-  //   this.cursoDetalleSeleccionado = plantelCurso;
 
-  //   // this.authService.getIdFromToken().then((idPlantelCurso) => {
-  //     this.plantelService
-  //       .getInfoCursoPlantelByiD(plantelCurso)
-  //       .subscribe((detalails) => {
-  //         this.cursoDetails = detalails;
-  //         const mappedDetails = {
-  //           curso_id: this.cursoDetails.id,
-  //           curso_nombre: this.cursoDetails.nombre,
-  //           docente_asignado: this.cursoDetails.docente
-  //         };
-  //         this.cursoForm.patchValue(mappedDetails);
-  //       });
-  //   // });
-
-  // }
   actualizarCurso() {
     const index = this.cursosFiltrados.findIndex(
       (curso: any) => curso.id === this.cursoSeleccionado?.curso
@@ -361,51 +471,30 @@ export class ListadoCursosAprovadosComponent implements OnInit {
   }
 
 
-
-
-
-  // Método para guardar cambios
   guardarCambios() {
+    // Combina todo el objeto de curso con las demás propiedades
     const cursoData = {
-      nombre: this.curso.nombre,
-      area_nombre: this.curso.area_nombre,
-      especialidad_nombre: this.curso.especialidad_nombre,
-      fecha_inicio: this.curso.fecha_inicio,
-      fecha_fin: this.curso.fecha_fin,
-      cupo_maximo: this.curso.cupo_maximo,
-      requisitos_extra: this.curso.requisitos_extra,
-      sector_atendido: this.curso.sector_atendido,
-      rango_edad: this.curso.rango_edad,
-      tipo_beca: this.curso.tipo_beca,
-      tipo_curso: this.curso.tipo_curso,
-      convenio_numero: this.curso.convenio_numero,
-      cruzada_contra_hambre: this.curso.cruzada_contra_hambre,
-      cuota_tipo: this.curso.cuota_tipo,
-      cuota_monto: this.curso.cuota_monto,
-      pagar_final: this.curso.pagar_final,
-      participantes: this.curso.participantes,
-      cant_instructores: this.curso.cant_instructores,
-      plantel: {
-        calle: this.curso.plantel.calle,
-        localidad: this.curso.plantel.localidad,
-        municipio: this.curso.plantel.municipio,
-        num_interior: this.curso.plantel.num_interior,
-        num_exterior: this.curso.plantel.num_exterior
-      },
-      horario: this.curso.horario,
-      docentes: this.docentes,
-      alumnos: this.alumnos
+      ...this.cursoForm.value, // Toma todas las propiedades del formulario
+      docentes: this.cursoForm.get('docentes')?.value, // Incluye los docentes del FormArray
+      alumnos: this.cursoForm.get('alumnos')?.value // Incluye los alumnos del FormArray
     };
-
+  
+    // Serializa a JSON
     const jsonData = JSON.stringify(cursoData);
-    console.log(jsonData); // Aquí puedes enviar el JSON a tu API o donde lo necesites
+  
+    // Muestra en consola el resultado
+    console.log(jsonData);
+  
+    // Aquí puedes enviar jsonData a tu API o donde lo necesites
+    // this.plantelService.guardarCurso(jsonData).subscribe(response => {
+    //   // Manejo de la respuesta después de guardar
+    //   console.log('Curso guardado con éxito:', response);
+    // }, error => {
+    //   // Manejo de errores
+    //   console.error('Error al guardar el curso:', error);
+    // });
   }
-
-
-
-
-
-
+  
 
 
 
@@ -426,36 +515,52 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     tituloModal: string = '';
     tablaData: any[] = [];
 
-    // Datos de ejemplo
-    alumnosNuevos = [
-        { nombre: 'Carlos', apellido: 'Hernández', selected: false},
-        { nombre: 'María', apellido: 'López' ,selected: false},
-        { nombre: 'Luis', apellido: 'González',selected: false }
-    ];
+    // Datos iniciales
+    alumnosNuevos!:any[];
 
-    // Datos de instructores
     instructores = [
       { nombre: 'Ana', apellido: 'Martínez', selected: false },
       { nombre: 'Pedro', apellido: 'Rodríguez', selected: true },
       { nombre: 'Sofía', apellido: 'Torres', selected: false },
       { nombre: 'Luis', apellido: 'Gómez', selected: false },
-      { nombre: 'pepe', apellido: 'Gómez', selected: false },
-      { nombre: 'Luis', apellido: 'Gómez', selected: false },
-      { nombre: 'antonio', apellido: 'Gómez', selected: false },
-      { nombre: 'raul', apellido: 'Gómez', selected: false },
-      { nombre: 'juan', apellido: 'Gómez', selected: false },
-      { nombre: 'mario', apellido: 'Gómez', selected: false },
+      { nombre: 'Pepe', apellido: 'Gómez', selected: false },
+      { nombre: 'Antonio', apellido: 'Gómez', selected: false },
+      { nombre: 'Raúl', apellido: 'Gómez', selected: false },
+      { nombre: 'Juan', apellido: 'Gómez', selected: false },
+      { nombre: 'Mario', apellido: 'Gómez', selected: false },
       { nombre: 'María', apellido: 'Fernández', selected: false }
     ];
-
-    // Método para abrir el modal con la tabla específica
-   
+    
+    // Variable para manejar la visibilidad del modal
    
     
-    agregarAlumno(){
+    
+    // Método para abrir el modal y realizar la petición
+    agregarAlumno() {
+      // Mostrar el modal
       this.modalVisibleAlumno = true;
-  
+    
+      // Realizar la petición para obtener los alumnos
+      this.http.get(`${environment.api}/alumno`).subscribe(
+        (response: any) => {
+          console.log('Respuesta de la API:', response);
+    
+          // Procesar la respuesta y actualizar `alumnosNuevos`
+          this.alumnosNuevos = response.map((alumno: any) => ({
+            nombre: alumno.nombre,
+            apellido: alumno.apellido,
+            selected: false // Añadir la propiedad `selected` a cada alumno
+          }));
+    
+          console.log('Lista actualizada de alumnos nuevos:', this.alumnosNuevos);
+        },
+        (error) => {
+          console.error('Error al obtener alumnos:', error);
+        }
+      );
     }
+    
+
     agregarInstructor() {
         this.modalVisibleInstructor = true;
     }

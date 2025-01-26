@@ -1,10 +1,8 @@
 <!-- Formulario para agregar curso -->
-<div class="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
+<div class="bg-white p-8 rounded-lg border border-gray-200">
   <h2 class="text-2xl font-bold text-gray-800 mb-6">Información del Curso</h2>
   <form (ngSubmit)="agregarCurso()" #cursoForm="ngForm" class="space-y-6">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      
-    
       <!-- Tipo de Curso -->
       <div>
         <label class="block text-sm font-medium">Tipo de Curso</label>
@@ -20,7 +18,7 @@
           </option>
         </select>
       </div>
-    
+
       <!-- Nombre del Curso -->
       <div>
         <label class="block text-sm font-medium">Nombre del Curso</label>
@@ -33,7 +31,7 @@
           placeholder="Nombre del curso"
         />
       </div>
-    
+
       <!-- Clave -->
       <div>
         <label class="block text-sm font-medium">Clave</label>
@@ -46,7 +44,7 @@
           placeholder="Clave"
         />
       </div>
-    
+
       <!-- Duración -->
       <div>
         <label class="block text-sm font-medium">Duración (Horas)</label>
@@ -60,11 +58,13 @@
         />
       </div>
     </div>
-    
+
     <!-- Descripción -->
     <div>
       <label class="block text-sm font-medium">Descripción</label>
-      <textarea pTextarea  [autoResize]="true"
+      <textarea
+        pTextarea
+        [autoResize]="true"
         [(ngModel)]="nuevoCurso.descripcion"
         name="descripcion"
         required
@@ -79,7 +79,7 @@
         La descripción es obligatoria.
       </div>
     </div>
-    
+
     <!-- Nivel -->
     <div>
       <label class="block text-sm font-medium">Nivel</label>
@@ -102,7 +102,6 @@
       </div>
     </div>
 
-
     <div class="flex space-x-4">
       <!-- Vigencia Inicio -->
       <div class="flex-1">
@@ -116,7 +115,7 @@
           placeholder="Vigencia inicio"
         />
       </div>
-    
+
       <!-- Fecha de Publicación -->
       <div class="flex-1">
         <label class="block text-sm font-medium">Fecha de Publicación</label>
@@ -129,7 +128,7 @@
           placeholder="Fecha de publicación"
         />
       </div>
-    
+
       <!-- Costo -->
       <div class="flex-1">
         <label class="block text-sm font-medium">Costo</label>
@@ -144,133 +143,191 @@
       </div>
     </div>
 
+    <div class="flex space-x-4">
+      <!-- Vigencia Inicio -->
+      <div class="flex-1">
+        <label class="block text-sm font-medium">Revisado por</label>
+        <input
+          type="text"
+          [(ngModel)]="nuevoCurso.revisado_por"
+          name="revisado_por"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+          placeholder="Nombre"
+        />
+      </div>
 
+      <!-- Fecha de Publicación -->
+      <div class="flex-1">
+        <label class="block text-sm font-medium">Autorizado por</label>
+        <input
+          type="text"
+          [(ngModel)]="nuevoCurso.autorizado_por"
+          name="autorizado_por"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+          placeholder="Nombre"
+        />
+      </div>
+
+      <!-- Costo -->
+      <div class="flex-1">
+        <label class="block text-sm font-medium">Elaborado por</label>
+        <input
+          type="text"
+          [(ngModel)]="nuevoCurso.elaborado_por"
+          name="elaborado_por"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+          placeholder="Nombre"
+        />
+      </div>
+    </div>
 
     <h2 class="text-2xl font-bold text-gray-800 mb-6">Objetivos del Curso</h2>
 
-   <!-- Tabla de objetivos -->
-<div class="overflow-x-auto">
-  <!-- Tabla de objetivos del curso -->
-  <table class="w-full border-collapse border border-gray-300 mt-8">
-    <thead>
-      <tr class="bg-gray-100">
-        <th class="border border-gray-300 px-4 py-2 text-left font-semibold w-1/4">
-          Título
-        </th>
-        <th class="border border-gray-300 px-4 py-2 text-left font-semibold w-3/4">
-          Descripción
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
-          OBJETIVO DEL CURSO
-        </td>
-        <td class="border border-gray-300 px-4 py-2 w-3/4">
-          <textarea pTextarea  [autoResize]="true"
-            [(ngModel)]="nuevoCurso.objetivos.objetivo"
-            name="objetivo"
-            class="w-full border border-gray-300 rounded-md p-2 resize-none"
-            rows="3"
-          ></textarea>
-        </td>
-      </tr>
-      <tr>
-        <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
-          PERFIL DE INGRESO
-        </td>
-        <td class="border border-gray-300 px-4 py-2 w-3/4">
-          <textarea pTextarea  [autoResize]="true"
-            [(ngModel)]="nuevoCurso.objetivos.perfil_ingreso"
-            name="perfil_ingreso"
-            class="w-full border border-gray-300 rounded-md p-2 resize-none"
-            rows="4"
-          ></textarea>
-        </td>
-      </tr>
-      <tr>
-        <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
-          PERFIL DE EGRESO
-        </td>
-        <td class="border border-gray-300 px-4 py-2 w-3/4">
-          <textarea pTextarea  [autoResize]="true"
-            [(ngModel)]="nuevoCurso.objetivos.perfil_egreso"
-            name="perfil_egreso"
-            class="w-full border border-gray-300 rounded-md p-2 resize-none"
-            rows="5"
-          ></textarea>
-        </td>
-      </tr>
-      <tr>
-        <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
-          PERFIL DEL DOCENTE / INSTRUCTOR
-        </td>
-        <td class="border border-gray-300 px-4 py-2 w-3/4">
-          <textarea pTextarea  [autoResize]="true"
-            [(ngModel)]="nuevoCurso.objetivos.perfil_del_docente"
-            name="perfil_del_docente"
-            class="w-full border border-gray-300 rounded-md p-2 resize-none"
-            rows="6"
-          ></textarea>
-        </td>
-      </tr>
-      <tr>
-        <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
-          METODOLOGÍA DE CAPACITACIÓN
-        </td>
-        <td class="border border-gray-300 px-4 py-2 w-3/4">
-          <textarea pTextarea  [autoResize]="true"
-            [(ngModel)]="nuevoCurso.objetivos.metodologia"
-            name="metodologia"
-            class="w-full border border-gray-300 rounded-md p-2 resize-none"
-            rows="3"
-          ></textarea>
-        </td>
-      </tr>
-      <tr>
-        <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
-          BIBLIOGRAFÍA
-        </td>
-        <td class="border border-gray-300 px-4 py-2 w-3/4">
-          <textarea pTextarea  [autoResize]="true"
-            [(ngModel)]="nuevoCurso.objetivos.bibliografia"
-            name="bibliografia"
-            class="w-full border border-gray-300 rounded-md p-2 resize-none"
-            rows="3"
-          ></textarea>
-        </td>
-      </tr>
-      <tr>
-        <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
-          CRITERIOS DE ACREDITACIÓN
-        </td>
-        <td class="border border-gray-300 px-4 py-2 w-3/4">
-          <textarea pTextarea  [autoResize]="true"
-            [(ngModel)]="nuevoCurso.objetivos.criteriosAcreditacion"
-            name="criteriosAcreditacion"
-            class="w-full border border-gray-300 rounded-md p-2 resize-none"
-            rows="3"
-          ></textarea>
-        </td>
-      </tr>
-      <tr>
-        <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
-          RECONOCIMIENTO AL ALUMNO
-        </td>
-        <td class="border border-gray-300 px-4 py-2 w-3/4">
-          <textarea pTextarea  [autoResize]="true"
-            [(ngModel)]="nuevoCurso.objetivos.reconocimiento"
-            name="reconocimiento"
-            class="w-full border border-gray-300 rounded-md p-2 resize-none"
-            rows="3"
-          ></textarea>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+    <!-- Tabla de objetivos -->
+    <div class="overflow-x-auto">
+      <!-- Tabla de objetivos del curso -->
+      <table class="w-full border-collapse border border-gray-300 mt-8">
+        <thead>
+          <tr class="bg-gray-100">
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold w-1/4"
+            >
+              Título
+            </th>
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold w-3/4"
+            >
+              Descripción
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+              OBJETIVO DEL CURSO
+            </td>
+            <td class="border border-gray-300 px-4 py-2 w-3/4">
+              <textarea
+                pTextarea
+                [autoResize]="true"
+                [(ngModel)]="nuevoCurso.objetivos.objetivo"
+                name="objetivo"
+                class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                rows="3"
+              ></textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+              PERFIL DE INGRESO
+            </td>
+            <td class="border border-gray-300 px-4 py-2 w-3/4">
+              <textarea
+                pTextarea
+                [autoResize]="true"
+                [(ngModel)]="nuevoCurso.objetivos.perfil_ingreso"
+                name="perfil_ingreso"
+                class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                rows="4"
+              ></textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+              PERFIL DE EGRESO
+            </td>
+            <td class="border border-gray-300 px-4 py-2 w-3/4">
+              <textarea
+                pTextarea
+                [autoResize]="true"
+                [(ngModel)]="nuevoCurso.objetivos.perfil_egreso"
+                name="perfil_egreso"
+                class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                rows="5"
+              ></textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+              PERFIL DEL DOCENTE / INSTRUCTOR
+            </td>
+            <td class="border border-gray-300 px-4 py-2 w-3/4">
+              <textarea
+                pTextarea
+                [autoResize]="true"
+                [(ngModel)]="nuevoCurso.objetivos.perfil_del_docente"
+                name="perfil_del_docente"
+                class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                rows="6"
+              ></textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+              METODOLOGÍA DE CAPACITACIÓN
+            </td>
+            <td class="border border-gray-300 px-4 py-2 w-3/4">
+              <textarea
+                pTextarea
+                [autoResize]="true"
+                [(ngModel)]="nuevoCurso.objetivos.metodologia"
+                name="metodologia"
+                class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                rows="3"
+              ></textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+              BIBLIOGRAFÍA
+            </td>
+            <td class="border border-gray-300 px-4 py-2 w-3/4">
+              <textarea
+                pTextarea
+                [autoResize]="true"
+                [(ngModel)]="nuevoCurso.objetivos.bibliografia"
+                name="bibliografia"
+                class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                rows="3"
+              ></textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+              CRITERIOS DE ACREDITACIÓN
+            </td>
+            <td class="border border-gray-300 px-4 py-2 w-3/4">
+              <textarea
+                pTextarea
+                [autoResize]="true"
+                [(ngModel)]="nuevoCurso.objetivos.criteriosAcreditacion"
+                name="criteriosAcreditacion"
+                class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                rows="3"
+              ></textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+              RECONOCIMIENTO AL ALUMNO
+            </td>
+            <td class="border border-gray-300 px-4 py-2 w-3/4">
+              <textarea
+                pTextarea
+                [autoResize]="true"
+                [(ngModel)]="nuevoCurso.objetivos.reconocimiento"
+                name="reconocimiento"
+                class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                rows="3"
+              ></textarea>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <h2 class="text-2xl font-bold text-gray-800 mb-6">
       Contenido Programático
@@ -280,55 +337,116 @@
       <table class="w-full border-collapse border border-gray-300 mt-8">
         <thead>
           <tr class="bg-gray-100">
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold w-1/12">
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold w-1/12"
+            >
               No.
             </th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold w-2/12">
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold w-2/12"
+            >
               Nombre del Tema
             </th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold w-1/12">
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold w-1/12"
+            >
               Tiempo (HRS)
             </th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold w-2/12">
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold w-2/12"
+            >
               Competencias a Desarrollar
             </th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold w-2/12">
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold w-2/12"
+            >
               Instrumentos de Evaluación
             </th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold w-4/12">
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold w-4/12"
+            >
               Actividades de Enseñanza-Aprendizaje
             </th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold w-1/12">
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold w-1/12"
+            >
               Acción
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let tema of nuevoCurso.contenidoProgramatico.temas; let i = index">
-            <td class="border border-gray-300 px-4 py-2 text-center">{{ i + 1 }}</td>
+          <tr
+            *ngFor="
+              let tema of nuevoCurso.contenidoProgramatico.temas;
+              let i = index
+            "
+          >
+            <td class="border border-gray-300 px-4 py-2 text-center">
+              {{ i + 1 }}
+            </td>
             <td class="border border-gray-300 px-4 py-2">
-              <textarea pTextarea  [autoResize]="true" [(ngModel)]="tema.nombre" name="nombre_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="2"></textarea>
+              <textarea
+                pTextarea
+                [autoResize]="true"
+                [(ngModel)]="tema.nombre"
+                name="nombre_{{ i }}"
+                class="w-full border border-gray-300 px-2 py-1 rounded-md"
+                rows="2"
+              ></textarea>
             </td>
             <td class="border border-gray-300 px-4 py-2 text-center">
-              <input type="number" [(ngModel)]="tema.tiempo" name="tiempo_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" />
+              <input
+                type="number"
+                [(ngModel)]="tema.tiempo"
+                name="tiempo_{{ i }}"
+                class="w-full border border-gray-300 px-2 py-1 rounded-md"
+              />
             </td>
             <td class="border border-gray-300 px-4 py-2">
-              <textarea pTextarea  [autoResize]="true" [(ngModel)]="tema.competencias" name="competencias_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="2"></textarea>
+              <textarea
+                pTextarea
+                [autoResize]="true"
+                [(ngModel)]="tema.competencias"
+                name="competencias_{{ i }}"
+                class="w-full border border-gray-300 px-2 py-1 rounded-md"
+                rows="2"
+              ></textarea>
             </td>
             <td class="border border-gray-300 px-4 py-2">
-              <textarea pTextarea  [autoResize]="true" [(ngModel)]="tema.evaluacion" name="evaluacion_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="2"></textarea>
+              <textarea
+                pTextarea
+                [autoResize]="true"
+                [(ngModel)]="tema.evaluacion"
+                name="evaluacion_{{ i }}"
+                class="w-full border border-gray-300 px-2 py-1 rounded-md"
+                rows="2"
+              ></textarea>
             </td>
             <td class="border border-gray-300 px-4 py-2">
-              <textarea pTextarea  [autoResize]="true" [(ngModel)]="tema.actividades" name="actividades_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="3"></textarea>
+              <textarea
+                pTextarea
+                [autoResize]="true"
+                [(ngModel)]="tema.actividades"
+                name="actividades_{{ i }}"
+                class="w-full border border-gray-300 px-2 py-1 rounded-md"
+                rows="3"
+              ></textarea>
             </td>
             <td class="border border-gray-300 px-4 py-2 text-center">
-              <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" (click)="eliminarTema(i)">
+              <button
+                type="button"
+                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                (click)="eliminarTema(i)"
+              >
                 Eliminar
               </button>
             </td>
           </tr>
           <tr>
-            <td colspan="6" class="border border-gray-300 px-4 py-2 text-center">
+            <td
+              colspan="6"
+              class="border border-gray-300 px-4 py-2 text-center"
+            >
               Total Horas
             </td>
             <td class="border border-gray-300 px-4 py-2 text-center">
@@ -337,12 +455,14 @@
           </tr>
         </tbody>
       </table>
-      <button type="button" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" (click)="agregarTema()">
+      <button
+        type="button"
+        class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        (click)="agregarTema()"
+      >
         Agregar Tema
       </button>
     </div>
-    
-    
 
     <h2 class="text-2xl font-bold text-gray-800 mb-6">Materiales</h2>
 
@@ -350,25 +470,39 @@
       <table class="w-full border-collapse border border-gray-300 mt-8">
         <thead>
           <tr class="bg-gray-100">
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold"
+            >
               Descripción
             </th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold"
+            >
               Unidad de Medida
             </th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold"
+            >
               Cantidad
             </th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold"
+            >
               10
             </th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold"
+            >
               15
             </th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold"
+            >
               20
             </th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold"
+            >
               Acción
             </th>
           </tr>
@@ -376,7 +510,9 @@
         <tbody>
           <tr *ngFor="let material of nuevoCurso.materiales; let j = index">
             <td class="border border-gray-300 px-4 py-2">
-              <textarea pTextarea  [autoResize]="true"
+              <textarea
+                pTextarea
+                [autoResize]="true"
                 [(ngModel)]="material.descripcion"
                 name="descripcion{{ j }}"
                 class="border border-gray-300 rounded-md px-2 py-1 w-full"
@@ -388,7 +524,10 @@
                 name="unidad_de_medida{{ j }}"
                 class="border border-gray-300 rounded-md px-2 py-1 w-full"
               >
-                <option *ngFor="let option of unitOptions" [value]="option.value">
+                <option
+                  *ngFor="let option of unitOptions"
+                  [value]="option.value"
+                >
                   {{ option.label }}
                 </option>
               </select>
@@ -448,37 +587,68 @@
         Agregar Material
       </button>
     </div>
-    
+
     <h2 class="text-2xl font-bold text-gray-800 mb-6">Equipamiento</h2>
 
     <div class="overflow-x-auto">
       <table class="w-full border-collapse border border-gray-300 mt-8">
         <thead>
           <tr class="bg-gray-100">
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">Descripción</th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">Unidad de Medida</th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">Cantidad</th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">10</th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">15</th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">Acción</th>
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold"
+            >
+              Descripción
+            </th>
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold"
+            >
+              Unidad de Medida
+            </th>
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold"
+            >
+              Cantidad
+            </th>
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold"
+            >
+              10
+            </th>
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold"
+            >
+              15
+            </th>
+            <th
+              class="border border-gray-300 px-4 py-2 text-left font-semibold"
+            >
+              Acción
+            </th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let equipamiento of nuevoCurso.equipamiento; let k = index">
+          <tr
+            *ngFor="let equipamiento of nuevoCurso.equipamiento; let k = index"
+          >
             <td class="border border-gray-300 px-4 py-2">
-              <textarea pTextarea  [autoResize]="true"
+              <textarea
+                pTextarea
+                [autoResize]="true"
                 [(ngModel)]="equipamiento.descripcion"
-                name="descripcion{{k}}" 
+                name="descripcion{{ k }}"
                 class="border border-gray-300 rounded-md px-2 py-1 w-full"
               ></textarea>
             </td>
             <td class="border border-gray-300 px-4 py-2">
               <select
                 [(ngModel)]="equipamiento.unidad_de_medida"
-                name="unidad_de_medida{{k}}"
+                name="unidad_de_medida{{ k }}"
                 class="border border-gray-300 rounded-md px-2 py-1 w-full"
               >
-                <option *ngFor="let option of unitOptions" [value]="option.value">
+                <option
+                  *ngFor="let option of unitOptions"
+                  [value]="option.value"
+                >
                   {{ option.label }}
                 </option>
               </select>
@@ -487,7 +657,7 @@
               <input
                 type="number"
                 [(ngModel)]="equipamiento.cantidad"
-                name="cantidad{{k}}" 
+                name="cantidad{{ k }}"
                 class="border border-gray-300 rounded-md px-2 py-1 w-full"
               />
             </td>
@@ -495,7 +665,7 @@
               <input
                 type="number"
                 [(ngModel)]="equipamiento.cantidad10"
-                name="cantidad10{{k}}"
+                name="cantidad10{{ k }}"
                 class="border border-gray-300 rounded-md px-2 py-1 w-full"
               />
             </td>
@@ -503,7 +673,7 @@
               <input
                 type="number"
                 [(ngModel)]="equipamiento.cantidad15"
-                name="cantidad15{{k}}"
+                name="cantidad15{{ k }}"
                 class="border border-gray-300 rounded-md px-2 py-1 w-full"
               />
             </td>
@@ -521,33 +691,38 @@
       </table>
       <button
         type="button"
-        class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition duration-300"
         (click)="agregarEquipamiento()"
       >
         Agregar Equipamiento
       </button>
     </div>
-    
-  
- <!-- Botón para guardar -->
-<div class="flex justify-end">
-  <button
-    type="submit"
-    [disabled]="isSaving" 
-    class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition duration-300"
-  >
-    <i *ngIf="isSaving" class="loading circle icon"></i>
-    Guardar Curso
-  </button>
-</div>
 
-<!-- Alerta para mostrar mensajes -->
-<div *ngIf="alertMessage" class="ui message" [ngClass]="{'success': alertType === 'success', 'error': alertType === 'error'}">
-  <div class="header">
-    {{ alertTitle }}
-  </div>
-  <p>{{ alertMessage }}</p>
-</div>
+    <!-- Botón para guardar -->
+    <div class="flex justify-end">
+      <button
+        type="submit"
+        [disabled]="isSaving"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition duration-300"
+      >
+        <i *ngIf="isSaving" class="loading circle icon"></i>
+        Guardar Curso
+      </button>
+    </div>
 
+    <!-- Alerta para mostrar mensajes -->
+    <div
+      *ngIf="alertMessage"
+      class="ui message"
+      [ngClass]="{
+        success: alertType === 'success',
+        error: alertType === 'error'
+      }"
+    >
+      <div class="header">
+        {{ alertTitle }}
+      </div>
+      <p>{{ alertMessage }}</p>
+    </div>
   </form>
 </div>

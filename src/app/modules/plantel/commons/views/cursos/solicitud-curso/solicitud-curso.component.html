@@ -81,7 +81,7 @@
               class="w-full p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
             >
               <option value="" disabled>Seleccione la Especialidad</option>
-              <option
+              <option  @fadeIn
                 *ngFor="let especialidad of especialidadesByArea"
                 [value]="especialidad.id"
               >
@@ -102,13 +102,13 @@
           <!-- Curso -->
           <div>
             <label class="block mb-2 text-sm text-gray-700">Curso</label>
-            <select
+            <select 
               *ngIf="cursosByEspecialidad"
               formControlName="curso_id"
               class="w-full p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
             >
               <option value="" disabled>Seleccione el Curso</option>
-              <option
+              <option  @fadeIn
                 *ngFor="let curso of cursosByEspecialidad"
                 [value]="curso.id"
                 [disabled]="curso.registrado"
@@ -154,30 +154,6 @@
               placeholder="Ej. Materiales necesarios"
               rows="2"
             ></textarea>
-          </div>
-
-          <!-- Fecha de Inicio -->
-          <div class="flex items-center">
-            <label class="block mb-2 text-sm mr-4 text-gray-700"
-              >Fecha de Inicio</label
-            >
-            <input
-              type="date"
-              formControlName="fecha_inicio"
-              class="flex-1 p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
-            />
-          </div>
-
-          <!-- Fecha de Fin -->
-          <div class="flex items-center">
-            <label class="block mb-2 text-sm mr-4 text-gray-700"
-              >Fecha de Fin</label
-            >
-            <input
-              type="date"
-              formControlName="fecha_fin"
-              class="flex-1 p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
-            />
           </div>
         </div>
 
@@ -377,41 +353,41 @@
         <!-- Encabezado -->
         <h1 class="text-center text-lg font-semibold text-gray-800">HORARIO</h1>
 
-        <!-- Fechas -->
-        <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div>
-            <label
-              for="fecha-inicio"
-              class="block text-sm font-medium text-gray-700"
-              >Fecha inicial:</label
-            >
-            <input
-              type="date"
-              id="fecha-inicio"
-              class="w-full p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
-            />
-          </div>
-          <div>
-            <label
-              for="fecha-termino"
-              class="block text-sm font-medium text-gray-700"
-              >Fecha de término:</label
-            >
-            <input
-              type="date"
-              id="fecha-termino"
-              class="w-full p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
-            />
-          </div>
-        </div> -->
+<!-- Fecha -->
+<div class="mb-4 flex justify-between">
+  <div class="flex items-center mr-4 w-1/2">
+    <label class="block text-sm mr-2 text-gray-700">Fecha de Inicio</label>
+    <input
+      type="date"
+      formControlName="fecha_inicio"
+      (change)="calcularSemana()"
+      class="flex-1 p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
+    />
+  </div>
+
+  <div class="flex items-center w-1/2">
+    <label class="block text-sm mr-2 text-gray-700">Fecha de Fin</label>
+    <input
+      type="date"
+      formControlName="fecha_fin"
+      (change)="calcularSemana()"
+      class="flex-1 p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
+    />
+  </div>
+</div>
+
 
         <!-- Información -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          <div>
-            <p class="text-sm font-medium text-gray-700">Semana del:</p>
-            <p class="text-sm text-gray-600">Lunes 03 de Julio de 2023</p>
-            <p class="text-sm text-gray-600">al Domingo 09 de Julio de 2023</p>
-          </div>
+           <!-- Información con animación -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4" *ngIf="semanaInicio && semanaFin" @fadeIn>
+    <div>
+      <p class="text-sm font-medium text-gray-700">Semana del:</p>
+      <p class="text-sm text-gray-600">{{ semanaInicio }}</p>
+      <p class="text-sm text-gray-600">a</p>
+      <p class="text-sm text-gray-600">{{ semanaFin }}</p>
+    </div>
+  </div>
           <div>
             <p class="text-sm font-medium text-gray-700">Horas Totales:</p>
             <p class="text-sm text-gray-600">120</p>

@@ -17,6 +17,11 @@ export interface Modulo {
   vigencia_inicio?: string | undefined; // Fecha de vigencia puede estar indefinida
   fecha_publicacion?: string | undefined; // Fecha de publicación puede estar indefinida
   ultima_actualizacion?: string | undefined; // Última actualización puede estar indefinida
+ 
+  revisado_por?: string | undefined; // Última actualización puede estar indefinida
+  autorizado_por?: string | undefined; // Última actualización puede estar indefinida
+  elaborado_por?: string | undefined; // Última actualización puede estar indefinida
+ 
   objetivos: {
     objetivo: string | undefined; // Objetivo del curso puede estar indefinido
     perfil_ingreso: string | undefined; // Perfil de ingreso
@@ -61,6 +66,10 @@ export class CursoModalidadVirtualComponent implements OnInit {
     area_id: undefined,
     especialidad_id: undefined,
     tipo_curso_id: undefined,
+
+    revisado_por: undefined,
+    autorizado_por: undefined,
+    elaborado_por: undefined,
     objetivos: {
       objetivo: '',
       perfil_ingreso: '',

@@ -14,10 +14,11 @@ import { CursoModalidadVirtualComponent } from './views/cursos/typos-cursos/curs
   import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   import { TextareaModule } from 'primeng/textarea';
 import { PdfExampleComponent } from './views/pdf-example/pdf-example.component';
+import { PdfViewComponent } from './views/pdf-view/pdf-view.component';
 // import {InputTextareaModule} from 'primeng/inputtextarea';
 @NgModule({
   declarations: [PdfExampleComponent,
-    HomeComponent,CursoModalidadCAEComponent,CursoModalidadEscuelaComponent,CursoModalidadVirtualComponent,OfertaEducativaComponent, HeaderComponent,ListadoCursosComponent
+    HomeComponent,CursoModalidadCAEComponent,CursoModalidadEscuelaComponent,CursoModalidadVirtualComponent,OfertaEducativaComponent, HeaderComponent,ListadoCursosComponent, PdfViewComponent
   ],  
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [RouterModule,HttpClientModule,

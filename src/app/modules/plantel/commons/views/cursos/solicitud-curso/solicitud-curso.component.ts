@@ -15,6 +15,7 @@ import { environment } from "../../../../../../../environments/environment.prod"
 import { DocenteService } from "../../../../../../shared/services/docente.service";
 // import EventEmitter from "events";
 
+import { trigger, state, style, animate, transition } from '@angular/animations';
 export interface Modulo {
   id: number;
   nombre: string;
@@ -39,6 +40,17 @@ export interface Modulo {
   selector: "app-solicitud-curso",
   templateUrl: "./solicitud-curso.component.html",
   styles: ``,
+  animations: [
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('300ms ease-in', style({ opacity: 1 })),
+      ]),
+      transition(':leave', [
+        animate('300ms ease-out', style({ opacity: 0 })),
+      ]),
+    ]),
+  ],
 })
 export class SolicitudCursoComponent implements OnInit, OnChanges {
   selectedTab: number = 1; // Tab seleccionado por defecto
@@ -227,9 +239,37 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
 
 
 
+    semanaInicio: string = '';
+    semanaFin: string = '';
 
-
-
+    calcularSemana() {
+      const fechaInicio = this.cursoForm.get('fecha_inicio')?.value;
+      const fechaFin = this.cursoForm.get('fecha_fin')?.value;
+    
+      if (fechaInicio && fechaFin) {
+        // Crear los objetos Date desde las fechas ingresadas
+        const inicio = new Date(`${fechaInicio}T00:00:00`); // Aseguramos formato ISO
+        const fin = new Date(`${fechaFin}T00:00:00`); // Aseguramos formato ISO
+    
+        // Formatear las fechas para evitar ajustes de zona horaria
+        const opciones: Intl.DateTimeFormatOptions = {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        };
+    
+        // Formatear las fechas seleccionadas
+        this.semanaInicio = inicio.toLocaleDateString('es-ES', opciones);
+        this.semanaFin = fin.toLocaleDateString('es-ES', opciones);
+      } else {
+        // Limpiar las variables si no hay fechas
+        this.semanaInicio = '';
+        this.semanaFin = '';
+      }
+    }
+    
+    
 
 
 

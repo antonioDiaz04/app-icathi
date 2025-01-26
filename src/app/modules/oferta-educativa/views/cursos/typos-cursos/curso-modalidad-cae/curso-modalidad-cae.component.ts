@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../../../../../../environments/environment.prod';
 import { HttpClient } from '@angular/common/http';
-
+import { PDFDocumentProxy } from 'ng2-pdf-viewer';
+import { DomSanitizer } from '@angular/platform-browser';
 export interface Modulo {
   id: number;
   nombre: string;
@@ -17,6 +18,9 @@ export interface Modulo {
   vigencia_inicio?: string | undefined; // Fecha de vigencia puede estar indefinida
   fecha_publicacion?: string | undefined; // Fecha de publicación puede estar indefinida
   ultima_actualizacion?: string | undefined; // Última actualización puede estar indefinida
+  revisado_por?: string | undefined; // Última actualización puede estar indefinida
+  autorizado_por?: string | undefined; // Última actualización puede estar indefinida
+  elaborado_por?: string | undefined; // Última actualización puede estar indefinida
   objetivos: {
     objetivo: string | undefined; // Objetivo del curso puede estar indefinido
     perfil_ingreso: string | undefined; // Perfil de ingreso
@@ -83,6 +87,9 @@ export class CursoModalidadCAEComponent implements OnInit {
     area_id: undefined,
     especialidad_id: undefined,
     tipo_curso_id: undefined,
+    revisado_por: undefined,
+    autorizado_por: undefined,
+    elaborado_por: undefined,
     objetivos: {
       objetivo: '',
       perfil_ingreso: '',
@@ -106,8 +113,8 @@ export class CursoModalidadCAEComponent implements OnInit {
   alertTitle: string | null = null;
   alertType: 'success' | 'error' = 'success';
 
-  
-  constructor(private http: HttpClient) {}
+   
+  constructor(private sanitizer: DomSanitizer,private http: HttpClient) {}
 
 
   ngOnInit(): void {
@@ -267,4 +274,135 @@ export class CursoModalidadCAEComponent implements OnInit {
   saveUnit(): void {
     // Lógica para guardar una nueva unidad_de_medida de medida
   }
+
+
+  mostrarFormulario:boolean=false;
+
+  mostrarModalSubirArchivo(){
+    this.mostrarFormulario=true;
+
+  }
+
+
+
+
+
+   //*************************FILE */}
+   selectedFile: File | any = null;
+   // isUploading = false;
+   fileExtension: string = '';
+ 
+   // Evento cuando se selecciona un archivo
+ 
+ 
+   // Subir el archivo
+   // uploadFile(file: File): void {
+   //   console.log(file);
+   // }
+ 
+   // Eliminar archivo
+   removeFile(): void {
+     this.url=''
+     this.selectedFile = null;
+     this.fileExtension = '';
+   }
+ 
+   // Obtener la extensión del archivo
+   getFileExtension(fileName: string): string {
+     const ext = fileName.split('.').pop()?.toLowerCase() || '';
+     return ext;
+   }
+ 
+   // Manejar eventos de arrastre
+   onDragOver(event: DragEvent): void {
+     event.preventDefault();
+   }
+ 
+   onDrop(event: DragEvent): void {
+     event.preventDefault();
+     const file = event.dataTransfer?.files[0];
+     if (file) {
+       this.selectedFile = file;
+       this.fileExtension = this.getFileExtension(file.name);
+       // this.uploadFile(file);
+     }
+   }
+ 
+   onDragLeave(event: DragEvent): void {
+     // Se puede agregar algún efecto visual para cuando el archivo sale del área
+   }
+   url:any = '';
+
+
+   onFileSelect(event: any): void {
+     const file = event.target.files[0];
+     if (file) {
+       this.selectedFile = file;
+       this.fileExtension = this.getFileExtension(file.name);
+ 
+       if (this.fileExtension === 'pdf') {
+         const reader = new FileReader();
+         reader.onloadend = () => {
+           this.url = this.sanitizer.bypassSecurityTrustResourceUrl(
+             URL.createObjectURL(file)
+           );
+         };
+         reader.readAsDataURL(file);
+       }
+     }
+   }
+ 
+ 
+   page:number=1;
+   totalPages!:number;
+   isLoaded:boolean=false;
+ 
+ 
+   callbackFn(pdf:PDFDocumentProxy){
+     this.totalPages=pdf.numPages;
+     this.isLoaded=true;
+   }
+ 
+   nextTep(){
+     this.page++;
+   }
+   prevTep(){
+     this.page--;
+   }
+ 
+ 
+  //  const formData = new FormData();
+  //       formData.append(
+  //         'especialidad_id',
+  //         this.cursoForm.value.especialidad_id
+  //       );
+  //       formData.append('plantelId', plantelId.toString());
+  //       formData.append('curso_id', this.cursoForm.value.curso_id);
+  //       formData.append('horario', this.cursoForm.value.horario);
+  //       formData.append('cupo_maximo', this.cursoForm.value.cupo_maximo);
+  //       formData.append(
+  //         'requisitos_extra',
+  //         this.cursoForm.value.requisitos_extra
+  //       );
+  //       formData.append('fecha_inicio', this.cursoForm.value.fecha_inicio);
+  //       formData.append('temario', this.selectedFile);
+  //       formData.append('fecha_fin', this.cursoForm.value.fecha_fin);
+  //       console.log('Datos enviados al backend:', formData);
+
+  //       // Enviar el objeto al servicio
+  //       this.http
+  //         .post<Modulo>(`${this.apiUrl}/planteles-curso`, formData)
+  //         .subscribe({
+  //           next: (cursoCreado) => {
+  //             this.cursosSolicitados.push(cursoCreado);
+  //             this.mostrarFormulario = false;
+  //             this.isLoading = false;
+  //             this.cursoForm.reset();
+  //             console.log('Curso agregado correctamente:', cursoCreado);
+  //           },
+  //           error: (err) => {
+  //             console.error('Error al agregar el curso:', err);
+  //             this.isLoading = false;
+  //           },
+  //         });
 }

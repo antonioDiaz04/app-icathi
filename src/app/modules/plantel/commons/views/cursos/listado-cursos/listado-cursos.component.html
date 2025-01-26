@@ -1,4 +1,4 @@
-<div *ngIf="!mostrarFormulario" class="container mx-auto p-4">
+<div *ngIf="!mostrarFormulario" class="container mx-auto p-4"   @fadeIn>
   <!-- Tabla de cursos -->
   <div
     class="bg-white rounded-lg border border-gray-300 p-4 w-full max-w-screen-xl"
@@ -15,7 +15,7 @@
           </th>
         </tr>
       </thead>
-      <tbody>
+      <tbody *ngIf="areas" @fadeIn>
         <tr *ngFor="let area of areas">
           <td class="px-4 py-2">{{ area.id }}</td>
           <td class="px-4 py-2">{{ area.nombre }}</td>
