@@ -1,12 +1,17 @@
 <div class="flex min-h-screen bg-gray-50">
   <!-- Menú lateral -->
-  <aside class="w-64 bg-white text-[#44509D] flex flex-col">
-    <div class="px-6 py-4 text-center text-lg font-bold bg-[#F08762]">
+  <aside class="w-64 bg-white text-[#fff] flex flex-col border border-gray-300">
+    <!-- Logo -->
+    <div class="flex items-center justify-center mb-8">
+      <img src="https://www.icathi.edu.mx/img/ICATHI.png" alt="ICATHI Logo" class="w-32 h-auto" />
+
+    </div>
+    <div class="px-6 py-4 text-center text-lg font-bold bg-white text-orange-500">
       Panel Admin
     </div>
     <nav class="flex-1 p-6">
       <ul>
-        <li class="hover:text-[#F08762] transition-all duration-300">
+        <li class="cursor-pointer rounded-3xl hover:bg-gray-100 transition-all duration-300 hover:text-[#F08762] transition-all duration-300">
           <a
             (click)="redirecto('home')"
             class="block py-3 px-6 flex items-center text-gray-600 hover:text-[#F08762]"
@@ -14,7 +19,7 @@
             <i class="fas fa-tachometer-alt text-[#44509D] mr-3"></i> Dashboard
           </a>
         </li>
-        <li class="hover:text-[#F08762] transition-all duration-300">
+        <li class="cursor-pointer rounded-3xl hover:bg-gray-100 transition-all duration-300 hover:text-[#F08762] transition-all duration-300">
           <a
             (click)="redirecto('listado-alumnos')"
             class="block py-3 px-6 flex items-center text-gray-600 hover:text-[#F08762]"
@@ -23,7 +28,7 @@
           </a>
         </li>
 
-        <li class="hover:text-[#F08762] transition-all duration-300">
+        <li class="cursor-pointer rounded-3xl hover:bg-gray-100 transition-all duration-300 hover:text-[#F08762] transition-all duration-300">
           <a
             (click)="redirecto('listado-docentes')"
             class="block py-3 px-6 flex items-center text-gray-600 hover:text-[#F08762]"
@@ -32,7 +37,7 @@
           </a>
         </li>
 
-        <li class="hover:text-[#F08762] transition-all duration-300">
+        <li class="cursor-pointer rounded-3xl hover:bg-gray-100 transition-all duration-300 hover:text-[#F08762] transition-all duration-300">
           <a
             (click)="redirecto('listado-cursos')"
             class="block py-3 px-6 flex items-center text-gray-600 hover:text-[#F08762]"
@@ -40,7 +45,7 @@
             <i class="fas fa-book text-[#44509D] mr-3"></i> Cursos
           </a>
         </li>
-        <li class="hover:text-[#F08762] transition-all duration-300">
+        <li class="cursor-pointer rounded-3xl hover:bg-gray-100 transition-all duration-300 hover:text-[#F08762] transition-all duration-300">
           <a
             (click)="redirecto('listado-cursos-solicitados')"
             class="block py-3 px-6 flex items-center text-gray-600 hover:text-[#F08762]"
@@ -48,7 +53,7 @@
             <i class="fas fa-paper-plane text-[#44509D] mr-3"></i>  Cursos solicitados
           </a>
         </li>
-        <!-- <li class="hover:text-[#F08762] transition-all duration-300">
+        <!-- <li class="cursor-pointer rounded-3xl hover:bg-gray-100 transition-all duration-300 hover:text-[#F08762] transition-all duration-300">
           <a
             (click)="redirecto('Impartidos')"
             class="block py-3 px-6 flex items-center text-gray-600 hover:text-[#F08762]"
@@ -56,7 +61,7 @@
             <i class="fas fa-check-circle text-[#44509D] mr-3"></i>Status Cursos
           </a>
         </li> -->
-        <li class="hover:text-[#F08762] transition-all duration-300">
+        <li class="cursor-pointer rounded-3xl hover:bg-gray-100 transition-all duration-300 hover:text-[#F08762] transition-all duration-300">
           <a
             (click)="redirecto('Historial')"
             class="block py-3 px-6 flex items-center text-gray-600 hover:text-[#F08762]"
@@ -65,26 +70,34 @@
           </a>
         </li>
 
-        <li class="hover:text-[#F08762] transition-all duration-300">
-          <button (click)="logout()" class="block py-3 px-6 flex items-center text-gray-600 w-full border-2 border-[#44509D] rounded-md hover:bg-[#44509D] hover:text-white transition-all duration-300">
-            <i class="fas fa-sign-out-alt text-[#44509D] mr-3 hover:text-white"></i> Cerrar Sesión
-          </button>
-        </li>
       </ul>
+      <!-- <li class="cursor-pointer rounded-3xl hover:bg-gray-100 transition-all duration-300 hover:text-[#F08762] transition-all duration-300"> -->
+        <button (click)="logout()" class="block px-[10px] py-[10px] flex items-center text-gray-600 w-full border-2 border-[#44509D] rounded-md hover:bg-[#44509D] hover:text-white transition-all duration-300 
+        shadow-lg hover:shadow-[#8A4F98] rounded-[50px]">
+        <i class="fas fa-sign-out-alt text-[#44509D] mr-3 hover:text-white"></i> Cerrar Sesión
+      </button>
+      
+      <!-- </li> -->
+      
     </nav>
     <div class="bg-[#D8566C] px-6 py-4 text-sm text-center">© 2024 Admin</div>
   </aside>
 
   <!-- Contenido principal -->
   <main class="flex-1">
-    <!-- Encabezado -->
-    <header
-      class="sticky top-0 bg-white shadow-md px-6 py-4 flex justify-between items-center z-10"
-    >
-      <h1 class="text-2xl font-bold text-[#44509D] flex items-center">
-        <i class="fas fa-school text-[#44509D] mr-2"></i>Plantel
+
+    <header class="sticky top-0 bg-transparent backdrop-blur-lg px-6 py-4 flex justify-between items-center z-10 border-b border-[#44509D]">
+      <h1 class="text-2xl font-bold text-[#44509D]">
+        Plantel
       </h1>
     </header>
+    
+    
+    
+    
+    
+    
+    
 
     <router-outlet></router-outlet>
   </main>

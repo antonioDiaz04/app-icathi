@@ -1,23 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { AspiranteService } from '../../../../../../shared/services/aspirante.service';
-import { AuthService } from '../../../../../../shared/services/auth.service';
+import { Component, OnInit } from "@angular/core";
+import { AspiranteService } from "../../../../../../shared/services/aspirante.service";
+import { AuthService } from "../../../../../../shared/services/auth.service";
+import { HttpClient } from "@angular/common/http";
+import { environment } from "../../../../../../../environments/environment";
 
 @Component({
-  selector: 'app-listado-alumnos',
-  templateUrl: './listado-alumnos.component.html',
+  selector: "app-listado-alumnos",
+  templateUrl: "./listado-alumnos.component.html",
   styles: ``,
   standalone: false,
 })
 export class ListadoAlumnosComponent implements OnInit {
-  textoBusqueda: string = '';
-  fechaInicio: string = '';
-  fechaFin: string = '';
+  textoBusqueda: string = "";
+  fechaInicio: string = "";
+  fechaFin: string = "";
   alumnoSeleccionado: any = null;
 
   // Datos de alumnos
   alumnos: any = [];
 
   constructor(
+    private http: HttpClient,
     private aspirantesService: AspiranteService,
     private auth: AuthService
   ) {}
@@ -30,22 +33,26 @@ export class ListadoAlumnosComponent implements OnInit {
 
   getAlumnos() {
     this.auth.getIdFromToken().then((plantelId) => {
-      console.log('Plantel ID:', plantelId);
+      console.log("Plantel ID:", plantelId);
 
       if (!plantelId) {
-        console.error('No se pudo obtener el ID del plantel');
+        console.error("No se pudo obtener el ID del plantel");
         return;
       }
 
-      this.aspirantesService.getApirantesBIdPlantel(plantelId).subscribe(
-        (response) => {
-          this.alumnos = response;
-          // this.alumnos = this.filtrarAlumnos();
-        },
-        (error) => {
-          console.error('Error al obtener los alumnos:', error);
-        }
-      );
+      this.http
+        .get(
+          `${environment.api}/planteles-curso/alumnos/${plantelId}`
+        )
+        .subscribe(
+          (response) => {
+            this.alumnos = response;
+            // this.alumnos = this.filtrarAlumnos();
+          },
+          (error) => {
+            console.error("Error al obtener los alumnos:", error);
+          }
+        );
     });
   }
   // Alumnos filtrados según búsqueda
