@@ -197,67 +197,183 @@
   </div>
 </div>
 
+<!-- ...existing code... -->
+
 <!-- Modal de Detalle del Curso -->
 <div *ngIf="selectedCourseDetails" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
   <div class="bg-white p-6 rounded-md shadow-lg w-3/4 max-h-[90vh] overflow-auto">
     <h2 class="text-2xl font-bold mb-4">Detalles del Curso</h2>
 
     <!-- Información general del curso -->
-    <p><strong>Nombre:</strong> {{ selectedCourseDetails.nombre }}</p>
-    <p><strong>Clave:</strong> {{ selectedCourseDetails.clave }}</p>
-    <p><strong>Duración (Horas):</strong> {{ selectedCourseDetails.duracion_horas }}</p>
-    <p><strong>Descripción:</strong> {{ selectedCourseDetails.descripcion }}</p>
-    <p><strong>Nivel:</strong> {{ selectedCourseDetails.nivel }}</p>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Nombre:</label>
+        <input [(ngModel)]="selectedCourseDetails.nombre" class="border p-2 rounded w-full" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Clave:</label>
+        <input [(ngModel)]="selectedCourseDetails.clave" class="border p-2 rounded w-full" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Duración (Horas):</label>
+        <input [(ngModel)]="selectedCourseDetails.duracion_horas" class="border p-2 rounded w-full" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Nivel:</label>
+        <input [(ngModel)]="selectedCourseDetails.nivel" class="border p-2 rounded w-full" />
+      </div>
+      <div class="col-span-2">
+        <label class="block text-sm font-medium text-gray-700">Descripción:</label>
+        <textarea [(ngModel)]="selectedCourseDetails.descripcion" class="border p-2 rounded w-full"></textarea>
+      </div>
+    </div>
 
     <!-- Ficha técnica -->
-    <h3 class="text-xl font-semibold mt-4 mb-2">Ficha Técnica</h3>
-    <p><strong>Objetivo:</strong> {{ selectedCourseDetails.fichaTecnica.objetivo }}</p>
-    <p><strong>Perfil de Ingreso:</strong> {{ selectedCourseDetails.fichaTecnica.perfil_ingreso }}</p>
-    <p><strong>Perfil de Egreso:</strong> {{ selectedCourseDetails.fichaTecnica.perfil_egreso }}</p>
-    <p><strong>Perfil del Docente:</strong> {{ selectedCourseDetails.fichaTecnica.perfil_del_docente }}</p>
-    <p><strong>Metodología:</strong> {{ selectedCourseDetails.fichaTecnica.metodologia }}</p>
-    <p><strong>Bibliografía:</strong> {{ selectedCourseDetails.fichaTecnica.bibliografia }}</p>
-    <p><strong>Criterios de Acreditación:</strong> {{ selectedCourseDetails.fichaTecnica.criterios_acreditacion }}</p>
-    <p><strong>Reconocimiento:</strong> {{ selectedCourseDetails.fichaTecnica.reconocimiento }}</p>
+    <h3 class="text-xl font-semibold mt-6 mb-2">Ficha Técnica</h3>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Objetivo:</label>
+        <textarea [(ngModel)]="selectedCourseDetails.fichaTecnica.objetivo" class="border p-2 rounded w-full"></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Perfil de Ingreso:</label>
+        <textarea [(ngModel)]="selectedCourseDetails.fichaTecnica.perfil_ingreso" class="border p-2 rounded w-full"></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Perfil de Egreso:</label>
+        <textarea [(ngModel)]="selectedCourseDetails.fichaTecnica.perfil_egreso" class="border p-2 rounded w-full"></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Perfil del Docente:</label>
+        <textarea [(ngModel)]="selectedCourseDetails.fichaTecnica.perfil_del_docente" class="border p-2 rounded w-full"></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Metodología:</label>
+        <textarea [(ngModel)]="selectedCourseDetails.fichaTecnica.metodologia" class="border p-2 rounded w-full"></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Bibliografía:</label>
+        <textarea [(ngModel)]="selectedCourseDetails.fichaTecnica.bibliografia" class="border p-2 rounded w-full"></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Criterios de Acreditación:</label>
+        <textarea [(ngModel)]="selectedCourseDetails.fichaTecnica.criterios_acreditacion" class="border p-2 rounded w-full"></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Reconocimiento:</label>
+        <textarea [(ngModel)]="selectedCourseDetails.fichaTecnica.reconocimiento" class="border p-2 rounded w-full"></textarea>
+      </div>
+    </div>
 
     <!-- Materiales -->
-    <h3 class="text-xl font-semibold mt-4 mb-2">Materiales</h3>
-    <ul>
+    <h3 class="text-xl font-semibold mt-6 mb-2">Materiales</h3>
+    <ul class="space-y-4">
       <li *ngFor="let material of selectedCourseDetails.materiales">
-        <p>{{ material.descripcion }} ({{ material.unidad_de_medida }}) - 
-        Cantidad para 10: {{ material.cantidad_10 }}, 
-        Cantidad para 15: {{ material.cantidad_15 }}, 
-        Cantidad para 20: {{ material.cantidad_20 }}</p>
+        <div class="grid grid-cols-4 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Descripción:</label>
+            <input [(ngModel)]="material.descripcion" class="border p-2 rounded w-full" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Unidad de Medida:</label>
+            <input [(ngModel)]="material.unidad_de_medida" class="border p-2 rounded w-full" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Cantidad para 10:</label>
+            <input [(ngModel)]="material.cantidad_10" class="border p-2 rounded w-full" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Cantidad para 15:</label>
+            <input [(ngModel)]="material.cantidad_15" class="border p-2 rounded w-full" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Cantidad para 20:</label>
+            <input [(ngModel)]="material.cantidad_20" class="border p-2 rounded w-full" />
+          </div>
+        </div>
       </li>
     </ul>
 
     <!-- Equipamiento -->
-    <h3 class="text-xl font-semibold mt-4 mb-2">Equipamiento</h3>
-    <ul>
+    <h3 class="text-xl font-semibold mt-6 mb-2">Equipamiento</h3>
+    <ul class="space-y-4">
       <li *ngFor="let equipo of selectedCourseDetails.equipamiento">
-        <p>{{ equipo.descripcion }} ({{ equipo.unidad_de_medida }}) - 
-        Cantidad para 10: {{ equipo.cantidad_10 }}, 
-        Cantidad para 15: {{ equipo.cantidad_15 }}, 
-        Cantidad para 20: {{ equipo.cantidad_20 }}</p>
+        <div class="grid grid-cols-4 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Descripción:</label>
+            <input [(ngModel)]="equipo.descripcion" class="border p-2 rounded w-full" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Unidad de Medida:</label>
+            <input [(ngModel)]="equipo.unidad_de_medida" class="border p-2 rounded w-full" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Cantidad para 10:</label>
+            <input [(ngModel)]="equipo.cantidad_10" class="border p-2 rounded w-full" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Cantidad para 15:</label>
+            <input [(ngModel)]="equipo.cantidad_15" class="border p-2 rounded w-full" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Cantidad para 20:</label>
+            <input [(ngModel)]="equipo.cantidad_20" class="border p-2 rounded w-full" />
+          </div>
+        </div>
       </li>
     </ul>
 
-    <button class="mt-4 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" (click)="closeCourseDetails()">
-      Cerrar
-    </button>
+    <!-- Contenido Programático -->
+    <h3 class="text-xl font-semibold mt-6 mb-2">Contenido Programático</h3>
+    <ul class="space-y-4">
+      <li *ngFor="let contenido of selectedCourseDetails.contenidoProgramatico">
+        <div class="grid grid-cols-5 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Tema:</label>
+            <input [(ngModel)]="contenido.tema_nombre" class="border p-2 rounded w-full" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Tiempo:</label>
+            <input [(ngModel)]="contenido.tiempo" class="border p-2 rounded w-full" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Competencias:</label>
+            <input [(ngModel)]="contenido.competencias" class="border p-2 rounded w-full" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Evaluación:</label>
+            <input [(ngModel)]="contenido.evaluacion" class="border p-2 rounded w-full" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Actividades:</label>
+            <input [(ngModel)]="contenido.actividades" class="border p-2 rounded w-full" />
+          </div>
+        </div>
+      </li>
+    </ul>
 
-
-<!-- boton  para generar pdf  -->
-<button (click)="generarPDF()" [class.loading]="generando" class="ui primary button">
-  <i class="spinner loading icon" *ngIf="generando"></i>
-  Crear PDF
-</button>
-
-
-
-
-
-
+    <div class="flex justify-end mt-6">
+      <button class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 mr-2" (click)="closeCourseDetails()">
+        Cerrar
+      </button>
+      <!-- Botón para generar PDF -->
+      <button (click)="generarPDF()" [class.loading]="generando" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+        <i class="spinner loading icon" *ngIf="generando"></i>
+        Crear PDF
+      </button>
+      <button (click)="actualizarCurso()" [class.loading]="generando" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+        <i class="spinner loading icon" *ngIf="generando"></i>
+        Actualizar
+      </button>
+    </div>
+    <div *ngIf="showModal" class="modal">
+      <div class="modal-content">
+        <span class="close" (click)="showModal = false">&times;</span>
+        <p>{{ modalMessage }}</p>
+        
+      </div>
+    </div>
   </div>
 </div>
 
+<!-- ...existing code... -->
