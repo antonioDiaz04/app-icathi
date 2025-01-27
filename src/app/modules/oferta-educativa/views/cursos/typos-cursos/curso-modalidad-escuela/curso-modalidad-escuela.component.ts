@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../../../../../../environments/environment.prod';
 import { HttpClient } from '@angular/common/http';
+import { PDFDocumentProxy } from 'ng2-pdf-viewer';
+import { DomSanitizer } from '@angular/platform-browser';
+
 
 export interface Modulo {
   id: number;
@@ -122,7 +125,7 @@ export class CursoModalidadEscuelaComponent implements OnInit {
   alertType: 'success' | 'error' = 'success';
 
   
-  constructor(private http: HttpClient) {}
+  constructor(private sanitizer: DomSanitizer,private http: HttpClient) {}
 
   ngOnInit(): void {
     this.cargarAreas();
@@ -167,8 +170,42 @@ export class CursoModalidadEscuelaComponent implements OnInit {
      this.isSaving = true;
      this.alertMessage = null; // Reset previous alert
  
-     this.http.post<Modulo>(`${this.apiUrl}/cursos`, this.nuevoCurso).subscribe({
-       next: (cursoCreado) => {
+
+ // Crear un objeto FormData
+    const formData = new FormData();
+  
+    // Agregar propiedades del objeto `nuevoCurso` a FormData
+    formData.append('nombre', this.nuevoCurso.nombre);
+    formData.append('duracion_horas', this.nuevoCurso.duracion_horas.toString());
+    formData.append('descripcion', this.nuevoCurso.descripcion);
+    formData.append('nivel', this.nuevoCurso.nivel);
+    formData.append('clave', this.nuevoCurso.clave?.toString() || '');
+    formData.append('area_id', this.nuevoCurso.area_id?.toString() || '');
+    formData.append('especialidad_id', this.nuevoCurso.especialidad_id?.toString() || '');
+    formData.append('tipo_curso_id', this.nuevoCurso.tipo_curso_id?.toString() || '');
+    formData.append('revisado_por', this.nuevoCurso.revisado_por?.toString() || '');
+    formData.append('autorizado_por', this.nuevoCurso.autorizado_por?.toString() || '');
+    formData.append('elaborado_por', this.nuevoCurso.elaborado_por?.toString() || '');
+  
+    formData.append('temario', this.selectedFile);
+    // Convertir `objetivos` a JSON y agregarlo a FormData
+    formData.append('objetivos', JSON.stringify(this.nuevoCurso.objetivos));
+  
+    // Convertir `contenidoProgramatico` a JSON y agregarlo
+    formData.append('contenidoProgramatico', JSON.stringify(this.nuevoCurso.contenidoProgramatico));
+  
+    // Agregar materiales como archivos (si existen)
+    // this.nuevoCurso.materiales.forEach((material, index) => {
+    //   formData.append(`materiales[${index}]`, material);
+    // });
+    formData.append('materiales', JSON.stringify(this.nuevoCurso.materiales));
+  
+    // Agregar equipamiento como texto
+    formData.append('equipamiento', JSON.stringify(this.nuevoCurso.equipamiento));
+  
+    // Enviar la solicitud HTTP con FormData
+    this.http.post<Modulo>(`${this.apiUrl}/cursos`, formData).subscribe({
+    next: (cursoCreado) => {
          this.isSaving = false; // Termina el estado de carga
          this.modulos.push(cursoCreado);
          this.resetNuevoCurso();
@@ -276,7 +313,100 @@ export class CursoModalidadEscuelaComponent implements OnInit {
   showModal = false;
   newUnitName = '';
 
-  saveUnit(): void {
-    // Lógica para guardar una nueva unidad_de_medida de medida
+  
+
+  mostrarFormulario:boolean=false;
+
+  mostrarModalSubirArchivo(){
+    this.mostrarFormulario=true;
   }
+
+
+
+
+
+   //*************************FILE */}
+   selectedFile: File | any = null;
+   // isUploading = false;
+   fileExtension: string = '';
+ 
+   // Evento cuando se selecciona un archivo
+ 
+ 
+   // Subir el archivo
+   // uploadFile(file: File): void {
+   //   console.log(file);
+   // }
+ 
+   // Eliminar archivo
+   removeFile(): void {
+     this.url=''
+     this.selectedFile = null;
+     this.fileExtension = '';
+   }
+ 
+   // Obtener la extensión del archivo
+   getFileExtension(fileName: string): string {
+     const ext = fileName.split('.').pop()?.toLowerCase() || '';
+     return ext;
+   }
+ 
+   // Manejar eventos de arrastre
+   onDragOver(event: DragEvent): void {
+     event.preventDefault();
+   }
+ 
+   onDrop(event: DragEvent): void {
+     event.preventDefault();
+     const file = event.dataTransfer?.files[0];
+     if (file) {
+       this.selectedFile = file;
+       this.fileExtension = this.getFileExtension(file.name);
+       // this.uploadFile(file);
+     }
+   }
+ 
+   onDragLeave(event: DragEvent): void {
+     // Se puede agregar algún efecto visual para cuando el archivo sale del área
+   }
+   url:any = '';
+
+
+   onFileSelect(event: any): void {
+     const file = event.target.files[0];
+     if (file) {
+       this.selectedFile = file;
+       this.fileExtension = this.getFileExtension(file.name);
+ 
+       if (this.fileExtension === 'pdf') {
+         const reader = new FileReader();
+         reader.onloadend = () => {
+           this.url = this.sanitizer.bypassSecurityTrustResourceUrl(
+             URL.createObjectURL(file)
+           );
+         };
+         reader.readAsDataURL(file);
+       }
+     }
+   }
+ 
+ 
+   page:number=1;
+   totalPages!:number;
+   isLoaded:boolean=false;
+ 
+ 
+   callbackFn(pdf:PDFDocumentProxy){
+     this.totalPages=pdf.numPages;
+     this.isLoaded=true;
+   }
+ 
+   nextTep(){
+     this.page++;
+   }
+   prevTep(){
+     this.page--;
+   }
+ 
+ 
 }

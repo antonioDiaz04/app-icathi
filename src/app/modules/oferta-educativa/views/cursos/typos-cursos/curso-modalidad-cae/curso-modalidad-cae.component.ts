@@ -159,8 +159,41 @@ export class CursoModalidadCAEComponent implements OnInit {
   agregarCurso(): void {
     this.isSaving = true;
     this.alertMessage = null; // Reset previous alert
-
-    this.http.post<Modulo>(`${this.apiUrl}/cursos`, this.nuevoCurso).subscribe({
+  
+    // Crear un objeto FormData
+    const formData = new FormData();
+  
+    // Agregar propiedades del objeto `nuevoCurso` a FormData
+    formData.append('nombre', this.nuevoCurso.nombre);
+    formData.append('duracion_horas', this.nuevoCurso.duracion_horas.toString());
+    formData.append('descripcion', this.nuevoCurso.descripcion);
+    formData.append('nivel', this.nuevoCurso.nivel);
+    formData.append('clave', this.nuevoCurso.clave?.toString() || '');
+    formData.append('area_id', this.nuevoCurso.area_id?.toString() || '');
+    formData.append('especialidad_id', this.nuevoCurso.especialidad_id?.toString() || '');
+    formData.append('tipo_curso_id', this.nuevoCurso.tipo_curso_id?.toString() || '');
+    formData.append('revisado_por', this.nuevoCurso.revisado_por?.toString() || '');
+    formData.append('autorizado_por', this.nuevoCurso.autorizado_por?.toString() || '');
+    formData.append('elaborado_por', this.nuevoCurso.elaborado_por?.toString() || '');
+  
+    formData.append('temario', this.selectedFile);
+    // Convertir `objetivos` a JSON y agregarlo a FormData
+    formData.append('objetivos', JSON.stringify(this.nuevoCurso.objetivos));
+  
+    // Convertir `contenidoProgramatico` a JSON y agregarlo
+    formData.append('contenidoProgramatico', JSON.stringify(this.nuevoCurso.contenidoProgramatico));
+  
+    // Agregar materiales como archivos (si existen)
+    // this.nuevoCurso.materiales.forEach((material, index) => {
+    //   formData.append(`materiales[${index}]`, material);
+    // });
+    formData.append('materiales', JSON.stringify(this.nuevoCurso.materiales));
+  
+    // Agregar equipamiento como texto
+    formData.append('equipamiento', JSON.stringify(this.nuevoCurso.equipamiento));
+  
+    // Enviar la solicitud HTTP con FormData
+    this.http.post<Modulo>(`${this.apiUrl}/cursos`, formData).subscribe({
       next: (cursoCreado) => {
         this.isSaving = false; // Termina el estado de carga
         this.modulos.push(cursoCreado);
@@ -177,11 +210,15 @@ export class CursoModalidadCAEComponent implements OnInit {
       },
       complete: () => {
         this.isSaving = false;
-      }
+      },
     });
   }
+  
+
 
   resetNuevoCurso(): void {
+
+    // this.selectedFile=null
     this.nuevoCurso = {
       id: 0,
       nombre: '',
@@ -271,11 +308,7 @@ export class CursoModalidadCAEComponent implements OnInit {
   showModal = false;
   newUnitName = '';
 
-  saveUnit(): void {
-    // Lógica para guardar una nueva unidad_de_medida de medida
-  }
-
-
+  
   mostrarFormulario:boolean=false;
 
   mostrarModalSubirArchivo(){
@@ -371,38 +404,4 @@ export class CursoModalidadCAEComponent implements OnInit {
    }
  
  
-  //  const formData = new FormData();
-  //       formData.append(
-  //         'especialidad_id',
-  //         this.cursoForm.value.especialidad_id
-  //       );
-  //       formData.append('plantelId', plantelId.toString());
-  //       formData.append('curso_id', this.cursoForm.value.curso_id);
-  //       formData.append('horario', this.cursoForm.value.horario);
-  //       formData.append('cupo_maximo', this.cursoForm.value.cupo_maximo);
-  //       formData.append(
-  //         'requisitos_extra',
-  //         this.cursoForm.value.requisitos_extra
-  //       );
-  //       formData.append('fecha_inicio', this.cursoForm.value.fecha_inicio);
-  //       formData.append('temario', this.selectedFile);
-  //       formData.append('fecha_fin', this.cursoForm.value.fecha_fin);
-  //       console.log('Datos enviados al backend:', formData);
-
-  //       // Enviar el objeto al servicio
-  //       this.http
-  //         .post<Modulo>(`${this.apiUrl}/planteles-curso`, formData)
-  //         .subscribe({
-  //           next: (cursoCreado) => {
-  //             this.cursosSolicitados.push(cursoCreado);
-  //             this.mostrarFormulario = false;
-  //             this.isLoading = false;
-  //             this.cursoForm.reset();
-  //             console.log('Curso agregado correctamente:', cursoCreado);
-  //           },
-  //           error: (err) => {
-  //             console.error('Error al agregar el curso:', err);
-  //             this.isLoading = false;
-  //           },
-  //         });
 }
