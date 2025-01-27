@@ -550,43 +550,31 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     }
   }
 
-
   guardarCambios() {
-    console.log("id_plantel_curso_a_editar al guardar cambios ***  detalles",this.id_plantel_curso_a_editar)
-
-    // Combina todo el objeto de curso con las demás propiedades
+    console.log("id_plantel_curso_a_editar al guardar cambios *** detalles", this.id_plantel_curso_a_editar);
+  
+    // Obtén los datos del formulario
+    const formValues = this.cursoForm.value;
+  
+    // Combina el objeto curso con las demás propiedades y convierte el valor de "cruzada_contra_hambre" a booleano
     const cursoData = {
-      ...this.cursoForm.value, // Toma todas las propiedades del formulario
+      ...formValues, // Toma todas las propiedades del formulario
+      cruzada_contra_hambre: formValues.cruzada_contra_hambre === 'Sí', // Convierte 'Sí' a true y 'No' a false
       docentes: this.cursoForm.get('docentes')?.value, // Incluye los docentes del FormArray
       alumnos: this.cursoForm.get('alumnos')?.value // Incluye los alumnos del FormArray
     };
+  
+    // Llama al servicio para actualizar la solicitud
     this.plantelCursosService.updateCourseSolicitudById(Number(this.id_plantel_curso_a_editar), cursoData).subscribe({
       next: (response) => {
         console.log('Solicitud actualizada con éxito:', response);
-        this.openModal(this.id_plantel_curso_a_editar)
+        this.openModal(this.id_plantel_curso_a_editar);
       },
       error: (error) => {
         console.error('Error al actualizar la solicitud:', error);
       },
     });
-    // Serializa a JSON
-    const jsonData = JSON.stringify(cursoData);
-  
-    // Muestra en consola el resultado
-    console.log(jsonData);
-  
-    // Aquí puedes enviar jsonData a tu API o donde lo necesites
-    // this.plantelService.guardarCurso(jsonData).subscribe(response => {
-    //   // Manejo de la respuesta después de guardar
-    //   console.log('Curso guardado con éxito:', response);
-    // }, error => {
-    //   // Manejo de errores
-    //   console.error('Error al guardar el curso:', error);
-    // });
   }
-  
-
-
 
 
 
