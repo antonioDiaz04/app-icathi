@@ -35,6 +35,7 @@
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",
     "ng2-pdf-viewer": "^10.4.0",
+    "ngx-extended-pdf-viewer": "^22.3.8",
     "pdfmake": "^0.2.18",
     "primeng": "^18.0.2",
     "rxjs": "~7.8.0",

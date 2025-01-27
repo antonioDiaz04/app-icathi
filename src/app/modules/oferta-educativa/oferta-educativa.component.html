@@ -370,7 +370,6 @@
     <div class="border p-4 rounded-md">
       <input type="file" (change)="onFileSelect($event)" class="mb-4" />
       <div *ngIf="fileExtension === 'pdf'">
-        <ng2-pdf-viewer [src]="url" [page]="page" (after-load-complete)="callbackFn($event)"></ng2-pdf-viewer>
         <div class="flex justify-between mt-4">
           <button (click)="prevTep()" [disabled]="page === 1" class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400">Anterior</button>
           <button (click)="nextTep()" [disabled]="page === totalPages" class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400">Siguiente</button>
