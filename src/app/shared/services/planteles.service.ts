@@ -33,7 +33,10 @@ export class PlantelesService {
   createPlantel(body:any):Observable<any>{
     return this.http.post<any>(`${environment.api}/plantel/`,body);
   }
-
+  // Método para obtener cursos por ID del plantel
+  getCursosByPlantelId(plantelId: number): Observable<any> {
+    return this.http.get<any>(`${environment.api}/plantel/${plantelId}/cursos`);
+  }
   // getPlanteles(){
   //   return this.http.get(`${environment.api}/plantel`)
   // }
@@ -51,5 +54,9 @@ export class PlantelesService {
     return this.http.put(`${environment.api}/plantel/${id}`, formData);
   }
 
+// Nueva función para obtener los datos del plantel por su ID
+getPlantelDetails(plantelId: number): Observable<any> {
+  return this.http.get<any>(`${environment.api}/plantel/datos/${plantelId}`);
+}
 
 }

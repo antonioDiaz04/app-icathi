@@ -2,6 +2,8 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { PlantelesService } from '../../../../../shared/services/planteles.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CursosService } from '../../../../../shared/services/cursos.service';
+import { AlumnoPlantelCursoService } from '../../../../../shared/services/alumno-plantel-curso.service';
 
 declare var $: any;
 
@@ -15,14 +17,21 @@ export class ListadoPlantelesComponent implements OnInit {
   planteles: any; // Lista de planteles
   idPlantel!: any; // ID del plantel seleccionado
   dataPlantel!: any; // Datos del plantel seleccionado
-  isModalOpen = false; // Estado del modal
   editForm!: FormGroup; // Formulario reactivo para edición
-
+  plantelDetails: any;
+  cursos: any[] = [];
+  isModalOpen: boolean = false;
+  isModalOpenverDetalleCursos: boolean = false;
+  isModalAlumnosOpen: boolean = false;
+  alumnos: any[] = [];
+  id_pplantel:  number=0
   @ViewChild('confirmModal') confirmModal!: ElementRef; // Referencia al modal de confirmación
 
   constructor(
     private fb: FormBuilder,
+    private cursosService: CursosService,
     private router: Router,
+    private alumnoPlantelCursoService: AlumnoPlantelCursoService,
     private plantelService_: PlantelesService
   ) {
     // Inicialización del formulario
@@ -43,15 +52,80 @@ export class ListadoPlantelesComponent implements OnInit {
     });
   }
 
+  verDetalleCursos(plantelId: number): void {
+    this.plantelService_.getCursosByPlantelId(plantelId).subscribe(
+      (data) => {
+        this.cursos = data;
+        console.log("datos cursos ",this.cursos)
+        this.isModalOpenverDetalleCursos = true; // Abrir el modal
+        this.id_pplantel=plantelId
+      },
+      (error) => {
+        console.error('Error al cargar los cursos:', error);
+      }
+    );
+  }
+  verAlumnosCurso(idPlantel: number,cursoId: number): void {
+    this.alumnoPlantelCursoService.obtenerAlumnosPorPlantelYCurso(idPlantel, cursoId).subscribe(
+
+    // this.cursosService.getAlumnosCurso(idPlantel, cursoId).subscribe(
+      (data) => {
+        this.alumnos = data;
+        this.isModalAlumnosOpen = true;
+      },
+      (error) => {
+        console.error('Error al cargar los alumnos:', error);
+      }
+    );
+  }
+  cerrarModal(): void {
+    this.isModalOpenverDetalleCursos = false; // Cerrar el modal
+  }
+
+  cerrarModalAlumnos(): void {
+    this.isModalAlumnosOpen = false;
+  }
   ngOnInit(): void {
     this.getPlanteles(); // Cargar la lista de planteles al inicializar
   }
-
-  getPlanteles() {
-    this.plantelService_.getPlanteles().subscribe((response) => {
-      this.planteles = response;
+ getPlantelDetails(plantelId: number): void {
+    this.plantelService_.getPlantelDetails(plantelId).subscribe({
+      next: (data) => {
+        this.plantelDetails = data;
+        console.log('Detalles del plantel:', data);
+      },
+      error: (error) => {
+        console.error('Error al obtener los detalles del plantel:', error);
+      }
     });
   }
+  getPlanteles(): void {
+    // Obtener la lista de planteles
+    this.plantelService_.getPlanteles().subscribe({
+      next: async (planteles) => {
+        this.planteles = planteles;
+
+        // Obtener detalles para cada plantel
+        for (const plantel of this.planteles) {
+          const details = await this.plantelService_
+            .getPlantelDetails(plantel.id)
+            .toPromise();
+          plantel.total_cursos = details.total_cursos;
+          
+          plantel.total_alumnos = details.total_alumnos;
+          console.log("-------DATA PLANTEL",plantel)
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener la lista de planteles:', error);
+      }
+    });
+  }
+  // getPlanteles() {
+  //   this.plantelService_.getPlanteles().subscribe((response) => {
+  //     this.planteles = response;
+  //   });
+  // }
 
   // Navegación
   navigateTo(action: string): void {

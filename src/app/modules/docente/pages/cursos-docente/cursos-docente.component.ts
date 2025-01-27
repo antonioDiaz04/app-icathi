@@ -3,65 +3,109 @@ import { CursosdocentesService } from '../../../../shared/services/cursosdocente
 import { AuthService } from '../../../../shared/services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { DocenteService } from '../../../../shared/services/docente.service';
-import { environment } from '../../../../../environments/environment.prod';
 
 @Component({
   selector: 'app-cursos-docente',
   templateUrl: './cursos-docente.component.html',
-  styleUrls: ['./cursos-docente.component.scss']
+  styleUrls: ['./cursos-docente.component.scss'],
 })
 export class CursosDocenteComponent implements OnInit {
-  cursos: any[] = []; // Cursos del docente
   cursosAsignados: any[] = []; // Cursos asignados al docente
   docenteData: any = {}; // Datos del docente
+  filtro: string = ''; // Texto de búsqueda para filtrar cursos
+  selectedCurso: any = null; // Curso seleccionado para mostrar detalles
+  showModal: boolean = false; // Estado del modal
+  mostrarBuscador: boolean = false;  // Nueva variable para controlar la visibilidad del buscador
+  mensajeError: string | null = null;  // Variable para mostrar el mensaje de error
 
   constructor(
     private docenteService: DocenteService,
     private http: HttpClient,
     private cursosDocentesService: CursosdocentesService,
-    private autS: AuthService
+    private authService: AuthService
   ) {}
 
-  ngOnInit() {
-    this.obtenerDatosDocenteYCursos(); // Llamada inicial para obtener los datos
+  ngOnInit(): void {
+    this.obtenerDatosDocenteYCursos(); // Llamada inicial para obtener datos
   }
 
-  obtenerDatosDocenteYCursos() {
-    this.autS.getIdFromToken().then((id) => {
-      // Primero obtenemos los datos del docente usando el ID del usuario (del token)
-      this.docenteService.getDocenteById(Number(id)).subscribe({
+  async obtenerDatosDocenteYCursos(): Promise<void> {
+    try {
+      const userId = await this.authService.getIdFromToken(); // Obtener ID desde el token
+      this.docenteService.getDocenteById(Number(userId)).subscribe({
         next: (docenteResponse) => {
-          this.docenteData = docenteResponse;
-          console.log('Datos del docente:', this.docenteData);
+          this.docenteData =
+            Array.isArray(docenteResponse) && docenteResponse.length > 0
+              ? docenteResponse[0]
+              : docenteResponse;
 
-          // Después de obtener los datos del docente, obtenemos los cursos asignados
-          this.obtenerCursosAsignados(String(this.docenteData.id));
+          if (this.docenteData?.id) {
+            console.log('ID del docente:', this.docenteData.id);
+            this.obtenerCursosAsignados(this.docenteData.id);
+          } else {
+            console.error("El campo 'id' no está definido en los datos del docente.");
+          }
         },
         error: (error) => {
           console.error('Error al obtener los datos del docente:', error);
-        }
+        },
       });
-    }).catch((error) => {
-      // Manejar el error al obtener el ID del token
+    } catch (error) {
       console.error('Error al obtener ID del token:', error);
-    });
+    }
   }
-
-  obtenerCursosAsignados(docenteId: string) {
-    // Consultamos los cursos asignados al docente
+  obtenerCursosAsignados(docenteId: number): void {
     this.cursosDocentesService.obtenerCursosAsignados(Number(docenteId)).subscribe({
-      next: (cursosResponse: any) => {  // Usamos "any" para no restringir el tipo
+      next: (cursosResponse: any) => {
         if (Array.isArray(cursosResponse)) {
-          this.cursosAsignados = cursosResponse;
-          console.log('Cursos asignados:', this.cursosAsignados);
+          if (cursosResponse.length === 0) {
+            this.cursosAsignados = [];
+            this.mensajeError = "No se encontraron cursos asignados para este docente";
+            this.mostrarBuscador = false;  // Ocultar el buscador si no hay cursos
+          } else {
+            this.cursosAsignados = cursosResponse;
+            this.mensajeError = "";  // Limpiar el mensaje de error
+            this.mostrarBuscador = true;  // Mostrar el buscador si hay cursos
+          }
         } else {
           console.error('La respuesta no es un arreglo de cursos:', cursosResponse);
+          this.mensajeError = "Error al obtener los cursos asignados.";
+          this.mostrarBuscador = false;  // Ocultar el buscador en caso de error
         }
       },
       error: (error) => {
         console.error('Error al obtener los cursos asignados:', error);
+        this.mensajeError = "Error al obtener los cursos asignados.";
+        this.mostrarBuscador = false;  // Ocultar el buscador en caso de error
       }
     });
   }
   
+
+  // Método para abrir el modal y mostrar los detalles del curso seleccionado
+  verDetalles(curso: any): void {
+    this.selectedCurso = curso;
+    this.showModal = true;
+  }
+
+  // Método para cerrar el modal
+  cerrarModal(): void {
+    this.showModal = false;
+    this.selectedCurso = null;
+  }
+
+  // Filtro dinámico para buscar cursos
+  get cursosFiltrados(): any[] {
+    if (!this.filtro.trim()) {
+      return this.cursosAsignados;
+    }
+    const filtroLower = this.filtro.toLowerCase();
+    return this.cursosAsignados.filter(
+      (curso) =>
+        curso.curso_nombre.toLowerCase().includes(filtroLower) ||
+        curso.curso_clave.toLowerCase().includes(filtroLower) ||
+        curso.area_nombre.toLowerCase().includes(filtroLower) ||
+        curso.especialidad_nombre.toLowerCase().includes(filtroLower)
+    );
+  }
 }

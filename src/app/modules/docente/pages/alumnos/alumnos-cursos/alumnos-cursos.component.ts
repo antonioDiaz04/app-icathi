@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../../../shared/services/auth.service';
+import { environment } from '../../../../../../environments/environment.prod';
+import { runInThisContext } from 'vm';
 
 @Component({
     selector: 'app-alumnos-cursos',
@@ -11,10 +13,23 @@ import { AuthService } from '../../../../../shared/services/auth.service';
 export class AlumnosCursosComponent implements OnInit {
   cursos: any[] = []; // Lista de cursos
   students: any[] = []; // Lista de todos los estudiantes
-  filteredStudents: any[] = []; // Lista de estudiantes filtrados por curso
   selectedCourse: string = ''; // ID del curso seleccionado
   selectedCourseName: string = ''; // Nombre del curso seleccionado
+  
+  isCourseSelectorOpen: boolean = false; // Para controlar el modal del selector de cursos
+  isModifyGradeModalOpen: boolean = false; // Para controlar el modal de modificar calificación
+  selectedStudent: any = null; // Alumno seleccionado para modificar calificación
+  
+  filteredStudents: any[] = []; // Ensure it's an empty array by default
 
+  // get filteredStudentsSafe(): any[] {
+  //   return this.filteredStudents || [];
+  // }
+  
+
+
+
+  
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   ngOnInit(): void {
@@ -22,12 +37,31 @@ export class AlumnosCursosComponent implements OnInit {
   }
 
   isModifying: boolean = false;
-  selectedStudent: any;
-
+  openCourseSelector(): void {
+    this.isCourseSelectorOpen = true;
+  }
+  
+  closeCourseSelector(): void {
+    this.isCourseSelectorOpen = false;
+  }
+  
+  openModifyGradeModal(student: any): void {
+    this.selectedStudent = { ...student }; // Crear una copia para no afectar datos originales
+    this.isModifyGradeModalOpen = true;
+  }
+  
+  closeModifyGradeModal(): void {
+    this.isModifyGradeModalOpen = false;
+  }
+  reloadList(): void {
+    this.cargarAlumnos(); // Reutiliza el método existente para recargar los datos
+  }
+    
   modifyGrade(student: any) {
     this.isModifying = true;
     this.selectedStudent = student;
   }
+  hasData: boolean = true;  // Inicialmente se asume que hay datos.
 
   cargarAlumnos() {
     this.authService.getIdFromToken()
@@ -36,8 +70,8 @@ export class AlumnosCursosComponent implements OnInit {
           console.error('No hay ID docente');
           return;
         }
-        console.log('ID docente encontrado:', idDocente.toString());
-        this.http.get<any>(`http://localhost:3000/docentes/alumnoANDcursos/${idDocente}`)
+        console.log('ID usuario del docente encontrado:', idDocente.toString());
+        this.http.get<any>(`${environment.api}/docentes/alumnoANDcursos/${idDocente}`)
           .subscribe(
             (response) => {
               if (Array.isArray(response) && response.length > 0) {
@@ -48,20 +82,36 @@ export class AlumnosCursosComponent implements OnInit {
                 console.log('Cursos:', this.cursos);
                 console.log('Alumnos:', this.students);
 
+                // Verifica si no hay cursos o alumnos
+                if ((!this.cursos || this.cursos.length === 0) && (!this.students || this.students.length === 0)) {
+                  this.hasData = false;  // No hay datos, se ocultará el selector de cursos
+                } else {
+                  this.hasData = true;  // Hay datos, se mostrará el selector de cursos
+                }
+
                 // Inicializa filteredStudents con todos los estudiantes
                 this.filteredStudents = this.students;
               } else {
                 console.error('Respuesta inesperada:', response);
+                this.hasData = false;  // No hay datos válidos, se ocultará el selector
               }
             },
             (error) => {
               console.error('Error al obtener los datos:', error);
+              this.hasData = false;  // Si ocurre un error, se ocultará el selector
             }
           );
       })
       .catch((error) => {
         console.error('Error al obtener el ID del docente:', error);
+        this.hasData = false;  // Si hay error en el ID, también se ocultará el selector
       });
+  }
+
+  showNotification(type: string, message: string) {
+    // Implementa un sistema de notificaciones, como SweetAlert2, Toastr, o Semantic UI
+    // Aquí se muestra un ejemplo con un simple console.log
+    console.log(`[${type.toUpperCase()}] - ${message}`);
   }
 
   onCourseChange(event: Event): void {
@@ -83,21 +133,27 @@ export class AlumnosCursosComponent implements OnInit {
     console.log('Estudiantes filtrados:', this.filteredStudents);
   }
 
-  saveGrade(student: any) {
-    // router.put('/:alumnoId/cursos/:cursoId', AlumnosPlantelCursosController.actualizarCalificacionFinal);
-
-    // http://localhost:3000/plantelesCursos/5/cursos/3
-    // Enviar los cambios de calificación al servidor
-    this.http.put<any>(`http://localhost:3000/plantelesCursos/${student.alumno_id}/cursos/${student.curso_id}`, { nuevaCalificacion: student.calificacion })
-      .subscribe(
+  saveGrade(student: any): void {
+    if (student && student.calificacion !== undefined) {
+      this.http.put<any>(
+        `${environment.api}/plantelesCursos/${student.alumno_id}/cursos/${student.curso_id}`,
+        { nuevaCalificacion: student.calificacion }
+      ).subscribe(
         (response) => {
           console.log('Calificación guardada:', response);
-          this.isModifying = false;
-          this.selectedStudent = null;
+          // Actualiza la lista de alumnos con la nueva calificación
+          const index = this.filteredStudents.findIndex(s => s.alumno_id === student.alumno_id);
+          if (index > -1) {
+            this.filteredStudents[index].calificacion = student.calificacion;
+          }
+          this.closeModifyGradeModal();
+          this.reloadList()
         },
         (error) => {
           console.error('Error al guardar la calificación:', error);
         }
       );
+    }
   }
+  
 }

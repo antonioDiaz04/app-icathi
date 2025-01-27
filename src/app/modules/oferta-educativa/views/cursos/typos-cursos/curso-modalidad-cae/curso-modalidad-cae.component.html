@@ -1,5 +1,5 @@
 <!-- Formulario para agregar curso -->
-<div class="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
+<div class="bg-white p-8 rounded-lg border border-gray-200">
   <h2 class="text-2xl font-bold text-gray-800 mb-6">Información del Curso</h2>
   <form (ngSubmit)="agregarCurso()" #cursoForm="ngForm" class="space-y-6">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -202,6 +202,52 @@
 
       
     </div>
+
+    <div class="flex space-x-4">
+      <!-- Vigencia Inicio -->
+      <div class="flex-1">
+        <label class="block text-sm font-medium">Revisado por</label>
+        <input
+          type="text"
+          [(ngModel)]="nuevoCurso.revisado_por"
+          name="revisado_por"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+          placeholder="Nombre"
+        />
+      </div>
+    
+      <!-- Fecha de Publicación -->
+      <div class="flex-1">
+        <label class="block text-sm font-medium">Autorizado por</label>
+        <input
+          type="text"
+          [(ngModel)]="nuevoCurso.autorizado_por"
+          name="autorizado_por"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+          placeholder="Nombre"
+        />
+      </div>
+    
+      <!-- Costo -->
+      <div class="flex-1">
+        <label class="block text-sm font-medium">Elaborado por</label>
+        <input
+          type="text"
+          [(ngModel)]="nuevoCurso.elaborado_por"
+          name="elaborado_por"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+          placeholder="Nombre"
+        />
+      </div>
+
+
+
+
+      
+    </div>
     
 
 
@@ -228,7 +274,7 @@
           OBJETIVO DEL CURSO
         </td>
         <td class="border border-gray-300 px-4 py-2 w-3/4">
-          <textarea
+          <textarea pTextarea  [autoResize]="true"
             [(ngModel)]="nuevoCurso.objetivos.objetivo"
             name="objetivo"
             class="w-full border border-gray-300 rounded-md p-2 resize-none"
@@ -241,7 +287,7 @@
           PERFIL DE INGRESO
         </td>
         <td class="border border-gray-300 px-4 py-2 w-3/4">
-          <textarea
+          <textarea pTextarea  [autoResize]="true"
             [(ngModel)]="nuevoCurso.objetivos.perfil_ingreso"
             name="perfil_ingreso"
             class="w-full border border-gray-300 rounded-md p-2 resize-none"
@@ -254,19 +300,21 @@
           PERFIL DE EGRESO
         </td>
         <td class="border border-gray-300 px-4 py-2 w-3/4">
-          <textarea
+          <textarea pTextarea  [autoResize]="true"
             [(ngModel)]="nuevoCurso.objetivos.perfil_egreso"
             name="perfil_egreso"
             class="w-full border border-gray-300 rounded-md p-2 resize-none"
             class="w-full border border-gray-300 rounded-md p-2 resize-none"
             rows="3"
           ></textarea>
+      </tr>
+
       <tr>
         <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
           PERFIL DEL DOCENTE / INSTRUCTOR
         </td>
         <td class="border border-gray-300 px-4 py-2 w-3/4">
-          <textarea
+          <textarea pTextarea  [autoResize]="true"
             [(ngModel)]="nuevoCurso.objetivos.perfil_del_docente"
             name="perfil_del_docente"
             class="w-full border border-gray-300 rounded-md p-2 resize-none"
@@ -278,7 +326,7 @@
           METODOLOGÍA DE CAPACITACIÓN
         </td>
         <td class="border border-gray-300 px-4 py-2 w-3/4">
-          <textarea
+          <textarea pTextarea  [autoResize]="true"
             [(ngModel)]="nuevoCurso.objetivos.metodologia"
             name="metodologia"
             class="w-full border border-gray-300 rounded-md p-2 resize-none"
@@ -291,7 +339,7 @@
           BIBLIOGRAFÍA
         </td>
         <td class="border border-gray-300 px-4 py-2 w-3/4">
-          <textarea
+          <textarea pTextarea  [autoResize]="true"
             [(ngModel)]="nuevoCurso.objetivos.bibliografia"
             name="bibliografia"
             class="w-full border border-gray-300 rounded-md p-2 resize-none"
@@ -304,7 +352,7 @@
           CRITERIOS DE ACREDITACIÓN
         </td>
         <td class="border border-gray-300 px-4 py-2 w-3/4">
-          <textarea
+          <textarea pTextarea  [autoResize]="true"
             [(ngModel)]="nuevoCurso.objetivos.criteriosAcreditacion"
             name="criteriosAcreditacion"
             class="w-full border border-gray-300 rounded-md p-2 resize-none"
@@ -317,7 +365,7 @@
           RECONOCIMIENTO AL ALUMNO
         </td>
         <td class="border border-gray-300 px-4 py-2 w-3/4">
-          <textarea
+          <textarea pTextarea  [autoResize]="true"
             [(ngModel)]="nuevoCurso.objetivos.reconocimiento"
             name="reconocimiento"
             class="w-full border border-gray-300 rounded-md p-2 resize-none"
@@ -365,19 +413,19 @@
           <tr *ngFor="let tema of nuevoCurso.contenidoProgramatico.temas; let i = index">
             <td class="border border-gray-300 px-4 py-2 text-center">{{ i + 1 }}</td>
             <td class="border border-gray-300 px-4 py-2">
-              <textarea [(ngModel)]="tema.nombre" name="nombre_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="2"></textarea>
+              <textarea pTextarea  [autoResize]="true" [(ngModel)]="tema.nombre" name="nombre_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="2"></textarea>
             </td>
             <td class="border border-gray-300 px-4 py-2 text-center">
               <input type="number" [(ngModel)]="tema.tiempo" name="tiempo_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" />
             </td>
             <td class="border border-gray-300 px-4 py-2">
-              <textarea [(ngModel)]="tema.competencias" name="competencias_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="2"></textarea>
+              <textarea pTextarea  [autoResize]="true" [(ngModel)]="tema.competencias" name="competencias_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="2"></textarea>
             </td>
             <td class="border border-gray-300 px-4 py-2">
-              <textarea [(ngModel)]="tema.evaluacion" name="evaluacion_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="2"></textarea>
+              <textarea pTextarea  [autoResize]="true" [(ngModel)]="tema.evaluacion" name="evaluacion_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="2"></textarea>
             </td>
             <td class="border border-gray-300 px-4 py-2">
-              <textarea [(ngModel)]="tema.actividades" name="actividades_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="3"></textarea>
+              <textarea  pTextarea  [autoResize]="true" [(ngModel)]="tema.actividades" name="actividades_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="3"></textarea>
             </td>
             <td class="border border-gray-300 px-4 py-2 text-center">
               <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" (click)="eliminarTema(i)">
@@ -395,7 +443,10 @@
           </tr>
         </tbody>
       </table>
-      <button type="button" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" (click)="agregarTema()">
+      <button type="button"
+      class="mt-4 bg-white hover:bg-gray-200 text-blue-500 font-bold py-2 px-4 rounded border border-gray-200"
+
+        (click)="agregarTema()">
         Agregar Tema
       </button>
     </div>
@@ -500,7 +551,8 @@
       </table>
       <button
         type="button"
-        class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        class="mt-4 bg-white hover:bg-gray-200 text-blue-500 font-bold py-2 px-4 rounded border border-gray-200"
+
         (click)="agregarMaterial()"
       >
         Agregar Material
@@ -525,7 +577,7 @@
         <tbody>
           <tr *ngFor="let equipamiento of nuevoCurso.equipamiento; let k = index">
             <td class="border border-gray-300 px-4 py-2">
-              <textarea
+              <textarea pTextarea  [autoResize]="true"
                 [(ngModel)]="equipamiento.descripcion"
                 name="descripcion{{k}}" 
                 class="border border-gray-300 rounded-md px-2 py-1 w-full"
@@ -587,21 +639,35 @@
         </tbody>
       </table>
       <button
-        type="button"
-        class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        (click)="agregarEquipamiento()"
-      >
-        Agregar Equipamiento
-      </button>
+      type="button"
+      class="mt-4 bg-white hover:bg-gray-200 text-blue-500 font-bold py-2 px-4 rounded border border-gray-200"
+      (click)="agregarEquipamiento()"
+    >
+      Agregar Equipamiento
+    </button>
+    
+    
     </div>
     
+
+    <button
+  type="button"
+  class="mt-4 bg-white hover:bg-gray-100 text-blue-500 font-bold py-2 px-4 rounded border border-gray-200 flex items-center"
+  (click)="mostrarModalSubirArchivo()"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+  </svg>
+  Subir Archivo
+</button>
+
   
  <!-- Botón para guardar -->
 <div class="flex justify-end">
   <button
     type="submit"
     [disabled]="isSaving" 
-    class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition duration-300"
+    class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition duration-300"
   >
     <i *ngIf="isSaving" class="loading circle icon"></i>
     Guardar Curso
@@ -618,3 +684,180 @@
 
   </form>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Modal file -->
+<div
+  class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
+  *ngIf="mostrarFormulario"
+>
+  <div
+    class="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-2xl flex flex-col space-y-4"
+  >
+    <!-- Contenido del modal -->
+    <div class="w-full">
+      <form enctype="multipart/form-data" class="space-y-4">
+        <div class="grid grid-cols-1 gap-2">
+        <!-- file -->
+        <div class="w-full mx-auto my-12">
+          <h2 class="text-2xl font-semibold mb-6">Cargar Temario</h2>
+          <!-- <img [src]="url" height="200"> -->
+          <!-- Example for PDF viewer -->
+          <!-- <pdf-viewer [src]="url" [render-text]="true" style="display: block;"></pdf-viewer> -->
+
+          <!-- Contenedor para el drag and drop y clic -->
+          <!-- Disparar el evento de selección del archivo al hacer clic -->
+
+          <div
+            class="flex flex-col items-center justify-center h-40 border-2 border-gray-300 border-dashed rounded-md hover:border-blue-500 transition-colors duration-300"
+            >
+            <svg
+              *ngIf="!selectedFile"
+            (click)="fileInput.click()"
+            (dragover)="onDragOver($event)"
+            (drop)="onDrop($event)"
+            (dragleave)="onDragLeave($event)"
+              class="w-16 h-14 text-gray-400 group-hover:text-blue-500 transition-colors duration-300"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+              ></path>
+            </svg>
+
+            <!-- Mensaje cuando no hay archivo seleccionado -->
+            <p
+              *ngIf="!selectedFile"
+              class="mt-6 text-gray-500 group-hover:text-blue-500 transition-colors duration-300"
+            >
+              Selecciona un archivo para subir<br />o arrástralo aquí
+            </p>
+
+            <!-- Mostrar el nombre del archivo y el ícono correspondiente -->
+            <div
+              *ngIf="selectedFile"
+              class="mt-6 flex items-center space-x-4"
+            >
+              <ng-container [ngSwitch]="fileExtension">
+                <svg
+                  *ngSwitchCase="'pdf'"
+                  class="w-8 h-8 text-red-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9l-7-7z"
+                  ></path>
+                </svg>
+                <svg
+                  *ngSwitchCase="'doc'"
+                  class="w-8 h-8 text-blue-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M15.74 2.72c-.61 0-1.22.24-1.66.66L11.18 5.2l-.24-.2C10.17 4.53 9.65 4 9.01 4H7.99c-.6 0-1.14.27-1.52.73L3.4 7.47c-.44.47-.72 1.06-.83 1.69-.1.6-.07 1.23.1 1.8.38.95 1.24 1.72 2.25 1.86 1.51.2 3.02-.6 4.14-2.23 1.14 1.63 2.67 2.43 4.27 2.45 1.06 0 2.05-.28 2.91-.78l2.99 3.45c.45.51 1.11.78 1.8.78 1.32 0 2.48-1.03 2.56-2.36.1-1.02-.35-2.06-1.14-2.75-.85-.75-2.02-1.04-3.18-.93-1.31.14-2.53.81-3.17 1.84-.42-.73-.97-1.39-1.63-1.99-.75-.72-1.6-1.37-2.47-1.88-.27-.21-.58-.37-.88-.54l-1.05-.49.72-2.32c.33-1.06-.47-2.11-1.54-2.11z"
+                  ></path>
+                </svg>
+                <svg
+                  *ngSwitchCase="'xlsx'"
+                  class="w-8 h-8 text-green-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M4 3v18c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2z"
+                  ></path>
+                </svg>
+                <div *ngSwitchDefault class="w-8 h-8 bg-gray-200 text-gray-400">
+                  ?
+                </div>
+              </ng-container>
+              <p class="text-sm font-medium text-gray-700">
+                Archivo seleccionado: {{ selectedFile.name }}
+              </p>
+              <button
+                type="button"
+                class="mt-3 bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-md"
+                (click)="removeFile()"
+              >
+                Eliminar archivo
+              </button>
+            </div>
+          </div>
+          <label class="block mb-3 text-sm font-medium text-gray-700"
+            >O súbelo desde una URL</label
+          >
+          <div class="flex">
+            <input
+              type="text"
+              class="flex-1 px-5 py-3 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="https://ejemplo.com/archivo.csv"
+            />
+          </div>
+
+          <input
+            #fileInput
+            type="file"
+            (change)="onFileSelect($event)"
+            hidden
+            accept=".pdf"
+          />
+          <div class="flex justify-end">
+            <button
+              (click)="mostrarFormulario = false"  class="mt-4 bg-white hover:bg-gray-100 text-blue-500 font-bold py-2 px-4 rounded border border-gray-200 flex items-center"
+  
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+       
+        </div>
+
+
+
+      </form>
+    </div>
+
+    <!-- Visor de PDF -->
+    <!-- <div *ngIf="fileExtension === 'pdf'" class="w-1/2">
+      <h2 class="text-2xl font-semibold mb-6"> Temario</h2>
+
+      <pdf-viewer *ngIf="fileExtension === 'pdf'"
+      [original-size]="false"
+        [src]="url"
+        [render-text]="true"
+        style="width: 100%; height: 600px"
+        ></pdf-viewer>
+      </div>
+    </div> -->
+    <!-- (after-load-complete)="callbackFn($event)" -->
+    <!-- [show-all]="false" -->
+    <!-- [page]="page" -->
+</div>
+
+
+

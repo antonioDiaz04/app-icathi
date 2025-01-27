@@ -9,14 +9,19 @@ import en from '@angular/common/locales/en';
 import { FormsModule } from '@angular/forms';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient } from '@angular/common/http';
+import Material from '@primeng/themes/material';
 
 registerLocaleData(en);
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    providePrimeNG({
-      // theme: {
-      //     preset: Aura
-      // }
-  }),provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideClientHydration(), importProvidersFrom(FormsModule), provideAnimationsAsync(), provideHttpClient(), provideAnimationsAsync()]
+    provideAnimationsAsync(),
+    
+  //   providePrimeNG({
+  //     theme: {
+  //         preset: Material
+  //     }
+  // })
+  // ,
+  provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideClientHydration(), importProvidersFrom(FormsModule), provideAnimationsAsync(), provideHttpClient(), provideAnimationsAsync()]
 };

@@ -18,18 +18,27 @@ export class CalificacionesComponent implements OnInit {
   selectedCurso: any = null; // Curso seleccionado para el modal
   selectedMateria: string = ''; // Materia seleccionada para filtrar
   calificaciones: any[] = []; // Calificaciones de las materias
+  today: Date = new Date(); // Fecha actual
+  cursoSeleccionado: any = null;
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private aspiranteService: AspiranteService,
-    private alumnosCursosService: AlumnosCursosService,
-    private route: ActivatedRoute
-  ) {}
-
-  ngOnInit(): void {
-    this.loadUserDetails();
+  abrirModal(curso: any) {
+    this.cursoSeleccionado = curso;
   }
+  
+  cerrarModal() {
+    this.cursoSeleccionado = null;
+      }
+      constructor(
+        private authService: AuthService,
+        private router: Router,
+        private aspiranteService: AspiranteService,
+        private alumnosCursosService: AlumnosCursosService,
+        private route: ActivatedRoute
+      ) {}
+
+      ngOnInit(): void {
+        this.loadUserDetails();
+      }
 
   /**
    * Carga los detalles del usuario autenticado y sus cursos.
@@ -71,6 +80,7 @@ export class CalificacionesComponent implements OnInit {
 
               console.log('Cursos del alumno:', this.cursos);
             },
+
             error: (err) => {
               console.error('Error al obtener los cursos del alumno:', err);
             }
@@ -88,6 +98,9 @@ export class CalificacionesComponent implements OnInit {
 
 
   verDetalles(curso: any): void {
+
+    this.selectedCurso = curso;
+
     console.log('Detalles del curso:', curso);
     // Lógica para mostrar un modal o redirigir a otra página
   }

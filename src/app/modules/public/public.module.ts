@@ -23,7 +23,7 @@ import { CreapasswordComponent } from './pages/creapassword/creapassword.compone
 import { OptionsRegiterComponent } from './pages/options-regiter/options-regiter.component';
 import { CreatePasswordAlumnoComponent } from './pages/create-password-alumno/create-password-alumno.component';
 
-
+import { DrawerModule } from 'primeng/drawer';
 
 
 @NgModule({
@@ -35,7 +35,7 @@ import { CreatePasswordAlumnoComponent } from './pages/create-password-alumno/cr
     LoginComponent,RegistroUserComponent, CursosComponent, UnauthorizedComponent, TeacherApplicationComponent, PostulacionComponent, ValidarCorreoComponent, CreapasswordComponent, OptionsRegiterComponent, CreatePasswordAlumnoComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  imports: [FormsModule,SidebarModule,
+  imports: [DrawerModule,FormsModule,SidebarModule,
     CommonModule,ReactiveFormsModule,
     PublicRoutingModule
 // BrowserAnimationsModule,

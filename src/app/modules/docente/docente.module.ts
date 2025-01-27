@@ -13,6 +13,9 @@ import { AlumnosCursosComponent } from './pages/alumnos/alumnos-cursos/alumnos-c
 import { CursosComponent } from './pages/cursos/cursos.component';
 import { AistenciasComponent } from './pages/aistencias/aistencias.component';
 import { CursosDocenteComponent } from './pages/cursos-docente/cursos-docente.component';
+import { DrawerModule } from 'primeng/drawer';
+import { Breadcrumb } from 'primeng/breadcrumb';
+import { DialogModule } from 'primeng/dialog';
 
 
 @NgModule({
@@ -27,9 +30,10 @@ import { CursosDocenteComponent } from './pages/cursos-docente/cursos-docente.co
     CursosDocenteComponent
   ],
   imports: [
-    NbThemeModule.forRoot(),
+    NbThemeModule.forRoot(),DialogModule,
     SafeUrlPipe,
-
+    DrawerModule,
+    Breadcrumb,
     FormsModule,
     NbSelectModule,
     NbCardModule,

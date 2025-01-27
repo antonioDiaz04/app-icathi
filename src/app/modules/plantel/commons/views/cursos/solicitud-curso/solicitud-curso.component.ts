@@ -15,6 +15,7 @@ import { environment } from "../../../../../../../environments/environment.prod"
 import { DocenteService } from "../../../../../../shared/services/docente.service";
 // import EventEmitter from "events";
 
+import { trigger, state, style, animate, transition } from '@angular/animations';
 export interface Modulo {
   id: number;
   nombre: string;
@@ -39,6 +40,17 @@ export interface Modulo {
   selector: "app-solicitud-curso",
   templateUrl: "./solicitud-curso.component.html",
   styles: ``,
+  animations: [
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('300ms ease-in', style({ opacity: 1 })),
+      ]),
+      transition(':leave', [
+        animate('300ms ease-out', style({ opacity: 0 })),
+      ]),
+    ]),
+  ],
 })
 export class SolicitudCursoComponent implements OnInit, OnChanges {
   selectedTab: number = 1; // Tab seleccionado por defecto
@@ -86,18 +98,20 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
 
       // int
       num_instructores: ["uno", Validators.required], // Número de instructores (obligatorio)
-      instructor: ["", Validators.required], // Instructor(es) (obligatorio)
-      municipio: ["", Validators.required], 
-      localidad: ["", Validators.required], 
-      calle: ["", Validators.required], 
-      num_interior: [0, Validators.required], 
-      num_exterior: [0, Validators.required], 
-      referencia: ["", Validators.required], 
+      // instructor: ["", Validators.required], // Instructor(es) (obligatorio)
+     instructor: [[]], // Para almacenar los IDs de los instructores seleccionados
       
-      
-      
-      
-      
+      municipio: ["", Validators.required],
+      localidad: ["", Validators.required],
+      calle: ["", Validators.required],
+      num_interior: [0, Validators.required],
+      num_exterior: [0, Validators.required],
+      referencia: ["", Validators.required],
+
+
+
+
+
       turno: ["", Validators.required], // Turno (obligatorio)
       tipo_horario: ["", Validators.required], // Tipo de Horario (obligatorio)
 
@@ -142,7 +156,8 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
       convenio: [""],
       convenio_numero: [""], // Valor inicial para Número de Convenio u Oficio
       // tipo_curso
-      tipo_curso: [""], // Valor inicial para Número de Convenio u Oficio
+      // Modificado campo de tipo_curso
+      tipo_curso: [0, Validators.required], // 0 = Presencial, 1 = En Línea
     });
   }
 
@@ -168,6 +183,95 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
   close(): void {
     this.mostrarFormularioChange.emit(false); // Emitir el valor booleano
   }
+
+
+
+
+
+
+    selectedInstructors: number[] = [];
+    isMultipleSelection = false;
+  
+    // constructor(private fb: FormBuilder) {
+    //   this.form = this.fb.group({
+    //     num_instructores: [''],
+    //     instructor: [[]], // Para almacenar los IDs de los instructores seleccionados
+    //   });
+    // }
+  
+    updateSelectionMode() {
+      const numInstructores = this.cursoForm.get('num_instructores')?.value;
+      this.isMultipleSelection = numInstructores === '2';
+      if (!this.isMultipleSelection && this.selectedInstructors.length > 1) {
+        // Si cambia a "Uno", conserva solo el primer seleccionado
+        this.selectedInstructors = [this.selectedInstructors[0]];
+        this.cursoForm.get('instructor')?.setValue(this.selectedInstructors);
+      }
+    }
+  
+    toggleSelection(event: Event, id: number) {
+      const checked = (event.target as HTMLInputElement).checked;
+      if (checked) {
+        if (!this.isMultipleSelection && this.selectedInstructors.length >= 1) {
+          // Si es selección única, reemplaza el seleccionado
+          this.selectedInstructors = [id];
+        } else {
+          // Agregar a la selección
+          this.selectedInstructors.push(id);
+        }
+      } else {
+        // Remover de la selección
+        this.selectedInstructors = this.selectedInstructors.filter((instructorId) => instructorId !== id);
+      }
+      this.cursoForm.get('instructor')?.setValue(this.selectedInstructors);
+    }
+  
+    isSelected(id: number): boolean {
+      return this.selectedInstructors.includes(id);
+    }
+  
+    isSelectionDisabled(id: number): boolean {
+      // Si es selección única y ya hay uno seleccionado, desactiva los demás
+      return !this.isMultipleSelection && this.selectedInstructors.length >= 1 && !this.selectedInstructors.includes(id);
+    }
+  
+
+
+
+
+    semanaInicio: string = '';
+    semanaFin: string = '';
+
+    calcularSemana() {
+      const fechaInicio = this.cursoForm.get('fecha_inicio')?.value;
+      const fechaFin = this.cursoForm.get('fecha_fin')?.value;
+    
+      if (fechaInicio && fechaFin) {
+        // Crear los objetos Date desde las fechas ingresadas
+        const inicio = new Date(`${fechaInicio}T00:00:00`); // Aseguramos formato ISO
+        const fin = new Date(`${fechaFin}T00:00:00`); // Aseguramos formato ISO
+    
+        // Formatear las fechas para evitar ajustes de zona horaria
+        const opciones: Intl.DateTimeFormatOptions = {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        };
+    
+        // Formatear las fechas seleccionadas
+        this.semanaInicio = inicio.toLocaleDateString('es-ES', opciones);
+        this.semanaFin = fin.toLocaleDateString('es-ES', opciones);
+      } else {
+        // Limpiar las variables si no hay fechas
+        this.semanaInicio = '';
+        this.semanaFin = '';
+      }
+    }
+    
+    
+
+
 
   resetFilters() {
     // this.filtroId = '';
@@ -202,7 +306,7 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
     //   console.error("El formulario contiene errores o campos vacíos");
     //   return;
     // }
-  
+
     this.authService
       .getIdFromToken()
       .then((plantelId) => {
@@ -210,7 +314,7 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
           console.error("No se pudo obtener el ID del plantel");
           return;
         }
-  
+
         const requestBody = {
           especialidad_id: this.cursoForm.value.especialidad_id,
           plantelId: plantelId.toString(),
@@ -220,13 +324,13 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
           requisitos_extra: this.cursoForm.value.requisitos_extra,
           fecha_inicio: this.cursoForm.value.fecha_inicio,
           fecha_fin: this.cursoForm.value.fecha_fin,
-          
+
           // Campos adicionales
           num_instructores: this.cursoForm.value.num_instructores,
           instructor: this.cursoForm.value.instructor,
           turno: this.cursoForm.value.turno,
           tipo_horario: this.cursoForm.value.tipo_horario,
-        
+
           // Dirección
           municipio: this.cursoForm.value.municipio,
           localidad: this.cursoForm.value.localidad,
@@ -234,7 +338,7 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
           num_interior: this.cursoForm.value.num_interior,
           num_exterior: this.cursoForm.value.num_exterior,
           referencia: this.cursoForm.value.referencia,
-        
+
           // Horarios diarios
           lunes_inicio: this.cursoForm.value.lunes_inicio,
           lunes_fin: this.cursoForm.value.lunes_fin,
@@ -250,7 +354,7 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
           sabado_fin: this.cursoForm.value.sabado_fin,
           domingo_inicio: this.cursoForm.value.domingo_inicio,
           domingo_fin: this.cursoForm.value.domingo_fin,
-        
+
           // Otros campos
           sector: this.cursoForm.value.sector,
           rango_edad: this.cursoForm.value.rango_edad,
@@ -263,9 +367,9 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
           convenio_numero: this.cursoForm.value.convenio_numero,
           tipo_curso: this.cursoForm.value.tipo_curso,
         };
-        
+
         console.log("Datos enviados al backend:", requestBody);
-  
+
         // Enviar el objeto al servicio
         this.http
           .post<Modulo>(`${this.apiUrl}/planteles-curso`, requestBody)
@@ -275,7 +379,7 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
               this.mostrarFormulario = false;
               this.isLoading = false;
               this.cursoForm.reset();
-        
+
               this.mostrarFormularioChange.emit(false); // Emitir el valor booleano
               alert("Datos enviados exitosamente al backend"); // Mostrar alerta de éxito
               console.log("Curso agregado correctamente:", cursoCreado);
@@ -291,7 +395,7 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
         console.error("Error al obtener el ID del plantel:", error);
       });
   }
-  
+
   onEspecialidadChange(event: Event): void {
     const especialidadId = Number((event.target as HTMLSelectElement).value); // Obtener el ID de la especialidad seleccionada
     if (!isNaN(especialidadId)) {

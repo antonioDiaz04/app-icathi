@@ -8,6 +8,8 @@ import { response } from 'express';
 import { CursosdocentesService } from '../../../../../../shared/services/cursosdocentes.service';
 import { CursosService } from '../../../../../../shared/services/cursos.service';
 import { PDFDocumentProxy } from 'ng2-pdf-viewer';
+import { trigger, state, style, animate, transition } from '@angular/animations';
+
 export interface Modulo {
   id: number;
   nombre: string;
@@ -39,6 +41,17 @@ declare var $: any;
 @Component({
     selector: 'app-listado-cursos',
     templateUrl: './listado-cursos.component.html',
+     animations: [
+        trigger('fadeIn', [
+          transition(':enter', [
+            style({ opacity: 0 }),
+            animate('300ms ease-in', style({ opacity: 1 })),
+          ]),
+          transition(':leave', [
+            animate('300ms ease-out', style({ opacity: 0 })),
+          ]),
+        ]),
+      ],
     styles: `textarea{
     field-sizing:content;
   }

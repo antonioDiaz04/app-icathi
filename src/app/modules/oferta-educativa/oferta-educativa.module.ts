@@ -12,16 +12,17 @@ import { CursoModalidadCAEComponent } from './views/cursos/typos-cursos/curso-mo
 import { CursoModalidadEscuelaComponent } from './views/cursos/typos-cursos/curso-modalidad-escuela/curso-modalidad-escuela.component';
 import { CursoModalidadVirtualComponent } from './views/cursos/typos-cursos/curso-modalidad-virtual/curso-modalidad-virtual.component';
   import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+  import { TextareaModule } from 'primeng/textarea';
 import { PdfExampleComponent } from './views/pdf-example/pdf-example.component';
-
+import { PdfViewComponent } from './views/pdf-view/pdf-view.component';
+// import {InputTextareaModule} from 'primeng/inputtextarea';
 @NgModule({
   declarations: [PdfExampleComponent,
-    HomeComponent,CursoModalidadCAEComponent,CursoModalidadEscuelaComponent,CursoModalidadVirtualComponent,OfertaEducativaComponent, HeaderComponent,ListadoCursosComponent
+    HomeComponent,CursoModalidadCAEComponent,CursoModalidadEscuelaComponent,CursoModalidadVirtualComponent,OfertaEducativaComponent, HeaderComponent,ListadoCursosComponent, PdfViewComponent
   ],  
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [RouterModule,HttpClientModule,
-
+    TextareaModule,
     CommonModule,FormsModule ,ReactiveFormsModule,
     OfertaEducativaRoutingModule
   ]

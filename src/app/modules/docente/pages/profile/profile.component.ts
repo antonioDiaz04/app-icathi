@@ -6,6 +6,7 @@ import { forkJoin, Observable, tap } from 'rxjs';
 import { DocenteService } from '../../../../shared/services/docente.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { PendingAlertService } from '../../../../shared/services/pending-alert.service';
 // import { SafeUrlPipe} from '@angular/router';
 interface Docente {
   nombre: any;
@@ -52,6 +53,7 @@ export class ProfileComponent {
 
   constructor(
     private router: Router,
+    private pendingAlertService: PendingAlertService,
 
     private sanitizer: DomSanitizer,
     public docenteDataService: DocenteDataService,
@@ -65,6 +67,18 @@ export class ProfileComponent {
   get docenteData() {
     return this.docenteDataService.docenteData;
   }
+      updatePendingAlerts() {
+        const alerts: string[] = [];
+      
+        if (!this.docenteData.cedula_profesional) alerts.push('Cédula profesional pendiente');
+        if (!this.docenteData.curriculum_url) alerts.push('Curriculum pendiente');
+        if (!this.docenteData.documento_identificacion) alerts.push('Documento de identificación pendiente');
+        if (!this.selectedEspecialidades_doce?.length) alerts.push('Especialidad pendiente');
+        if (!this.docenteData.estatus_id) alerts.push('Validación pendiente');
+        if (!this.docenteData.usuario_validador_id) alerts.push('Asignación de validador pendiente');
+      
+        this.pendingAlertService.updatePendingAlerts(alerts);
+      }
   // Manejo del cambio de archivo
   onCurriculumFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -78,6 +92,8 @@ export class ProfileComponent {
     }
   }
   ngOnInit(): void {
+    this.updatePendingAlerts();
+
     this.loadEspecialidades();
     console.log('----', this.docenteDataService.docenteData);
     if (
