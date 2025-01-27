@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class PlantelCursosService {
   private baseUrl = `${environment.api}/PlantelCursos`;
+  private planteles_curso_solicitud = `${environment.api}/planteles-curso`;
 
   constructor(private http: HttpClient) {}
 
@@ -19,5 +20,16 @@ export class PlantelCursosService {
   getOfertaEducativa(alumnoId: number): Observable<any[]> {
     const url = `${this.baseUrl}/${alumnoId}/oferta-educativa`;
     return this.http.get<any[]>(url);
+  }
+
+  /**
+   * Actualiza la solicitud de un curso por ID.
+   * @param id - ID de la solicitud a actualizar
+   * @param data - Objeto con los datos que se desean actualizar
+   * @returns Un Observable con la respuesta del servidor
+   */
+  updateCourseSolicitudById(id: number, data: any): Observable<any> {
+    const url = `${this.planteles_curso_solicitud}/solicitud/${id}`;
+    return this.http.put<any>(url, data);
   }
 }

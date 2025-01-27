@@ -10,6 +10,8 @@ import { PlantelService } from '../../../../../../shared/services/plantel.servic
 // import { response } from 'express';
 import localeEs from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
+import { PlantelCursosService } from '../../../../../../shared/services/plantel-cursos.service';
+import { animate, style, transition, trigger } from '@angular/animations';
 registerLocaleData(localeEs, 'es');
 
 export interface Modulo {
@@ -49,6 +51,17 @@ interface Docente {
     selector: 'app-listado-cursos-aprovados',
     templateUrl: './listado-cursos-aprovados.component.html',
     standalone: false,
+      animations: [
+        trigger('fadeIn', [
+          transition(':enter', [
+            style({ opacity: 0 }),
+            animate('300ms ease-in', style({ opacity: 1 })),
+          ]),
+          transition(':leave', [
+            animate('300ms ease-out', style({ opacity: 0 })),
+          ]),
+        ]),
+      ],
     providers: [{ provide: LOCALE_ID, useValue: 'es' }]
 })
 export class ListadoCursosAprovadosComponent implements OnInit {
@@ -65,14 +78,16 @@ export class ListadoCursosAprovadosComponent implements OnInit {
   mostrarFormulario = false;
   mostrarModal = false;
   alumnos: any = [];
-
+  
   mostrarDetalleModal = false; // Nueva variable para el modal de detalles
   cursoSeleccionado: Modulo | null = null;
   cursoDetalleSeleccionado: number | null = null; // Curso seleccionado para ver detalles
   curso: any;
   cursosSolicitados: any;
   // dataCurso: any;
-
+  getDocentes_a_asignar: any[] = [];
+  id_plantel_curso_a_editar:Number=0
+  // id_plantel_a_editar:Number=0
 
 
   
@@ -94,6 +109,7 @@ export class ListadoCursosAprovadosComponent implements OnInit {
 
 
   constructor(
+    private plantelCursosService: PlantelCursosService,
     private docenteService: DocenteService,
     private http: HttpClient,
     private aspirantesService: AspiranteService,
@@ -103,8 +119,7 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     private fb: FormBuilder,
   
   ) {
-  
-
+ 
     this.cursoForm = this.fb.group({
       nombre: [''],
       area_nombre: [''],
@@ -123,7 +138,14 @@ export class ListadoCursosAprovadosComponent implements OnInit {
       cuota_monto: [''],
       pagar_final: [false],
       participantes: [''],
-      cant_instructores: [''],
+      // cant_instructores: [this.curso.cant_instructores], // Asignamos el valor de 'cant_instructores'
+      // cant_instructores: [''],  // Se inicializa con un valor vacío o el valor que venga
+      // cant_instructores: [this.curso?.cant_instructores || ''], // Asigna el valor inicial
+      // cant_instructores: ['cant_instructores'], // Valor predeterminado para seleccionar "Más de Uno"
+      // cant_instructores: ['1'], // Selecciona "Uno" por defecto
+      cant_instructores: [],
+
+      // cant_instructores:  ["uno", Validators.required],
       calle: [''],
         localidad: [''],
         municipio: [''],
@@ -152,6 +174,8 @@ export class ListadoCursosAprovadosComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.getDocentes__asignar();
+
     this.cargarCursosByIdPlantel();
     // this.getInfo();
     // this.getDocentes();
@@ -177,39 +201,90 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     this.filtroNivel = '';
     this.filtroDuracion = null;
   }
-
+  mapRangoEdad(rango: string | undefined): string {
+    if (!rango) return ''; // Devuelve una cadena vacía si no hay valor
+    if (rango === '11-15' || rango === '11-14') return '11-14';
+    if (rango === '15+' || rango === '15-20') return '15+';
+    return ''; // Devuelve vacío si no coincide con ningún caso
+  }
+  mapCruzadaContraHambre(valor: boolean | undefined): string {
+    if (valor === true) return 'Sí';
+    if (valor === false) return 'No';
+    return ''; // Devuelve vacío si no hay valor
+  }
+  mapSectorAtendido(valor: string | undefined): string {
+    const sectoresValidos = ['Productivo', 'Público', 'Social', 'Readaptación Social'];
+    if (sectoresValidos.includes(valor || '')) {
+      return valor || '';
+    }
+    return ''; // Devuelve vacío si no hay coincidencias
+  }
+  
+  mapCuotaTipo(valor: string | undefined): string {
+    const tiposValidos = ['Por Grupo', 'Por Alumno'];
+    if (tiposValidos.includes(valor || '')) {
+      return valor || '';
+    }
+    return ''; // Devuelve vacío si no es un valor válido
+  }
+  mapPagarFinal(valor: string | undefined): string {
+    if (valor === 'true') {
+      return 'Sí';
+    } else if (valor === 'false') {
+      return 'No';
+    }
+    return ''; // Devuelve vacío si el valor no es válido
+  }
+  
   // cursosFiltrados!:Modulo;
   openModal(idPlantelCurso: any) {
     alert(idPlantelCurso);
     this.mostrarFormulario = !this.mostrarFormulario;
-  
+  this.id_plantel_curso_a_editar=idPlantelCurso
+
+  console.log("id_plantel_curso_a_editar al abrir detalles",this.id_plantel_curso_a_editar)
     this.plantelService.getInfoCursoPlantel(idPlantelCurso).subscribe((response:any) => {
       this.alumnos = response.alumnos;
       this.docentes = response.docentes;
       this.curso = response.curso;
-      const cursohorario = response.curso.horario;
-  
-      // Cargar la información del curso en el formulario
-      this.cursoForm.patchValue({
-        nombre: this.curso.nombre,
-        area_nombre: this.curso.area_nombre,
-        especialidad_nombre: this.curso.especialidad_nombre,
-        fecha_inicio:this.formatDate(this.curso.fecha_inicio),
-        fecha_fin:   this.formatDate(this.curso.fecha_fin),
-        cupo_maximo: this.curso.cupo_maximo,
-        requisitos_extra: this.curso.requisitos_extra,
-        sector_atendido: this.curso.sector_atendido,
-        rango_edad: this.curso.rango_edad,
-        tipo_beca: this.curso.tipo_beca,
-        tipo_curso: this.curso.tipo_curso,
-        convenio_numero: this.curso.convenio_numero,
-        cruzada_contra_hambre: this.curso.cruzada_contra_hambre,
-        cuota_tipo: this.curso.cuota_tipo,
-        cuota_monto: this.curso.cuota_monto,
-        pagar_final: this.curso.pagar_final,
-        participantes: this.curso.participantes,
-        cant_instructores: this.curso.cant_instructores,
-        // plantel: {
+        const cursohorario = response.curso.horario;
+    
+        // Cargar la información del curso en el formulario
+        this.cursoForm.patchValue({
+          nombre: this.curso.nombre,
+          area_nombre: this.curso.area_nombre,
+          especialidad_nombre: this.curso.especialidad_nombre,
+          fecha_inicio:this.formatDate(this.curso.fecha_inicio),
+          fecha_fin:   this.formatDate(this.curso.fecha_fin),
+          cupo_maximo: this.curso.cupo_maximo,
+          requisitos_extra: this.curso.requisitos_extra,
+          sector_atendido: this.mapSectorAtendido(this.curso?.sector_atendido), // Mapeo para sector_atendido
+
+          // sector_atendido: this.curso.sector_atendido,
+          rango_edad: this.mapRangoEdad(this.curso?.rango_edad),
+
+          // rango_edad: String(this.curso?.rango_edad),
+          tipo_beca: this.curso.tipo_beca,
+          tipo_curso: this.curso.tipo_curso,
+          convenio_numero: this.curso.convenio_numero,
+          cruzada_contra_hambre: this.mapCruzadaContraHambre(this.curso?.cruzada_contra_hambre),
+          cuota_tipo: this.mapCuotaTipo(this.curso?.cuota_tipo), // Mapeo para cuota_tipo
+
+          // cruzada_contra_hambre: this.curso.cruzada_contra_hambre,
+          // cuota_tipo: this.curso.cuota_tipo,
+          cuota_monto: this.curso.cuota_monto,
+          // pagar_final: this.curso.pagar_final,
+          pagar_final: this.mapPagarFinal(this.curso?.pagar_final), // Mapeo para pagar_final
+
+          participantes: this.curso.participantes,
+          // cant_instructores: this.curso.cant_instructores,
+          cant_instructores: String(this.curso?.cant_instructores ), // Convierte a cadena
+
+          // cant_instructores: this.curso.cant_instructores || '', // Asignamos el valor recibido o un valor predeterminado
+          // cant_instructores: this.curso.cant_instructores || '1', // Selecciona dinámicamente o usa "Uno" como valor predeterminado
+          // cant_instructores:1, // Valor inicial en "1"
+
+          // plantel: {
           calle: this.curso.plantel.calle,
           localidad: this.curso.plantel.localidad,
           municipio: this.curso.plantel.municipio,
@@ -271,6 +346,11 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     return d.toISOString().split('T')[0]; // Retorna solo la parte de fecha en formato YYYY-MM-DD
   }
   
+  getDocentes__asignar() {
+    this.docenteService.getDocentes().subscribe((response) => {
+      this.getDocentes_a_asignar = response;
+    });
+  }
 
   closeModal() {
     this.mostrarFormulario = !this.mostrarFormulario;
@@ -472,13 +552,23 @@ export class ListadoCursosAprovadosComponent implements OnInit {
 
 
   guardarCambios() {
+    console.log("id_plantel_curso_a_editar al guardar cambios ***  detalles",this.id_plantel_curso_a_editar)
+
     // Combina todo el objeto de curso con las demás propiedades
     const cursoData = {
       ...this.cursoForm.value, // Toma todas las propiedades del formulario
       docentes: this.cursoForm.get('docentes')?.value, // Incluye los docentes del FormArray
       alumnos: this.cursoForm.get('alumnos')?.value // Incluye los alumnos del FormArray
     };
-  
+    this.plantelCursosService.updateCourseSolicitudById(Number(this.id_plantel_curso_a_editar), cursoData).subscribe({
+      next: (response) => {
+        console.log('Solicitud actualizada con éxito:', response);
+        this.openModal(this.id_plantel_curso_a_editar)
+      },
+      error: (error) => {
+        console.error('Error al actualizar la solicitud:', error);
+      },
+    });
     // Serializa a JSON
     const jsonData = JSON.stringify(cursoData);
   
@@ -495,9 +585,6 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     // });
   }
   
-
-
-
 
 
 
@@ -658,7 +745,53 @@ nextPageAlumnos() {
 }
 
 
+selectedInstructors: number[] = [];
+isMultipleSelection = false;
+
+updateSelectionMode() {
+  const numInstructores = this.cursoForm.get('cant_instructores')?.value;
+
+  if (numInstructores) {
+    this.isMultipleSelection = numInstructores === '2';
+    
+    if (!this.isMultipleSelection && this.selectedInstructors.length > 1) {
+      // Limitar selección a un solo instructor
+      this.selectedInstructors = [this.selectedInstructors[0]];
+      this.cursoForm.get('instructor')?.setValue(this.selectedInstructors);
+    }
+  } else {
+    console.error('cant_instructores no está definido');
+  }
+}
 
 
-  
+
+isSelectionDisabled(id: number): boolean {
+  // Si es selección única y ya hay uno seleccionado, desactiva los demás
+  return !this.isMultipleSelection && this.selectedInstructors.length >= 1 && !this.selectedInstructors.includes(id);
+}
+
+toggleSelection(event: Event, id: number) {
+  const checked = (event.target as HTMLInputElement).checked;
+  if (checked) {
+    if (!this.isMultipleSelection && this.selectedInstructors.length >= 1) {
+      // Si es selección única, reemplaza el seleccionado
+      this.selectedInstructors = [id];
+    } else {
+      // Agregar a la selección
+      this.selectedInstructors.push(id);
+    }
+  } else {
+    // Remover de la selección
+    this.selectedInstructors = this.selectedInstructors.filter((instructorId) => instructorId !== id);
+  }
+  this.cursoForm.get('instructor')?.setValue(this.selectedInstructors);
+}
+
+isSelected(id: number): boolean {
+  return this.selectedInstructors.includes(id);
+}
+
+
+
 }

@@ -1,0 +1,848 @@
+<!-- Tabla de cursos solicitados -->
+<div *ngIf="!mostrarFormulario" class="container mx-auto p-4">
+  <p class="font-bold text-xl text-slate-500 mb-2">Cursos solicitados</p>
+
+  <div class="mb-4">
+    <h2 class="font-semibold text-md mb-2">Filtrar Estatus</h2>
+    <div class="flex space-x-2">
+      <button
+        class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
+        (click)="filtrarCursos('validados')"
+      >
+        <i class="fas fa-check-circle mr-1"></i> Validados
+      </button>
+      <button
+        class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
+        (click)="filtrarCursos('no-validados')"
+      >
+        <i class="fas fa-times-circle mr-1"></i> No validados
+      </button>
+      <button
+        class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
+        (click)="filtrarCursos('todos')"
+      >
+        <i class="fas fa-list mr-1"></i> Todos
+      </button>
+      <button
+        class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
+        (click)="cargarCursosByIdPlantel()"
+      >
+        <i class="fas fa-repeat mr-1"></i> Recargar
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="bg-white rounded-lg border border-gray-300 p-4 w-full max-w-screen-xl"
+  >
+    <table class="min-w-full table-auto">
+      <thead>
+        <tr>
+          <th class="px-4 py-2 text-left text-[#44509D] font-semibold">ID</th>
+          <th class="px-4 py-2 text-left text-[#44509D] font-semibold">AREA</th>
+          <th class="px-4 py-2 text-left text-[#44509D] font-semibold">
+            ESPECIALIDAD
+          </th>
+          <th class="px-4 py-2 text-left text-[#44509D] font-semibold">
+            NOMBRE DEL CURSO
+          </th>
+          <th class="px-4 py-2 text-left text-[#44509D] font-semibold">
+            FECHA SOLICITADO
+          </th>
+          <th class="px-4 py-2 text-left text-[#44509D] font-semibold">
+            Estatus
+          </th>
+          <!-- <th class="px-4 py-2 text-left text-[#44509D] font-semibold">
+            Docente
+          </th> -->
+          <th class="px-4 py-2 text-left text-[#44509D] font-semibold">
+            ACCIONES
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let modulo of cursosFiltrados">
+          <td class="px-2 py-1 text-sm">{{ modulo.plantel_curso_id }}</td>
+          <td class="px-2 py-1 text-sm">{{ modulo.area_nombre }}</td>
+          <td class="px-2 py-1 text-sm">{{ modulo.especialidad_nombre }}</td>
+          <td class="px-2 py-1 text-sm">{{ modulo.curso_nombre }}</td>
+          <td class="px-2 py-1 text-sm">
+            {{ modulo.created_at | date : "EEEE, d 'de' MMMM 'de' y" }}
+          </td>
+
+          <!-- Estado del módulo en otro td -->
+          <td
+            class="px-2 py-1 text-sm font-medium"
+            [ngClass]="{
+              'bg-green-100': modulo.estatus_id == 8,
+              'bg-red-100': modulo.estatus_id == 9,
+              'bg-yellow-100': modulo.estatus_id == 10
+            }"
+          >
+            <span *ngIf="modulo.estatus_id == 8" class="text-black">
+              <i class="fas fa-check-circle text-green-500 mr-1"></i> Aceptado
+            </span>
+            <span *ngIf="modulo.estatus_id == 9" class="text-black">
+              <i class="fas fa-times-circle text-red-500 mr-1"></i> Rechazado
+            </span>
+            <span *ngIf="modulo.estatus_id == 10" class="text-black">
+              <i class="fas fa-hourglass-half text-yellow-500 mr-1"></i>
+              Pendiente
+            </span>
+          </td>
+
+          <td class="px-2 py-1 text-sm relative">
+            <div class="group relative">
+              <button
+                type="button"
+                (click)="eliminarSolicitudCurso(modulo.plantel_curso_id)"
+                class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
+              >
+                <i class="fas fa-trash-alt mr-1"></i> Cancelar Solicitud
+              </button>
+            </div>
+
+            <button
+              class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
+              (click)="openModal(modulo.plantel_curso_id)"
+            >
+              <!-- (click)="verDetalles(modulo.id)" -->
+              <i class="fas fa-info-circle mr-1"></i> Ver Detalles
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div *ngIf="isLoading" class="text-center py-4">
+  <p>Cargando cursos...</p>
+</div>
+
+
+
+
+<form *ngIf="mostrarFormulario" class="container mx-auto p-6" [formGroup]="cursoForm" (ngSubmit)="guardarCambios()">
+  <button
+  type="button"
+    class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
+    (click)="openModal(modulo.plantel_curso_id)"
+  >
+    Atras
+  </button>
+
+  <!-- Detalles del Curso -->
+  <div class="bg-white rounded-lg border border-gray-300 p-4 w-full max-w-screen-xl">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+      Detalles del Curso:
+      <input
+        type="text"
+        formControlName="nombre"
+        class="border rounded p-1"
+      />
+    </h3>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <p>
+          <strong>Área:</strong>
+          <input
+            type="text"
+            formControlName="area_nombre"
+            class="border rounded p-1"
+          />
+        </p>
+      </div>
+      <div>
+        <p>
+          <strong>Especialidad:</strong>
+          <input
+            type="text"
+            formControlName="especialidad_nombre"
+            class="border rounded p-1"
+          />
+        </p>
+      </div>
+
+      <div>
+        <p>
+          <strong>Fecha de Inicio:</strong>
+          <input
+            type="date"
+            formControlName="fecha_inicio"
+            class="border rounded p-1"
+          />
+        </p>
+      </div>
+      <div>
+        <p>
+          <strong>Fecha de Finalización:</strong>
+          <input
+            type="date"
+            formControlName="fecha_fin"
+            class="border rounded p-1"
+          />
+        </p>
+      </div>
+
+      <div>
+        <p>
+          <strong>Cupo Máximo:</strong>
+          <input
+            type="number"
+            formControlName="cupo_maximo"
+            class="border rounded p-1"
+          />
+        </p>
+      </div>
+      <div>
+        <p>
+          <strong>Requisitos Extra:</strong>
+          <textarea
+            formControlName="requisitos_extra"
+            class="border rounded p-1"
+          ></textarea>
+        </p>
+      </div>
+      <div>
+                <!-- Sector inicial 👍-->
+                <div class="mb-4">
+                  <label class="block font-medium mb-2">Sector Atendido:</label>
+                  <div class="flex flex-wrap gap-4">
+                    <label class="flex items-center">
+                      <input
+                        type="radio"
+                        formControlName="sector_atendido"
+                        value="Productivo"
+                        class="mr-2"
+                      />
+                      Productivo
+                    </label>
+                    <label class="flex items-center">
+                      <input
+                        type="radio"
+                        formControlName="sector_atendido"
+                        value="Público"
+                        class="mr-2"
+                      />
+                      Público
+                    </label>
+                    <label class="flex items-center">
+                      <input
+                        type="radio"
+                        formControlName="sector_atendido"
+                        value="Social"
+                        class="mr-2"
+                      />
+                      Social
+                    </label>
+                    <label class="flex items-center">
+                      <input
+                        type="radio"
+                        formControlName="sector_atendido"
+                        value="Readaptación Social"
+                        class="mr-2"
+                      />
+                      Personas en Proceso de Readaptación Social
+                    </label>
+                  </div>
+                </div>
+        <!-- <p>
+          <strong>Sector Atendido:</strong>
+          <input
+            type="text"
+            formControlName="sector_atendido"
+            class="border rounded p-1"
+          />
+        </p> -->
+      </div>
+      <div>
+                <!-- Rango de Edad 👍 -->
+                <div class="mb-4">
+                  <label class="block font-medium mb-2">Rango de Edad Atendido:</label>
+                  <div class="flex gap-4">
+                    <label class="flex items-center">
+                      <input
+                        type="radio"
+                        formControlName="rango_edad"
+                        value="11-14"
+                        class="mr-2"
+                      />
+                      De 11 a 14 años
+                    </label>
+                    <label class="flex items-center">
+                      <input
+                        type="radio"
+                        formControlName="rango_edad"
+                        value="15+"
+                        class="mr-2"
+                      />
+                      Mayores de 15 años
+                    </label>
+                  </div>
+                </div>
+        <!-- <p>
+          <strong>Rango de Edad:</strong>
+          <input
+            type="text"
+            formControlName="rango_edad"
+            class="border rounded p-1"
+          />
+        </p> -->
+      </div>
+      <div>
+        <p>
+          <strong>Tipo de Beca:</strong>
+          <input
+            type="text"
+            formControlName="tipo_beca"
+            class="border rounded p-1"
+          />
+        </p>
+      </div>
+      <div>
+        <p>
+          <strong>Tipo de Curso:</strong>
+          <input
+            type="text"
+            formControlName="tipo_curso"
+            class="border rounded p-1"
+          />
+        </p>
+      </div>
+      <div>
+        <p>
+          <strong>Número de Convenio:</strong>
+          <input
+            type="text"
+            formControlName="convenio_numero"
+            class="border rounded p-1"
+          />
+        </p>
+      </div>
+      <div>
+        <p>
+          <strong>Cruzada Contra el Hambre:</strong>
+          <input
+            type="text"
+            formControlName="cruzada_contra_hambre"
+            class="border rounded p-1"
+          />
+        </p>
+      </div>
+      <div>
+        <p>
+          <strong>Tipo de Cuota:</strong>
+          <input
+            type="text"
+            formControlName="cuota_tipo"
+            class="border rounded p-1"
+          />
+        </p>
+      </div>
+      <div>
+        <p>
+          <strong>Monto de Cuota:</strong>
+          <input
+            type="number"
+            formControlName="cuota_monto"
+            class="border rounded p-1"
+          />
+        </p>
+      </div>
+      <div>
+        <p>
+          <strong>Pagar al Final:</strong>
+          <input type="checkbox" formControlName="pagar_final" />
+        </p>
+      </div>
+      <div>
+        <p>
+          <strong>Participantes:</strong>
+          <input
+            type="number"
+            formControlName="participantes"
+            class="border rounded p-1"
+          />
+        </p>
+      </div>
+      <div>
+        <p>
+          <strong>Cantidad de Instructores:</strong>
+          <input
+            type="number"
+            formControlName="cant_instructores"
+            class="border rounded p-1"
+          />
+        </p>
+      </div>
+    </div>
+
+    <!-- Información del Plantel -->
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+      Información del Plantel
+    </h3>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <p>
+          <strong>Calle:</strong>
+          <input
+            type="text"
+            formControlName="calle"
+            class="border rounded p-1"
+          />
+        </p>
+      </div>
+      <div>
+        <p>
+          <strong>Localidad:</strong>
+          <input
+            type="text"
+            formControlName="localidad"
+            class="border rounded p-1"
+          />
+        </p>
+      </div>
+      <div>
+        <p>
+          <strong>Municipio:</strong>
+          <input
+            type="text"
+            formControlName="municipio"
+            class="border rounded p-1"
+          />
+        </p>
+      </div>
+      <div>
+        <p>
+          <strong>Número Interior:</strong>
+          <input
+            type="text"
+            formControlName="num_interior"
+            class="border rounded p-1"
+          />
+        </p>
+      </div>
+      <div>
+        <p>
+          <strong>Número Exterior:</strong>
+          <input
+            type="text"
+            formControlName="num_exterior"
+            class="border rounded p-1"
+          />
+        </p>
+      </div>
+    </div>
+
+    <!-- Información del Horario -->
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Horario del Curso</h3>
+    <table class="min-w-full border-collapse border border-gray-300">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="border border-gray-300 p-2">Día</th>
+          <th class="border border-gray-300 p-2">Inicio</th>
+          <th class="border border-gray-300 p-2">Fin</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="border border-gray-300 p-2"><strong>Lunes:</strong></td>
+          <td class="border border-gray-300 p-2">
+            <input
+              type="time"
+              formControlName="lunes_inicio"
+              class="border rounded p-1 w-full"
+            />
+          </td>
+          <td class="border border-gray-300 p-2">
+            <input
+              type="time"
+              formControlName="lunes_fin"
+              class="border rounded p-1 w-full"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td class="border border-gray-300 p-2"><strong>Martes:</strong></td>
+          <td class="border border-gray-300 p-2">
+            <input
+              type="time"
+              formControlName="martes_inicio"
+              class="border rounded p-1 w-full"
+            />
+          </td>
+          <td class="border border-gray-300 p-2">
+            <input
+              type="time"
+              formControlName="martes_fin"
+              class="border rounded p-1 w-full"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td class="border border-gray-300 p-2"><strong>Miércoles:</strong></td>
+          <td class="border border-gray-300 p-2">
+            <input
+              type="time"
+              formControlName="miercoles_inicio"
+              class="border rounded p-1 w-full"
+            />
+          </td>
+          <td class="border border-gray-300 p-2">
+            <input
+              type="time"
+              formControlName="miercoles_fin"
+              class="border rounded p-1 w-full"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td class="border border-gray-300 p-2"><strong>Jueves:</strong></td>
+          <td class="border border-gray-300 p-2">
+            <input
+              type="time"
+              formControlName="jueves_inicio"
+              class="border rounded p-1 w-full"
+            />
+          </td>
+          <td class="border border-gray-300 p-2">
+            <input
+              type="time"
+              formControlName="jueves_fin"
+              class="border rounded p-1 w-full"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td class="border border-gray-300 p-2"><strong>Viernes:</strong></td>
+          <td class="border border-gray-300 p-2">
+            <input
+              type="time"
+              formControlName="viernes_inicio"
+              class="border rounded p-1 w-full"
+            />
+          </td>
+          <td class="border border-gray-300 p-2">
+            <input
+              type="time"
+              formControlName="viernes_fin"
+              class="border rounded p-1 w-full"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td class="border border-gray-300 p-2"><strong>Sábado:</strong></td>
+          <td class="border border-gray-300 p-2">
+            <input
+              type="time"
+              formControlName="sabado_inicio"
+              class="border rounded p-1 w-full"
+            />
+          </td>
+          <td class="border border-gray-300 p-2">
+            <input
+              type="time"
+              formControlName="sabado_fin"
+              class="border rounded p-1 w-full"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td class="border border-gray-300 p-2"><strong>Domingo:</strong></td>
+          <td class="border border-gray-300 p-2">
+            <input
+              type="time"
+              formControlName="domingo_inicio"
+              class="border rounded p-1 w-full"
+            />
+          </td>
+          <td class="border border-gray-300 p-2">
+            <input
+              type="time"
+              formControlName="domingo_fin"
+              class="border rounded p-1 w-full"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Información de los Instructores -->
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+      Información de los Instructores
+    </h3>
+    <table class="min-w-full border-collapse border border-gray-300">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="border border-gray-300 p-2">Nombre</th>
+          <th class="border border-gray-300 p-2">Apellidos</th>
+          <th class="border border-gray-300 p-2">Email</th>
+          <th class="border border-gray-300 p-2">Teléfono</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let docente of docentes">
+          <td class="border border-gray-300 p-2">
+            <span>{{ docente.nombre }}</span>
+          </td>
+          <td class="border border-gray-300 p-2">
+            <span>{{ docente.docente_apellidos }}</span>
+          </td>
+          <td class="border border-gray-300 p-2">
+            <span>{{ docente.email }}</span>
+          </td>
+          <td class="border border-gray-300 p-2">
+            <span>{{ docente.telefono }}</span>
+          </td>
+        </tr>
+      </tbody>
+      
+    </table>
+    <button
+    type="button"
+      class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100 mt-4"
+      (click)="agregarInstructor()"
+    >
+      <i class="fas fa-plus mr-1"></i> Agregar Instructor
+    </button>
+
+    <!-- Información de los Alumnos -->
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+      Información de los Alumnos
+    </h3>
+    <table class="min-w-full border-collapse border border-gray-300">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="border border-gray-300 p-2">Nombre</th>
+          <th class="border border-gray-300 p-2">Apellidos</th>
+          <th class="border border-gray-300 p-2">Email</th>
+          <th class="border border-gray-300 p-2">Teléfono</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let alumno of alumnos">
+          <!-- <tr *ngFor="let docente of docentes"> -->
+            <td class="border border-gray-300 p-2">
+              <span>{{ alumno.nombre }}</span>
+            </td>
+            <td class="border border-gray-300 p-2">
+              <span>{{ alumno.apellidos }}</span>
+            </td>
+            <td class="border border-gray-300 p-2">
+              <span>{{ alumno.email }}</span>
+            </td>
+            <td class="border border-gray-300 p-2">
+              <span>{{ alumno.telefono }}</span>
+            </td>
+        </tr>
+      </tbody>
+    </table>
+    <button
+    type="button"
+      class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100 mt-4"
+      (click)="agregarAlumno()"
+    >
+      <i class="fas fa-plus mr-1"></i> Agregar Alumno
+    </button>
+
+
+    
+  </div>
+
+  <!-- Botón de Guardar Cambios -->
+  <button
+    type="submit"
+    class="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
+  >
+    Guardar Cambios
+  </button>
+</form>
+
+
+<!-- Modal -->
+<div
+  *ngIf="modalVisibleInstructor"
+  class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50"
+>
+  <div
+    class="rounded-lg shadow-lg w-4/5 max-w-4xl"
+    style="
+      background: linear-gradient(
+        to bottom,
+        rgb(212, 192, 255) -21%,
+        rgba(255, 255, 255, 0.9) 24%,
+        rgba(255, 255, 255, 1) 67%
+      );
+    "
+  >
+    <!-- Modal Header -->
+    <div class="py-4 px-6 flex justify-between items-center text-white">
+      <h3 class="text-lg font-semibold">{{ tituloModal }}</h3>
+      <button
+        type="button"
+        (click)="closeModalInstructures()"
+        class="text-black rounded-full p-2"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-10.707a1 1 0 00-1.414-1.414L10 8.586 7.707 6.293a1 1 0 00-1.414 1.414L8.586 10l-2.293 2.293a1 1 0 101.414 1.414L10 11.414l2.293 2.293a1 1 0 001.414-1.414L11.414 10l2.293-2.293z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Content -->
+    <div class="p-4">
+      <table class="min-w-full border-collapse border border-gray-300">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="p-3 border border-gray-300 text-left">
+              <input type="checkbox" (click)="toggleSelectAll($event)" />
+            </th>
+            <th class="p-3 border border-gray-300 text-left">Nombre</th>
+            <th class="p-3 border border-gray-300 text-left">Apellido</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let instructor of paginatedData"
+            class="hover:bg-gray-100"
+          >
+            <td class="p-3 border border-gray-300 text-center">
+              <input type="checkbox" [(ngModel)]="instructor.selected" />
+            </td>
+            <td class="p-3 border border-gray-300">{{ instructor.nombre }}</td>
+            <td class="p-3 border border-gray-300">
+              {{ instructor.apellido }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div class="mt-4 flex justify-between items-center">
+        <button
+          class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+          (click)="prevPage()"
+          [disabled]="currentPage === 1"
+        >
+          Anterior
+        </button>
+
+        <span class="text-gray-700"
+          >Página {{ currentPage }} de {{ totalPages }}</span
+        >
+
+        <button
+          class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages"
+        >
+          Siguiente
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- Modal -->
+<div
+  *ngIf="modalVisibleAlumno"
+  class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50"
+>
+  <div
+    class="rounded-lg shadow-lg w-4/5 max-w-4xl"
+    style="
+      background: linear-gradient(
+        to bottom,
+        rgb(212, 192, 255) -21%,
+        rgba(255, 255, 255, 0.9) 24%,
+        rgba(255, 255, 255, 1) 67%
+      );
+    "
+  >
+    <!-- Modal Header -->
+    <div class="py-4 px-6 flex justify-between items-center text-white">
+      <h3 class="text-lg font-semibold">{{ tituloModal }}</h3>
+      <button
+        type="button"
+        (click)="closeModalAlumnos()"
+        class="text-black rounded-full p-2"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-10.707a1 1 0 00-1.414-1.414L10 8.586 7.707 6.293a1 1 0 00-1.414 1.414L8.586 10l-2.293 2.293a1 1 0 101.414 1.414L10 11.414l2.293 2.293a1 1 0 001.414-1.414L11.414 10l2.293-2.293z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Content -->
+    <div class="p-4">
+      <table class="min-w-full border-collapse border border-gray-300">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="p-3 border border-gray-300 text-left">
+              <input type="checkbox" (click)="toggleSelectAllAlumnos($event)" />
+            </th>
+            <th class="p-3 border border-gray-300 text-left">Nombre</th>
+            <th class="p-3 border border-gray-300 text-left">Apellido</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let alumno of paginatedDataAlumno"
+            class="hover:bg-gray-100"
+          >
+            <td class="p-3 border border-gray-300 text-center">
+              <input type="checkbox" [(ngModel)]="alumno.selected" />
+            </td>
+            <td class="p-3 border border-gray-300">{{ alumno.nombre }}</td>
+            <td class="p-3 border border-gray-300">{{ alumno.apellido }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div class="mt-4 flex justify-between items-center">
+        <button
+          class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+          (click)="prevPageAlumnos()"
+          [disabled]="currentPage === 1"
+        >
+          Anterior
+        </button>
+
+        <span class="text-gray-700"
+          >Página {{ currentPage }} de {{ totalPagesAlumnos }}</span
+        >
+
+        <button
+          class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+          (click)="nextPageAlumnos()"
+          [disabled]="currentPage === totalPagesAlumnos"
+        >
+          Siguiente
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
