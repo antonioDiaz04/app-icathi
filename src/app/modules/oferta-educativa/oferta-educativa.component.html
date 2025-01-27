@@ -227,6 +227,20 @@
         <textarea [(ngModel)]="selectedCourseDetails.descripcion" class="border p-2 rounded w-full"></textarea>
       </div>
     </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Elaborado por:</label>
+            <input [(ngModel)]="selectedCourseDetails.elaborado_por" class="border p-2 rounded w-full" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Revisado por:</label>
+            <input [(ngModel)]="selectedCourseDetails.revisado_por" class="border p-2 rounded w-full" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Autorizado por:</label>
+            <input [(ngModel)]="selectedCourseDetails.autorizado_por" class="border p-2 rounded w-full" />
+          </div>
+        </div>
 
     <!-- Ficha técnica -->
     <h3 class="text-xl font-semibold mt-6 mb-2">Ficha Técnica</h3>
@@ -352,6 +366,17 @@
       </li>
     </ul>
 
+    <h3 class="text-xl font-semibold mt-6 mb-2">Subir Archivo</h3>
+    <div class="border p-4 rounded-md">
+      <input type="file" (change)="onFileSelect($event)" class="mb-4" />
+      <div *ngIf="fileExtension === 'pdf'">
+        <ng2-pdf-viewer [src]="url" [page]="page" (after-load-complete)="callbackFn($event)"></ng2-pdf-viewer>
+        <div class="flex justify-between mt-4">
+          <button (click)="prevTep()" [disabled]="page === 1" class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400">Anterior</button>
+          <button (click)="nextTep()" [disabled]="page === totalPages" class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400">Siguiente</button>
+        </div>
+      </div>
+    </div>
     <div class="flex justify-end mt-6">
       <button class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 mr-2" (click)="closeCourseDetails()">
         Cerrar

@@ -5,6 +5,11 @@ import { Router } from '@angular/router';
 import { jsPDF } from "jspdf";
 import "jspdf-autotable"; // Ensure this is imported
 
+import { PDFDocumentProxy } from 'ng2-pdf-viewer';
+
+import { DomSanitizer } from '@angular/platform-browser'; // Import DomSanitizer
+
+
 declare module "jspdf" {
   interface jsPDF {
     autoTable: any;
@@ -46,7 +51,14 @@ export class OfertaEducativaComponent implements OnInit {
     
     showDetailModal: boolean = false;
 
-  constructor(private http: HttpClient , private  router: Router) {}
+      // Propiedades para manejar archivos
+  selectedFile: File | any = null;
+  fileExtension: string = '';
+  url: any = '';
+  page: number = 1;
+  isLoaded: boolean = false;
+
+  constructor(private http: HttpClient , private  router: Router , private sanitizer: DomSanitizer) {}
 
   ngOnInit(): void {
     this.cargarCursos();
@@ -397,6 +409,9 @@ export class OfertaEducativaComponent implements OnInit {
         vigencia_inicio: this.selectedCourseDetails.vigencia_inicio,
         fecha_publicacion: this.selectedCourseDetails.fecha_publicacion,
         ultima_actualizacion: this.selectedCourseDetails.ultima_actualizacion,
+        autorizado_por: this.selectedCourseDetails.autorizado_por,
+        elaborado_por: this.selectedCourseDetails.elaborado_por,
+        achivo_url: this.selectedCourseDetails.achivo_url,
         fichaTecnica: {
           objetivo: this.selectedCourseDetails.fichaTecnica.objetivo,
           perfil_ingreso: this.selectedCourseDetails.fichaTecnica.perfil_ingreso,
@@ -447,4 +462,47 @@ export class OfertaEducativaComponent implements OnInit {
         }
       });
     }
+    onFileSelect(event: any): void {
+      const file = event.target.files[0];
+      if (file) {
+        this.selectedFile = file;
+        this.fileExtension = this.getFileExtension(file.name);
+    
+        if (this.fileExtension === 'pdf') {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            this.url = this.sanitizer.bypassSecurityTrustResourceUrl(
+              URL.createObjectURL(file)
+            );
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    }
+    
+
+    callbackFn(pdf: PDFDocumentProxy): void {
+      this.totalPages = pdf.numPages;
+      this.isLoaded = true;
+      console.log('PDF cargado:', pdf);
+    }
+    
+    prevTep(): void {
+      if (this.page > 1) {
+        this.page--;
+      }
+    }
+    
+    nextTep(): void {
+      if (this.page < this.totalPages) {
+        this.page++;
+      }
+    }
+    
+    getFileExtension(fileName: string): string {
+      const ext = fileName.split('.').pop()?.toLowerCase() || '';
+      return ext;
+    }
+
+
 }
