@@ -391,77 +391,62 @@ export class OfertaEducativaComponent implements OnInit {
       this.selectedCourse = null;
     }
 
-    actualizarCurso(): void {
-      if (!this.selectedCourseDetails) {
-        console.error('No hay detalles del curso seleccionados para actualizar.');
-        return;
-      }
-    
-      const updatedData = {
-        nombre: this.selectedCourseDetails.nombre,
-        clave: this.selectedCourseDetails.clave,
-        duracion_horas: this.selectedCourseDetails.duracion_horas,
-        descripcion: this.selectedCourseDetails.descripcion,
-        nivel: this.selectedCourseDetails.nivel,
-        area_id: this.selectedCourseDetails.area_id,
-        especialidad_id: this.selectedCourseDetails.especialidad_id,
-        tipo_curso_id: this.selectedCourseDetails.tipo_curso_id,
-        vigencia_inicio: this.selectedCourseDetails.vigencia_inicio,
-        fecha_publicacion: this.selectedCourseDetails.fecha_publicacion,
-        ultima_actualizacion: this.selectedCourseDetails.ultima_actualizacion,
-        autorizado_por: this.selectedCourseDetails.autorizado_por,
-        elaborado_por: this.selectedCourseDetails.elaborado_por,
-        achivo_url: this.selectedCourseDetails.achivo_url,
-        fichaTecnica: {
-          objetivo: this.selectedCourseDetails.fichaTecnica.objetivo,
-          perfil_ingreso: this.selectedCourseDetails.fichaTecnica.perfil_ingreso,
-          perfil_egreso: this.selectedCourseDetails.fichaTecnica.perfil_egreso,
-          perfil_del_docente: this.selectedCourseDetails.fichaTecnica.perfil_del_docente,
-          metodologia: this.selectedCourseDetails.fichaTecnica.metodologia,
-          bibliografia: this.selectedCourseDetails.fichaTecnica.bibliografia,
-          criterios_acreditacion: this.selectedCourseDetails.fichaTecnica.criterios_acreditacion,
-          reconocimiento: this.selectedCourseDetails.fichaTecnica.reconocimiento
-        },
-        contenidoProgramatico: this.selectedCourseDetails.contenidoProgramatico.map((contenido: any) => ({
-          tema_nombre: contenido.tema_nombre,
-          tiempo: contenido.tiempo,
-          competencias: contenido.competencias,
-          evaluacion: contenido.evaluacion,
-          actividades: contenido.actividades
-        })),
-        materiales: this.selectedCourseDetails.materiales.map((material: any) => ({
-          descripcion: material.descripcion,
-          unidad_de_medida: material.unidad_de_medida,
-          cantidad_10: material.cantidad_10,
-          cantidad_15: material.cantidad_15,
-          cantidad_20: material.cantidad_20
-        })),
-        equipamiento: this.selectedCourseDetails.equipamiento.map((equipo: any) => ({
-          descripcion: equipo.descripcion,
-          unidad_de_medida: equipo.unidad_de_medida,
-          cantidad_10: equipo.cantidad_10,
-          cantidad_15: equipo.cantidad_15,
-          cantidad_20: equipo.cantidad_20
-        }))
-      };
-    
-      this.generando = true;
-    
-      this.http.put(`${this.apiUrl}/update/${this.selectedCourseDetails.id}`, updatedData).subscribe({
-        next: () => {
-          this.mostrarModal('Curso actualizado correctamente.', 'success');
-          this.cargarCursos(); // Recargar la lista de cursos
-          this.showDetailModal = false; // Cerrar el modal de detalles
-          this.generando = false;
-        },
-        error: (err) => {
-          console.error('Error al actualizar el curso:', err);
-          console.error('Detalles del error:', err.message, err.error);
-          this.mostrarModal('Error al actualizar el curso. Intenta más tarde.', 'error');
-          this.generando = false;
-        }
-      });
+actualizarCurso(): void {
+  if (!this.selectedCourseDetails) {
+    console.error('No se ha seleccionado un curso para actualizar.');
+    return;
+  }
+  console.log('Curso seleccionado para actualizar:', this.selectedCourseDetails);
+  // Crear un objeto FormData para enviar los datos del curso y el archivo
+  const formData = new FormData();
+
+  // Agregar las propiedades del objeto `nuevoCurso` al FormData
+  formData.append('nombre', this.selectedCourseDetails.nombre);
+  formData.append('duracion_horas', this.selectedCourseDetails.duracion_horas.toString());
+  formData.append('descripcion', this.selectedCourseDetails.descripcion);
+  formData.append('nivel', this.selectedCourseDetails.nivel);
+  formData.append('clave', this.selectedCourseDetails.clave?.toString() || '');
+  formData.append('area_id', this.selectedCourseDetails.area_id?.toString() || '');
+  formData.append('especialidad_id', this.selectedCourseDetails.especialidad_id?.toString() || '');
+  formData.append('tipo_curso_id', this.selectedCourseDetails.tipo_curso_id?.toString() || '');
+  formData.append('revisado_por', this.selectedCourseDetails.revisado_por?.toString() || '');
+  formData.append('autorizado_por', this.selectedCourseDetails.autorizado_por?.toString() || '');
+  formData.append('elaborado_por', this.selectedCourseDetails.elaborado_por?.toString() || '');
+
+  // Si se seleccionó un archivo (por ejemplo, un archivo de temario)
+  if (this.selectedFile) {
+    formData.append('temario', this.selectedFile, this.selectedFile.name);
+  }
+
+  // Convertir `objetivos` a JSON y agregarlo a FormData
+  formData.append('objetivos', JSON.stringify(this.selectedCourseDetails.objetivos));
+
+  // Convertir `contenidoProgramatico` a JSON y agregarlo
+  formData.append('contenidoProgramatico', JSON.stringify(this.selectedCourseDetails.contenidoProgramatico));
+
+  // Agregar materiales como archivos (si existen)
+  formData.append('materiales', JSON.stringify(this.selectedCourseDetails.materiales));
+
+  // Agregar equipamiento como texto
+  formData.append('equipamiento', JSON.stringify(this.selectedCourseDetails.equipamiento));
+
+  // Hacer la solicitud POST a la API para actualizar el curso
+  this.http.post(`${this.apiUrl}/cursos/${this.selectedCourseDetails.id}`, formData).subscribe({
+    next: (response) => {
+      console.log('Curso actualizado correctamente:', response);
+      alert('Curso actualizado con éxito.');
+      this.mostrarModal('Curso actualizado con éxito.', 'success');
+      this.cargarCursos(); // Recargar los cursos para reflejar la actualización
+      this.ocultarFormulario(); // Ocultar el formulario
+    },
+    error: (err) => {
+      console.error('Error al actualizar el curso:', err);
+      alert('Error al actualizar el curso. Intenta más tarde.');
+      this.mostrarModal('Error al actualizar el curso. Intenta más tarde.', 'error');
     }
+  });
+}
+
     onFileSelect(event: any): void {
       const file = event.target.files[0];
       if (file) {
