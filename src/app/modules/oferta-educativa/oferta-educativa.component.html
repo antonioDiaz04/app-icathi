@@ -382,10 +382,13 @@
 
     <div class="flex justify-end mt-6">
       <button class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 mr-2" (click)="closeCourseDetails()">Cerrar</button>
+      <button class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-400 mr-2" (click)="generarPDF()">PDF</button>
+
       <button (click)="actualizarCurso()" [class.loading]="generando" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
         <i class="spinner loading icon" *ngIf="generando"></i>
         Actualizar
       </button>
+
       
     </div>
   </div>

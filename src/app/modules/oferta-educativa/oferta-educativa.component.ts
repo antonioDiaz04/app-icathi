@@ -233,6 +233,8 @@ export class OfertaEducativaComponent implements OnInit {
     });
   }
   generarPDF() {
+    console.log(this.cursoData);  // Verificar los datos del curso
+
     if (!this.cursoData) {
       console.error('No hay datos del curso disponibles para generar el PDF.');
       return;
@@ -249,11 +251,11 @@ export class OfertaEducativaComponent implements OnInit {
     const courseData = {
       titulo: "DATOS GENERALES DEL CURSO",
       datosGenerales: [
-        { label: "CLAVE:", value: this.cursoData.CLAVE || "No disponible" },
-        { label: "DURACIÓN EN HORAS:", value: this.cursoData.DURACION_HORAS || "No disponible" },
-        { label: "DESCRIPCIÓN:", value: this.cursoData.DESCRIPCION || "No disponible" },
-        { label: "ÁREA ID:", value: this.cursoData.AREA_ID || "No disponible" },
-        { label: "ESPECIALIDAD ID:", value: this.cursoData.ESPECIALIDAD_ID || "No disponible" },
+        { label: "CLAVE:", value: this.cursoData.clave || "No disponible" },
+        { label: "DURACIÓN EN HORAS:", value: this.cursoData.duracion_horas || "No disponible" },
+        { label: "DESCRIPCIÓN:", value: this.cursoData.descripcion || "No disponible" },
+        { label: "ÁREA ID:", value: this.cursoData.area_id || "No disponible" },
+        { label: "ESPECIALIDAD ID:", value: this.cursoData.especialidad_id || "No disponible" },
       ],
     };
   
@@ -279,17 +281,17 @@ export class OfertaEducativaComponent implements OnInit {
     doc.setFontSize(10);
   
     // Vigencia
-    const vigenciaInicio = this.cursoData.VIGENCIA_INICIO
-      ? new Date(this.cursoData.VIGENCIA_INICIO).toLocaleDateString()
+    const vigenciaInicio = this.cursoData.vigencia_inicio
+      ? new Date(this.cursoData.vigencia_inicio).toLocaleDateString()
       : "No disponible";
     doc.text("VIGENCIA A PARTIR DE", doc.internal.pageSize.width - 60, topMargin + 20);
     doc.text(vigenciaInicio, doc.internal.pageSize.width - 60, topMargin + 30);
   
     // Datos de "Elaborado por", "Revisado por" y "Autorizado por"
     const fixedPositionData = [
-      { label: "Elaborado por:", value: this.cursoData.ELABORADO_POR || "No disponible", yOffset: topMargin + 80 },
-      { label: "Revisado por:", value: this.cursoData.REVISADO_POR || "No disponible", yOffset: topMargin + 100 },
-      { label: "Autorizado por:", value: this.cursoData.AUTORIZADO_POR || "No disponible", yOffset: topMargin + 140 },
+      { label: "Elaborado por:", value: this.cursoData.elaborado_por || "No disponible", yOffset: topMargin + 80 },
+      { label: "Revisado por:", value: this.cursoData.revisado_por || "No disponible", yOffset: topMargin + 100 },
+      { label: "Autorizado por:", value: this.cursoData.autorizado_por || "No disponible", yOffset: topMargin + 140 },
     ];
   
     fixedPositionData.forEach((data) => {
@@ -324,7 +326,7 @@ export class OfertaEducativaComponent implements OnInit {
     });
   
     // Verificar si los materiales y equipamiento existen
-    if (this.cursoData.MATERIALES && this.cursoData.MATERIALES.length > 0) {
+    if (this.cursoData.material && this.cursoData.material.length > 0) {
       doc.addPage();
       doc.setFontSize(16);
       doc.text("MATERIALES", 10, 20);
