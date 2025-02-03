@@ -396,8 +396,10 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
       });
   }
 
+  
   onEspecialidadChange(event: Event): void {
     const especialidadId = Number((event.target as HTMLSelectElement).value); // Obtener el ID de la especialidad seleccionada
+    console.log("especialidadId******",especialidadId)
     if (!isNaN(especialidadId)) {
       this.getCursosByEspecialidadId(especialidadId); // Cargar cursos relacionados
     } else {
@@ -411,12 +413,14 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
         console.error("No se pudo obtener el ID del plantel");
         return;
       }
-
+      console.log("aqui se esta haciendo pa peticion para obtener los cursos de acuerdo ala especialidad",especialidadId, plantelId)
       this.cursosService
         .getCursosByEspecialidadId(especialidadId, plantelId)
         .subscribe(
           (cursos) => {
             this.cursosByEspecialidad = cursos; // Actualizar los cursos disponibles
+                      console.log("this.cursosByEspecialidad",this.cursosByEspecialidad)
+
           },
           (error) => {
             console.error("Error al obtener los cursos:", error);
@@ -429,6 +433,7 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
     this.cursosService.getEspecialidadesByAreaId(areaId).subscribe(
       (especialidades) => {
         this.especialidadesByArea = especialidades;
+        console.log("this.especialidadesByArea",this.especialidadesByArea)
       },
       (error) => {
         console.error("Error al obtener las especialidades:", error);
