@@ -1,5 +1,7 @@
 <!-- Tabla de cursos solicitados -->
 <div *ngIf="!mostrarFormulario" class="container mx-auto p-4">
+
+  
   <p class="font-bold text-xl text-slate-500 mb-2">Cursos solicitados</p>
 
   <div class="mb-4">
@@ -396,7 +398,7 @@
 <!-- direccion  👍 -->
 <div>
   <h1 class="text-center text-lg font-semibold text-gray-800 mb-4">
-    DIRECCIÓN
+    DIRECCIÓN -   
   </h1>
 
   <div class="grid grid-cols-2 gap-4">
@@ -473,59 +475,9 @@
 </div>
 
 
-<!-- Turno 👍 -->
-<!-- <div>
-  <label class="block mb-2 text-sm">Turno</label>
-  <div>
-    <input
-      type="radio"
-      id="matutino"
-      formControlName="turno"
-      value="matutino"
-    />
-    <label for="matutino">Matutino</label>
-    <input
-      type="radio"
-      id="vespertino"
-      formControlName="turno"
-      value="vespertino"
-    />
-    <label for="vespertino">Vespertino</label>
-    <input
-      type="radio"
-      id="mixto"
-      formControlName="turno"
-      value="mixto"
-    />
-    <label for="mixto">Mixto</label>
-  </div>
-</div> -->
-
 <!-- Encabezado -->
 <h1 class="text-center text-lg font-semibold text-gray-800">HORARIO</h1>
 
-<!-- Fecha -->
-<!-- <div class="mb-4 flex justify-between">
-<div class="flex items-center mr-4 w-1/2">
-<label class="block text-sm mr-2 text-gray-700">Fecha de Inicio</label>
-<input
-type="date"
-formControlName="fecha_inicio"
-(change)="calcularSemana()"
-class="flex-1 p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
-/>
-</div>
-
-<div class="flex items-center w-1/2">
-<label class="block text-sm mr-2 text-gray-700">Fecha de Fin</label>
-<input
-type="date"
-formControlName="fecha_fin"
-(change)="calcularSemana()"
-class="flex-1 p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
-/>
-</div>
-</div> -->
 
 
 <!-- Información -->
@@ -534,13 +486,7 @@ class="flex-1 p-2 border border-sky-300 rounded-md bg-white outline-none focus:r
 
    <!-- Información con animación -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4" @fadeIn>
-  <!-- <div>
-    <p class="text-sm font-medium text-gray-700">Semana del:</p>
-    <p class="text-sm text-gray-600">{{ semanaInicio }}</p>
-    <p class="text-sm text-gray-600">a</p>
-    <p class="text-sm text-gray-600">{{ semanaFin }}</p>
-  </div>
-   -->
+
   <!-- Segundo bloque con diseño similar -->
   <div>
     <p class="text-sm font-medium text-gray-700">Fecha de Inicio:</p>
@@ -580,32 +526,7 @@ class="flex-1 p-2 border border-sky-300 rounded-md bg-white outline-none focus:r
 <!-- Tipo de Horario  👍 -->
 <div class="mb-4">
   <p class="text-sm font-medium text-gray-700">Tipo de Horario</p>
-  <!-- <div class="flex items-center space-x-4">
-    <div>
-      <input
-        type="radio"
-        id="regular"
-        formControlName="tipo_horario"
-        value="regular"
-        class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-      />
-      <label for="regular" class="ml-2 text-sm text-gray-700"
-        >Regular</label
-      >
-    </div>
-    <div>
-      <input
-        type="radio"
-        id="irregular"
-        formControlName="tipo_horario"
-        value="irregular"
-        class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-      />
-      <label for="irregular" class="ml-2 text-sm text-gray-700"
-        >Irregular</label
-      >
-    </div>
-  </div> -->
+
 </div>
 
 <!-- Días de la Semana -->
@@ -960,40 +881,7 @@ class="flex-1 p-2 border border-sky-300 rounded-md bg-white outline-none focus:r
 
 
 
-<!-- Tipo de Curso 👍 -->
-<!-- <div class="mb-4">
-  <label class="block font-medium mb-2">Tipo de Curso:</label>
-  <div class="flex items-center gap-4">
-    <label class="flex items-center">
-      <input
-        type="radio"
-        formControlName="tipo_curso"
-        value="1"
-        class="mr-2"
-      />
-      En Línea
-    </label>
-    <label class="flex items-center">
-      <input
-        type="radio"
-        formControlName="tipo_curso"
-        value="0"
-        class="mr-2"
-      />
-      Presencial
-    </label>
-  </div>
-</div> -->
 
-<!-- Botón para cerrar el modal -->
-<!-- <button
-  type="button"
-  class="mt-4 text-gray-500 hover:text-gray-700"
->
-  Cerrar
-</button> -->
-
-<!-- Botón para enviar solicitud -->
 <button
 type="submit"
 class="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
@@ -1080,105 +968,54 @@ Guardar Cambios
 
     <!-- Modal Content -->
     <div class="p-4">
-      <!-- <table class="min-w-full border-collapse border border-gray-300">
-        <thead class="bg-gray-200">
-          <tr>
-            <th class="p-3 border border-gray-300 text-left">
-              <input type="checkbox" (click)="toggleSelectAll($event)" />
-            </th>
-            <th class="p-3 border border-gray-300 text-left">Nombre</th>
-            <th class="p-3 border border-gray-300 text-left">Apellido</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            *ngFor="let instructor of paginatedData"
-            class="hover:bg-gray-100"
-          >
-            <td class="p-3 border border-gray-300 text-center">
-              <input type="checkbox" [(ngModel)]="instructor.selected" />
-            </td>
-            <td class="p-3 border border-gray-300">{{ instructor.nombre }}</td>
-            <td class="p-3 border border-gray-300">
-              {{ instructor.apellido }}
-            </td>
-          </tr>
-        </tbody>
-      </table> -->
+
       <div class="w-full bg-white shadow-md rounded-lg p-4">
         <!-- Título de la tabla -->
         <h2 class="text-xl font-semibold text-gray-700 mb-4">Lista de Docentes</h2>
-      
-        <table class="w-full border-collapse border border-gray-300 bg-white">
-          <thead>
-            <tr class="bg-blue-100 text-blue-900">
-              <th class="border border-gray-300 px-4 py-2 text-left">
-                Seleccionar
-              </th>
-              <th class="border border-gray-300 px-4 py-2 text-left">
-                Nombre
-              </th>
-              <th class="border border-gray-300 px-4 py-2 text-left">
-                Apellidos
-              </th>
-              <th class="border border-gray-300 px-4 py-2 text-left">
-                Especialidad
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              *ngFor="let docente of getDocentes_a_asignar"
-              class="odd:bg-gray-50 even:bg-blue-50 hover:bg-blue-100 transition-colors"
-            >
-              <td class="border border-gray-300 px-4 py-2 text-center">
-                <input
-                  type="checkbox"
-                  [value]="docente.id"
-                  [checked]="isSelected(docente.id)"
-                  [disabled]="isSelectionDisabled(docente.id)"
-                  (change)="toggleSelection($event, docente.id)"
-                />
-              </td>
-              <td class="border border-gray-300 px-4 py-2">
-                {{ docente.nombre }}
-              </td>
-              <td class="border border-gray-300 px-4 py-2">
-                {{ docente.apellidos }}
-              </td>
-              <td class="border border-gray-300 px-4 py-2">
-                {{ docente.especialidad }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+<!-- Primera tabla (docentes con la misma especialidad) -->
+<table class="min-w-full border-collapse border border-gray-300">
+  <thead class="bg-gray-200">
+    <tr>
+      <th class="p-3 border border-gray-300 text-left">Acción</th>
+      <th class="p-3 border border-gray-300 text-left">Nombre</th>
+      <th class="p-3 border border-gray-300 text-left">Apellidos</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let docente of docentes_con_misma_especialidad">
+      <td class="p-3 border border-gray-300 text-center">
+        <!-- Botón para asignar o desasignar -->
+        <button 
+          (click)="toggleSelection(docente.docente_id)" 
+          [ngClass]="{'bg-green-500': isSelected(docente.docente_id), 'bg-gray-300': !isSelected(docente.docente_id)}"
+          class="px-4 py-2 rounded text-white">
+          {{ isSelected(docente.docente_id) ? 'quitar' : 'Asignar' }}
+        </button>
+      </td>
+      <td class="p-3 border border-gray-300">{{ docente.nombre }}</td>
+      <td class="p-3 border border-gray-300">{{ docente.apellidos }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Botón global para asignar o desasignar todos los docentes seleccionados -->
+<button 
+  (click)="asignarODesasignarDocentes()" 
+  [disabled]="selectedInstructors.length === 0"
+  class="bg-blue-500 text-white px-4 py-2 rounded">
+  {{ isAllSelected() ? 'Desasignar Docentes' : 'Asignar Docentes' }}
+</button>
       </div>
       
       <!-- Pagination -->
       <div class="mt-4 flex justify-between items-center">
-        <button
-          class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
-          (click)="prevPage()"
-          [disabled]="currentPage === 1"
-        >
-          Anterior
-        </button>
 
-        <span class="text-gray-700"
-          >Página {{ currentPage }} de {{ totalPages }}</span
-        >
-
-        <button
-          class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
-          (click)="nextPage()"
-          [disabled]="currentPage === totalPages"
-        >
-          Siguiente
-        </button>
       </div>
     </div>
   </div>
 </div>
+
+
 
 <!-- Modal -->
 <div
@@ -1225,58 +1062,11 @@ Guardar Cambios
         <h2 class="text-lg font-semibold mb-4 flex items-center">
           <i class="table icon mr-2"></i> Listado de Alumnos
         </h2>
-        <table class="ui celled table">
-          <thead>
-            <tr>
-              <th>
-                <input type="checkbox" (click)="toggleSelectAllAlumnos($event)" />
-              </th>
-              <th>
-                <i class="user icon"></i> Nombre
-              </th>
-              <th>
-                <i class="address book icon"></i> Apellido
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              *ngFor="let alumno of paginatedDataAlumno"
-              [ngClass]="{ 'active': alumno.selected }"
-            >
-              <td class="center aligned">
-                <input type="checkbox" [(ngModel)]="alumno.selected" />
-              </td>
-              <td>{{ alumno.nombre }}</td>
-              <td>{{ alumno.apellido }}</td>
-            </tr>
-          </tbody>
-        </table>
+
       </div>
       
 
-      <!-- Pagination -->
-      <div class="mt-4 flex justify-between items-center">
-        <button
-          class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
-          (click)="prevPageAlumnos()"
-          [disabled]="currentPage === 1"
-        >
-          Anterior
-        </button>
 
-        <span class="text-gray-700"
-          >Página {{ currentPage }} de {{ totalPagesAlumnos }}</span
-        >
-
-        <button
-          class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
-          (click)="nextPageAlumnos()"
-          [disabled]="currentPage === totalPagesAlumnos"
-        >
-          Siguiente
-        </button>
-      </div>
     </div>
   </div>
 </div>

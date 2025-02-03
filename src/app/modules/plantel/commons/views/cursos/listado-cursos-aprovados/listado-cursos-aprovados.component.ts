@@ -88,6 +88,8 @@ export class ListadoCursosAprovadosComponent implements OnInit {
   getDocentes_a_asignar: any[] = [];
   id_plantel_curso_a_editar:Number=0
   // id_plantel_a_editar:Number=0
+  docentes_con_misma_especialidad: any[] = [];
+  docentesDelCurso: any[] = [];  // O si tienes una estructura de datos específica, usa esa estructura
 
 
   
@@ -96,6 +98,22 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     this.cursoSeleccionado = { ...modulo };
     this.mostrarModal = true;
   }
+  // Tu función para normalizar los datos
+  normalizeData() {
+    this.docentesDelCurso.forEach((docente: { id?: number; docente_id?: number }) => {
+      if (docente.id !== undefined) {
+        docente.docente_id = docente.id; // Cambiamos 'id' por 'docente_id'
+        delete docente.id; // Eliminamos 'id'
+      }
+    });
+  
+    this.docentes_con_misma_especialidad.forEach((docente: { docente_id?: number }) => {
+      docente.docente_id = docente.docente_id; // Aseguramos que los campos coincidan
+    });
+  }
+  
+  
+
 
   // cursoForm: FormGroup;
   private apiUrl = `${environment.api}`;
@@ -174,17 +192,49 @@ export class ListadoCursosAprovadosComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.getDocentes__asignar();
+     // Inicializar la selección de los instructores basados en una lista de IDs de seleccionados
+  // this.selectedInstructors = this.docentes.map((docente) => docente.id); // Esto es solo un ejemplo
+  const docentesSeleccionados = JSON.parse(localStorage.getItem('docentesSeleccionados') || '[]');
 
+  // Establecer `instructor.selected` en función de los IDs seleccionados
+  // this.docentes_con_misma_especialidad.forEach((instructor) => {
+  //   instructor.selected = this.selectedInstructors.includes(instructor.id); // Establecer si el instructor está seleccionado
+  // });
+    // Actualizar los estados en el FormArray
+    const docentesArray = this.cursoForm.get('docentes') as FormArray;
+    docentesArray.controls.forEach(group => {
+      const docenteId = group.get('id')?.value;
+      const seleccionado = docentesSeleccionados.some((doc: any) => doc.id === docenteId);
+      group.get('selected')?.setValue(seleccionado);
+    });
+  // Si necesitas algo más con el formulario, continúa con la lógica que tienes.
+  this.cursoForm.get('instructor')?.setValue(this.selectedInstructors);
+    // Inicializar seleccionados (puedes cambiar a [] si no deben estar todos seleccionados al inicio)
+    // this.selectedInstructors = this.docentes.map((docente) => docente.id); // Lista inicial de seleccionados
+    
+    // // Sincronizar selección inicial con el formulario
+    // this.cursoForm.get('instructor')?.setValue(this.selectedInstructors);
+  
+    // Escuchar cambios en la selección de cantidad de instructores
+    this.cursoForm.get('cant_instructores')?.valueChanges.subscribe(() => {
+      this.updateSelectionMode();
+    });
+  
+    // Escuchar cambios en la lista de instructores seleccionados
+    this.cursoForm.get('instructor')?.valueChanges.subscribe((selectedIds) => {
+      this.selectedInstructors = selectedIds;
+      console.log('Instructores seleccionados:', this.selectedInstructors); // Para depuración
+    });
+  
+    // Llamar a los métodos de inicialización
     this.cargarCursosByIdPlantel();
-    // this.getInfo();
-    // this.getDocentes();
     this.cargarAreas();
-    // this.getAlumnos();
-
     this.cargarEspecialidades();
     this.cargarTiposCurso();
+    // this.markSelectedDocentes();
+
   }
+  
   textoBusqueda: string = '';
   isLoading = false;
   isModalOpen = false;
@@ -193,6 +243,31 @@ export class ListadoCursosAprovadosComponent implements OnInit {
   filtroNombre: string = '';
   filtroNivel: string = '';
   filtroDuracion: number | null = null; // Puede ser null para indicar que no hay filtro
+  // markSelectedDocentes() {
+  //   // Recorremos cada docente de la primera tabla
+  //   this.docentes_con_misma_especialidad.forEach(instructor => {
+  //     // Verificamos si el docente está en la segunda tabla usando el docente_id
+  //     const docenteEnSegundaTabla = this.docentes.find(docente => docente.docente_id === instructor.docente_id);
+
+  //     // Si se encuentra en la segunda tabla, marcamos el checkbox como seleccionado
+  //     if (docenteEnSegundaTabla) {
+  //       instructor.selected = true;
+  //     } else {
+  //       instructor.selected = false;
+  //     }
+  //   });
+  // }
+  // markSelectedDocentes() {
+  //   this.docentes_con_misma_especialidad.forEach(instructor => {
+  //     const docenteEnCurso = this.docentes.find(docente => docente.docente_id === instructor.docente_id);
+  //     if (docenteEnCurso) {
+  //       instructor.selected = true;
+  //     } else {
+  //       instructor.selected = false;
+  //     }
+  //   });
+  // }
+  // Normalizar los datos para que todos usen 'docente_id'
 
   // Función para reiniciar filtros
   resetFilters() {
@@ -235,7 +310,8 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     }
     return ''; // Devuelve vacío si el valor no es válido
   }
-  
+  selectedDocentes: number[] = []; // IDs de los docentes seleccionados
+
   // cursosFiltrados!:Modulo;
   openModal(idPlantelCurso: any) {
     alert(idPlantelCurso);
@@ -244,14 +320,51 @@ export class ListadoCursosAprovadosComponent implements OnInit {
 
   console.log("id_plantel_curso_a_editar al abrir detalles",this.id_plantel_curso_a_editar)
     this.plantelService.getInfoCursoPlantel(idPlantelCurso).subscribe((response:any) => {
+      console.log("response*",response)
+      const cursoId = response.curso.curso_id; 
+      console.log("ID del curso:", cursoId);
       this.alumnos = response.alumnos;
+        // Determina si el curso permite selección múltiple
+  const numInstructores = response.curso.cant_instructores; 
+  this.isMultipleSelection = numInstructores === '2'; 
+  console.log("cursoId-------::::::::::::::::",cursoId)
+      this.cursoDocenteS_.obtenerDocentesPorCurso(cursoId).subscribe(
+        (data: any[]) => {
+          this.docentes_con_misma_especialidad = data;
+     
+        // Marcamos los docentes seleccionados basándonos en `selectedDocentes`
+        this.docentes_con_misma_especialidad.forEach(instructor => {
+          // Verificamos si el `docente_id` está en la lista de docentes seleccionados
+          const isSelected = this.docentes.some(seleccionado => seleccionado.id === instructor.docente_id);
+          instructor.selected = isSelected;
+        
+          if (isSelected) {
+            this.selectedInstructors.push(instructor.docente_id);
+          }
+        });
+              // Aplicar la validación de selección única o múltiple
+      if (!this.isMultipleSelection && this.selectedInstructors.length > 1) {
+        this.selectedInstructors = [this.selectedInstructors[0]];
+      }
+
+      // Actualizar el formulario con los docentes seleccionados
+      this.cursoForm.get('instructor')?.setValue(this.selectedInstructors);
+
+
+          console.log('Docentes del curso asociados:', this.docentes_con_misma_especialidad);
+        },
+        (error) => {
+          console.error('Error al obtener docentes:', error);
+        }
+      );
       this.docentes = response.docentes;
+      console.log('Docentes del curso seleccionado:', this.docentes);
       this.curso = response.curso;
         const cursohorario = response.curso.horario;
     
         // Cargar la información del curso en el formulario
         this.cursoForm.patchValue({
-          nombre: this.curso.nombre,
+          nombre: this.curso.curso_nombre,
           area_nombre: this.curso.area_nombre,
           especialidad_nombre: this.curso.especialidad_nombre,
           fecha_inicio:this.formatDate(this.curso.fecha_inicio),
@@ -285,27 +398,27 @@ export class ListadoCursosAprovadosComponent implements OnInit {
           // cant_instructores:1, // Valor inicial en "1"
 
           // plantel: {
-          calle: this.curso.plantel.calle,
-          localidad: this.curso.plantel.localidad,
-          municipio: this.curso.plantel.municipio,
-          num_interior: this.curso.plantel.num_interior,
-          num_exterior: this.curso.plantel.num_exterior,
+          calle: this.curso.plantel_calle,
+          localidad: this.curso.plantel_localidad,
+          municipio: this.curso.plantel_municipio,
+          num_interior: this.curso.plantel_num_interior,
+          num_exterior: this.curso.plantel_num_exterior,
         // },
       
-          lunes_inicio: cursohorario.lunes_inicio,
-          lunes_fin: cursohorario.lunes_fin,
-          martes_inicio: cursohorario.martes_inicio,
-          martes_fin: cursohorario.martes_fin,
-          miercoles_inicio: cursohorario.miercoles_inicio,
-          miercoles_fin: cursohorario.miercoles_fin,
-          jueves_inicio: cursohorario.jueves_inicio,
-          jueves_fin: cursohorario.jueves_fin,
-          viernes_inicio: cursohorario.viernes_inicio,
-          viernes_fin: cursohorario.viernes_fin,
-          sabado_inicio: cursohorario.sabado_inicio,
-          sabado_fin: cursohorario.sabado_fin,
-          domingo_inicio: cursohorario.domingo_inicio,
-          domingo_fin: cursohorario.domingo_fin
+          lunes_inicio: this.curso.lunes_inicio,
+          lunes_fin: this.curso.lunes_fin,
+          martes_inicio: this.curso.martes_inicio,
+          martes_fin: this.curso.martes_fin,
+          miercoles_inicio: this.curso.miercoles_inicio,
+          miercoles_fin: this.curso.miercoles_fin,
+          jueves_inicio: this.curso.jueves_inicio,
+          jueves_fin: this.curso.jueves_fin,
+          viernes_inicio: this.curso.viernes_inicio,
+          viernes_fin: this.curso.viernes_fin,
+          sabado_inicio: this.curso.sabado_inicio,
+          sabado_fin: this.curso.sabado_fin,
+          domingo_inicio: this.curso.domingo_inicio,
+          domingo_fin: this.curso.domingo_fin
         
       });
 
@@ -314,18 +427,26 @@ export class ListadoCursosAprovadosComponent implements OnInit {
       // Limpiar los arrays de docentes y alumnos
       this.cursoForm.setControl('docentes', this.fb.array([]));
       this.cursoForm.setControl('alumnos', this.fb.array([]));
-  
+      // Obtener datos almacenados en localStorage
+      const docentesSeleccionados = JSON.parse(localStorage.getItem('docentesSeleccionados') || '[]');
+
       // Cargar los docentes en el FormArray
       const docentesArray = this.cursoForm.get('docentes') as FormArray;
       this.docentes.forEach(docente => {
+        // Verificar si este docente ya está seleccionado
+        const seleccionado = docentesSeleccionados.some((d: any) => d.id === docente.id);
+
         docentesArray.push(this.fb.group({
           nombre: docente.nombre,
           docente_apellidos: docente.docente_apellidos,
           email: docente.email,
-          telefono: docente.telefono
+          telefono: docente.telefono,
+          selected: [seleccionado] // Añadimos el estado de selección
         }));
       });
-  
+        
+
+
       // Cargar los alumnos en el FormArray
       const alumnosArray = this.cursoForm.get('alumnos') as FormArray;
       this.alumnos.forEach((alumno:any) => {
@@ -337,10 +458,34 @@ export class ListadoCursosAprovadosComponent implements OnInit {
         }));
       });
   
-      console.log(this.cursoForm.value); // Para verificar que los datos se han cargado correctamente
+      console.log("cargando ...........",this.cursoForm.value); // Para verificar que los datos se han cargado correctamente
     });
   }
 
+
+
+  
+  onSelectionChange(): void {
+    const docentesArray = this.cursoForm.get('docentes') as FormArray;
+ 
+
+
+
+    // Filtrar los docentes seleccionados
+    const docentesSeleccionados = docentesArray.controls
+      .filter(group => group.get('selected')?.value)
+      .map(group => ({
+        id: group.get('id')?.value,
+        nombre: group.get('nombre')?.value,
+        docente_apellidos: group.get('docente_apellidos')?.value,
+        email: group.get('email')?.value,
+        telefono: group.get('telefono')?.value
+      }));
+  
+    // Guardar en localStorage
+    localStorage.setItem('docentesSeleccionados', JSON.stringify(docentesSeleccionados));
+  }
+  
   formatDate(date: string): string {
     const d = new Date(date);
     return d.toISOString().split('T')[0]; // Retorna solo la parte de fecha en formato YYYY-MM-DD
@@ -380,6 +525,13 @@ export class ListadoCursosAprovadosComponent implements OnInit {
         .subscribe({
           next: (data) => {
             this.cursosSolicitados = data;
+            console.log("-----------------------------")
+            console.log("-----------------------------")
+            console.log("-----------Peticon 1 trae curso por id de plantel------------------")
+            console.log("-----------------------------",this.cursosSolicitados)
+            console.log("-----------------------------")
+            console.log("-----------------------------")
+            console.log("-----------------------------")
             this.isLoading = false;
           },
           error: (err) => {
@@ -523,32 +675,62 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     const tipoCurso = this.tiposCurso.find((t) => t.id === tipoCursoId);
     return tipoCurso ? tipoCurso.nombre : 'N/A';
   }
-
-  asignarDocente() {
-    // const docenteId = Number(modulo.id);
-    const cursoId = this.curso;
-
-    const selectedDocenteId = this.docenteInput.nativeElement.value;
-    // Aquí puedes hacer lo que necesites con el ID del docente seleccionado
-    console.log('Docente seleccionado:', selectedDocenteId);
-
-    console.log('docente=>', selectedDocenteId);
-    console.log('curso=>', cursoId.id);
-    if (selectedDocenteId && cursoId) {
-      this.cursoDocenteS_
-        .asignarDocenteACurso(selectedDocenteId, cursoId.id)
-        .subscribe(
+  asignarDocentes(): void {
+    if (this.selectedInstructors.length > 0) {
+      // Evitar duplicados en la lista de asignación antes de enviarlo al backend
+      const docentesSinDuplicados = [...new Set(this.selectedInstructors)];
+  
+      // Enviar docentes uno por uno
+      docentesSinDuplicados.forEach(docenteId => {
+        this.cursoDocenteS_.asignarDocenteACurso(docenteId, this.curso.id).subscribe(
           (response) => {
-            console.log('Docente asignado:', response);
-            this.closeModal();
-            this.cargarCursosByIdPlantel();
+            console.log('Docente asignado con éxito:', response);
           },
           (error) => {
             console.error('Error al asignar docente:', error);
           }
         );
+      });
+  
+      // Limpia la selección después de asignar
+      this.selectedInstructors = [];
     }
   }
+  
+
+  
+  // asignarDocente(): void {
+  //   const cursoId = this.curso; // ID del curso
+
+  //   // Asegurarse de que haya docentes seleccionados
+  //   if (this.selectedInstructors.length > 0 && cursoId) {
+  //     this.selectedInstructors.forEach(docenteId => {
+  //       this.cursoDocenteS_
+  //         .asignarDocenteACurso(docenteId, cursoId.id)
+  //         .subscribe(
+  //           (response) => {
+  //             console.log('Docente asignado:', response);
+  //             this.closeModal(); // Cierra el modal o lo que necesites hacer tras asignar
+  //             this.cargarCursosByIdPlantel(); // Vuelve a cargar los cursos o actualiza la vista
+  //           },
+  //           (error) => {
+  //             console.error('Error al asignar docente:', error);
+  //           }
+  //         );
+  //     });
+  //   } else {
+  //     console.log('No se seleccionaron docentes');
+  //   }
+  // }
+
+  
+  // Método para verificar si el docente ya ha sido asignado
+  isDocenteAsignado(docenteId: number): boolean {
+    // Aquí se asume que `this.asignados` es un array con los docentes ya asignados al curso
+    return this.selectedInstructors.includes(docenteId);
+  }
+  
+  
 
   guardarCambios() {
     console.log("id_plantel_curso_a_editar al guardar cambios *** detalles", this.id_plantel_curso_a_editar);
@@ -593,18 +775,18 @@ export class ListadoCursosAprovadosComponent implements OnInit {
     // Datos iniciales
     alumnosNuevos!:any[];
 
-    instructores = [
-      { nombre: 'Ana', apellido: 'Martínez', selected: false },
-      { nombre: 'Pedro', apellido: 'Rodríguez', selected: true },
-      { nombre: 'Sofía', apellido: 'Torres', selected: false },
-      { nombre: 'Luis', apellido: 'Gómez', selected: false },
-      { nombre: 'Pepe', apellido: 'Gómez', selected: false },
-      { nombre: 'Antonio', apellido: 'Gómez', selected: false },
-      { nombre: 'Raúl', apellido: 'Gómez', selected: false },
-      { nombre: 'Juan', apellido: 'Gómez', selected: false },
-      { nombre: 'Mario', apellido: 'Gómez', selected: false },
-      { nombre: 'María', apellido: 'Fernández', selected: false }
-    ];
+    // instructores = [
+    //   { nombre: 'Ana', apellido: 'Martínez', selected: false },
+    //   { nombre: 'Pedro', apellido: 'Rodríguez', selected: true },
+    //   { nombre: 'Sofía', apellido: 'Torres', selected: false },
+    //   { nombre: 'Luis', apellido: 'Gómez', selected: false },
+    //   { nombre: 'Pepe', apellido: 'Gómez', selected: false },
+    //   { nombre: 'Antonio', apellido: 'Gómez', selected: false },
+    //   { nombre: 'Raúl', apellido: 'Gómez', selected: false },
+    //   { nombre: 'Juan', apellido: 'Gómez', selected: false },
+    //   { nombre: 'Mario', apellido: 'Gómez', selected: false },
+    //   { nombre: 'María', apellido: 'Fernández', selected: false }
+    // ];
     
     // Variable para manejar la visibilidad del modal
    
@@ -662,36 +844,52 @@ export class ListadoCursosAprovadosComponent implements OnInit {
   // itemsPerPage = 3;
 
     
-     // Obtener datos paginados solo de instructores
-  get paginatedData() {
-    const startIndex = (this.currentPage - 1) * this.rowsPerPage;
-    return this.instructores.slice(startIndex, startIndex + this.rowsPerPage);
-  }
+  //    // Obtener datos paginados solo de instructores
+  // get paginatedData() {
+  //   const startIndex = (this.currentPage - 1) * this.rowsPerPage;
+  //   return this.instructores.slice(startIndex, startIndex + this.rowsPerPage);
+  // }
     
-    get totalPages() {
-      return Math.ceil(this.instructores.length / this.rowsPerPage);
-    }
+    // get totalPages() {
+    //   return Math.ceil(this.instructores.length / this.rowsPerPage);
+    // }
+    toggleSelectAll(event: any): void {
+      const selectAll = event.target.checked;
+      
+      // Actualizamos todos los instructores según si seleccionamos todo o no
+      this.docentes_con_misma_especialidad.forEach(instructor => {
+        instructor.selected = selectAll;
+      });
     
-    toggleSelectAll(event: Event) {
-      const checked = (event.target as HTMLInputElement).checked;
-      this.instructores.forEach(item => (item.selected = checked));
-    }
-    
-    get allSelected() {
-      return this.instructores.every(item => item.selected);
-    }
-    
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
+      // Actualizamos la lista de docentes seleccionados
+      if (selectAll) {
+        this.selectedDocentes = this.docentes_con_misma_especialidad.map(instructor => instructor.docente_id);
+      } else {
+        this.selectedDocentes = [];
       }
+      console.log('Docentes seleccionados:', this.selectedDocentes); // Para depuración
     }
     
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
-      }
-    }
+    // toggleSelectAll(event: Event) {
+    //   const checked = (event.target as HTMLInputElement).checked;
+    //   this.instructores.forEach(item => (item.selected = checked));
+    // }
+    
+    // get allSelected() {
+    //   return this.instructores.every(item => item.selected);
+    // }
+    
+    // prevPage() {
+    //   if (this.currentPage > 1) {
+    //     this.currentPage--;
+    //   }
+    // }
+    
+    // nextPage() {
+    //   if (this.currentPage < this.totalPages) {
+    //     this.currentPage++;
+    //   }
+    // }
 
 
  // Configuración para manejar los alumnos
@@ -738,46 +936,96 @@ isMultipleSelection = false;
 
 updateSelectionMode() {
   const numInstructores = this.cursoForm.get('cant_instructores')?.value;
-
-  if (numInstructores) {
-    this.isMultipleSelection = numInstructores === '2';
-    
-    if (!this.isMultipleSelection && this.selectedInstructors.length > 1) {
-      // Limitar selección a un solo instructor
-      this.selectedInstructors = [this.selectedInstructors[0]];
-      this.cursoForm.get('instructor')?.setValue(this.selectedInstructors);
-    }
-  } else {
-    console.error('cant_instructores no está definido');
+  console.log("numInstructores**_",numInstructores)
+  this.isMultipleSelection = numInstructores === '2';
+  if (!this.isMultipleSelection && this.selectedInstructors.length > 1) {
+    // Si cambia a "Uno", conserva solo el primer seleccionado
+    this.selectedInstructors = [this.selectedInstructors[0]];
+    console.log("this.selectedInstructors**",this.selectedInstructors)
+    this.cursoForm.get('instructor')?.setValue(this.selectedInstructors);
   }
 }
 
 
+
+// isSelectionDisabled(id: number): boolean {
+//   // Si es selección única y ya hay uno seleccionado, desactiva los demás
+//   return !this.isMultipleSelection && this.selectedInstructors.length >= 1 && !this.selectedInstructors.includes(id);
+// }
 
 isSelectionDisabled(id: number): boolean {
   // Si es selección única y ya hay uno seleccionado, desactiva los demás
   return !this.isMultipleSelection && this.selectedInstructors.length >= 1 && !this.selectedInstructors.includes(id);
 }
 
-toggleSelection(event: Event, id: number) {
-  const checked = (event.target as HTMLInputElement).checked;
-  if (checked) {
-    if (!this.isMultipleSelection && this.selectedInstructors.length >= 1) {
-      // Si es selección única, reemplaza el seleccionado
-      this.selectedInstructors = [id];
-    } else {
-      // Agregar a la selección
-      this.selectedInstructors.push(id);
-    }
+// toggleSelection(event: any, docente_id: number): void {
+//   if (event.target.checked) {
+//     // Si el checkbox está marcado, agregamos el docente a la lista de seleccionados
+//     this.selectedDocentes.push(docente_id);
+//   } else {
+//     // Si el checkbox está desmarcado, eliminamos el docente de la lista de seleccionados
+//     this.selectedDocentes = this.selectedDocentes.filter(id => id !== docente_id);
+//   }
+//   console.log('Docentes seleccionados:', this.selectedDocentes); // Para depuración
+// }
+// toggleSelection(docenteId: number): void {
+//   if (this.isSelected(docenteId)) {
+//     this.selectedInstructors = this.selectedInstructors.filter(id => id !== docenteId);
+//   } else {
+//     this.selectedInstructors.push(docenteId);
+//   }
+// }
+toggleSelection(docenteId: number): void {
+  const index = this.selectedInstructors.indexOf(docenteId);
+  if (index === -1) {
+    this.selectedInstructors.push(docenteId); // Agregar a la lista
   } else {
-    // Remover de la selección
-    this.selectedInstructors = this.selectedInstructors.filter((instructorId) => instructorId !== id);
+    this.selectedInstructors.splice(index, 1); // Eliminar de la lista
   }
-  this.cursoForm.get('instructor')?.setValue(this.selectedInstructors);
 }
+// asignarODesasignarDocentes(): void {
+//   const action: 'asignar' | 'desasignar' = this.isAllSelected() ? 'desasignar' : 'asignar';
 
-isSelected(id: number): boolean {
-  return this.selectedInstructors.includes(id);
+//   this.selectedInstructors.forEach(docenteId => {
+//     this.cursoDocenteS_.asignarODesasignarDocenteACurso(docenteId, this.curso.id, action).subscribe(
+//       (response) => {
+//         console.log(`Docente ${action}ado con éxito:`, response);
+//       },
+//       (error) => {
+//         console.error(`Error al ${action}ar docente:`, error);
+//       }
+//     );
+//   });
+
+//   // Limpiar la selección después de la operación
+//   this.selectedInstructors = [];
+// }
+asignarODesasignarDocentes(): void {
+  if (this.selectedInstructors.length === 0) {
+    console.warn('No hay docentes seleccionados.');
+    return;
+  }
+
+  // Enviar la lista de IDs al backend
+  this.cursoDocenteS_.asignarODesasignarDocenteACurso(this.selectedInstructors, this.curso.id).subscribe(
+    (response) => {
+      console.log('Operación completada con éxito:', response);
+      // Limpiar la selección después de la operación
+      this.selectedInstructors = [];
+    },
+    (error) => {
+      console.error('Error al realizar la operación:', error);
+    }
+  );
+}
+  // Verifica si todos los docentes están seleccionados
+  isAllSelected(): boolean {
+    return this.selectedInstructors.length === this.docentes_con_misma_especialidad.length;
+  }
+// Función para verificar si un docente está seleccionado
+isSelected(docenteId: number): boolean {
+  console.log("isSelected{{{{{{{{{{{{{{",docenteId)
+  return this.selectedInstructors.includes(docenteId);
 }
 
 
