@@ -10,9 +10,9 @@ import { Component } from '@angular/core';
         <!-- Título principal estilizado -->
         <div class="text-center mb-12">
           <h1
-            class="text-8xl md:text-8xl font-extrabold text-gray-800 leading-tight"
+            class="text-2xl md:text-8xl font-extrabold text-gray-800 leading-tight"
           >
-            Registro
+            REGISTRO 
           </h1>
           <p class="text-gray-600 text-lg md:text-xl mt-4 max-w-2xl mx-auto">
             Selecciona que tipo de usuario
@@ -22,13 +22,12 @@ import { Component } from '@angular/core';
               class="hover:underline  cursor-pointer font-semibold text-orange-500"
               >alumno</span
             >
-            y
+            ó 
             <span
               routerLink="/public/registro-user"
               class="hover:underline cursor-pointer font-semibold text-purple-500"
               >docente</span
             >
-            en un solo lugar.
           </p>
         </div>
 

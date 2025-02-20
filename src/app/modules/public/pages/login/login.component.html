@@ -1,22 +1,26 @@
+<!--
+Este código representa una interfaz de inicio de sesión responsiva utilizando Tailwind CSS y Angular.
+Incluye validaciones de formularios, enlaces de recuperación de contraseña y opciones de autenticación social.
+-->
+
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+  
+  <!-- Contenedor principal -->
   <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-    <img class="mx-auto h-10 w-auto" src="https://www.icathi.edu.mx/img/ICATHI.png" alt="ICATHI">
-    <h2 class="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
+    <!-- Logo de la empresa -->
+    <img class="mx-auto h-24 w-auto" src="https://www.icathi.edu.mx/img/ICATHI.png" alt="ICATHI">
+    <!-- Título del formulario -->
+    <h2 class="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">INICIA SESIÓN - 4.0</h2>
   </div>
 
   <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <!-- Formulario de inicio de sesión -->
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
-      <!-- Email Input -->
+      
+      <!-- Campo de correo electrónico -->
       <div>
-        <label for="email" class="block text-sm font-medium text-gray-900">Email address</label>
+        <label for="email" class="block text-sm font-medium text-gray-900">CORREO ELECTRÓNICO</label>
         <div class="mt-2">
-          <!-- <input
-            formControlName="email"
-            id="email"
-            type="email"
-            autocomplete="email"
-            class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600 sm:text-sm"
-          /> -->
           <input
             formControlName="email"
             id="email"
@@ -25,17 +29,19 @@
             class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600 sm:text-sm"
           />
         </div>
+
+        <!-- Mensaje de error para email -->
         <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-red-500 text-sm mt-1">
           Email válido es requerido.
         </div>
       </div>
 
-      <!-- Password Input -->
+      <!-- Campo de contraseña -->
       <div>
         <div class="flex items-center justify-between">
-          <label for="password" class="block text-sm font-medium text-gray-900">Password</label>
+          <label for="password" class="block text-sm font-medium text-gray-900">CONTRASEÑA</label>
           <div class="text-sm">
-            <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+            <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Olvidaste tu contraseña?</a>
           </div>
         </div>
         <div class="mt-2">
@@ -47,61 +53,25 @@
             class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600 sm:text-sm"
           />
         </div>
+        <!-- Mensaje de error para contraseña -->
         <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-red-500 text-sm mt-1">
           Contraseña debe tener al menos 6 caracteres.
         </div>
       </div>
 
-      <!-- Sign In Button -->
+      <!-- Botón de inicio de sesión -->
       <div>
         <button *ngIf="!loading"
         type="submit"
-        class="button flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-indigo-600"
-      >
-        Sign in
-      </button>
-        <button
-        *ngIf="loading"
-        type="submit"
-        class="ui primary loading button flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-indigo-600"
-      >
-        <!-- Sign in -->
-      </button>
-
+        class="button flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-indigo-600">
+          INICIA SESIÓN 
+        </button>
+        <button *ngIf="loading" type="submit" class="ui primary loading button flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-indigo-600">
+        </button>
       </div>
     </form>
 
-    <!-- Divider -->
-    <div class="relative mt-6">
-      <div class="absolute inset-0 flex items-center">
-        <div class="w-full border-t border-gray-300"></div>
-      </div>
-      <div class="relative flex justify-center text-sm">
-        <span class="bg-white px-2 text-gray-500">Or continue with</span>
-      </div>
-    </div>
-
-    <!-- Social Login Buttons -->
-    <div class="mt-6 space-y-4">
-      <button
-        class="flex w-full items-center justify-center gap-3 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-indigo-600"
-      >
-        <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" class="h-5 w-5">
-        Continue with Google
-      </button>
-      <button
-        class="flex w-full items-center justify-center gap-3 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-indigo-600"
-      >
-        <img src="https://www.svgrepo.com/show/332084/github.svg" alt="GitHub" class="h-5 w-5">
-        Continue with GitHub
-      </button>
-    </div>
-
-    <!-- Footer Links -->
-    <p class="mt-10 text-center text-sm text-gray-500">
-      Not a member?
-      <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Start a 14 day free trial</a>
-    </p>
+    <!-- Enlaces de registro -->
     <p class="mt-4 text-center text-sm text-gray-500">
       ¿No tienes cuenta?
       <a routerLink="/public/select-rol" class="font-semibold text-indigo-600 hover:text-indigo-500">Crear cuenta</a>

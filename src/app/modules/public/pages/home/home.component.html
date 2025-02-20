@@ -1,26 +1,55 @@
 
-  <!-- <body class="bg-gray-100"> -->
-    <!-- Header Section -->
-    <header class="relative bg-gray-900 text-white">
-      <div class="absolute inset-0">
-        <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
-             alt="Background" class="w-full h-full object-cover opacity-70">
-      </div>
-      <div class="relative z-10 flex flex-col items-center justify-center text-center px-4 py-20 space-y-4">
-        <h1 class="text-4xl md:text-6xl font-bold">
-          Instituto de Capacitación para el Trabajo del Estado de Hidalgo
-        </h1>
-        <h2 class="text-3xl md:text-4xl font-semibold text-red-500">ICATHI</h2>
-        <p class="text-lg md:text-xl max-w-2xl">
-          Descubre una amplia variedad de cursos diseñados para ayudarte a alcanzar tus metas laborales y personales.
-        </p>
-        <a href="#courses" class="px-6 py-3 bg-red-500 text-white rounded-full font-medium hover:bg-red-600 transition">
-          Explora Nuestros Cursos
-        </a>
+  <section>
+    <!-- Encabezado con imagen de fondo y texto superpuesto -->
+    <header class="relative bg-gray-200 text-black">
+      
+      <!-- Contenedor principal con diseño en grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Columna Izquierda -->
+        <div class="flex flex-col items-end justify-center space-y-6 w-full pr-8">
+          <!-- Título principal -->
+          <h1 class="text-4xl md:text-6xl font-bold text-black text-justify md:text-end">
+            Instituto de Capacitación para el Trabajo del Estado de Hidalgo
+            ICATHI
+          </h1>
+          
+          <!-- Descripción breve -->
+          <p class="text-lg md:text-xl max-w-2xl">
+            Bienvenido a este espacio de capacitación 4.0
+          </p>
+  
+          <!-- Botón de exploración de cursos (comentado por ahora) -->
+          <!-- <a href="#courses" class="px-6 py-3 bg-red-500 text-white rounded-full font-medium hover:bg-red-600 transition">
+            Explora Nuestros Cursos
+          </a> -->
+        </div>
+
+        <!-- Columna Derecha -->
+        <div class="flex flex-col items-end w-full">
+          <img src="image/recurso2.png" alt="Background" class="w-full md:w-3/4 h-auto">
+        </div>
+
       </div>
     </header>
+  </section>
 
-<app-teacher-application></app-teacher-application>
+  <section class="py-12">
+    <!-- Encabezado de la sección -->
+    <div class="text-center mb-8 animate-fade-in">
+      <h2 class="text-4xl font-bold text-[#44509D] mb-4">ÚNETE A NUESTRO EQUIPO 4.0</h2>
+      <p class="text-gray-700 text-xl leading-relaxed mx-6 md:mx-16 lg:mx-32 text-center mb-8" >
+        En el Instituto de Capacitación para el Trabajo del Estado de Hidalgo (ICATHI), valoramos la pasión por la enseñanza y el compromiso con la educación. Ahora, con ICATHI 4.0, damos un paso adelante en la modernización de nuestros procesos para fortalecer el seguimiento y control de cursos, asegurando una gestión más eficiente y transparente. <br> <br>
+
+        Si eres docente, capacitador o estudiante, te invitamos a registrarte y ser parte de este proceso que impulsa el desarrollo profesional y mejora el acceso a la educación de calidad.
+      </p>
+      <!-- Botón de postulación -->
+      <a routerLink="/public/select-rol"  class="px-8 py-4 bg-[#44509D] text-white rounded-lg shadow-lg transform transition hover:scale-105 hover:bg-orange-500 hover:text-white">POSTÚLATE AHORA </a>
+    </div>
+  </section>
+    
+  <!-- App postulacion Docente (comentado por ahora) -->
+  <!-- <app-teacher-application></app-teacher-application> -->
+
     <section id="nosotros" class="py-16 bg-gradient-to-b from-gray-50 to-gray-100 relative overflow-hidden">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Title Section -->

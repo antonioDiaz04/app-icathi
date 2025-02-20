@@ -1,13 +1,15 @@
+
+// Estilos para el carrusel
 .carousel {
-  position: relative;
+  position: relative; // Permite posicionar elementos hijos de forma absoluta dentro del carrusel
 
   .carousel-item {
-    display: block;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
+    display: block; // Se asegura de que cada elemento sea visible en el flujo del documento
+    opacity: 0; // Los elementos no activos son invisibles
+    transition: opacity 0.5s ease-in-out; // Suaviza la transición entre elementos
 
     &.active {
-      opacity: 1;
+      opacity: 1; // El elemento activo es visible
     }
   }
 }
@@ -19,7 +21,8 @@ button {
   }
 }
 
-
 span{
   cursor: pointer;
 }
+
+
