@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.prod';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class EspecialidadesDocentesService {
   private baseUrl = `${environment.api}/especialidades_docentes`;
+
   constructor(private http: HttpClient) {}
 
   /**
@@ -29,12 +30,19 @@ export class EspecialidadesDocentesService {
       usuarioValidadorId
     };
 
-    // // Configuración de los headers si es necesario
-    // const headers = new HttpHeaders({
-    //   'Content-Type': 'application/json'
-    // });
-
     // Realiza la solicitud PUT
     return this.http.put(url, body);
+  }
+
+  /**
+   * Obtiene los docentes de una especialidad específica.
+   * @param especialidadId ID de la especialidad.
+   * @returns Observable con la lista de docentes.
+   */
+  obtenerDocentesPorEspecialidad(especialidadId: number): Observable<any> {
+    const url = `${this.baseUrl}/especialidad/${especialidadId}`;
+
+    // Realiza la solicitud GET
+    return this.http.get<any>(url);
   }
 }

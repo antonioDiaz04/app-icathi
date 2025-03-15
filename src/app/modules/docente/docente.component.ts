@@ -40,7 +40,7 @@
         console.log("alerts",alerts)
         console.log("pendiendtes",this.pendingCount)
       });
-
+      this.updatePendingAlerts()
     }
     selectedEspecialidades_doce: number[] = []; // Solo los IDs de las especialidades
 
@@ -66,7 +66,8 @@
       if (!this.docenteData?.usuario_validador_id) {
         alerts.push('Asignación de validador pendiente');
       }
-    
+      this.pendingAlertService.updatePendingAlerts(alerts);
+
     }
   private detectScreenSize(): void {
     this.breakpointObserver

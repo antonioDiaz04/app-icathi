@@ -1,7 +1,7 @@
 <!-- Tabla de cursos solicitados -->
 <div *ngIf="!mostrarFormulario" class="container mx-auto p-4">
 
-  
+
   <p class="font-bold text-xl text-slate-500 mb-2">Cursos solicitados</p>
 
   <div class="mb-4">
@@ -9,34 +9,28 @@
     <div class="flex space-x-2">
       <button
         class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
-        (click)="filtrarCursos('validados')"
-      >
+        (click)="filtrarCursos('validados')">
         <i class="fas fa-check-circle mr-1"></i> Validados
       </button>
       <button
         class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
-        (click)="filtrarCursos('no-validados')"
-      >
+        (click)="filtrarCursos('no-validados')">
         <i class="fas fa-times-circle mr-1"></i> No validados
       </button>
       <button
         class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
-        (click)="filtrarCursos('todos')"
-      >
+        (click)="filtrarCursos('todos')">
         <i class="fas fa-list mr-1"></i> Todos
       </button>
       <button
         class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
-        (click)="cargarCursosByIdPlantel()"
-      >
+        (click)="cargarCursosByIdPlantel()">
         <i class="fas fa-repeat mr-1"></i> Recargar
       </button>
     </div>
   </div>
 
-  <div
-    class="bg-white rounded-lg border border-gray-300 p-4 w-full max-w-screen-xl"
-  >
+  <div class="bg-white rounded-lg border border-gray-300 p-4 w-full max-w-screen-xl">
     <table class="min-w-full table-auto">
       <thead>
         <tr>
@@ -73,14 +67,11 @@
           </td>
 
           <!-- Estado del módulo en otro td -->
-          <td
-            class="px-2 py-1 text-sm font-medium"
-            [ngClass]="{
+          <td class="px-2 py-1 text-sm font-medium" [ngClass]="{
               'bg-green-100': modulo.estatus_id == 8,
               'bg-red-100': modulo.estatus_id == 9,
               'bg-yellow-100': modulo.estatus_id == 10
-            }"
-          >
+            }">
             <span *ngIf="modulo.estatus_id == 8" class="text-black">
               <i class="fas fa-check-circle text-green-500 mr-1"></i> Aceptado
             </span>
@@ -95,19 +86,15 @@
 
           <td class="px-2 py-1 text-sm relative">
             <div class="group relative">
-              <button
-                type="button"
-                (click)="eliminarSolicitudCurso(modulo.plantel_curso_id)"
-                class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
-              >
+              <button type="button" (click)="eliminarSolicitudCurso(modulo.plantel_curso_id)"
+                class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100">
                 <i class="fas fa-trash-alt mr-1"></i> Cancelar Solicitud
               </button>
             </div>
 
             <button
               class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
-              (click)="openModal(modulo.plantel_curso_id)"
-            >
+              (click)="openModal(modulo.plantel_curso_id)">
               <!-- (click)="verDetalles(modulo.id)" -->
               <i class="fas fa-info-circle mr-1"></i> Ver Detalles
             </button>
@@ -149,320 +136,249 @@
 
 
 <form *ngIf="mostrarFormulario" class="container mx-auto p-6" [formGroup]="cursoForm" (ngSubmit)="guardarCambios()">
- 
-  <button
-  type="button"
+
+  <button type="button"
     class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100"
-    (click)="openModal(modulo.plantel_curso_id)"
-  >
+    (click)="openModal(modulo.plantel_curso_id)">
     Atras
   </button>
 
-<h1 class="text-center text-lg font-semibold text-gray-800">
-  INFORMACION DEL CURSO
-</h1>
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-  <!-- Especialidad -->
-  <div>
-    <label class="block mb-2 text-sm text-gray-700">Especialidad</label>
-    <input
-      type="text"
-      formControlName="especialidad_nombre"
-      class="w-full p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
-      placeholder="Ingrese la especialidad"
-    />
-    <div
-      *ngIf="
+  <h1 class="text-center text-lg font-semibold text-gray-800">
+    INFORMACION DEL CURSO
+  </h1>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <!-- Especialidad -->
+    <div>
+      <label class="block mb-2 text-sm text-gray-700">Especialidad</label>
+      <input type="text" formControlName="especialidad_nombre"
+        class="w-full p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
+        placeholder="Ingrese la especialidad" />
+      <div *ngIf="
         cursoForm.get('especialidad_nombre')?.invalid &&
         cursoForm.get('especialidad_nombre')?.touched
-      "
-      class="text-red-500 text-sm"
-    >
-      El nombre de la especialidad es obligatorio.
+      " class="text-red-500 text-sm">
+        El nombre de la especialidad es obligatorio.
+      </div>
     </div>
-  </div>
-  
-  <!-- Curso -->
-  <div>
-    <label class="block mb-2 text-sm text-gray-700">Curso</label>
-    <input
-      type="text"
-      formControlName="nombre"
-      class="w-full p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
-      placeholder="Ingrese el nombre del curso"
-    />
-    <div
-      *ngIf="
+
+    <!-- Curso -->
+    <div>
+      <label class="block mb-2 text-sm text-gray-700">Curso</label>
+      <input type="text" formControlName="nombre"
+        class="w-full p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
+        placeholder="Ingrese el nombre del curso" />
+      <div *ngIf="
         cursoForm.get('nombre')?.invalid &&
         cursoForm.get('nombre')?.touched
-      "
-      class="text-red-500 text-sm"
-    >
-      El nombre del curso es obligatorio.
+      " class="text-red-500 text-sm">
+        El nombre del curso es obligatorio.
+      </div>
+    </div>
+
+
+
+
+
+    <!-- Cupo Máximo -->
+    <div class="flex items-center">
+      <label class="block mb-2 text-sm mr-4 text-gray-700">Cupo Máximo</label>
+      <input type="number" formControlName="cupo_maximo"
+        class="flex-1 p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
+        placeholder="Ej. 30" />
+    </div>
+
+    <!-- Requisitos Extra -->
+    <div class="col-span-2">
+      <label class="block mb-2 text-sm text-gray-700">Requisitos Extra</label>
+      <textarea formControlName="requisitos_extra"
+        class="w-full p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
+        placeholder="Ej. Materiales necesarios" rows="2"></textarea>
     </div>
   </div>
 
-  
-
-
-
-  <!-- Cupo Máximo -->
-  <div class="flex items-center">
-    <label class="block mb-2 text-sm mr-4 text-gray-700"
-      >Cupo Máximo</label
-    >
-    <input
-      type="number"
-      formControlName="cupo_maximo"
-      class="flex-1 p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
-      placeholder="Ej. 30"
-    />
-  </div>
-
-  <!-- Requisitos Extra -->
-  <div class="col-span-2">
-    <label class="block mb-2 text-sm text-gray-700"
-      >Requisitos Extra</label
-    >
-    <textarea
-      formControlName="requisitos_extra"
-      class="w-full p-2 border border-sky-300 rounded-md bg-white outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
-      placeholder="Ej. Materiales necesarios"
-      rows="2"
-    ></textarea>
-  </div>
-</div>
 
 
 
 
 
 
-
-<!-- INFORMACIÓN DEL INSTRUCTOR   👍 -->
-<div class="mb-4">
-  <h1 class="text-center text-lg font-semibold text-gray-800 mb-4">
-    INFORMACIÓN DEL INSTRUCTOR
-  </h1>
-
-
-  
-
-  <!-- Número de Instructores -->
-  <!-- Número de Instructores -->
-
-
-
-  <br>
+  <!-- INFORMACIÓN DEL INSTRUCTOR   👍 -->
   <div class="mb-4">
-    <label class="block mb-2 text-sm text-gray-700">Número de Instructores</label>
-    <div class="flex gap-4">
-      <!-- Radio button para "Uno" -->
-      <div class="flex items-center gap-2">
-        <input
-          type="radio"
-          id="uno"
-          name="cant_instructores"
-          formControlName="cant_instructores"
-          value="1"
-          class="focus:ring focus:ring-sky-200 focus:outline-none focus:ring-offset-2"
-          (change)="updateSelectionMode()"
-        />
-        <label for="uno" class="text-sm text-gray-700">Uno</label>
+    <h1 class="text-center text-lg font-semibold text-gray-800 mb-4">
+      INFORMACIÓN DEL INSTRUCTOR
+    </h1>
+
+
+
+
+    <!-- Número de Instructores -->
+    <!-- Número de Instructores -->
+
+
+
+    <br>
+    <div class="mb-4">
+      <label class="block mb-2 text-sm text-gray-700">Número de Instructores</label>
+      <div class="flex gap-4">
+        <!-- Radio button para "Uno" -->
+        <div class="flex items-center gap-2">
+          <input type="radio" id="uno" name="cant_instructores" formControlName="cant_instructores" value="1"
+            class="focus:ring focus:ring-sky-200 focus:outline-none focus:ring-offset-2"
+            (change)="updateSelectionMode()" />
+          <label for="uno" class="text-sm text-gray-700">Uno</label>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="radio" id="masDeUno" name="cant_instructores" formControlName="cant_instructores" value="2"
+            class="w-5 h-5 text-sky-600 border-gray-300 focus:ring focus:ring-sky-200 focus:outline-none focus:ring-offset-2"
+            (change)="updateSelectionMode()" />
+
+
+          <label for="masDeUno" class="text-sm font-medium text-gray-700 hover:text-sky-600">
+            Más de Uno
+          </label>
+        </div>
+
+
       </div>
-  
-      <div class="flex items-center gap-2">
-        <input
-        type="radio"
-        id="masDeUno"
-        name="cant_instructores"
-        formControlName="cant_instructores"
-        value="2"
-        class="w-5 h-5 text-sky-600 border-gray-300 focus:ring focus:ring-sky-200 focus:outline-none focus:ring-offset-2"
-        (change)="updateSelectionMode()"
-      />
-      
-      
-        <label for="masDeUno" class="text-sm font-medium text-gray-700 hover:text-sky-600">
-          Más de Uno
-        </label>
-      </div>
-      
-      
     </div>
+
+
+
+
+
+
+
+
+    <table class="min-w-full border-collapse border border-gray-300 bg-white">
+      <thead>
+        <tr class="bg-blue-100 text-blue-900">
+          <th class="border border-gray-300 p-2">Nombre</th>
+          <th class="border border-gray-300 p-2">Apellidos</th>
+          <th class="border border-gray-300 p-2">Email</th>
+          <th class="border border-gray-300 p-2">Teléfono</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let docente of docentes" class="odd:bg-gray-50 even:bg-blue-50 hover:bg-blue-100 transition-colors">
+          <td class="border border-gray-300 p-2">
+            <span>{{ docente.nombre }}</span>
+          </td>
+          <td class="border border-gray-300 p-2">
+            <span>{{ docente.docente_apellidos }}</span>
+          </td>
+          <td class="border border-gray-300 p-2">
+            <span>{{ docente.email }}</span>
+          </td>
+          <td class="border border-gray-300 p-2">
+            <span>{{ docente.telefono }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button type="button"
+      class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100 mt-4"
+      (click)="agregarInstructor()">
+      <i class="fas fa-plus mr-1"></i> Agregar Instructor
+    </button>
+
+
+
+
+
+    <h1 class="text-center text-lg font-semibold text-gray-800 mb-4">
+      INFORMACIÓN DE LOS ALUMNOS
+    </h1>
+    <div class="w-full bg-white shadow-md rounded-lg p-4">
+
+      <table class="min-w-full border-collapse border border-gray-300">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="border border-gray-300 p-2">Nombre</th>
+            <th class="border border-gray-300 p-2">Apellidos</th>
+            <th class="border border-gray-300 p-2">Email</th>
+            <th class="border border-gray-300 p-2">Teléfono</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let alumno of alumnos">
+            <td class="border border-gray-300 p-2">
+              <span>{{ alumno.nombre }}</span>
+            </td>
+            <td class="border border-gray-300 p-2">
+              <span>{{ alumno.apellidos }}</span>
+            </td>
+            <td class="border border-gray-300 p-2">
+              <span>{{ alumno.email }}</span>
+            </td>
+            <td class="border border-gray-300 p-2">
+              <span>{{ alumno.telefono }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <button type="button"
+      class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100 mt-4"
+      (click)="agregarAlumno()">
+      <i class="fas fa-plus mr-1"></i> Agregar Alumno
+    </button>
+
   </div>
-  
-  
-  
-  
-
-  
-
-
-  <table class="min-w-full border-collapse border border-gray-300 bg-white">
-    <thead>
-      <tr class="bg-blue-100 text-blue-900">
-        <th class="border border-gray-300 p-2">Nombre</th>
-        <th class="border border-gray-300 p-2">Apellidos</th>
-        <th class="border border-gray-300 p-2">Email</th>
-        <th class="border border-gray-300 p-2">Teléfono</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr 
-        *ngFor="let docente of docentes" 
-        class="odd:bg-gray-50 even:bg-blue-50 hover:bg-blue-100 transition-colors"
-      >
-        <td class="border border-gray-300 p-2">
-          <span>{{ docente.nombre }}</span>
-        </td>
-        <td class="border border-gray-300 p-2">
-          <span>{{ docente.docente_apellidos }}</span>
-        </td>
-        <td class="border border-gray-300 p-2">
-          <span>{{ docente.email }}</span>
-        </td>
-        <td class="border border-gray-300 p-2">
-          <span>{{ docente.telefono }}</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  
-  <button
-  type="button"
-    class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100 mt-4"
-    (click)="agregarInstructor()"
-  >
-    <i class="fas fa-plus mr-1"></i> Agregar Instructor
-  </button>
 
 
 
-      <!-- Información de los Alumnos -->
-      <!-- <h3 class="text-lg font-semibold text-gray-800 mb-4">
-        Información de los Alumnos
-      </h3> -->
 
-      <h1 class="text-center text-lg font-semibold text-gray-800 mb-4">
-        INFORMACIÓN DE LOS ALUMNOS
-      </h1>
-      <div class="w-full bg-white shadow-md rounded-lg p-4">
-        <!-- Título de la tabla -->
-        <!-- <h2 class="text-xl font-semibold text-gray-700 mb-4">Lista de Docentes</h2> -->
-      
-        <table class="min-w-full border-collapse border border-gray-300">
-          <thead>
-            <tr class="bg-gray-200">
-              <th class="border border-gray-300 p-2">Nombre</th>
-              <th class="border border-gray-300 p-2">Apellidos</th>
-              <th class="border border-gray-300 p-2">Email</th>
-              <th class="border border-gray-300 p-2">Teléfono</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let alumno of alumnos">
-              <!-- <tr *ngFor="let docente of docentes"> -->
-                <td class="border border-gray-300 p-2">
-                  <span>{{ alumno.nombre }}</span>
-                </td>
-                <td class="border border-gray-300 p-2">
-                  <span>{{ alumno.apellidos }}</span>
-                </td>
-                <td class="border border-gray-300 p-2">
-                  <span>{{ alumno.email }}</span>
-                </td>
-                <td class="border border-gray-300 p-2">
-                  <span>{{ alumno.telefono }}</span>
-                </td>
-            </tr>
-          </tbody>
-        </table>
+  <div>
+    <h1 class="text-center text-lg font-semibold text-gray-800 mb-4">
+      DIRECCIÓN -
+    </h1>
+
+    <div class="grid grid-cols-2 gap-4">
+      <!-- Municipio -->
+      <div>
+        <label class="block mb-2 text-sm text-gray-700">Municipio</label>
+        <input type="text" formControlName="municipio"
+          class="w-full p-2 border border-sky-300 rounded-md outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
+          placeholder="Nombre del municipio" />
       </div>
-      
-      <button
-      type="button"
-        class="px-4 py-2 bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-purple-100 mt-4"
-        (click)="agregarAlumno()"
-      >
-        <i class="fas fa-plus mr-1"></i> Agregar Alumno
-      </button>
-  
-</div>
 
+      <!-- Localidad -->
+      <div>
+        <label class="block mb-2 text-sm text-gray-700">Localidad</label>
+        <input type="text" formControlName="localidad"
+          class="w-full p-2 border border-sky-300 rounded-md outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
+          placeholder="Nombre de la localidad" />
+      </div>
 
+      <!-- Calle -->
+      <div>
+        <label class="block mb-2 text-sm text-gray-700">Calle</label>
+        <input type="text" formControlName="calle"
+          class="w-full p-2 border border-sky-300 rounded-md outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
+          placeholder="Nombre de la calle" />
+      </div>
 
+      <!-- Número Interior -->
+      <div>
+        <label class="block mb-2 text-sm text-gray-700">Número Interior</label>
+        <input type="text" formControlName="num_interior"
+          class="w-full p-2 border border-sky-300 rounded-md outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
+          placeholder="Número interior" />
+      </div>
 
+      <!-- Número Exterior -->
+      <div>
+        <label class="block mb-2 text-sm text-gray-700">Número Exterior</label>
+        <input type="text" formControlName="num_exterior"
+          class="w-full p-2 border border-sky-300 rounded-md outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
+          placeholder="Número exterior" />
+      </div>
 
-
-<!-- direccion  👍 -->
-<div>
-  <h1 class="text-center text-lg font-semibold text-gray-800 mb-4">
-    DIRECCIÓN -   
-  </h1>
-
-  <div class="grid grid-cols-2 gap-4">
-    <!-- Municipio -->
-    <div>
-      <label class="block mb-2 text-sm text-gray-700">Municipio</label>
-      <input
-        type="text"
-        formControlName="municipio"
-        class="w-full p-2 border border-sky-300 rounded-md outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
-        placeholder="Nombre del municipio"
-      />
-    </div>
-
-    <!-- Localidad -->
-    <div>
-      <label class="block mb-2 text-sm text-gray-700">Localidad</label>
-      <input
-        type="text"
-        formControlName="localidad"
-        class="w-full p-2 border border-sky-300 rounded-md outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
-        placeholder="Nombre de la localidad"
-      />
-    </div>
-
-    <!-- Calle -->
-    <div>
-      <label class="block mb-2 text-sm text-gray-700">Calle</label>
-      <input
-        type="text"
-        formControlName="calle"
-        class="w-full p-2 border border-sky-300 rounded-md outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
-        placeholder="Nombre de la calle"
-      />
-    </div>
-
-    <!-- Número Interior -->
-    <div>
-      <label class="block mb-2 text-sm text-gray-700"
-        >Número Interior</label
-      >
-      <input
-        type="text"
-        formControlName="num_interior"
-        class="w-full p-2 border border-sky-300 rounded-md outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
-        placeholder="Número interior"
-      />
-    </div>
-
-    <!-- Número Exterior -->
-    <div>
-      <label class="block mb-2 text-sm text-gray-700"
-        >Número Exterior</label
-      >
-      <input
-        type="text"
-        formControlName="num_exterior"
-        class="w-full p-2 border border-sky-300 rounded-md outline-none focus:ring focus:ring-sky-200 focus:border-sky-400"
-        placeholder="Número exterior"
-      />
-    </div>
-
-    <!-- Referencia -->
-    <!-- <div>
+      <!-- Referencia -->
+      <!-- <div>
       <label class="block mb-2 text-sm text-gray-700">Referencia</label>
       <input
         type="text"
@@ -471,423 +387,288 @@
         placeholder="Referencia de la ubicación"
       />
     </div> -->
-  </div>
-</div>
-
-
-<!-- Encabezado -->
-<h1 class="text-center text-lg font-semibold text-gray-800">HORARIO</h1>
-
-
-
-<!-- Información -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-
-
-   <!-- Información con animación -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4" @fadeIn>
-
-  <!-- Segundo bloque con diseño similar -->
-  <div>
-    <p class="text-sm font-medium text-gray-700">Fecha de Inicio:</p>
-    <input
-      type="date"
-      formControlName="fecha_inicio"
-      class="border rounded p-1 w-full"
-    />
-  </div>
-  
-  <div>
-    <p class="text-sm font-medium text-gray-700">Fecha de Finalización:</p>
-    <input
-      type="date"
-      formControlName="fecha_fin"
-      class="border rounded p-1 w-full"
-    />
+    </div>
   </div>
 
 
+  <!-- Encabezado -->
+  <h1 class="text-center text-lg font-semibold text-gray-800">HORARIO</h1>
 
 
 
-</div>
-  <div>
-    <p class="text-sm font-medium text-gray-700">Horas Totales:</p>
-    <p class="text-sm text-gray-600">120</p>
-    <p class="text-sm font-medium text-gray-700">Horas Registradas:</p>
-    <p class="text-sm text-red-600">5</p>
+  <!-- Información -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+
+
+    <!-- Información con animación -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4" @fadeIn>
+
+      <!-- Segundo bloque con diseño similar -->
+      <div>
+        <p class="text-sm font-medium text-gray-700">Fecha de Inicio:</p>
+        <input type="date" formControlName="fecha_inicio" class="border rounded p-1 w-full" />
+      </div>
+
+      <div>
+        <p class="text-sm font-medium text-gray-700">Fecha de Finalización:</p>
+        <input type="date" formControlName="fecha_fin" class="border rounded p-1 w-full" />
+      </div>
+
+
+
+
+
+    </div>
+    <div>
+      <p class="text-sm font-medium text-gray-700">Horas Totales:</p>
+      <p class="text-sm text-gray-600">120</p>
+      <p class="text-sm font-medium text-gray-700">Horas Registradas:</p>
+      <p class="text-sm text-red-600">5</p>
+    </div>
+    <div>
+      <p class="text-sm font-medium text-gray-700">Número de sesiones:</p>
+      <p class="text-sm text-gray-600">1</p>
+    </div>
   </div>
-  <div>
-    <p class="text-sm font-medium text-gray-700">Número de sesiones:</p>
-    <p class="text-sm text-gray-600">1</p>
+
+  <!-- Tipo de Horario  👍 -->
+  <div class="mb-4">
+    <p class="text-sm font-medium text-gray-700">Tipo de Horario</p>
+
   </div>
-</div>
 
-<!-- Tipo de Horario  👍 -->
-<div class="mb-4">
-  <p class="text-sm font-medium text-gray-700">Tipo de Horario</p>
-
-</div>
-
-<!-- Días de la Semana -->
-<div class="mb-4">
-  <p class="text-sm font-medium text-gray-700">
-    Seleccione el día de la semana:
-  </p>
-  <div class="overflow-x-auto">
-    <table
-      class="border border-gray-300 w-full text-sm text-left text-gray-700"
-    >
-      <thead class="bg-blue-100 text-red-600">
-        <tr>
-          <th class="border border-gray-300 px-4 py-2">Día</th>
-          <th class="border border-gray-300 px-4 py-2">Lun</th>
-          <th class="border border-gray-300 px-4 py-2">Mar</th>
-          <th class="border border-gray-300 px-4 py-2">Mié</th>
-          <th class="border border-gray-300 px-4 py-2">Jue</th>
-          <th class="border border-gray-300 px-4 py-2">Vie</th>
-          <th class="border border-gray-300 px-4 py-2">Sáb</th>
-          <th class="border border-gray-300 px-4 py-2">Dom</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="border border-gray-300 px-4 py-2 font-medium">
-            Inicia
-          </td>
-          <td class="border border-gray-300 px-4 py-2">
-            <input
-              type="time"
-              formControlName="lunes_inicio"
-              class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
-              placeholder="Ejemplo: 08:00"
-            />
-          </td>
-          <td class="border border-gray-300 px-4 py-2">
-            <input
-              type="time"
-              formControlName="martes_inicio"
-              class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
-              placeholder="Ejemplo: 07:00"
-            />
-          </td>
-          <td class="border border-gray-300 px-4 py-2">
-            <input
-              type="time"
-              formControlName="miercoles_inicio"
-              class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
-              placeholder="Ejemplo: 07:00"
-            />
-          </td>
-          <td class="border border-gray-300 px-4 py-2">
-            <input
-              type="time"
-              formControlName="jueves_inicio"
-              class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
-              placeholder="Ejemplo: 07:00"
-            />
-          </td>
-          <td class="border border-gray-300 px-4 py-2">
-            <input
-              type="time"
-              formControlName="viernes_inicio"
-              class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
-              placeholder="Ejemplo: 07:00"
-            />
-          </td>
-          <td class="border border-gray-300 px-4 py-2">
-            <input
-              type="time"
-              formControlName="sabado_inicio"
-              class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
-              placeholder="Ejemplo: 07:00"
-            />
-          </td>
-          <td class="border border-gray-300 px-4 py-2">
-            <input
-              type="time"
-              formControlName="domingo_inicio"
-              class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
-              placeholder="Ejemplo: 08:00"
-            />
-          </td>
-        </tr>
-        <tr>
-          <td class="border border-gray-300 px-4 py-2 font-medium">
-            Termina
-          </td>
-          <td class="border border-gray-300 px-4 py-2">
-            <input
-              type="time"
-              formControlName="lunes_fin"
-              class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
-              placeholder="Ejemplo: 13:00"
-            />
-          </td>
-          <td class="border border-gray-300 px-4 py-2">
-            <input
-              type="time"
-              formControlName="martes_fin"
-              class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
-              placeholder="Ejemplo: 13:00"
-            />
-          </td>
-          <td class="border border-gray-300 px-4 py-2">
-            <input
-              type="time"
-              formControlName="miercoles_fin"
-              class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
-              placeholder="Ejemplo: 13:00"
-            />
-          </td>
-          <td class="border border-gray-300 px-4 py-2">
-            <input
-              type="time"
-              formControlName="jueves_fin"
-              class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
-              placeholder="Ejemplo: 13:00"
-            />
-          </td>
-          <td class="border border-gray-300 px-4 py-2">
-            <input
-              type="time"
-              formControlName="viernes_fin"
-              class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
-              placeholder="Ejemplo: 13:00"
-            />
-          </td>
-          <td class="border border-gray-300 px-4 py-2">
-            <input
-              type="time"
-              formControlName="sabado_fin"
-              class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
-              placeholder="Ejemplo: 13:00"
-            />
-          </td>
-          <td class="border border-gray-300 px-4 py-2">
-            <input
-              type="time"
-              formControlName="domingo_fin"
-              class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
-              placeholder="Ejemplo: 13:00"
-            />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- Días de la Semana -->
+  <div class="mb-4">
+    <p class="text-sm font-medium text-gray-700">
+      Seleccione el día de la semana:
+    </p>
+    <div class="overflow-x-auto">
+      <table class="border border-gray-300 w-full text-sm text-left text-gray-700">
+        <thead class="bg-blue-100 text-red-600">
+          <tr>
+            <th class="border border-gray-300 px-4 py-2">Día</th>
+            <th class="border border-gray-300 px-4 py-2">Lun</th>
+            <th class="border border-gray-300 px-4 py-2">Mar</th>
+            <th class="border border-gray-300 px-4 py-2">Mié</th>
+            <th class="border border-gray-300 px-4 py-2">Jue</th>
+            <th class="border border-gray-300 px-4 py-2">Vie</th>
+            <th class="border border-gray-300 px-4 py-2">Sáb</th>
+            <th class="border border-gray-300 px-4 py-2">Dom</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2 font-medium">
+              Inicia
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              <input type="time" formControlName="lunes_inicio"
+                class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
+                placeholder="Ejemplo: 08:00" />
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              <input type="time" formControlName="martes_inicio"
+                class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
+                placeholder="Ejemplo: 07:00" />
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              <input type="time" formControlName="miercoles_inicio"
+                class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
+                placeholder="Ejemplo: 07:00" />
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              <input type="time" formControlName="jueves_inicio"
+                class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
+                placeholder="Ejemplo: 07:00" />
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              <input type="time" formControlName="viernes_inicio"
+                class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
+                placeholder="Ejemplo: 07:00" />
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              <input type="time" formControlName="sabado_inicio"
+                class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
+                placeholder="Ejemplo: 07:00" />
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              <input type="time" formControlName="domingo_inicio"
+                class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
+                placeholder="Ejemplo: 08:00" />
+            </td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2 font-medium">
+              Termina
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              <input type="time" formControlName="lunes_fin"
+                class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
+                placeholder="Ejemplo: 13:00" />
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              <input type="time" formControlName="martes_fin"
+                class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
+                placeholder="Ejemplo: 13:00" />
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              <input type="time" formControlName="miercoles_fin"
+                class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
+                placeholder="Ejemplo: 13:00" />
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              <input type="time" formControlName="jueves_fin"
+                class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
+                placeholder="Ejemplo: 13:00" />
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              <input type="time" formControlName="viernes_fin"
+                class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
+                placeholder="Ejemplo: 13:00" />
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              <input type="time" formControlName="sabado_fin"
+                class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
+                placeholder="Ejemplo: 13:00" />
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              <input type="time" formControlName="domingo_fin"
+                class="border border-gray-300 rounded-md px-2 py-1 w-full focus:ring focus:ring-blue-300"
+                placeholder="Ejemplo: 13:00" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
 
-<!-- Sector inicial 👍-->
-<div class="mb-4">
-  <label class="block font-medium mb-2">Sector Atendido:</label>
-  <div class="flex flex-wrap gap-4">
-    <label class="flex items-center">
-      <input
-        type="radio"
-        formControlName="sector_atendido"
-        value="Productivo"
-        class="mr-2"
-      />
-      Productivo
-    </label>
-    <label class="flex items-center">
-      <input
-        type="radio"
-        formControlName="sector_atendido"
-        value="Público"
-        class="mr-2"
-      />
-      Público
-    </label>
-    <label class="flex items-center">
-      <input
-        type="radio"
-        formControlName="sector_atendido"
-        value="Social"
-        class="mr-2"
-      />
-      Social
-    </label>
-    <label class="flex items-center">
-      <input
-        type="radio"
-        formControlName="sector_atendido"
-        value="Readaptación Social"
-        class="mr-2"
-      />
-      Personas en Proceso de Readaptación Social
-    </label>
+  <!-- Sector inicial 👍-->
+  <div class="mb-4">
+    <label class="block font-medium mb-2">Sector Atendido:</label>
+    <div class="flex flex-wrap gap-4">
+      <label class="flex items-center">
+        <input type="radio" formControlName="sector_atendido" value="Productivo" class="mr-2" />
+        Productivo
+      </label>
+      <label class="flex items-center">
+        <input type="radio" formControlName="sector_atendido" value="Público" class="mr-2" />
+        Público
+      </label>
+      <label class="flex items-center">
+        <input type="radio" formControlName="sector_atendido" value="Social" class="mr-2" />
+        Social
+      </label>
+      <label class="flex items-center">
+        <input type="radio" formControlName="sector_atendido" value="Readaptación Social" class="mr-2" />
+        Personas en Proceso de Readaptación Social
+      </label>
+    </div>
   </div>
-</div>
 
-<!-- Rango de Edad 👍 -->
-<div class="mb-4">
-  <label class="block font-medium mb-2">Rango de Edad Atendido:</label>
-  <div class="flex gap-4">
-    <label class="flex items-center">
-      <input
-        type="radio"
-        formControlName="rango_edad"
-        value="11-14"
-        class="mr-2"
-      />
-      De 11 a 14 años
-    </label>
-    <label class="flex items-center">
-      <input
-        type="radio"
-        formControlName="rango_edad"
-        value="15+"
-        class="mr-2"
-      />
-      Mayores de 15 años
+  <!-- Rango de Edad 👍 -->
+  <div class="mb-4">
+    <label class="block font-medium mb-2">Rango de Edad Atendido:</label>
+    <div class="flex gap-4">
+      <label class="flex items-center">
+        <input type="radio" formControlName="rango_edad" value="11-14" class="mr-2" />
+        De 11 a 14 años
+      </label>
+      <label class="flex items-center">
+        <input type="radio" formControlName="rango_edad" value="15+" class="mr-2" />
+        Mayores de 15 años
+      </label>
+    </div>
+  </div>
+
+
+
+  <!-- Cruzada contra el hambre  👍-->
+  <div class="mb-4">
+    <label class="block font-medium mb-2">Cruzada contra el hambre:</label>
+    <div class="flex gap-4">
+      <label class="flex items-center">
+        <input type="radio" formControlName="cruzada_contra_hambre" value="Sí" class="mr-2" />
+        Sí
+      </label>
+      <label class="flex items-center">
+        <input type="radio" formControlName="cruzada_contra_hambre" value="No" class="mr-2" />
+        No
+      </label>
+    </div>
+  </div>
+
+
+  <!-- Tipo de Beca 👍-->
+  <div class="mb-4">
+    <label class="block font-medium mb-2">Tipo de Beca:</label>
+    <select class="w-full p-2 border rounded-md" formControlName="tipo_beca">
+      <option value="Ninguna">Ninguna</option>
+      <option value="Inscripción">Inscripción</option>
+      <option value="Beca Capacitación">Beca Capacitación</option>
+      <option value="Becas para el empleo">Becas para el empleo</option>
+    </select>
+  </div>
+
+  <!-- Participantes 👍 -->
+  <div class="mb-4">
+    <label class="block font-medium mb-2">Participantes:</label>
+    <input type="number" class="w-full p-2 border rounded-md" formControlName="participantes" min="0" />
+    <label class="block font-medium mb-2">
+      La justificación no debe exceder de 200 caracteres (incluyendo
+      espacios en blanco):
     </label>
   </div>
-</div>
 
-
-
-<!-- Cruzada contra el hambre  👍-->
-<div class="mb-4">
-  <label class="block font-medium mb-2"
-    >Cruzada contra el hambre:</label
-  >
-  <div class="flex gap-4">
-    <label class="flex items-center">
-      <input
-        type="radio"
-        formControlName="cruzada_contra_hambre"
-        value="Sí"
-        class="mr-2"
-      />
-      Sí
-    </label>
-    <label class="flex items-center">
-      <input
-        type="radio"
-        formControlName="cruzada_contra_hambre"
-        value="No"
-        class="mr-2"
-      />
-      No
-    </label>
+  <!-- Cuota de inscripción 👍-->
+  <div class="mb-4">
+    <label class="block font-medium mb-2">Cuota de inscripción:</label>
+    <div class="flex gap-4">
+      <label class="flex items-center">
+        <input type="radio" formControlName="cuota_tipo" value="Por Grupo" class="mr-2" />
+        Por Grupo
+      </label>
+      <label class="flex items-center">
+        <input type="radio" formControlName="cuota_tipo" value="Por Alumno" class="mr-2" />
+        Por Alumno
+      </label>
+    </div>
   </div>
-</div>
 
 
-<!-- Tipo de Beca 👍-->
-<div class="mb-4">
-  <label class="block font-medium mb-2">Tipo de Beca:</label>
-  <select
-    class="w-full p-2 border rounded-md"
-    formControlName="tipo_beca"
-  >
-    <option value="Ninguna">Ninguna</option>
-    <option value="Inscripción">Inscripción</option>
-    <option value="Beca Capacitación">Beca Capacitación</option>
-    <option value="Becas para el empleo">Becas para el empleo</option>
-  </select>
-</div>
-
-<!-- Participantes 👍 -->
-<div class="mb-4">
-  <label class="block font-medium mb-2">Participantes:</label>
-  <input
-    type="number"
-    class="w-full p-2 border rounded-md"
-    formControlName="participantes"
-    min="0"
-  />
-  <label class="block font-medium mb-2">
-    La justificación no debe exceder de 200 caracteres (incluyendo
-    espacios en blanco):
-  </label>
-</div>
-
-<!-- Cuota de inscripción 👍-->
-<div class="mb-4">
-  <label class="block font-medium mb-2">Cuota de inscripción:</label>
-  <div class="flex gap-4">
-    <label class="flex items-center">
-      <input
-        type="radio"
-        formControlName="cuota_tipo"
-        value="Por Grupo"
-        class="mr-2"
-      />
-      Por Grupo
-    </label>
-    <label class="flex items-center">
-      <input
-        type="radio"
-        formControlName="cuota_tipo"
-        value="Por Alumno"
-        class="mr-2"
-      />
-      Por Alumno
-    </label>
+  <!-- Monto 👍 -->
+  <div class="mb-4">
+    <label class="block font-medium mb-2">Monto:</label>
+    <input type="text" formControlName="cuota_monto" class="w-full p-2 border rounded-md" />
   </div>
-</div>
 
-
-<!-- Monto 👍 -->
-<div class="mb-4">
-  <label class="block font-medium mb-2">Monto:</label>
-  <input
-    type="text"
-    formControlName="cuota_monto"
-    class="w-full p-2 border rounded-md"
-  />
-</div>
-
-<!-- pagar_al_final 👍-->
-<div class="mb-4">
-  <label class="block font-medium mb-2">Pagar al final:</label>
-  <div class="flex gap-4">
-    <label class="flex items-center">
-      <input
-        type="radio"
-        formControlName="pagar_final"
-        value="Sí"
-        class="mr-2"
-      />
-      Sí
-    </label>
-    <label class="flex items-center">
-      <input
-        type="radio"
-        formControlName="pagar_final"
-        value="No"
-        class="mr-2"
-      />
-      No
-    </label>
+  <!-- pagar_al_final 👍-->
+  <div class="mb-4">
+    <label class="block font-medium mb-2">Pagar al final:</label>
+    <div class="flex gap-4">
+      <label class="flex items-center">
+        <input type="radio" formControlName="pagar_final" value="Sí" class="mr-2" />
+        Sí
+      </label>
+      <label class="flex items-center">
+        <input type="radio" formControlName="pagar_final" value="No" class="mr-2" />
+        No
+      </label>
+    </div>
   </div>
-</div>
 
 
-<!-- Número de Convenio u Oficio 👍-->
-<div class="mb-4">
-  <label class="block font-medium mb-2"
-    >Número de Convenio u Oficio:</label
-  >
-  <input
-    type="text"
-    formControlName="convenio_numero"
-    class="w-full p-2 border rounded-md"
-  />
-</div>
+  <!-- Número de Convenio u Oficio 👍-->
+  <div class="mb-4">
+    <label class="block font-medium mb-2">Número de Convenio u Oficio:</label>
+    <input type="text" formControlName="convenio_numero" class="w-full p-2 border rounded-md" />
+  </div>
 
 
 
 
-<button
-type="submit"
-class="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
->
-Guardar Cambios
-</button>
+  <button type="submit" class="mt-4 bg-blue-500 text-white py-2 px-4 rounded">
+    Guardar Cambios
+  </button>
 </form>
 
 
@@ -928,85 +709,65 @@ Guardar Cambios
 
 
 <!-- Modal -->
-<div
-  *ngIf="modalVisibleInstructor"
-  class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50"
->
-  <div
-    class="rounded-lg shadow-lg w-4/5 max-w-4xl"
-    style="
+<div *ngIf="modalVisibleInstructor"
+  class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+  <div class="rounded-lg shadow-lg w-4/5 max-w-4xl" style="
       background: linear-gradient(
         to bottom,
         rgb(212, 192, 255) -21%,
         rgba(255, 255, 255, 0.9) 24%,
         rgba(255, 255, 255, 1) 67%
       );
-    "
-  >
+    ">
     <!-- Modal Header -->
     <div class="py-4 px-6 flex justify-between items-center text-white">
       <h3 class="text-lg font-semibold">{{ tituloModal }}</h3>
-      <button
-        type="button"
-        (click)="closeModalInstructures()"
-        class="text-black rounded-full p-2"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fill-rule="evenodd"
+      <button type="button" (click)="closeModalInstructures()" class="text-black rounded-full p-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd"
             d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-10.707a1 1 0 00-1.414-1.414L10 8.586 7.707 6.293a1 1 0 00-1.414 1.414L8.586 10l-2.293 2.293a1 1 0 101.414 1.414L10 11.414l2.293 2.293a1 1 0 001.414-1.414L11.414 10l2.293-2.293z"
-            clip-rule="evenodd"
-          />
+            clip-rule="evenodd" />
         </svg>
       </button>
     </div>
 
-    <!-- Modal Content -->
     <div class="p-4">
 
       <div class="w-full bg-white shadow-md rounded-lg p-4">
         <!-- Título de la tabla -->
         <h2 class="text-xl font-semibold text-gray-700 mb-4">Lista de Docentes</h2>
-<!-- Primera tabla (docentes con la misma especialidad) -->
-<table class="min-w-full border-collapse border border-gray-300">
-  <thead class="bg-gray-200">
-    <tr>
-      <th class="p-3 border border-gray-300 text-left">Acción</th>
-      <th class="p-3 border border-gray-300 text-left">Nombre</th>
-      <th class="p-3 border border-gray-300 text-left">Apellidos</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let docente of docentes_con_misma_especialidad">
-      <td class="p-3 border border-gray-300 text-center">
-        <!-- Botón para asignar o desasignar -->
-        <button 
-          (click)="toggleSelection(docente.docente_id)" 
-          [ngClass]="{'bg-green-500': isSelected(docente.docente_id), 'bg-gray-300': !isSelected(docente.docente_id)}"
-          class="px-4 py-2 rounded text-white">
-          {{ isSelected(docente.docente_id) ? 'quitar' : 'Asignar' }}
-        </button>
-      </td>
-      <td class="p-3 border border-gray-300">{{ docente.nombre }}</td>
-      <td class="p-3 border border-gray-300">{{ docente.apellidos }}</td>
-    </tr>
-  </tbody>
-</table>
+        <!-- Primera tabla (docentes con la misma especialidad) -->
+        <table class="min-w-full border-collapse border border-gray-300">
+          <thead class="bg-gray-200">
+            <tr>
+              <th class="p-3 border border-gray-300 text-left">Acción</th>
+              <th class="p-3 border border-gray-300 text-left">Nombre</th>
+              <th class="p-3 border border-gray-300 text-left">Apellidos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let docente of docentes_con_misma_especialidad">
+              <td class="p-3 border border-gray-300 text-center">
+                <!-- Botón para asignar o desasignar -->
+                <button (click)="toggleSelection(docente.docente_id)"
+                  [ngClass]="{'bg-green-500': isSelected(docente.docente_id), 'bg-gray-300': !isSelected(docente.docente_id)}"
+                  class="px-4 py-2 rounded text-white">
+                  {{ isSelected(docente.docente_id) ? 'quitar' : 'Asignar' }}
+                </button>
+              </td>
+              <td class="p-3 border border-gray-300">{{ docente.nombre }}</td>
+              <td class="p-3 border border-gray-300">{{ docente.apellidos }}</td>
+            </tr>
+          </tbody>
+        </table>
 
-<!-- Botón global para asignar o desasignar todos los docentes seleccionados -->
-<button 
-  (click)="asignarODesasignarDocentes()" 
-  [disabled]="selectedInstructors.length === 0"
-  class="bg-blue-500 text-white px-4 py-2 rounded">
-  {{ isAllSelected() ? 'Desasignar Docentes' : 'Asignar Docentes' }}
-</button>
+        <!-- Botón global para asignar o desasignar todos los docentes seleccionados -->
+        <button (click)="asignarODesasignarDocentes()" [disabled]="selectedInstructors.length === 0"
+          class="bg-blue-500 text-white px-4 py-2 rounded">
+          {{ isAllSelected() ? 'Desasignar Docentes' : 'Asignar Docentes' }}
+        </button>
       </div>
-      
+
       <!-- Pagination -->
       <div class="mt-4 flex justify-between items-center">
 
@@ -1018,40 +779,23 @@ Guardar Cambios
 
 
 <!-- Modal -->
-<div
-  *ngIf="modalVisibleAlumno"
-  class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50"
->
-  <div
-    class="rounded-lg shadow-lg w-4/5 max-w-4xl"
-    style="
+<div *ngIf="modalVisibleAlumno" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+  <div class="rounded-lg shadow-lg w-4/5 max-w-4xl" style="
       background: linear-gradient(
         to bottom,
         rgb(212, 192, 255) -21%,
         rgba(255, 255, 255, 0.9) 24%,
         rgba(255, 255, 255, 1) 67%
       );
-    "
-  >
+    ">
     <!-- Modal Header -->
     <div class="py-4 px-6 flex justify-between items-center text-white">
       <h3 class="text-lg font-semibold">{{ tituloModal }}</h3>
-      <button
-        type="button"
-        (click)="closeModalAlumnos()"
-        class="text-black rounded-full p-2"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fill-rule="evenodd"
+      <button type="button" (click)="closeModalAlumnos()" class="text-black rounded-full p-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd"
             d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-10.707a1 1 0 00-1.414-1.414L10 8.586 7.707 6.293a1 1 0 00-1.414 1.414L8.586 10l-2.293 2.293a1 1 0 101.414 1.414L10 11.414l2.293 2.293a1 1 0 001.414-1.414L11.414 10l2.293-2.293z"
-            clip-rule="evenodd"
-          />
+            clip-rule="evenodd" />
         </svg>
       </button>
     </div>
@@ -1064,7 +808,7 @@ Guardar Cambios
         </h2>
 
       </div>
-      
+
 
 
     </div>

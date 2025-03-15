@@ -1,18 +1,13 @@
 <div class="max-w-7xl mx-auto p-6 space-y-8">
-  <!-- Título y botón para agregar docente -->
   <div class="flex justify-between items-center">
     <h2 class="text-3xl font-bold text-gray-900">
       Listado de Docentes
     </h2>
-    <button
-      (click)="toggleFormulario()"
-      class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300"
-    >
+    <button (click)="toggleFormulario()"
+      class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300">
       {{ mostrarFormulario ? 'Cancelar' : 'Agregar Docente' }}
     </button>
   </div>
-
-  <!-- Tabla de docentes -->
   <div *ngIf="!mostrarFormulario">
     <table class="min-w-full border border-gray-300 shadow-lg rounded-lg overflow-hidden">
       <thead>
@@ -29,22 +24,16 @@
           <td class="border border-gray-300 px-4 py-3">{{ docente.nombre }} {{ docente.apellidos }}</td>
           <td class="border border-gray-300 px-4 py-3 text-center">{{ docente.email }}</td>
           <td class="border border-gray-300 px-4 py-3 text-center space-x-2">
-            <button
-              (click)="verDetalles(docente)"
-              class="bg-green-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-green-700 transition duration-300"
-            >
+            <button (click)="verDetalles(docente)"
+              class="bg-green-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-green-700 transition duration-300">
               Ver Detalles
             </button>
-            <button
-              (click)="editarDocente(docente)"
-              class="bg-blue-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
-            >
+            <button (click)="editarDocente(docente)"
+              class="bg-blue-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
               Editar
             </button>
-            <button
-              (click)="eliminarDocente(docente.id)"
-              class="bg-red-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-red-700 transition duration-300"
-            >
+            <button (click)="eliminarDocente(docente.id)"
+              class="bg-red-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-red-700 transition duration-300">
               Eliminar
             </button>
           </td>
@@ -52,331 +41,250 @@
       </tbody>
     </table>
   </div>
-
-  <!-- Formulario para agregar docente -->
   <div *ngIf="mostrarFormulario" class="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
     <h2 class="text-2xl font-bold text-gray-800 mb-6">Registrar Nuevo Docente</h2>
     <form (ngSubmit)="agregarDocente()" #docenteForm="ngForm" class="space-y-6">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Nombre -->
         <div>
           <label class="block text-sm font-medium">Nombre</label>
-          <input
-            type="text"
-            [(ngModel)]="nuevoDocente.nombre"
-            name="nombre"
-            required
-            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            placeholder="Nombre"
-          />
+          <input type="text" [(ngModel)]="nuevoDocente.nombre" name="nombre" required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" placeholder="Nombre" />
         </div>
-
-        <!-- Apellidos -->
         <div>
           <label class="block text-sm font-medium">Apellidos</label>
-          <input
-            type="text"
-            [(ngModel)]="nuevoDocente.apellidos"
-            name="apellidos"
-            required
-            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            placeholder="Apellidos"
-          />
+          <input type="text" [(ngModel)]="nuevoDocente.apellidos" name="apellidos" required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" placeholder="Apellidos" />
         </div>
-
-        <!-- Email -->
         <div>
           <label class="block text-sm font-medium">Email</label>
-          <input
-            type="email"
-            [(ngModel)]="nuevoDocente.email"
-            name="email"
-            required
+          <input type="email" [(ngModel)]="nuevoDocente.email" name="email" required
             class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            placeholder="Correo electrónico"
-          />
+            placeholder="Correo electrónico" />
         </div>
-
-        <!-- Teléfono -->
         <div>
           <label class="block text-sm font-medium">Teléfono</label>
-          <input
-            type="text"
-            [(ngModel)]="nuevoDocente.telefono"
-            name="telefono"
-            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            placeholder="Teléfono"
-          />
+          <input type="text" [(ngModel)]="nuevoDocente.telefono" name="telefono"
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" placeholder="Teléfono" />
         </div>
-
-        <!-- Especialidad -->
         <div>
           <label class="block text-sm font-medium">Especialidad</label>
-          <input
-            type="text"
-            [(ngModel)]="nuevoDocente.especialidad"
-            name="especialidad"
-            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            placeholder="Especialidad"
-          />
+          <input type="text" [(ngModel)]="nuevoDocente.especialidad" name="especialidad"
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" placeholder="Especialidad" />
         </div>
-
-        <!-- Certificado Profesional -->
         <div class="flex items-center mt-6">
-          <input
-            type="checkbox"
-            [(ngModel)]="nuevoDocente.certificado_profesional"
-            name="certificado_profesional"
-            class="mr-2"
-          />
+          <input type="checkbox" [(ngModel)]="nuevoDocente.certificado_profesional" name="certificado_profesional"
+            class="mr-2" />
           <label class="text-sm font-medium">Certificado Profesional</label>
         </div>
-
-        <!-- Cédula Profesional -->
         <div>
           <label class="block text-sm font-medium">Cédula Profesional</label>
-          <input
-            type="text"
-            [(ngModel)]="nuevoDocente.cedula_profesional"
-            name="cedula_profesional"
+          <input type="text" [(ngModel)]="nuevoDocente.cedula_profesional" name="cedula_profesional"
             class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            placeholder="Cédula Profesional"
-          />
+            placeholder="Cédula Profesional" />
         </div>
-
-        <!-- Documento de Identificación -->
         <div>
           <label class="block text-sm font-medium">Documento de Identificación</label>
-          <input
-            type="text"
-            [(ngModel)]="nuevoDocente.documento_identificacion"
-            name="documento_identificacion"
-            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            placeholder="Tipo de documento"
-          />
+          <input type="text" [(ngModel)]="nuevoDocente.documento_identificacion" name="documento_identificacion"
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" placeholder="Tipo de documento" />
         </div>
-
-        <!-- Número de Documento de Identificación -->
         <div>
           <label class="block text-sm font-medium">Número de Documento de Identificación</label>
-          <input
-            type="text"
-            [(ngModel)]="nuevoDocente.num_documento_identificacion"
-            name="num_documento_identificacion"
+          <input type="text" [(ngModel)]="nuevoDocente.num_documento_identificacion" name="num_documento_identificacion"
             class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            placeholder="Número de documento"
-          />
+            placeholder="Número de documento" />
         </div>
-
-        <!-- Curriculum URL -->
         <div>
           <label class="block text-sm font-medium">Curriculum URL</label>
-          <input
-            type="text"
-            [(ngModel)]="nuevoDocente.curriculum_url"
-            name="curriculum_url"
-            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            placeholder="Enlace al CV"
-          />
+          <input type="text" [(ngModel)]="nuevoDocente.curriculum_url" name="curriculum_url"
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" placeholder="Enlace al CV" />
         </div>
-
-        <!-- Foto URL -->
         <div>
           <label class="block text-sm font-medium">Foto URL</label>
-          <input
-            type="text"
-            [(ngModel)]="nuevoDocente.foto_url"
-            name="foto_url"
-            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            placeholder="Enlace a la foto"
-          />
+          <input type="text" [(ngModel)]="nuevoDocente.foto_url" name="foto_url"
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" placeholder="Enlace a la foto" />
         </div>
       </div>
-
-      <!-- Botón para enviar el formulario -->
       <div class="flex justify-end">
-        <button
-          type="submit"
-          class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition duration-300"
-        >
+        <button type="submit"
+          class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition duration-300">
           Guardar Docente
         </button>
       </div>
     </form>
   </div>
 
-  <!-- Modal de edición -->
+</div>
+
+
+
   <div *ngIf="mostrarModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
       <h2 class="text-2xl font-bold mb-6">Editar Docente</h2>
       <form (ngSubmit)="guardarEdicion()" #editarForm="ngForm" class="space-y-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Nombre -->
           <div>
             <label class="block text-sm font-medium">Nombre</label>
-            <input
-              [(ngModel)]="docenteSeleccionado!.nombre"
-              name="nombre_editar"
-              required
-              type="text"
-              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            />
+            <input [(ngModel)]="docenteSeleccionado!.nombre" name="nombre_editar" required type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" />
           </div>
-
-          <!-- Apellidos -->
           <div>
             <label class="block text-sm font-medium">Apellidos</label>
-            <input
-              [(ngModel)]="docenteSeleccionado!.apellidos"
-              name="apellidos_editar"
-              required
-              type="text"
-              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            />
+            <input [(ngModel)]="docenteSeleccionado!.apellidos" name="apellidos_editar" required type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" />
           </div>
-
-          <!-- Email -->
           <div>
             <label class="block text-sm font-medium">Email</label>
-            <input
-              [(ngModel)]="docenteSeleccionado!.email"
-              name="email_editar"
-              required
-              type="email"
-              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            />
+            <input [(ngModel)]="docenteSeleccionado!.email" name="email_editar" required type="email"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" />
           </div>
-
-          <!-- Teléfono -->
           <div>
             <label class="block text-sm font-medium">Teléfono</label>
-            <input
-              [(ngModel)]="docenteSeleccionado!.telefono"
-              name="telefono_editar"
-              type="text"
-              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            />
+            <input [(ngModel)]="docenteSeleccionado!.telefono" name="telefono_editar" type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" />
           </div>
-
-          <!-- Especialidad -->
           <div>
             <label class="block text-sm font-medium">Especialidad</label>
-            <input
-              [(ngModel)]="docenteSeleccionado!.especialidad"
-              name="especialidad_editar"
-              type="text"
-              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            />
+            <input [(ngModel)]="docenteSeleccionado!.especialidad" name="especialidad_editar" type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" />
           </div>
 
-          <!-- Certificado Profesional -->
           <div class="flex items-center mt-6">
-            <input
-              type="checkbox"
-              [(ngModel)]="docenteSeleccionado!.certificado_profesional"
-              name="certificado_profesional_editar"
-              class="mr-2"
-            />
+            <input type="checkbox" [(ngModel)]="docenteSeleccionado!.certificado_profesional"
+              name="certificado_profesional_editar" class="mr-2" />
             <label class="text-sm font-medium">Certificado Profesional</label>
           </div>
 
           <!-- Cédula Profesional -->
           <div>
             <label class="block text-sm font-medium">Cédula Profesional</label>
-            <input
-              [(ngModel)]="docenteSeleccionado!.cedula_profesional"
-              name="cedula_profesional_editar"
-              type="text"
-              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            />
+            <input [(ngModel)]="docenteSeleccionado!.cedula_profesional" name="cedula_profesional_editar" type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" />
           </div>
 
           <!-- Documento de Identificación -->
           <div>
             <label class="block text-sm font-medium">Documento de Identificación</label>
-            <input
-              [(ngModel)]="docenteSeleccionado!.documento_identificacion"
-              name="documento_identificacion_editar"
-              type="text"
-              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            />
+            <input [(ngModel)]="docenteSeleccionado!.documento_identificacion" name="documento_identificacion_editar"
+              type="text" class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" />
           </div>
 
           <!-- Número de Documento de Identificación -->
           <div>
             <label class="block text-sm font-medium">Número de Documento de Identificación</label>
-            <input
-              [(ngModel)]="docenteSeleccionado!.num_documento_identificacion"
-              name="num_documento_identificacion_editar"
-              type="text"
-              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            />
+            <input [(ngModel)]="docenteSeleccionado!.num_documento_identificacion"
+              name="num_documento_identificacion_editar" type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" />
           </div>
 
           <!-- Curriculum URL -->
           <div>
             <label class="block text-sm font-medium">Curriculum URL</label>
-            <input
-              [(ngModel)]="docenteSeleccionado!.curriculum_url"
-              name="curriculum_url_editar"
-              type="text"
-              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            />
+            <input [(ngModel)]="docenteSeleccionado!.curriculum_url" name="curriculum_url_editar" type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" />
           </div>
 
           <!-- Foto URL -->
           <div>
             <label class="block text-sm font-medium">Foto URL</label>
-            <input
-              [(ngModel)]="docenteSeleccionado!.foto_url"
-              name="foto_url_editar"
-              type="text"
-              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-            />
+            <input [(ngModel)]="docenteSeleccionado!.foto_url" name="foto_url_editar" type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" />
           </div>
         </div>
 
         <!-- Botones -->
         <div class="flex justify-end mt-6">
-          <button
-            type="button"
-            (click)="cerrarModal()"
-            class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-lg shadow-md mr-4 transition duration-300"
-          >
+          <button type="button" (click)="cerrarModal()"
+            class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-lg shadow-md mr-4 transition duration-300">
             Cancelar
           </button>
-          <button
-            type="submit"
-            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition duration-300"
-          >
+          <button type="submit"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition duration-300">
             Guardar
           </button>
         </div>
       </form>
     </div>
 
-    <!-- Modal de detalles del docente -->
-    <div *ngIf="mostrarDetalleModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
-        <h2 class="text-2xl font-bold mb-6">Detalles del Docente</h2>
-        <div class="space-y-4">
-          <p><strong>ID:</strong> {{ docenteDetalleSeleccionado?.id }}</p>
-          <p><strong>Nombre:</strong> {{ docenteDetalleSeleccionado?.nombre }} {{ docenteDetalleSeleccionado?.apellidos }}</p>
-          <p><strong>Email:</strong> {{ docenteDetalleSeleccionado?.email }}</p>
-          <p><strong>Teléfono:</strong> {{ docenteDetalleSeleccionado?.telefono || 'N/A' }}</p>
-          <p><strong>Especialidad:</strong> {{ docenteDetalleSeleccionado?.especialidad || 'N/A' }}</p>
-          <p><strong>Certificado Profesional:</strong> {{ docenteDetalleSeleccionado?.certificado_profesional ? 'Sí' : 'No' }}</p>
-          <!-- Agrega más detalles según sea necesario -->
-        </div>
-        <div class="flex justify-end mt-6">
-          <button
-            type="button"
-            (click)="cerrarDetalleModal()"
-            class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-lg shadow-md"
-          >
-            Cerrar
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
+
+
+  <div *ngIf="mostrarDetalleModal"
+  class="fixed inset-0 flex items-center justify-center z-[10000] bg-black bg-opacity-50 backdrop-blur-sm px-4">
+<div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-3xl z-[11000] transform scale-95 transition-all duration-300 ease-out opacity-0"
+    [ngClass]="{'opacity-100 scale-100': mostrarDetalleModal}">
+
+ <!-- Encabezado -->
+ <div class="flex justify-between items-center border-b pb-4 mb-6">
+   <h2 class="text-3xl font-semibold text-gray-800">Detalles del Docente</h2>
+   <button (click)="cerrarDetalleModal()" class="text-gray-500 hover:text-red-500 text-3xl focus:outline-none">
+     &times;
+   </button>
+ </div>
+
+ <!-- Contenido en dos columnas -->
+ <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-gray-700">
+   <div class="space-y-4">
+     <p><strong>ID:</strong> {{ docenteDetalleSeleccionado?.id }}</p>
+     <p><strong>Nombre:</strong> {{ docenteDetalleSeleccionado?.nombre }} {{ docenteDetalleSeleccionado?.apellidos }}</p>
+     <p><strong>Email:</strong> {{ docenteDetalleSeleccionado?.email }}</p>
+     <p><strong>Teléfono:</strong> {{ docenteDetalleSeleccionado?.telefono || 'N/A' }}</p>
+     <p><strong>Especialidad:</strong> {{ docenteDetalleSeleccionado?.especialidad || 'N/A' }}</p>
+
+     <p><strong>Certificado Profesional:</strong>
+       <span class="px-3 py-1 rounded-full text-white"
+             [ngClass]="docenteDetalleSeleccionado?.certificado_profesional ? 'bg-green-500' : 'bg-red-500'">
+         {{ docenteDetalleSeleccionado?.certificado_profesional ? 'Sí' : 'No' }}
+       </span>
+     </p>
+
+     <p><strong>Cédula Profesional:</strong>
+       <span class="px-3 py-1 rounded-full text-white"
+             [ngClass]="docenteDetalleSeleccionado?.cedula_profesional ? 'bg-green-500' : 'bg-red-500'">
+         <a *ngIf="docenteDetalleSeleccionado?.cedula_profesional"
+            [href]="docenteDetalleSeleccionado?.cedula_profesional"
+            target="_blank"
+            class="text-blue-500 flex items-center gap-2">
+           <i class="fas fa-file-alt"></i> Ver Cédula Profesional
+         </a>
+         <span *ngIf="!docenteDetalleSeleccionado?.cedula_profesional">N/A</span>
+       </span>
+     </p>
+
+     <p><strong>Documento de Identificación:</strong>
+       <a *ngIf="docenteDetalleSeleccionado?.documento_identificacion"
+          [href]="docenteDetalleSeleccionado?.documento_identificacion"
+          target="_blank"
+          class="flex items-center gap-2 text-blue-500 hover:underline">
+          <i class="fas fa-id-card"></i> Ver Documento
+       </a>
+       <span *ngIf="!docenteDetalleSeleccionado?.documento_identificacion">N/A</span>
+     </p>
+
+     <p><strong>Num. Documento Identificación:</strong> {{ docenteDetalleSeleccionado?.num_documento_identificacion || 'N/A' }}</p>
+
+     <p><strong>Curriculum:</strong>
+       <a href="{{ docenteDetalleSeleccionado?.curriculum_url }}" target="_blank"
+          class="flex items-center gap-2 text-blue-500 hover:underline">
+         <i class="fas fa-file-pdf"></i> Ver CV
+       </a>
+     </p>
+
+     <p><strong>Fecha de Validación:</strong> {{ docenteDetalleSeleccionado?.fecha_validacion | date:'dd/MM/yyyy HH:mm' }}</p>
+   </div>
+
+   <!-- Foto del docente -->
+   <div class="flex justify-center items-center">
+     <img [src]="docenteDetalleSeleccionado?.foto_url" alt="Foto del Docente"
+          class="w-48 h-48 rounded-full object-cover shadow-lg">
+   </div>
+ </div>
+
+ <!-- Botón para cerrar -->
+ <div class="flex justify-end mt-8">
+   <button (click)="cerrarDetalleModal()"
+           class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-8 rounded-full shadow-md transition duration-300">
+     Cerrar
+   </button>
+ </div>
+</div>
+</div>

@@ -163,6 +163,7 @@ export class DocentesComponent implements OnInit {
   }
 
   verDetalles(docente: Docente): void {
+    console.log(docente)
     this.docenteDetalleSeleccionado = docente;
     this.mostrarDetalleModal = true;
   }

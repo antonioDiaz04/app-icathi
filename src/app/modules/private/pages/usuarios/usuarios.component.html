@@ -223,21 +223,19 @@
         <td class="px-6 py-4">
           <span
             [ngClass]="{
-              'text-green-500': usuario.estatus === true,
-              'text-red-500': usuario.estatus === false
+              'text-green-500': usuario.estatus,
+              'text-red-500': !usuario.estatus
             }"
-            class="font-semibold"
+            class="font-semibold flex items-center"
           >
-            <i
-              [ngClass]="{
-                'fas fa-check-circle': usuario.estatus === true,
-                'fas fa-times-circle': usuario.estatus === false
-              }"
+            <i 
+              [ngClass]="usuario.estatus ? 'fas fa-check-circle text-green-500' : 'fas fa-times-circle text-red-500'" 
               class="mr-2"
             ></i>
-            {{ usuario.estatus === true ? 'Activo' : 'Inactivo' }}
+            {{ usuario.estatus ? 'Activo' : 'Inactivo' }}
           </span>
         </td>
+        
       </tr>
     </tbody>
   </table>

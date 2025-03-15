@@ -1,6 +1,5 @@
 import {
   Component,
-  Input,
   OnChanges,
   OnInit,
   SimpleChanges,
@@ -102,17 +101,10 @@ export class ListadoCursosComponent implements OnInit, OnChanges {
 
   toggleFormulario(): void {
     this.mostrarOpcionesCursosTipo = !this.mostrarOpcionesCursosTipo;
-
-
     if(!this.mostrarOpcionesCursosTipo){
-
       this.cargarCursos()
-      
     }
-
-
   }
-
   filtrarCursos(): void {
     this.filteredCursos = this.cursos.filter((curso) =>
       curso.nombre.toLowerCase().includes(this.searchCurso.toLowerCase()) &&

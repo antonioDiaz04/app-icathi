@@ -16,6 +16,8 @@ import { DocenteService } from "../../../../../../shared/services/docente.servic
 // import EventEmitter from "events";
 
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { EspecialidadesDocentesService } from "../../../../../../shared/services/especialidades-docentes.service";
+import { AlertTaiwilService } from "../../../../../../shared/services/alert-taiwil.service";
 export interface Modulo {
   id: number;
   nombre: string;
@@ -81,7 +83,8 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
     private fb: FormBuilder,
     private authService: AuthService,
     private http: HttpClient,
-    private docenteService: DocenteService
+    private especialidadesDocentesService: EspecialidadesDocentesService,
+    private docenteService: DocenteService,private alertTaiwilService: AlertTaiwilService,
   ) {
     // this.plantel_id = this.authService.getIdFromToken();
     this.cursoForm = this.fb.group({
@@ -175,9 +178,9 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
   }
 
   getDocentes() {
-    this.docenteService.getDocentes().subscribe((response) => {
-      this.docentes = response;
-    });
+    // this.docenteService.getDocentes().subscribe((response) => {
+    //   this.docentes = response;
+    // });
   }
 
   close(): void {
@@ -298,6 +301,7 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
       return matchesId && matchesNombre && matchesNivel && matchesDuracion;
     });
   }
+  errorMessage :string=""
   enviarSolicitud(): void {
     console.log("Inicio de la solicitud");
     this.isLoading = true;
@@ -426,6 +430,30 @@ export class SolicitudCursoComponent implements OnInit, OnChanges {
             console.error("Error al obtener los cursos:", error);
           }
         );
+        this.especialidadesDocentesService
+        .obtenerDocentesPorEspecialidad(especialidadId)
+        .subscribe(
+          (response) => {
+            console.log(response); // Verifica la respuesta
+            if (response && response.data && response.data.length > 0) {
+              this.docentes = response.data; // Asignamos el array de docentes
+              this.errorMessage=""
+            } else {
+              
+              this.docentes = []; // Si no hay docentes, asignamos un array vacío
+              this.errorMessage = 'No se encontraron docentes con esta especialidad.'; // Mensaje de error
+              this.alertTaiwilService.showTailwindAlert(this.errorMessage, 'error');
+            }
+          },
+          (error) => {
+            console.error('Error al obtener los docentes:', error);
+            this.docentes = []; // Asignamos un array vacío en caso de error
+            this.errorMessage = 'No se encontraron docentes con esta especialidad.'; // Mensaje de error genérico
+            this.alertTaiwilService.showTailwindAlert(this.errorMessage, 'error');
+          }
+        );
+      
+      
     });
   }
 

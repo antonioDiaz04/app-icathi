@@ -218,7 +218,7 @@
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody *ngIf="!errorMessage || docentes.length > 0">
                 <tr *ngFor="let docente of docentes">
                   <td class="border border-gray-300 px-4 py-2 text-center">
                     <input
@@ -240,6 +240,14 @@
                   </td>
                 </tr>
               </tbody>
+              
+              <!-- Mensaje de error -->
+              <tr *ngIf="errorMessage">
+                <td colspan="4" class="border border-gray-300 px-4 py-2 text-center text-red-600">
+                  {{ errorMessage }}
+                </td>
+              </tr>
+              
             </table>
           </div>
         </div>

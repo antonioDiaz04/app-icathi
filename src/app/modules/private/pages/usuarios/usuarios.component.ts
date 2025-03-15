@@ -61,22 +61,28 @@ export class UsuariosComponent implements OnInit {
     if (this.validarCampos()) {
       console.log("Nuevo usuario:", this.nuevoUsuario);
       
-      // Llamada al servicio para crear el usuario
       this.userService.crearUsuario(this.nuevoUsuario).subscribe(
         (response) => {
           console.log('Usuario creado con éxito:', response);
           this.cargarUsuarios();  // Recargar la lista de usuarios si es necesario
-  
           this.cerrarModalregistro();  // Cerrar el modal después de crear el usuario
         },
         (error) => {
-          this.alertTaiwilService.showTailwindAlert(
-            'Error al crear el usuario',
-            'error'
-          );
-          // console.error('Error al crear el usuario:', error);
+          let errorMessage = 'Ocurrió un error inesperado.';
+      
+          // Extraer el mensaje correcto desde el error
+          if (error.error && error.error.error) {
+            errorMessage = error.error.error; // Captura el mensaje de error devuelto por el backend
+          } else if (error.error && error.error.message) {
+            errorMessage = error.error.message; // Captura otro mensaje si existe
+          }
+      
+          this.alertTaiwilService.showTailwindAlert(errorMessage, 'error');
+          console.error('Error al crear el usuario:', error);
         }
       );
+      
+      
     } else {
       this.alertTaiwilService.showTailwindAlert(
         'Por favor, completa todos los campos',
