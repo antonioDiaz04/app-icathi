@@ -29,6 +29,7 @@ export class OfertaEducativaComponent implements OnInit {
   totalPages = 0;
   showOfertaEducativa = false; // Cambia a true para mostrar la sección
   isAddingCourse: boolean = false;
+  isEditCourse: boolean = false;
   selectedCourseDetails: any = null;
 
   mostrarFormularioFlag = false;
@@ -40,6 +41,19 @@ export class OfertaEducativaComponent implements OnInit {
 
   searchCurso = '';
   searchEspecialidad = '';
+
+  
+ 
+  // Variables para los filtros
+  filtroId: string = '';
+  filtroEstado: string = '';
+  filtroArea: string = '';
+  filtroEspecialidad: string = '';
+  filtroClave: string = '';
+  filtroNombre: string = '';
+  filtroTipo: string = '';
+  filtroHoras: string = '';
+  filtroTipoCurso: string = '';
 
   private apiUrl = `${environment.api}/cursos`;
 
@@ -58,10 +72,39 @@ export class OfertaEducativaComponent implements OnInit {
   page: number = 1;
   isLoaded: boolean = false;
 
+  generarReportePdfCursoId!:  any;
+  // cursoId!:  any;
+  // generarReportePdf:boolean= false;
+
+  modalidades = [
+    { id: 1, nombre: 'Curso Modalidad CAE', componente: 'curso1' },
+    { id: 2, nombre: 'Curso Modalidad Virtual', componente: 'curso2' },
+    { id: 3, nombre: 'Curso Modalidad Escuela', componente: 'curso3' }
+  ];
+selectedCourseId: number=0;
   constructor(private http: HttpClient , private  router: Router , private sanitizer: DomSanitizer) {}
 
   ngOnInit(): void {
     this.cargarCursos();
+  }
+
+
+  verDetalles(curso: any): void {
+    this.isEditCourse = true; 
+    this.selectedCourseId = curso.id; // Guarda el ID del curso
+  
+    // Busca la modalidad correspondiente y extrae solo el componente
+    const modalidad = this.modalidades.find(m => m.id === curso.tipo_curso_id);
+    this.selectedCourse = modalidad ? modalidad.componente : null;
+    // selectedCourseId
+    // Verifica los valores en consola y alerta
+    alert(`ID del Curso: ${this.selectedCourseId}, Componente: ${this.selectedCourse}`);
+    console.log('Selected Component:', this.selectedCourse);
+  }
+  generarReportePDF(id: number): void {
+    this.generarReportePdfCursoId = id;
+    // this.generarReportePdf = true;
+    // alert("abrio ")
   }
 
   cargarCursos(): void {
@@ -77,6 +120,8 @@ export class OfertaEducativaComponent implements OnInit {
           tipo: curso.tipo_curso_nombre,
           horas: curso.horas,
           detalles: curso.detalles,
+          tipo_curso: curso.tipo_curso_nombre,
+          tipo_curso_id: curso.tipo_curso_id,
         }));
         this.filteredCursos = [...this.cursos];
         this.totalPages = Math.ceil(this.filteredCursos.length / this.itemsPerPage);
@@ -88,6 +133,24 @@ export class OfertaEducativaComponent implements OnInit {
     });
   }
 
+
+  // Función para filtrar los datos
+  filtrarCursosBy() {
+   
+    return this.cursos.filter(curso => {
+      return (
+        (this.filtroId === '' || curso.id.toString().includes(this.filtroId)) &&
+        (this.filtroEstado === '' || (this.filtroEstado === 'activo' ? curso.activo : !curso.activo)) &&
+        (this.filtroArea === '' || curso.area.toLowerCase().includes(this.filtroArea.toLowerCase())) &&
+        (this.filtroEspecialidad === '' || curso.especialidad.toLowerCase().includes(this.filtroEspecialidad.toLowerCase())) &&
+        (this.filtroClave === '' || curso.clave.toLowerCase().includes(this.filtroClave.toLowerCase())) &&
+        (this.filtroNombre === '' || curso.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase())) &&
+        (this.filtroTipo === '' || curso.tipo.toLowerCase().includes(this.filtroTipo.toLowerCase())) &&
+        (this.filtroHoras === '' || curso.horas.toString().includes(this.filtroHoras)) &&
+        (this.filtroTipoCurso === '' || curso.tipo_curso.toLowerCase().includes(this.filtroTipoCurso.toLowerCase()))
+      );
+    });
+  }
   filtrarCursos(): void {
     this.filteredCursos = this.cursos.filter((curso) =>
       curso.nombre.toLowerCase().includes(this.searchCurso.toLowerCase()) &&
@@ -190,6 +253,11 @@ export class OfertaEducativaComponent implements OnInit {
   regresar(): void {
     this.isAddingCourse = false;
   }
+  regresarEdit(): void {
+    this.isEditCourse = false;
+    this.selectedCourseId = 0;
+  }
+  
   verDetalle(cursoId: number): void {
     this.http.get<any>(`${this.apiUrl}/detalles/${cursoId}`).subscribe({
       next: (cursoDetalle) => {

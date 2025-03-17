@@ -1,3 +1,11 @@
+<!-- crg -->
+<div class="ui segment">
+  <!-- Dimmer que ocupa toda la pantalla cuando isSaving es true -->
+  <div class="ui dimmer" [ngClass]="{ active: isSaving }" [ngStyle]="{ position: isSaving ? 'fixed' : 'relative' }">
+    <div class="ui mini text loader">Loading</div>
+  </div>
+  <!-- <p>Contenido de la página</p> -->
+<!-- </div> -->
 <!-- Formulario para agregar curso -->
 <div class="bg-white p-8 rounded-lg border border-gray-200">
   <h2 class="text-2xl font-bold text-gray-800 mb-6">Información del Curso</h2>
@@ -17,6 +25,12 @@
             {{ area.nombre }}
           </option>
         </select>
+        <div
+        *ngIf="!nuevoCurso.nombre && cursoForm.submitted"
+        class="text-red-500 text-sm"
+      >
+        El nombre es obligatorio.
+      </div>
       </div>
     
       <!-- Especialidad -->
@@ -36,10 +50,16 @@
             {{ especialidad.nombre }}
           </option>
         </select>
+        <div
+        *ngIf="!nuevoCurso.especialidad_id && cursoForm.submitted"
+        class="text-red-500 text-sm"
+      >
+        El especialidad_id es obligatorio.
+      </div>
       </div>
     
       <!-- Tipo de Curso -->
-      <div>
+      <!-- <div>
         <label class="block text-sm font-medium">Tipo de Curso</label>
         <select
           [(ngModel)]="nuevoCurso.tipo_curso_id"
@@ -52,7 +72,7 @@
             {{ tipo.nombre }}
           </option>
         </select>
-      </div>
+      </div> -->
     
       <!-- Nombre del Curso -->
       <div>
@@ -65,6 +85,12 @@
           class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
           placeholder="Nombre del curso"
         />
+        <div
+        *ngIf="!nuevoCurso.nombre && cursoForm.submitted"
+        class="text-red-500 text-sm"
+      >
+        El nombre es obligatorio.
+      </div>
       </div>
     
       <!-- Clave -->
@@ -78,6 +104,12 @@
           class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
           placeholder="Clave"
         />
+        <div
+        *ngIf="!nuevoCurso.clave && cursoForm.submitted"
+        class="text-red-500 text-sm"
+      >
+        El nombre es obligatorio.
+      </div>
       </div>
     
       <!-- Duración -->
@@ -91,6 +123,12 @@
           class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
           placeholder="Duración en horas"
         />
+        <div
+        *ngIf="!nuevoCurso.duracion_horas && cursoForm.submitted"
+        class="text-red-500 text-sm"
+      >
+        Este campo es obligatorio.
+      </div>
       </div>
     </div>
     
@@ -169,6 +207,12 @@
           class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
           placeholder="Vigencia inicio"
         />
+        <div
+        *ngIf="!nuevoCurso.vigencia_inicio && cursoForm.submitted"
+        class="text-red-500 text-sm"
+      >
+        Este campo es obligatorio.
+      </div>
       </div>
     
       <!-- Fecha de Publicación -->
@@ -182,6 +226,12 @@
           class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
           placeholder="Fecha de publicación"
         />
+        <div
+        *ngIf="!nuevoCurso.fecha_publicacion && cursoForm.submitted"
+        class="text-red-500 text-sm"
+      >
+        Este campo es obligatorio.
+      </div>
       </div>
     
       <!-- Costo -->
@@ -195,6 +245,12 @@
           class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
           placeholder="Costo del curso"
         />
+        <div
+        *ngIf="!nuevoCurso.costo && cursoForm.submitted"
+        class="text-red-500 text-sm"
+      >
+        Este campo es obligatorio.
+      </div>
       </div>
 
 
@@ -204,50 +260,82 @@
     </div>
 
     <div class="flex space-x-4">
-      <!-- Vigencia Inicio -->
+      <!-- Revisado por -->
       <div class="flex-1">
         <label class="block text-sm font-medium">Revisado por</label>
         <input
           type="text"
-          [(ngModel)]="nuevoCurso.revisado_por"
+          [(ngModel)]="nuevoCurso.firmas.revisado.nombre"
           name="revisado_por"
           required
           class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
           placeholder="Nombre"
         />
+        <label class="block text-sm font-medium mt-2">Cargo</label>
+        <input
+          type="text"
+          [(ngModel)]="nuevoCurso.firmas.revisado.cargo"
+          name="cargo_revisado_por"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+          placeholder="Cargo"
+        />
+        <div *ngIf="!nuevoCurso.firmas.revisado.nombre && cursoForm.submitted" class="text-red-500 text-sm">
+          Este campo es obligatorio.
+        </div>
       </div>
     
-      <!-- Fecha de Publicación -->
+      <!-- Autorizado por -->
       <div class="flex-1">
         <label class="block text-sm font-medium">Autorizado por</label>
         <input
           type="text"
-          [(ngModel)]="nuevoCurso.autorizado_por"
+          [(ngModel)]="nuevoCurso.firmas.autorizado.nombre"
           name="autorizado_por"
           required
           class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
           placeholder="Nombre"
         />
+        <label class="block text-sm font-medium mt-2">Cargo</label>
+        <input
+          type="text"
+          [(ngModel)]="nuevoCurso.firmas.autorizado.cargo"
+          name="cargo_autorizado_por"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+          placeholder="Cargo"
+        />
+        <div *ngIf="!nuevoCurso.firmas.autorizado.nombre && cursoForm.submitted" class="text-red-500 text-sm">
+          Este campo es obligatorio.
+        </div>
       </div>
     
-      <!-- Costo -->
+      <!-- Elaborado por -->
       <div class="flex-1">
         <label class="block text-sm font-medium">Elaborado por</label>
         <input
           type="text"
-          [(ngModel)]="nuevoCurso.elaborado_por"
+          [(ngModel)]="nuevoCurso.firmas.elaborado.nombre"
           name="elaborado_por"
           required
           class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
           placeholder="Nombre"
         />
+        <label class="block text-sm font-medium mt-2">Cargo</label>
+        <input
+          type="text"
+          [(ngModel)]="nuevoCurso.firmas.elaborado.cargo"
+          name="cargo_elaborado_por"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+          placeholder="Cargo"
+        />
+        <div *ngIf="!nuevoCurso.firmas.elaborado.nombre && cursoForm.submitted" class="text-red-500 text-sm">
+          Este campo es obligatorio.
+        </div>
       </div>
-
-
-
-
-      
     </div>
+    
     
 
 
@@ -362,7 +450,7 @@
       </tr>
       <tr>
         <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
-          RECONOCIMIENTO AL ALUMNO
+          RECONOCIMIENTO A LA PERSONA EGRESADA
         </td>
         <td class="border border-gray-300 px-4 py-2 w-3/4">
           <textarea pTextarea  [autoResize]="true"
@@ -413,7 +501,7 @@
           <tr *ngFor="let tema of nuevoCurso.contenidoProgramatico.temas; let i = index">
             <td class="border border-gray-300 px-4 py-2 text-center">{{ i + 1 }}</td>
             <td class="border border-gray-300 px-4 py-2">
-              <textarea pTextarea  [autoResize]="true" [(ngModel)]="tema.nombre" name="nombre_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="2"></textarea>
+              <textarea pTextarea  [autoResize]="true" [(ngModel)]="tema.tema_nombre" name="tema_nombre_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" rows="2"></textarea>
             </td>
             <td class="border border-gray-300 px-4 py-2 text-center">
               <input type="number" [(ngModel)]="tema.tiempo" name="tiempo_{{i}}" class="w-full border border-gray-300 px-2 py-1 rounded-md" />
@@ -459,27 +547,15 @@
       <table class="w-full border-collapse border border-gray-300 mt-8">
         <thead>
           <tr class="bg-gray-100">
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">
-              Descripción
-            </th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">
-              Unidad de Medida
-            </th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">
-              Cantidad
-            </th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">
-              10
-            </th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">
-              15
-            </th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">
-              20
-            </th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">
-              Acción
-            </th>
+            <th class="border border-gray-300 px-4 py-2 text-left font-semibold" rowspan="2">Descripción</th>
+            <th class="border border-gray-300 px-4 py-2 text-left font-semibold" rowspan="2">Unidad de Medida</th>
+            <th class="border border-gray-300 px-4 py-2 text-left font-semibold" colspan="3">Cantidad por Número de Participantes</th>
+            <th class="border border-gray-300 px-4 py-2 text-left font-semibold" rowspan="2">Acción</th>
+          </tr>
+          <tr class="bg-gray-100">
+            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">10</th>
+            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">15</th>
+            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">20</th>
           </tr>
         </thead>
         <tbody>
@@ -501,14 +577,6 @@
                   {{ option.label }}
                 </option>
               </select>
-            </td>
-            <td class="border border-gray-300 px-4 py-2">
-              <input
-                type="number"
-                [(ngModel)]="material.cantidad"
-                name="cantidad{{ j }}"
-                class="border border-gray-300 rounded-md px-2 py-1 w-full"
-              />
             </td>
             <td class="border border-gray-300 px-4 py-2">
               <input
@@ -565,13 +633,15 @@
       <table class="w-full border-collapse border border-gray-300 mt-8">
         <thead>
           <tr class="bg-gray-100">
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">Descripción</th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">Unidad de Medida</th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">Cantidad</th>
+            <th class="border border-gray-300 px-4 py-2 text-left font-semibold" rowspan="2">Descripción</th>
+            <th class="border border-gray-300 px-4 py-2 text-left font-semibold" rowspan="2">Unidad de Medida</th>
+            <th class="border border-gray-300 px-4 py-2 text-left font-semibold" colspan="3">Cantidad por Número de Participantes</th>
+            <th class="border border-gray-300 px-4 py-2 text-left font-semibold" rowspan="2">Acción</th>
+          </tr>
+          <tr class="bg-gray-100">
             <th class="border border-gray-300 px-4 py-2 text-left font-semibold">10</th>
             <th class="border border-gray-300 px-4 py-2 text-left font-semibold">15</th>
             <th class="border border-gray-300 px-4 py-2 text-left font-semibold">20</th>
-            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">Acción</th>
           </tr>
         </thead>
         <tbody>
@@ -594,14 +664,7 @@
                 </option>
               </select>
             </td>
-            <td class="border border-gray-300 px-4 py-2">
-              <input
-                type="number"
-                [(ngModel)]="equipamiento.cantidad"
-                name="cantidad{{k}}" 
-                class="border border-gray-300 rounded-md px-2 py-1 w-full"
-              />
-            </td>
+           
             <td class="border border-gray-300 px-4 py-2">
               <input
                 type="number"
@@ -649,8 +712,81 @@
     
     </div>
     
+<div class="mt-4">
+  <!-- Botón para subir archivo (si no hay URL) -->
+  <button
+    *ngIf="!archivoUrl"
+    type="button"
+    class="bg-white hover:bg-gray-100 text-blue-500 font-bold py-2 px-4 rounded border border-gray-200 flex items-center"
+    (click)="mostrarModalSubirArchivo()"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-5 w-5 mr-2"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+      />
+    </svg>
+    Subir Archivo
+  </button>
 
+  <!-- Botón para ver el archivo (si hay URL) -->
+  <div *ngIf="archivoUrl" class="flex space-x-4">
+    <a
+      [href]="archivoUrl"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="bg-white hover:bg-gray-100 text-blue-500 font-bold py-2 px-4 rounded border border-gray-200 flex items-center"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5 mr-2"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+        />
+      </svg>
+      Ver Archivo
+    </a>
+
+    <!-- Botón para cambiar archivo -->
     <button
+      type="button"
+      class="bg-white hover:bg-gray-100 text-blue-500 font-bold py-2 px-4 rounded border border-gray-200 flex items-center"
+      (click)="mostrarModalSubirArchivo()"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5 mr-2"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+        />
+      </svg>
+      Cambiar Archivo
+    </button>
+  </div>
+</div>
+    <!-- <button
   type="button"
   class="mt-4 bg-white hover:bg-gray-100 text-blue-500 font-bold py-2 px-4 rounded border border-gray-200 flex items-center"
   (click)="mostrarModalSubirArchivo()"
@@ -659,7 +795,7 @@
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
   </svg>
   Subir Archivo
-</button>
+</button> -->
 
   
  <!-- Botón para guardar -->
@@ -670,7 +806,7 @@
     class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition duration-300"
   >
     <i *ngIf="isSaving" class="loading circle icon"></i>
-    Guardar Curso
+    {{btnTtle}} Curso
   </button>
 </div>
 
@@ -683,6 +819,7 @@
 </div>
 
   </form>
+</div>
 </div>
 
 

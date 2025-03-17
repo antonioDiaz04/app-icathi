@@ -1,8 +1,17 @@
- import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  OnChanges,
+  SimpleChanges,
+} from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../../../environments/environment.prod";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable"; // Ensure this is imported
+import { style } from "@angular/animations";
 
 declare module "jspdf" {
   interface jsPDF {
@@ -12,28 +21,31 @@ declare module "jspdf" {
 
 @Component({
   selector: "app-pdf-example",
-  templateUrl: "pdf-example.component.html",
-  styleUrls: ["style.scss"],
+  template: "",
+  styleUrls: [], // Sin estilos específicos
 })
-export class PdfExampleComponent implements OnInit {
-  @Input() id!: number;
+export class PdfExampleComponent implements OnChanges {
+  @Input() generarReportePdfCursoId!: number;
   @Output() cerrarModalEvent = new EventEmitter<boolean>();
   cursoData: any;
   generando = false;
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit(): void {
-    if (this.id) {
+  ngOnChanges(changes: SimpleChanges): void {
+    // Verifica si la propiedad `generarReportePdfCursoId` ha cambiado
+    if (changes["generarReportePdfCursoId"] && this.generarReportePdfCursoId) {
       this.cargarDetallesCurso();
+      console.log("generarReportePdfCursoId");
     }
   }
 
   cargarDetallesCurso() {
-    const url = `${environment.api}/cursos/reporte/${this.id}`;
+    const url = `${environment.api}/cursos/reporte/${this.generarReportePdfCursoId}`;
     this.http.get(url).subscribe(
       (data: any) => {
         this.cursoData = data;
+        this.generarPDF(); // Genera el PDF después de obtener los datos
         console.log("Datos del curso cargados:", this.cursoData);
       },
       (error) => {
@@ -42,221 +54,266 @@ export class PdfExampleComponent implements OnInit {
     );
   }
 
+  generarPDF() {
+    this.generando = true;
 
-generarPDF() {
-  this.generando = true;
+    const doc = new jsPDF();
 
-  const doc = new jsPDF();
+    // Agregar imagen de fondo solo en la primera página
+    const imageUrl =
+      "https://res.cloudinary.com/dvvhnrvav/image/upload/v1736174056/icathi/tsi14aynpqjer8fthxtz.png";
+    doc.addImage(
+      imageUrl,
+      "PNG",
+      0,
+      0,
+      doc.internal.pageSize.width,
+      doc.internal.pageSize.height
+    );
 
-  // Agregar imagen de fondo solo en la primera página
-  const imageUrl =
-    "https://res.cloudinary.com/dvvhnrvav/image/upload/v1736174056/icathi/tsi14aynpqjer8fthxtz.png";
-  doc.addImage(
-    imageUrl,
-    "PNG",
-    0,
-    0,
-    doc.internal.pageSize.width,
-    doc.internal.pageSize.height
-  );
+    // Definir el margen superior
+    const topMargin = 50;
 
-  const courseData = {
-    titulo: "DATOS GENERALES DEL CURSO",
-    datosGenerales: [
-      { label: "CLAVE:", value: this.cursoData?.CLAVE || "No disponible" },
+    // Centrar el texto "CURSO DE CAPACITACIÓN"
+    doc.setFontSize(16); // Tamaño de fuente más grande para el título
+    doc.setFont("helvetica", "bold");
+    doc.text(
+      "CURSO DE CAPACITACIÓN",
+      doc.internal.pageSize.width / 2,
+      topMargin,
       {
-        label: "DURACIÓN EN HORAS:",
-        value: this.cursoData?.DURACION_HORAS || "No disponible",
+        align: "center",
+      }
+    );
+
+    // Mostrar el valor de TIPO_CURSO debajo del título
+    doc.setFontSize(12); // Tamaño de fuente más pequeño para el subtítulo
+    doc.setFont("helvetica", "normal");
+    doc.text(
+      this.cursoData?.TIPO_CURSO || "No disponible",
+      doc.internal.pageSize.width / 2,
+      topMargin + 10,
+      { align: "center" }
+    );
+    // -------------------------------------
+    // Resto del contenido (datos generales, firmas, etc.)
+    const courseData = {
+      titulo: "DATOS GENERALES DEL CURSO",
+      datosGenerales: [
+        {
+          label: "ÁREA OCUPACIONAL:",
+          value: this.cursoData?.AREA_ID || "No disponible",
+        },
+        {
+          label: "ESPECIALIDAD:",
+          value: this.cursoData?.ESPECIALIDAD_ID || "No disponible",
+        },
+        { label: "CURSO:", value: this.cursoData?.NOMBRE || "No disponible" },
+        {
+          label: "CLAVE DEL CURSO:",
+          value: this.cursoData?.CLAVE || "No disponible",
+        },
+        {
+          label: "DURACIÓN EN HORAS:",
+          value: this.cursoData?.DURACION_HORAS || "No disponible",
+        },
+      ],
+    };
+
+    // Mostrar el título "DATOS GENERALES DEL CURSO"
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text(courseData.titulo, 30, topMargin + 40);
+  
+    // Mostrar los datos generales del curso
+    courseData.datosGenerales.forEach((data, index) => {
+      const text = `${data.label} ${data.value}`;
+      const yPosition = topMargin + 60 + index * 15; // Ajustar la posición vertical
+      doc.text(text, 30, yPosition);
+    });
+  
+
+    // -------------------------------------
+
+    // Agregar datos de "Vigencia"
+    doc.setFontSize(10);
+    const vigenciaInicio = this.cursoData?.VIGENCIA_INICIO
+      ? new Date(this.cursoData.VIGENCIA_INICIO).toLocaleDateString()
+      : "No disponible";
+    doc.text(
+      "VIGENCIA A PARTIR DE",
+      doc.internal.pageSize.width - 60,
+      topMargin + 60
+    );
+    doc.text(vigenciaInicio, doc.internal.pageSize.width - 60, topMargin + 70);
+
+    // Datos de "Elaborado por", "Revisado por" y "Autorizado por"
+    const fixedPositionData = [
+      {
+        label: "Elaborado por:",
+        value: this.cursoData?.ELABORADO_POR
+          ? `${this.cursoData.ELABORADO_POR.nombre}\n${this.cursoData.ELABORADO_POR.cargo}`
+          : "No disponible",
+        yOffset: topMargin + 120,
       },
       {
-        label: "DESCRIPCIÓN:",
-        value: this.cursoData?.DESCRIPCION || "No disponible",
+        label: "Revisado por:",
+        value: this.cursoData?.REVISADO_POR
+          ? `${this.cursoData.REVISADO_POR.nombre}\n${this.cursoData.REVISADO_POR.cargo}`
+          : "No disponible",
+        yOffset: topMargin + 160,
       },
       {
-        label: "ÁREA ID:",
-        value: this.cursoData?.AREA_ID || "No disponible",
+        label: "Autorizado por:",
+        value: this.cursoData?.AUTORIZADO_POR
+          ? `${this.cursoData.AUTORIZADO_POR.nombre}\n${this.cursoData.AUTORIZADO_POR.cargo}`
+          : "No disponible",
+        yOffset: topMargin + 200,
       },
-      {
-        label: "ESPECIALIDAD ID:",
-        value: this.cursoData?.ESPECIALIDAD_ID || "No disponible",
-      },
-    ],
-  };
+    ];
 
-  // Establecer un margen superior de 50 y usar un tamaño de fuente de 10
-  const topMargin = 50;
-  doc.setFontSize(10); // Establecer el tamaño de la fuente a 10
-  // Título principal
-  doc.setFont("helvetica", "bold");
-  // Mostrar el título con un margen superior de 50, alineado a la izquierda
-  doc.text(courseData.titulo, 30, topMargin);
+    // Mostrar las firmas en el PDF
+    fixedPositionData.forEach((data) => {
+      // Etiqueta en negrita
+      doc.setFont("helvetica", "bold");
+      doc.text(data.label, doc.internal.pageSize.width - 60, data.yOffset);
 
-  // Mostrar los datos generales del curso, alineados a la izquierda
-  courseData.datosGenerales.forEach((data, index) => {
-    const text = `${data.label} ${data.value}`;
+      // Nombre y cargo en una nueva línea con fuente normal
+      doc.setFont("helvetica", "normal");
+      doc.text(data.value, doc.internal.pageSize.width - 60, data.yOffset + 10);
+    });
 
-    // Aumentar el espacio entre las líneas
-    const yPosition = topMargin + 10 + index * 15; // Aumentar la separación en el eje Y (15 unidades de separación)
-
-    doc.text(text, 30, yPosition); // Alineado a la izquierda en el eje X (10)
-  });
-
-  // Agregar datos de "Vigencia"
-  doc.setFontSize(10);
-
-  // Vigencia
-  const vigenciaInicio = this.cursoData?.VIGENCIA_INICIO
-    ? new Date(this.cursoData.VIGENCIA_INICIO).toLocaleDateString()
-    : "No disponible";
-  doc.text(
-    "VIGENCIA A PARTIR DE",
-    doc.internal.pageSize.width - 60,
-    topMargin + 20
-  );
-  doc.text(vigenciaInicio, doc.internal.pageSize.width - 60, topMargin + 30);
-
-  // Datos de "Elaborado por", "Revisado por" y "Autorizado por"
-  const fixedPositionData = [
-    {
-      label: "Elaborado por:",
-      value: this.cursoData?.ELABORADO_POR || "No disponible",
-      yOffset: topMargin + 80,
-    },
-    {
-      label: "Revisado por:",
-      value: this.cursoData?.REVISADO_POR || "No disponible",
-      yOffset: topMargin + 100,
-    },
-    {
-      label: "Autorizado por:",
-      value: this.cursoData?.AUTORIZADO_POR || "No disponible",
-      yOffset: topMargin + 140,
-    },
-  ];
-
-  fixedPositionData.forEach((data) => {
-    doc.text(data.label, doc.internal.pageSize.width - 60, data.yOffset);
-    doc.text(data.value, doc.internal.pageSize.width - 60, data.yOffset + 10);
-  });
-
-  // Mover "Ficha Técnica" a otra página y usar tabla
-  doc.addPage();
-  doc.setFontSize(16);
-  doc.text("FICHA TÉCNICA", 10, 20);
-
-  const fichaTecnica = [
-    ["Objetivo", this.cursoData?.FICHA_TECNICA?.OBJETIVO || "No disponible"],
-    [
-      "Perfil de ingreso",
-      this.cursoData?.FICHA_TECNICA?.PERFIL_INGRESO || "No disponible",
-    ],
-    [
-      "Perfil de egreso",
-      this.cursoData?.FICHA_TECNICA?.PERFIL_EGRESO || "No disponible",
-    ],
-    [
-      "Perfil del docente",
-      this.cursoData?.FICHA_TECNICA?.PERFIL_DEL_DOCENTE || "No disponible",
-    ],
-    [
-      "Metodología",
-      this.cursoData?.FICHA_TECNICA?.METODOLOGIA || "No disponible",
-    ],
-    [
-      "Bibliografía",
-      this.cursoData?.FICHA_TECNICA?.BIBLIOGRAFIA || "No disponible",
-    ],
-    [
-      "Criterios de acreditación",
-      this.cursoData?.FICHA_TECNICA?.CRITERIOS_ACREDITACION ||
-        "No disponible",
-    ],
-  ];
-
-  doc.autoTable({
-    startY: 30,
-    body: fichaTecnica,
-    theme: "plain", // Tema simplificado
-    bodyStyles: { fontSize: 10 },
-    columnStyles: {
-      0: {
-        halign: "left",
-        fillColor: [45, 194, 162],
-        textColor: [0, 0, 0],
-        fontStyle: "bold",
-      }, // Primera columna con fondo azul claro y texto negro
-      1: { halign: "left", fillColor: [255, 255, 255], textColor: [0, 0, 0] }, // Segunda columna sin fondo
-    },
-  });
-
-  // Verificar si los materiales y equipamiento existen
-  if (this.cursoData?.MATERIALES && this.cursoData.MATERIALES.length > 0) {
+    // Mover "Ficha Técnica" a otra página y usar tabla
     doc.addPage();
     doc.setFontSize(16);
-    doc.text("MATERIALES", 10, 20);
+    doc.text("FICHA TÉCNICA", 10, 20);
 
-    const materialsTable = [
+    const fichaTecnica = [
+      ["Objetivo", this.cursoData?.FICHA_TECNICA?.OBJETIVO || "No disponible"],
       [
-        "Descripción",
-        "Unidad de medida",
-        "Cantidad 10",
-        "Cantidad 15",
-        "Cantidad 20",
-      ], // Headers
-      ...this.cursoData.MATERIALES.map((item: any) => [
-        item.material_descripcion,
-        item.material_unidad_de_medida,
-        item.material_cantidad_10,
-        item.material_cantidad_15,
-        item.material_cantidad_20,
-      ]),
+        "Perfil de ingreso",
+        this.cursoData?.FICHA_TECNICA?.PERFIL_INGRESO || "No disponible",
+      ],
+      [
+        "Perfil de egreso",
+        this.cursoData?.FICHA_TECNICA?.PERFIL_EGRESO || "No disponible",
+      ],
+      [
+        "Perfil del docente",
+        this.cursoData?.FICHA_TECNICA?.PERFIL_DEL_DOCENTE || "No disponible",
+      ],
+      [
+        "Metodología",
+        this.cursoData?.FICHA_TECNICA?.METODOLOGIA || "No disponible",
+      ],
+      [
+        "Bibliografía",
+        this.cursoData?.FICHA_TECNICA?.BIBLIOGRAFIA || "No disponible",
+      ],
+      [
+        "Criterios de acreditación",
+        this.cursoData?.FICHA_TECNICA?.CRITERIOS_ACREDITACION ||
+          "No disponible",
+      ],
     ];
 
     doc.autoTable({
-      startY: 30, // Positioning the table
-      head: materialsTable.slice(0, 1), // Table header
-      body: materialsTable.slice(1), // Table body
-      theme: "grid",
-      margin: { top: 20 },
+      startY: 30,
+      body: fichaTecnica,
+      theme: "plain",
+      bodyStyles: { fontSize: 10 },
+      columnStyles: {
+        0: {
+          halign: "left",
+          fillColor: [45, 194, 162],
+          textColor: [0, 0, 0],
+          fontStyle: "bold",
+        },
+        1: { halign: "left", fillColor: [255, 255, 255], textColor: [0, 0, 0] },
+      },
     });
+
+    // Verificar si los materiales existen
+    if (this.cursoData?.MATERIALES && this.cursoData.MATERIALES.length > 0) {
+      doc.addPage();
+      doc.setFontSize(16);
+      doc.text("MATERIALES", 10, 20);
+
+      const materialsTable = [
+        [
+          { content: "Descripción", rowSpan: 2 },
+          { content: "Unidad de medida", rowSpan: 2 },
+          { content: "Cantidad por Número de Participantes", colSpan: 3 },
+        ],
+        ["Cantidad 10", "Cantidad 15", "Cantidad 20"],
+        ...this.cursoData.MATERIALES.map((item: any) => [
+          item.material_descripcion,
+          item.material_unidad_de_medida,
+          item.material_cantidad_10,
+          item.material_cantidad_15,
+          item.material_cantidad_20,
+        ]),
+      ];
+
+      doc.autoTable({
+        startY: 30,
+        head: materialsTable.slice(0, 2),
+        body: materialsTable.slice(2),
+        theme: "grid",
+        margin: { top: 20 },
+        headStyles: {
+          fillColor: [45, 194, 162],
+          textColor: [0, 0, 0],
+          fontStyle: "bold",
+        },
+      });
+    }
+
+    // Verificar si el equipamiento existe
+    if (
+      this.cursoData?.EQUIPAMIENTO &&
+      this.cursoData.EQUIPAMIENTO.length > 0
+    ) {
+      doc.addPage();
+      doc.setFontSize(16);
+      doc.text("EQUIPAMIENTO", 10, 20);
+
+      const equipmentTable = [
+        [
+          { content: "Descripción", rowSpan: 2 },
+          { content: "Unidad de medida", rowSpan: 2 },
+          { content: "Cantidad por Número de Participantes", colSpan: 3 },
+        ],
+        ["Cantidad 10", "Cantidad 15", "Cantidad 20"],
+        ...this.cursoData.EQUIPAMIENTO.map((item: any) => [
+          item.equipamiento_descripcion,
+          item.equipamiento_unidad_de_medida,
+          item.equipamiento_cantidad_10,
+          item.equipamiento_cantidad_15,
+          item.equipamiento_cantidad_20,
+        ]),
+      ];
+
+      doc.autoTable({
+        startY: 30,
+        head: equipmentTable.slice(0, 2),
+        body: equipmentTable.slice(2),
+        theme: "grid",
+        margin: { top: 20 },
+        headStyles: {
+          fillColor: [45, 194, 162],
+          textColor: [0, 0, 0],
+          fontStyle: "bold",
+        },
+      });
+    }
+
+    // Guardar el PDF
+     // Guardar el PDF con un nombre personalizado
+  const nombreArchivo = `curso_${this.cursoData?.Id_Curso || "sin_id"}.pdf`;
+  doc.save(nombreArchivo);
+    this.generando = false;
   }
-
-  if (this.cursoData?.EQUIPAMIENTO && this.cursoData.EQUIPAMIENTO.length > 0) {
-    doc.addPage();
-    doc.setFontSize(16);
-    doc.text("EQUIPAMIENTO", 10, 20);
-
-    const equipmentTable = [
-      [
-        "Descripción",
-        "Unidad de medida",
-        "Cantidad 10",
-        "Cantidad 15",
-        "Cantidad 20",
-      ], // Headers
-      ...this.cursoData.EQUIPAMIENTO.map((item: any) => [
-        item.equipamiento_descripcion,
-        item.equipamiento_unidad_de_medida,
-        item.equipamiento_cantidad_10,
-        item.equipamiento_cantidad_15,
-        item.equipamiento_cantidad_20,
-      ]),
-    ];
-
-    doc.autoTable({
-      startY: 30, // Positioning the table
-      head: equipmentTable.slice(0, 1), // Table header
-      body: equipmentTable.slice(1), // Table body
-      theme: "grid",
-      margin: { top: 20 },
-    });
-  }
-
-  // Guardar el PDF
-  doc.save("curso.pdf");
-
-  this.generando = false;
-}
 
   cerrarModal() {
     this.cerrarModalEvent.emit(false); // Emitting the event to close the modal
