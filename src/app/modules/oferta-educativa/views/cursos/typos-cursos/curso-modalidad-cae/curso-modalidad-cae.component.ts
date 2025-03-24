@@ -37,7 +37,7 @@ export interface Modulo {
     perfil_del_docente: string | undefined; // Perfil del docente
     metodologia: string | undefined; // Metodología de capacitación
     bibliografia: string | undefined; // Bibliografía
-    criteriosAcreditacion: string | undefined; // Criterios de acreditación
+    criterios_acreditacion: string | undefined; // Criterios de acreditación
     reconocimiento: string | undefined; // Reconocimiento al alumno
   };
   contenidoProgramatico: {
@@ -132,7 +132,7 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
       perfil_del_docente: "",
       metodologia: "",
       bibliografia: "",
-      criteriosAcreditacion: "",
+      criterios_acreditacion: "",
       reconocimiento: "",
     },
     contenidoProgramatico: { temas: [] },
@@ -262,16 +262,16 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
              // Mapear las firmas
         firmas: {
           revisado: {
-            nombre: data.firmas.revisado_por?.nombre || "",
-            cargo: data.firmas.revisado_por?.cargo || "",
+            nombre: data.firmas.revisado?.nombre || "",
+            cargo: data.firmas.revisado?.cargo || "",
           },
           autorizado: {
-            nombre: data.firmas.autorizado_por?.nombre || "",
-            cargo: data.firmas.autorizado_por?.cargo || "",
+            nombre: data.firmas.autorizado?.nombre || "",
+            cargo: data.firmas.autorizado?.cargo || "",
           },
           elaborado: {
-            nombre: data.firmas.elaborado_por?.nombre || "",
-            cargo: data.firmas.elaborado_por?.cargo || "",
+            nombre: data.firmas.elaborado?.nombre || "",
+            cargo: data.firmas.elaborado?.cargo || "",
           },
         },
         };
@@ -461,7 +461,7 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
         perfil_del_docente: "",
         metodologia: "",
         bibliografia: "",
-        criteriosAcreditacion: "",
+        criterios_acreditacion: "",
         reconocimiento: "",
       },
       contenidoProgramatico: { temas: [] },

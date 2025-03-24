@@ -26,13 +26,11 @@ export interface Modulo {
   fecha_publicacion?: string | undefined; // Fecha de publicación puede estar indefinida
   ultima_actualizacion?: string | undefined; // Última actualización puede estar indefinida
 
-  revisado_por?: string | undefined; // Última actualización puede estar indefinida
-  cargo_revisado_por?: string | undefined; // Última actualización puede estar indefinida
-  autorizado_por?: string | undefined; // Última actualización puede estar indefinida
-  cargo_autorizado_por?: string | undefined; // Última actualización puede estar indefinida
-  elaborado_por?: string | undefined; // Última actualización puede estar indefinida
-  cargo_elaborado_por?: string | undefined; // Última actualización puede estar indefinida
-  
+  firmas: {
+    revisado: { nombre: string; cargo: string };
+    autorizado: { nombre: string; cargo: string };
+    elaborado: { nombre: string; cargo: string };
+  };
   objetivos: {
     objetivo: string | undefined; // Objetivo del curso puede estar indefinido
     perfil_ingreso: string | undefined; // Perfil de ingreso
@@ -40,7 +38,7 @@ export interface Modulo {
     perfil_del_docente: string | undefined; // Perfil del docente
     metodologia: string | undefined; // Metodología de capacitación
     bibliografia: string | undefined; // Bibliografía
-    criteriosAcreditacion: string | undefined; // Criterios de acreditación
+    criterios_acreditacion: string | undefined; // Criterios de acreditación
     reconocimiento: string | undefined; // Reconocimiento al alumno
   };
   contenidoProgramatico: {
@@ -93,14 +91,11 @@ export class CursoModalidadVirtualComponent implements OnInit, OnChanges {
     area_id: undefined,
     especialidad_id: undefined,
     tipo_curso_id: undefined,
-
-    revisado_por: '',
-    cargo_revisado_por: 'Programas de Estudio',
-    autorizado_por: '',
-    cargo_autorizado_por: 'Directora Académica',
-    elaborado_por: '',
-    cargo_elaborado_por: 'Director General',
-
+    firmas: {
+      revisado: { nombre: "", cargo: "Programas de Estudio" },
+      autorizado: { nombre: "", cargo: "Directora Académica" },
+      elaborado: { nombre: "", cargo: "Director General" },
+    },
 
     vigencia_inicio: undefined,
     fecha_publicacion: undefined,
@@ -111,7 +106,7 @@ export class CursoModalidadVirtualComponent implements OnInit, OnChanges {
       perfil_del_docente: "",
       metodologia: "",
       bibliografia: "",
-      criteriosAcreditacion: "",
+      criterios_acreditacion: "",
       reconocimiento: "",
     },
     contenidoProgramatico: { temas: [] },
@@ -196,6 +191,20 @@ export class CursoModalidadVirtualComponent implements OnInit, OnChanges {
                 }))
               : [],
           },
+          firmas: {
+            revisado: {
+              nombre: data.firmas.revisado?.nombre || "",
+              cargo: data.firmas.revisado?.cargo || "",
+            },
+            autorizado: {
+              nombre: data.firmas.autorizado?.nombre || "",
+              cargo: data.firmas.autorizado?.cargo || "",
+            },
+            elaborado: {
+              nombre: data.firmas.elaborado?.nombre || "",
+              cargo: data.firmas.elaborado?.cargo || "",
+            },
+          },
         };
 
         console.log("Curso cargado:", this.nuevoCurso);
@@ -274,18 +283,34 @@ export class CursoModalidadVirtualComponent implements OnInit, OnChanges {
       this.nuevoCurso.especialidad_id?.toString() || ""
     );
     formData.append("tipo_curso_id", "2");
+    
     formData.append(
       "revisado_por",
-      this.nuevoCurso.revisado_por?.toString() || ""
+      this.nuevoCurso.firmas?.revisado?.nombre?.toString() || ""
     );
+    formData.append(
+      "cargo_revisado_por",
+      this.nuevoCurso.firmas?.revisado?.cargo?.toString() || ""
+    );
+
     formData.append(
       "autorizado_por",
-      this.nuevoCurso.autorizado_por?.toString() || ""
+      this.nuevoCurso.firmas?.autorizado?.nombre?.toString() || ""
     );
     formData.append(
-      "elaborado_por",
-      this.nuevoCurso.elaborado_por?.toString() || ""
+      "cargo_autorizado_por",
+      this.nuevoCurso.firmas?.autorizado?.cargo?.toString() || ""
     );
+
+    formData.append(
+      "elaborado_por",
+      this.nuevoCurso.firmas?.elaborado?.nombre?.toString() || ""
+    );
+    formData.append(
+      "cargo_elaborado_por",
+      this.nuevoCurso.firmas?.elaborado?.cargo?.toString() || ""
+    );
+
 
     formData.append("temario", this.selectedFile);
     // Convertir `objetivos` a JSON y agregarlo a FormData
@@ -350,6 +375,11 @@ export class CursoModalidadVirtualComponent implements OnInit, OnChanges {
       area_id: undefined,
       especialidad_id: undefined,
       tipo_curso_id: undefined,
+      firmas: {
+        revisado: { nombre: "", cargo: "Programas de Estudio" },
+        autorizado: { nombre: "", cargo: "Directora Académica" },
+        elaborado: { nombre: "", cargo: "Director General" },
+      },
       objetivos: {
         objetivo: "",
         perfil_ingreso: "",
@@ -357,7 +387,7 @@ export class CursoModalidadVirtualComponent implements OnInit, OnChanges {
         perfil_del_docente: "",
         metodologia: "",
         bibliografia: "",
-        criteriosAcreditacion: "",
+        criterios_acreditacion: "",
         reconocimiento: "",
       },
       contenidoProgramatico: { temas: [] },

@@ -190,32 +190,25 @@ export class PdfExampleComponent implements OnChanges {
 
     const fichaTecnica = [
       ["Objetivo", this.cursoData?.FICHA_TECNICA?.OBJETIVO || "No disponible"],
+      ["Perfil de ingreso", this.cursoData?.FICHA_TECNICA?.PERFIL_INGRESO || "No disponible"],
+      ["Perfil de egreso", this.cursoData?.FICHA_TECNICA?.PERFIL_EGRESO || "No disponible"],
+      ["Perfil del docente", this.cursoData?.FICHA_TECNICA?.PERFIL_DEL_DOCENTE || "No disponible"],
+      ["Metodología", this.cursoData?.FICHA_TECNICA?.METODOLOGIA || "No disponible"],
       [
-        "Perfil de ingreso",
-        this.cursoData?.FICHA_TECNICA?.PERFIL_INGRESO || "No disponible",
+        this.cursoData?.FICHA_TECNICA?.ETIQUETAS?.find((etiqueta:any) => etiqueta.NOMBRE == 'BIBLIOGRAFÍA')?.NOMBRE || "Bibliografía", 
+        this.cursoData?.FICHA_TECNICA?.ETIQUETAS?.find((etiqueta:any) => etiqueta.NOMBRE == 'BIBLIOGRAFÍA')?.DATO || "No disponible"
       ],
       [
-        "Perfil de egreso",
-        this.cursoData?.FICHA_TECNICA?.PERFIL_EGRESO || "No disponible",
+        this.cursoData?.FICHA_TECNICA?.ETIQUETAS?.find((etiqueta:any) => etiqueta.NOMBRE == 'CRITERIOS DE ACREDITACIÓN')?.NOMBRE || "Criterios de acreditación", 
+        this.cursoData?.FICHA_TECNICA?.ETIQUETAS?.find((etiqueta:any) => etiqueta.NOMBRE == 'CRITERIOS DE ACREDITACIÓN')?.DATO || "No disponible"
       ],
       [
-        "Perfil del docente",
-        this.cursoData?.FICHA_TECNICA?.PERFIL_DEL_DOCENTE || "No disponible",
-      ],
-      [
-        "Metodología",
-        this.cursoData?.FICHA_TECNICA?.METODOLOGIA || "No disponible",
-      ],
-      [
-        "Bibliografía",
-        this.cursoData?.FICHA_TECNICA?.BIBLIOGRAFIA || "No disponible",
-      ],
-      [
-        "Criterios de acreditación",
-        this.cursoData?.FICHA_TECNICA?.CRITERIOS_ACREDITACION ||
-          "No disponible",
-      ],
+        this.cursoData?.FICHA_TECNICA?.ETIQUETAS?.find((etiqueta:any) => etiqueta.NOMBRE == 'RECONOCIMIENTO A LA PERSONA EGRESADA')?.NOMBRE || "Reconocimiento", 
+        this.cursoData?.FICHA_TECNICA?.ETIQUETAS?.find((etiqueta:any) => etiqueta.NOMBRE == 'RECONOCIMIENTO A LA PERSONA EGRESADA')?.DATO || "No disponible"
+      ]
     ];
+    
+    
 
     doc.autoTable({
       startY: 30,
@@ -233,80 +226,84 @@ export class PdfExampleComponent implements OnChanges {
       },
     });
 
-    // Verificar si los materiales existen
-    if (this.cursoData?.MATERIALES && this.cursoData.MATERIALES.length > 0) {
-      doc.addPage();
-      doc.setFontSize(16);
-      doc.text("MATERIALES", 10, 20);
+   // Verificar si el curso es virtual (TIPO_CURSO_ID = 2)
+if (this.cursoData?.TIPO_CURSO_ID !== 2) {
+  // Verificar si los materiales existen
+  if (this.cursoData?.MATERIALES && this.cursoData.MATERIALES.length > 0) {
+    doc.addPage();
+    doc.setFontSize(16);
+    doc.text("MATERIALES", 10, 20);
 
-      const materialsTable = [
-        [
-          { content: "Descripción", rowSpan: 2 },
-          { content: "Unidad de medida", rowSpan: 2 },
-          { content: "Cantidad por Número de Participantes", colSpan: 3 },
-        ],
-        ["Cantidad 10", "Cantidad 15", "Cantidad 20"],
-        ...this.cursoData.MATERIALES.map((item: any) => [
-          item.material_descripcion,
-          item.material_unidad_de_medida,
-          item.material_cantidad_10,
-          item.material_cantidad_15,
-          item.material_cantidad_20,
-        ]),
-      ];
+    const materialsTable = [
+      [
+        { content: "Descripción", rowSpan: 2 },
+        { content: "Unidad de medida", rowSpan: 2 },
+        { content: "Cantidad por Número de Participantes", colSpan: 3 },
+      ],
+      ["Cantidad 10", "Cantidad 15", "Cantidad 20"],
+      ...this.cursoData.MATERIALES.map((item: any) => [
+        item.material_descripcion,
+        item.material_unidad_de_medida,
+        item.material_cantidad_10,
+        item.material_cantidad_15,
+        item.material_cantidad_20,
+      ]),
+    ];
 
-      doc.autoTable({
-        startY: 30,
-        head: materialsTable.slice(0, 2),
-        body: materialsTable.slice(2),
-        theme: "grid",
-        margin: { top: 20 },
-        headStyles: {
-          fillColor: [45, 194, 162],
-          textColor: [0, 0, 0],
-          fontStyle: "bold",
-        },
-      });
-    }
+    doc.autoTable({
+      startY: 30,
+      head: materialsTable.slice(0, 2),
+      body: materialsTable.slice(2),
+      theme: "grid",
+      margin: { top: 20 },
+      headStyles: {
+        fillColor: [45, 194, 162],
+        textColor: [0, 0, 0],
+        fontStyle: "bold",
+      },
+    });
+  }
 
-    // Verificar si el equipamiento existe
-    if (
-      this.cursoData?.EQUIPAMIENTO &&
-      this.cursoData.EQUIPAMIENTO.length > 0
-    ) {
-      doc.addPage();
-      doc.setFontSize(16);
-      doc.text("EQUIPAMIENTO", 10, 20);
+  // Verificar si el equipamiento existe
+  if (
+    this.cursoData?.EQUIPAMIENTO &&
+    this.cursoData.EQUIPAMIENTO.length > 0
+  ) {
+    doc.addPage();
+    doc.setFontSize(16);
+    doc.text("EQUIPAMIENTO", 10, 20);
 
-      const equipmentTable = [
-        [
-          { content: "Descripción", rowSpan: 2 },
-          { content: "Unidad de medida", rowSpan: 2 },
-          { content: "Cantidad por Número de Participantes", colSpan: 3 },
-        ],
-        ["Cantidad 10", "Cantidad 15", "Cantidad 20"],
-        ...this.cursoData.EQUIPAMIENTO.map((item: any) => [
-          item.equipamiento_descripcion,
-          item.equipamiento_unidad_de_medida,
-          item.equipamiento_cantidad_10,
-          item.equipamiento_cantidad_15,
-          item.equipamiento_cantidad_20,
-        ]),
-      ];
+    const equipmentTable = [
+      [
+        { content: "Descripción", rowSpan: 2 },
+        { content: "Unidad de medida", rowSpan: 2 },
+        { content: "Cantidad por Número de Participantes", colSpan: 3 },
+      ],
+      ["Cantidad 10", "Cantidad 15", "Cantidad 20"],
+      ...this.cursoData.EQUIPAMIENTO.map((item: any) => [
+        item.equipamiento_descripcion,
+        item.equipamiento_unidad_de_medida,
+        item.equipamiento_cantidad_10,
+        item.equipamiento_cantidad_15,
+        item.equipamiento_cantidad_20,
+      ]),
+    ];
 
-      doc.autoTable({
-        startY: 30,
-        head: equipmentTable.slice(0, 2),
-        body: equipmentTable.slice(2),
-        theme: "grid",
-        margin: { top: 20 },
-        headStyles: {
-          fillColor: [45, 194, 162],
-          textColor: [0, 0, 0],
-          fontStyle: "bold",
-        },
-      });
-    }
+    doc.autoTable({
+      startY: 30,
+      head: equipmentTable.slice(0, 2),
+      body: equipmentTable.slice(2),
+      theme: "grid",
+      margin: { top: 20 },
+      headStyles: {
+        fillColor: [45, 194, 162],
+        textColor: [0, 0, 0],
+        fontStyle: "bold",
+      },
+    });
+  }
+}
+
 
     // Guardar el PDF
      // Guardar el PDF con un nombre personalizado

@@ -157,12 +157,12 @@
       </div>
 
       <div class="flex space-x-4">
-        <!-- Vigencia Inicio -->
+        <!-- Revisado por -->
         <div class="flex-1">
           <label class="block text-sm font-medium">Revisado por</label>
           <input
             type="text"
-            [(ngModel)]="nuevoCurso.revisado_por"
+            [(ngModel)]="nuevoCurso.firmas.revisado.nombre"
             name="revisado_por"
             required
             class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
@@ -170,25 +170,24 @@
           />
           <label class="block text-sm font-medium mt-2">Cargo</label>
           <input
-          type="text"
-          [(ngModel)]="nuevoCurso.cargo_revisado_por"
-          value="Programas de Estudio"
-          name="cargo_revisado_por"
-         
-          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm bg-gray-100"
-        />
-        
-          <div *ngIf="!nuevoCurso.revisado_por && cursoForm.submitted" class="text-red-500 text-sm">
+            type="text"
+            [(ngModel)]="nuevoCurso.firmas.revisado.cargo"
+            name="cargo_revisado_por"
+            required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+            placeholder="Cargo"
+          />
+          <div *ngIf="!nuevoCurso.firmas.revisado.nombre && cursoForm.submitted" class="text-red-500 text-sm">
             Este campo es obligatorio.
           </div>
         </div>
       
-        <!-- Fecha de Publicación -->
+        <!-- Autorizado por -->
         <div class="flex-1">
           <label class="block text-sm font-medium">Autorizado por</label>
           <input
             type="text"
-            [(ngModel)]="nuevoCurso.autorizado_por"
+            [(ngModel)]="nuevoCurso.firmas.autorizado.nombre"
             name="autorizado_por"
             required
             class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
@@ -196,24 +195,24 @@
           />
           <label class="block text-sm font-medium mt-2">Cargo</label>
           <input
-          type="text"
-          [(ngModel)]="nuevoCurso.cargo_autorizado_por"
-          value="Directora Académica"
-          name="cargo_autorizado_por"
-         
-          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm bg-gray-100"
-        />
-          <div *ngIf="!nuevoCurso.autorizado_por && cursoForm.submitted" class="text-red-500 text-sm">
+            type="text"
+            [(ngModel)]="nuevoCurso.firmas.autorizado.cargo"
+            name="cargo_autorizado_por"
+            required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+            placeholder="Cargo"
+          />
+          <div *ngIf="!nuevoCurso.firmas.autorizado.nombre && cursoForm.submitted" class="text-red-500 text-sm">
             Este campo es obligatorio.
           </div>
         </div>
       
-        <!-- Costo -->
+        <!-- Elaborado por -->
         <div class="flex-1">
           <label class="block text-sm font-medium">Elaborado por</label>
           <input
             type="text"
-            [(ngModel)]="nuevoCurso.elaborado_por"
+            [(ngModel)]="nuevoCurso.firmas.elaborado.nombre"
             name="elaborado_por"
             required
             class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
@@ -221,19 +220,19 @@
           />
           <label class="block text-sm font-medium mt-2">Cargo</label>
           <input
-          type="text"
-          [(ngModel)]="nuevoCurso.cargo_elaborado_por"
-          value="Director General"
-          name="cargo_elaborado_por"
-         
-          class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm bg-gray-100"
-        />
-          <div *ngIf="!nuevoCurso.elaborado_por && cursoForm.submitted" class="text-red-500 text-sm">
+            type="text"
+            [(ngModel)]="nuevoCurso.firmas.elaborado.cargo"
+            name="cargo_elaborado_por"
+            required
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+            placeholder="Cargo"
+          />
+          <div *ngIf="!nuevoCurso.firmas.elaborado.nombre && cursoForm.submitted" class="text-red-500 text-sm">
             Este campo es obligatorio.
           </div>
         </div>
       </div>
-      
+
       <h2 class="text-2xl font-bold text-gray-800 mb-6">Objetivos del Curso</h2>
 
       <!-- Tabla de objetivos -->
@@ -353,8 +352,8 @@
                 <textarea
                   pTextarea
                   [autoResize]="true"
-                  [(ngModel)]="nuevoCurso.objetivos.criteriosAcreditacion"
-                  name="criteriosAcreditacion"
+                  [(ngModel)]="nuevoCurso.objetivos.criterios_acreditacion"
+                  name="criterios_acreditacion"
                   class="w-full border border-gray-300 rounded-md p-2 resize-none"
                   rows="3"
                 ></textarea>
