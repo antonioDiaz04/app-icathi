@@ -56,31 +56,33 @@ export class UsuariosComponent implements OnInit {
   abrirModalEditar(usuario: any) {
     this.usuarioEditado = { ...usuario }; // Copia del usuario seleccionado
     this.mostrarModalEditar = true;
-  }crearUsuario() {
+  }
+  crearUsuario() {
     // Verificar si los campos están vacíos o son nulos
     if (this.validarCampos()) {
       console.log("Nuevo usuario:", this.nuevoUsuario);
-      
       this.userService.crearUsuario(this.nuevoUsuario).subscribe(
         (response) => {
+          this.alertTaiwilService.showTailwindAlert("Usuario creado con éxito", 'success');
+
           console.log('Usuario creado con éxito:', response);
           this.cargarUsuarios();  // Recargar la lista de usuarios si es necesario
           this.cerrarModalregistro();  // Cerrar el modal después de crear el usuario
         },
         (error) => {
           let errorMessage = 'Ocurrió un error inesperado.';
-      
-          // Extraer el mensaje correcto desde el error
-          if (error.error && error.error.error) {
-            errorMessage = error.error.error; // Captura el mensaje de error devuelto por el backend
-          } else if (error.error && error.error.message) {
-            errorMessage = error.error.message; // Captura otro mensaje si existe
+          
+          // Verificar si el error tiene un mensaje específico
+          if (error.error && error.error.message) {
+            errorMessage = error.error.message; // Captura el mensaje de error devuelto por el backend
           }
       
+          // Mostrar el mensaje de error utilizando el servicio de alertas
           this.alertTaiwilService.showTailwindAlert(errorMessage, 'error');
           console.error('Error al crear el usuario:', error);
         }
       );
+      
       
       
     } else {
@@ -136,12 +138,16 @@ export class UsuariosComponent implements OnInit {
     // Llamamos al servicio para actualizar el estatus y el rol del usuario
     this.userService.actualizarEstatusRol(this.usuarioEditado.id, estatus, rol).subscribe(
       (response) => {
-        console.log('Usuario actualizado con éxito:', response);
+        // console.log('Usuario actualizado con éxito:', response);
         this.cargarUsuarios()
+        this.alertTaiwilService.showTailwindAlert('Usuario actualizado con éxito', 'success');
+
         // Aquí puedes manejar la respuesta, como mostrar un mensaje de éxito o cerrar el modal
         this.cerrarModalEditar();
       },
       (error) => {
+        this.alertTaiwilService.showTailwindAlert('Error al actualizar el usuario', 'error');
+
         console.error('Error al actualizar el usuario:', error);
         // Aquí puedes manejar el error, por ejemplo, mostrar un mensaje de error
       }
@@ -154,11 +160,15 @@ export class UsuariosComponent implements OnInit {
     if (confirmacion) {
       this.userService.eliminarUsuario(usuario.id).subscribe(
         (response) => {
-          alert('Usuario eliminado correctamente.');
+          this.alertTaiwilService.showTailwindAlert('Usuario eliminado correctamente', 'success');
+
+          // alert('Usuario eliminado correctamente.');
           this.cargarUsuarios(); // Actualiza la lista de usuarios
         },
         (error) => {
-          console.error('Error al eliminar usuario:', error);
+          this.alertTaiwilService.showTailwindAlert('Error al eliminar usuario', 'error');
+
+          // console.error('Error al eliminar usuario:', error);
           alert('Ocurrió un error al intentar eliminar el usuario.');
         }
       );

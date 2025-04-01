@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PlantelesService } from '../../../../../shared/services/planteles.service';
 import { Router } from '@angular/router';
+import { ListadoPlantelesComponent } from '../listado-planteles/listado-planteles.component';
+import { LoadingSpinnerService } from '../../../../../shared/services/loading.service';
+import { AlertTaiwilService } from '../../../../../shared/services/alert-taiwil.service';
 
 @Component({
     selector: 'app-frm-plantel',
@@ -13,8 +16,11 @@ export class FrmPlantelComponent {
   formPlantel: FormGroup;
 
   constructor(
+        private spinner: LoadingSpinnerService,
+    
     private router: Router,
-    private fb: FormBuilder,
+    private fb: FormBuilder,    private alertTaiwilService: AlertTaiwilService,
+    
     private plantelService_: PlantelesService
   ) {
     this.formPlantel = this.fb.group({
@@ -35,12 +41,13 @@ export class FrmPlantelComponent {
   }
 
   regresar() {
-    
+
     // Navegar a la ruta de detalles del curso pasando el id como parámetro
     this.router.navigate([`/privado/lista-planteles`]);
   }
   guardarPlantel() {
-    alert('pasa en funsion guardar');
+    this.spinner.mostrar()
+    // alert('pasa en funsion guardar');
     console.log("this.formPlantel.valid¨¨¨¨¨¨¨¨¨¨",this.formPlantel)
     console.log("this.formPlantel.valid¨¨¨¨¨¨¨¨¨¨",this.formPlantel.valid)
     console.log("Errores en el formulario:", this.formPlantel.errors);
@@ -69,17 +76,28 @@ this.formPlantel.controls['municipio']?.errors && console.log("Error en municipi
       console.log("this.formPlantel.valid¨¨¨¨¨¨¨¨¨¨",this.formPlantel)
       this.plantelService_.createPlantel(Plantel).subscribe(
         (response) => {
-          console.log("enviando datos del platel  .....",Plantel)
-          // if (action === 'frm-plantel') {
-          this.router.navigate(['/privado/frm-plantel']); // Redirige a la página de edición
-          // }
+          console.log("Enviando datos del plantel  .....", Plantel);
+          this.router.navigate(['/privado/lista-planteles']); // Redirige a la página de edición
+          this.alertTaiwilService.showTailwindAlert("Creado exitosamente", "success");
+          this.spinner.ocultar();
           console.log('Plantel creado exitosamente', response);
-          // Aquí podrías redirigir o mostrar un mensaje de éxito
         },
         (error) => {
+          this.spinner.ocultar();
+      
+          // Mostrar el error del backend si está disponible
+          if (error && error.error && error.error.message) {
+            this.alertTaiwilService.showTailwindAlert(error.error.message, "error");
+          } else {
+            // Si no hay un mensaje específico, muestra un error genérico
+            this.alertTaiwilService.showTailwindAlert("Ocurrió un error al crear el plantel.", "error");
+          }
+      
           console.error('Error al crear el plantel', error);
         }
       );
+      
+      
       console.log(this.formPlantel.value); // Muestra los valores del formulario en consola
     }
   }

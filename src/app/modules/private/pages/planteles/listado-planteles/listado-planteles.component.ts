@@ -4,6 +4,7 @@ import { PlantelesService } from '../../../../../shared/services/planteles.servi
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CursosService } from '../../../../../shared/services/cursos.service';
 import { AlumnoPlantelCursoService } from '../../../../../shared/services/alumno-plantel-curso.service';
+import { AlertTaiwilService } from '../../../../../shared/services/alert-taiwil.service';
 
 declare var $: any;
 
@@ -30,6 +31,7 @@ export class ListadoPlantelesComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private cursosService: CursosService,
+    private alertTaiwilService: AlertTaiwilService,
     private router: Router,
     private alumnoPlantelCursoService: AlumnoPlantelCursoService,
     private plantelService_: PlantelesService
@@ -46,7 +48,6 @@ export class ListadoPlantelesComponent implements OnInit {
       director: ['', [Validators.required, Validators.maxLength(100)]],
       capacidad_alumnos: ['', Validators.required],
       estatus: [true],
-      usuario_gestor_id: ['', Validators.required],
       estado: ['', [Validators.required, Validators.maxLength(50)]],
       municipio: ['', [Validators.required, Validators.maxLength(50)]],
     });
@@ -111,7 +112,7 @@ export class ListadoPlantelesComponent implements OnInit {
             .getPlantelDetails(plantel.id)
             .toPromise();
           plantel.total_cursos = details.total_cursos;
-          
+
           plantel.total_alumnos = details.total_alumnos;
           console.log("-------DATA PLANTEL",plantel)
         }
@@ -162,6 +163,7 @@ export class ListadoPlantelesComponent implements OnInit {
   // Cerrar modal
   closeModal() {
     this.isModalOpen = false;
+
   }
 
   // Obtener datos del plantel por ID
@@ -187,7 +189,7 @@ export class ListadoPlantelesComponent implements OnInit {
         director: this.editForm.get('director')?.value,
         capacidad_alumnos: this.editForm.get('capacidad_alumnos')?.value,
         estatus: this.editForm.get('estatus')?.value,
-        usuario_gestor_id: this.editForm.get('usuario_gestor_id')?.value,
+        // usuario_gestor_id: this.editForm.get('usuario_gestor_id')?.value,
         estado: this.editForm.get('estado')?.value,
         municipio: this.editForm.get('municipio')?.value,
       };
@@ -197,7 +199,9 @@ export class ListadoPlantelesComponent implements OnInit {
 
       this.plantelService_.updatePlantel(this.idPlantel, formData).subscribe({
         next: (response) => {
-          console.log('Plantel actualizado con éxito:', response);
+          // console.log('Plantel actualizado con éxito:', response);
+          this.alertTaiwilService.showTailwindAlert("Plantel actualizado con éxito", "success");
+  
           // Cerrar el modal
           this.closeModal();
           // Actualizar la lista de planteles
@@ -222,14 +226,26 @@ export class ListadoPlantelesComponent implements OnInit {
 
   // Eliminar un elemento
   eliminarElemento(): void {
+    // Llamada al servicio para eliminar el plantel
     this.plantelService_.deletePlantel(this.idPlantel).subscribe({
       next: (response) => {
+        // Mostrar el mensaje de éxito usando el servicio de alertas
+        this.alertTaiwilService.showTailwindAlert("Elemento eliminado con éxito", "success");
+  
+        // Si el backend no devuelve el plantel eliminado, no es necesario loguearlo. Si lo devuelve, se puede loguear.
         console.log('Elemento eliminado con éxito:', response);
-        this.getPlanteles(); // Actualizar lista de planteles
+  
+        // Actualizar la lista de planteles después de eliminar uno
+        this.getPlanteles();
       },
       error: (error) => {
+        // Mostrar el mensaje de error usando el servicio de alertas
+        this.alertTaiwilService.showTailwindAlert("Error al eliminar el elemento", "error");
+  
+        // Mostrar el error en la consola para depurar
         console.error('Error al eliminar el elemento:', error);
       },
     });
   }
+  
 }
