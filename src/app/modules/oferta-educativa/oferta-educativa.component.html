@@ -43,31 +43,31 @@
         <input
           id="curso"
           type="text"
-          [(ngModel)]="searchCurso"
+          [(ngModel)]="filtroNombre"
           class="px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
           placeholder="Nombre del curso"
         />
       </div>
 
       <div class="flex flex-col">
-        <label for="especialidad" class="mb-2 text-sm text-gray-600"
+        <label for="filtroEspecialidad" class="mb-2 text-sm text-gray-600"
           >Buscar Especialidad:</label
         >
         <input
           id="especialidad"
           type="text"
-          [(ngModel)]="searchEspecialidad"
+          [(ngModel)]="filtroEspecialidad"
           class="px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
           placeholder="Especialidad"
         />
       </div>
 
-      <button
+      <!-- <button
         class="self-end px-6 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition"
         (click)="filtrarCursos()"
       >
         Buscar
-      </button>
+      </button> -->
       <!-- Botón para agregar curso -->
       <button
         (click)="toggleAddingCourse()"
@@ -174,6 +174,10 @@
 </div>
 
 
+
+
+
+
     <!-- Modal de Detalle del Curso -->
     <div
       *ngIf="selectedCourseDetails"
@@ -241,12 +245,14 @@
       <select
         id="course-select"
         [(ngModel)]="selectedCourse"
-        class="w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+        class="w-full border border-gray-300 rounded-lg p-3"
       >
         <option value="" disabled>Seleccione una opción</option>
         <option value="curso1">Curso Modalidad CAE</option>
         <option value="curso2">Curso Modalidad Virtual</option>
         <option value="curso3">Curso Modalidad Escuela</option>
+          <option value="curso5">Cursos Modalidad Regular</option>
+      <option value="curso6">Cursos Modalidad SEP</option>
       </select>
     </div>
 
@@ -323,5 +329,7 @@
   <!--  -->
 </div>
 <!-- ...... -->
-<app-pdf-example [generarReportePdfCursoId]="generarReportePdfCursoId">
-</app-pdf-example>
+<!-- <app-pdf-example [generarReportePdfCursoId]="generarReportePdfCursoId">
+</app-pdf-example> -->
+<app-pdf-generate [generarReportePdfCursoId]="generarReportePdfCursoId">
+</app-pdf-generate>

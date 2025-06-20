@@ -8,6 +8,7 @@ import "jspdf-autotable"; // Ensure this is imported
 import { PDFDocumentProxy } from 'ng2-pdf-viewer';
 
 import { DomSanitizer } from '@angular/platform-browser'; // Import DomSanitizer
+// import { PdfGenerateComponent } from '../../shared/components/pdf-generate/pdf-generate.component';
 
 
 declare module "jspdf" {
@@ -17,6 +18,7 @@ declare module "jspdf" {
 }
 
 @Component({
+  // imports:[PdfGenerateComponent],
   selector: 'app-oferta-educativa',
   templateUrl: './oferta-educativa.component.html',
   styleUrls: ['./oferta-educativa.component.scss']
@@ -33,7 +35,8 @@ export class OfertaEducativaComponent implements OnInit {
   selectedCourseDetails: any = null;
 
   mostrarFormularioFlag = false;
-  selectedCourse: any = null;
+  // selectedCourse: any = null;
+  selectedCourse: string = "curso1"; // Esto seleccionará "Curso Modalidad CAE" por defecto
   cursoData: any;
 
   generando = false;
@@ -95,13 +98,14 @@ selectedCourseId: number=0;
   
     // Busca la modalidad correspondiente y extrae solo el componente
     const modalidad = this.modalidades.find(m => m.id === curso.tipo_curso_id);
-    this.selectedCourse = modalidad ? modalidad.componente : null;
+    this.selectedCourse = modalidad ? modalidad.componente : "";
     // selectedCourseId
     // Verifica los valores en consola y alerta
     alert(`ID del Curso: ${this.selectedCourseId}, Componente: ${this.selectedCourse}`);
     console.log('Selected Component:', this.selectedCourse);
   }
   generarReportePDF(id: number): void {
+    console.log("----<",id)
     this.generarReportePdfCursoId = id;
     // this.generarReportePdf = true;
     // alert("abrio ")
@@ -137,20 +141,59 @@ selectedCourseId: number=0;
   // Función para filtrar los datos
   filtrarCursosBy() {
    
-    return this.cursos.filter(curso => {
+    // return this.cursos.filter(curso => {
+    //   return (
+    //     (this.filtroId === '' || curso.id.toString().includes(this.filtroId)) &&
+    //     (this.filtroEstado === '' || (this.filtroEstado === 'activo' ? curso.activo : !curso.activo)) &&
+    //     (this.filtroArea === '' || curso.area.toLowerCase().includes(this.filtroArea.toLowerCase())) &&
+    //     (this.filtroEspecialidad === '' || curso.especialidad.toLowerCase().includes(this.filtroEspecialidad.toLowerCase())) &&
+    //     (this.filtroClave === '' || curso.clave.toLowerCase().includes(this.filtroClave.toLowerCase())) &&
+    //     (this.filtroNombre === '' || curso.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase())) &&
+    //     (this.filtroTipo === '' || curso.tipo.toLowerCase().includes(this.filtroTipo.toLowerCase())) &&
+    //     (this.filtroHoras === '' || curso.horas.toString().includes(this.filtroHoras)) &&
+    //     (this.filtroTipoCurso === '' || curso.tipo_curso.toLowerCase().includes(this.filtroTipoCurso.toLowerCase()))
+    //   );
+    // });
+
+        let filtered = this.cursos.filter(curso => {
       return (
-        (this.filtroId === '' || curso.id.toString().includes(this.filtroId)) &&
-        (this.filtroEstado === '' || (this.filtroEstado === 'activo' ? curso.activo : !curso.activo)) &&
-        (this.filtroArea === '' || curso.area.toLowerCase().includes(this.filtroArea.toLowerCase())) &&
-        (this.filtroEspecialidad === '' || curso.especialidad.toLowerCase().includes(this.filtroEspecialidad.toLowerCase())) &&
-        (this.filtroClave === '' || curso.clave.toLowerCase().includes(this.filtroClave.toLowerCase())) &&
-        (this.filtroNombre === '' || curso.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase())) &&
-        (this.filtroTipo === '' || curso.tipo.toLowerCase().includes(this.filtroTipo.toLowerCase())) &&
-        (this.filtroHoras === '' || curso.horas.toString().includes(this.filtroHoras)) &&
-        (this.filtroTipoCurso === '' || curso.tipo_curso.toLowerCase().includes(this.filtroTipoCurso.toLowerCase()))
+        curso.id.toString().includes(this.filtroId.toLowerCase()) &&
+        (curso.activo ? 'activo' : 'inactivo').includes(this.filtroEstado.toLowerCase()) &&
+        curso.area.toLowerCase().includes(this.filtroArea.toLowerCase()) &&
+        curso.especialidad.toLowerCase().includes(this.filtroEspecialidad.toLowerCase()) &&
+        curso.clave.toLowerCase().includes(this.filtroClave.toLowerCase()) &&
+        curso.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()) &&
+        curso.tipo.toLowerCase().includes(this.filtroTipo.toLowerCase()) &&
+        curso.horas.toString().includes(this.filtroHoras.toLowerCase()) &&
+        curso.tipo_curso.toLowerCase().includes(this.filtroTipoCurso.toLowerCase())
       );
     });
+
+      this.calcularTotalPaginas(filtered);
+    return this.paginarDatos(filtered);
   }
+
+
+  
+
+  // Función para paginar los datos
+  paginarDatos(data: any[]): any[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return data.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  // Calcular total de páginas
+  calcularTotalPaginas(data?: any[]): void {
+    const datos = data || this.cursos;
+    this.totalPages = Math.ceil(datos.length / this.itemsPerPage) || 1;
+    
+    // Si la página actual es mayor que el total de páginas después de filtrar,
+    // volver a la primera página
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = 1;
+    }
+  }
+
   filtrarCursos(): void {
     this.filteredCursos = this.cursos.filter((curso) =>
       curso.nombre.toLowerCase().includes(this.searchCurso.toLowerCase()) &&
@@ -458,7 +501,7 @@ selectedCourseId: number=0;
   
     ocultarFormulario() {
       this.mostrarFormularioFlag = false;
-      this.selectedCourse = null;
+      this.selectedCourse = "";
     }
 
 actualizarCurso(): void {
