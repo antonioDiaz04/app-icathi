@@ -16,6 +16,14 @@ export class AlumnoComponent implements OnInit {
   alumnoData: any = null; // Datos del alumno cargados
   isAuthenticated: boolean = false; // Estado de autenticación
   menuOpen: boolean = false;
+menuItems = [
+  { label: 'Inicio', route: '/alumno/inicio', icon: 'fas fa-home' },
+  { label: 'Perfil', route: '/alumno/perfil', icon: 'fas fa-user' },
+  { label: 'Clases Asignadas', route: '/alumno/clases', icon: 'fas fa-book' },
+  { label: 'Calificaciones', route: '/alumno/calificaciones', icon: 'fas fa-clipboard' },
+  { label: 'Oferta Educativa', route: '/alumno/oferta', icon: 'fas fa-chart-bar' },
+  { label: 'Avisos', route: '/alumno/inicio', icon: 'fas fa-bell' }
+];
 
   constructor(
 

@@ -15,10 +15,10 @@ import { CursoModalidadVirtualComponent } from './views/cursos/typos-cursos/curs
   import { TextareaModule } from 'primeng/textarea';
 import { PdfExampleComponent } from './views/pdf-example/pdf-example.component';
 import { PdfViewComponent } from './views/pdf-view/pdf-view.component';
-import { PdfGenerateComponent } from '../../shared/components/pdf-generate/pdf-generate.component';
+// import { PdfGenerateComponent } from '../../shared/components/pdf-generate/pdf-generate.component';
 // import {InputTextareaModule} from 'primeng/inputtextarea';
 @NgModule({
-  declarations: [PdfGenerateComponent,PdfExampleComponent,
+  declarations: [PdfExampleComponent,
     HomeComponent,CursoModalidadCAEComponent,CursoModalidadEscuelaComponent,CursoModalidadVirtualComponent,OfertaEducativaComponent, HeaderComponent,ListadoCursosComponent, PdfViewComponent
   ],  
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -81,8 +81,8 @@ export interface UnitOption {
 
 @Component({
   // selector: "app-curso-modalidad-cae",
-    selector: "app-curso-modalidad-cae",
-  
+  selector: "app-curso-modalidad-cae",
+
   templateUrl: "./curso-modalidad-cae.component.html",
   styles: `
   .ui.dimmer {
@@ -101,7 +101,7 @@ export interface UnitOption {
 })
 export class CursoModalidadCAEComponent implements OnInit, OnChanges {
   @Input() selectedCourseId!: number;
-  
+
   // Signals for state management
   areas = signal<any[]>([]);
   especialidades = signal<any[]>([]);
@@ -150,13 +150,13 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
 
   private apiUrl = signal(environment.api);
 
-  constructor(private sanitizer: DomSanitizer, private http: HttpClient) {}
+  constructor(private sanitizer: DomSanitizer, private http: HttpClient) { }
 
   ngOnInit(): void {
     this.cargarAreas();
     this.cargarEspecialidades();
     this.cargarTiposCurso();
-    
+
     if (this.selectedCourseId) {
       this.btnTitle.set("Editar");
       console.log(`🔹 Inicializando con ID: ${this.selectedCourseId}`);
@@ -170,7 +170,9 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
       this.showCourseDetails(this.selectedCourseId);
     }
   }
-
+  get duracionCalculada(): number {
+    return this.calcularTotalHoras();
+  }
   cargarAreas() {
     this.http.get<any[]>(`${this.apiUrl()}/areas`).subscribe({
       next: (data) => this.areas.set(data),
@@ -196,7 +198,7 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
     this.http.get<any>(`${this.apiUrl()}/cursos/detalles/${id}`).subscribe({
       next: (data) => {
         this.archivoUrl.set(data.archivo_url);
-        
+
         const updatedCourse: Modulo = {
           ...this.nuevoCurso(), // Keep default structure
           ...data, // Override with API data
@@ -207,7 +209,8 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
           fecha_publicacion: isNaN(new Date(data.fecha_publicacion).getTime())
             ? ""
             : new Date(data.fecha_publicacion).toISOString().split("T")[0],
-          duracion_horas: Number(data.duracion_horas),
+          // duracion_horas: Number(data.duracion_horas),
+          duracion_horas: this.duracionCalculada,
           costo: data.costo !== undefined ? Number(data.costo) : undefined,
           area_id: data.area_id !== undefined ? Number(data.area_id) : undefined,
           especialidad_id: data.especialidad_id !== undefined ? Number(data.especialidad_id) : undefined,
@@ -219,34 +222,34 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
           contenidoProgramatico: {
             temas: Array.isArray(data.contenidoProgramatico)
               ? data.contenidoProgramatico.map((t: any) => ({
-                  id: Number(t.id),
-                  tema_nombre: t.tema_nombre,
-                  tiempo: Number(t.tiempo) || 0,
-                  competencias: t.competencias || undefined,
-                  evaluacion: t.evaluacion || undefined,
-                  actividades: t.actividades || undefined,
-                }))
+                id: Number(t.id),
+                tema_nombre: t.tema_nombre,
+                tiempo: Number(t.tiempo) || 0,
+                competencias: t.competencias || undefined,
+                evaluacion: t.evaluacion || undefined,
+                actividades: t.actividades || undefined,
+              }))
               : [],
           },
           materiales: Array.isArray(data.materiales)
             ? data.materiales.map((m: any) => ({
-                id: Number(m.id),
-                descripcion: m.descripcion,
-                unidad_de_medida: m.unidad_de_medida || undefined,
-                cantidad10: m.cantidad_10 !== undefined ? Number(m.cantidad_10) : undefined,
-                cantidad15: m.cantidad_15 !== undefined ? Number(m.cantidad_15) : undefined,
-                cantidad20: m.cantidad_20 !== undefined ? Number(m.cantidad_20) : undefined,
-              }))
+              id: Number(m.id),
+              descripcion: m.descripcion,
+              unidad_de_medida: m.unidad_de_medida || undefined,
+              cantidad10: m.cantidad_10 !== undefined ? Number(m.cantidad_10) : undefined,
+              cantidad15: m.cantidad_15 !== undefined ? Number(m.cantidad_15) : undefined,
+              cantidad20: m.cantidad_20 !== undefined ? Number(m.cantidad_20) : undefined,
+            }))
             : [],
           equipamiento: Array.isArray(data.equipamiento)
             ? data.equipamiento.map((e: any) => ({
-                id: Number(e.id),
-                descripcion: e.descripcion,
-                unidad_de_medida: e.unidad_de_medida || undefined,
-                cantidad10: e.cantidad_10 !== undefined ? Number(e.cantidad_10) : undefined,
-                cantidad15: e.cantidad_15 !== undefined ? Number(e.cantidad_15) : undefined,
-                cantidad20: e.cantidad_20 !== undefined ? Number(e.cantidad_20) : undefined,
-              }))
+              id: Number(e.id),
+              descripcion: e.descripcion,
+              unidad_de_medida: e.unidad_de_medida || undefined,
+              cantidad10: e.cantidad_10 !== undefined ? Number(e.cantidad_10) : undefined,
+              cantidad15: e.cantidad_15 !== undefined ? Number(e.cantidad_15) : undefined,
+              cantidad20: e.cantidad_20 !== undefined ? Number(e.cantidad_20) : undefined,
+            }))
             : [],
           firmas: {
             revisado: {
@@ -315,203 +318,203 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
   //   });
   // }
   // Add these signals at the top of your component class
-selectedFile = signal<File | null>(null);
-isFileSelected = computed(() => this.selectedFile() !== null);
+  selectedFile = signal<File | null>(null);
+  isFileSelected = computed(() => this.selectedFile() !== null);
 
-agregarCurso(): void {
-  this.isSaving.set(true);
-  this.alertMessage.set(null); // Reset previous alert
+  agregarCurso(): void {
+    this.isSaving.set(true);
+    this.alertMessage.set(null); // Reset previous alert
 
-  // Crear un objeto FormData
-  const formData = new FormData();
-  const currentCourse = this.nuevoCurso();
+    // Crear un objeto FormData
+    const formData = new FormData();
+    const currentCourse = this.nuevoCurso();
 
-  // Agregar propiedades del objeto `nuevoCurso` a FormData
-  formData.append("nombre", currentCourse.nombre);
-  formData.append(
-    "costo",
-    currentCourse.costo !== undefined ? currentCourse.costo.toString() : ""
-  );
-  formData.append(
-    "duracion_horas",
-    currentCourse.duracion_horas.toString()
-  );
-  formData.append("descripcion", currentCourse.descripcion);
-  formData.append("nivel", currentCourse.nivel);
-  formData.append(
-    "vigencia_inicio",
-    currentCourse.vigencia_inicio?.toString() || ""
-  );
-  formData.append(
-    "fecha_publicacion",
-    currentCourse.fecha_publicacion?.toString() || ""
-  );
-  formData.append("clave", currentCourse.clave?.toString() || "");
-  formData.append("area_id", currentCourse.area_id?.toString() || "");
-  formData.append(
-    "especialidad_id",
-    currentCourse.especialidad_id?.toString() || ""
-  );
-  formData.append("tipo_curso_id", "1");
+    // Agregar propiedades del objeto `nuevoCurso` a FormData
+    formData.append("nombre", currentCourse.nombre);
+    formData.append(
+      "costo",
+      currentCourse.costo !== undefined ? currentCourse.costo.toString() : ""
+    );
+    formData.append(
+      "duracion_horas",
+      currentCourse.duracion_horas.toString()
+    );
+    formData.append("descripcion", currentCourse.descripcion);
+    formData.append("nivel", currentCourse.nivel);
+    formData.append(
+      "vigencia_inicio",
+      currentCourse.vigencia_inicio?.toString() || ""
+    );
+    formData.append(
+      "fecha_publicacion",
+      currentCourse.fecha_publicacion?.toString() || ""
+    );
+    formData.append("clave", currentCourse.clave?.toString() || "");
+    formData.append("area_id", currentCourse.area_id?.toString() || "");
+    formData.append(
+      "especialidad_id",
+      currentCourse.especialidad_id?.toString() || ""
+    );
+    formData.append("tipo_curso_id", "1");
 
-  // Append firmas data
-  formData.append(
-    "revisado_por",
-    currentCourse.firmas?.revisado?.nombre?.toString() || ""
-  );
-  formData.append(
-    "cargo_revisado_por",
-    currentCourse.firmas?.revisado?.cargo?.toString() || ""
-  );
-  formData.append(
-    "autorizado_por",
-    currentCourse.firmas?.autorizado?.nombre?.toString() || ""
-  );
-  formData.append(
-    "cargo_autorizado_por",
-    currentCourse.firmas?.autorizado?.cargo?.toString() || ""
-  );
-  formData.append(
-    "elaborado_por",
-    currentCourse.firmas?.elaborado?.nombre?.toString() || ""
-  );
-  formData.append(
-    "cargo_elaborado_por",
-    currentCourse.firmas?.elaborado?.cargo?.toString() || ""
-  );
+    // Append firmas data
+    formData.append(
+      "revisado_por",
+      currentCourse.firmas?.revisado?.nombre?.toString() || ""
+    );
+    formData.append(
+      "cargo_revisado_por",
+      currentCourse.firmas?.revisado?.cargo?.toString() || ""
+    );
+    formData.append(
+      "autorizado_por",
+      currentCourse.firmas?.autorizado?.nombre?.toString() || ""
+    );
+    formData.append(
+      "cargo_autorizado_por",
+      currentCourse.firmas?.autorizado?.cargo?.toString() || ""
+    );
+    formData.append(
+      "elaborado_por",
+      currentCourse.firmas?.elaborado?.nombre?.toString() || ""
+    );
+    formData.append(
+      "cargo_elaborado_por",
+      currentCourse.firmas?.elaborado?.cargo?.toString() || ""
+    );
 
-  // Append file if selected
-  const file = this.selectedFile();
-  if (file) {
-    formData.append("temario", file);
+    // Append file if selected
+    const file = this.selectedFile();
+    if (file) {
+      formData.append("temario", file);
+    }
+
+    // Append JSON data
+    formData.append("objetivos", JSON.stringify(currentCourse.objetivos));
+    formData.append(
+      "contenidoProgramatico",
+      JSON.stringify(currentCourse.contenidoProgramatico)
+    );
+    formData.append("materiales", JSON.stringify(currentCourse.materiales));
+    formData.append(
+      "equipamiento",
+      JSON.stringify(currentCourse.equipamiento)
+    );
+
+    // Determinar si es una actualización o una creación
+    const url = this.selectedCourseId
+      ? `${this.apiUrl()}/cursos/${this.selectedCourseId}`
+      : `${this.apiUrl()}/cursos`;
+
+    const request = this.selectedCourseId
+      ? this.http.put(url, formData)
+      : this.http.post<Modulo>(url, formData);
+
+    request.subscribe({
+      next: (response) => {
+        this.isSaving.set(false);
+        if (this.selectedCourseId) {
+          this.alertMessage.set(`Curso actualizado correctamente con ID: ${this.selectedCourseId}`);
+          this.alertTitle.set("Éxito");
+          this.alertType.set("success");
+        } else {
+          this.modulos.update(modulos => [...modulos, response as Modulo]);
+          this.resetNuevoCurso();
+          this.alertMessage.set("Curso agregado correctamente.");
+          this.alertTitle.set("Éxito");
+          this.alertType.set("success");
+        }
+      },
+      error: (err) => {
+        this.isSaving.set(false);
+        console.error("Error en la operación del curso:", err);
+        this.alertMessage.set(
+          this.selectedCourseId
+            ? "Error al actualizar el curso"
+            : "Error al agregar el curso"
+        );
+        this.alertTitle.set("Error");
+        this.alertType.set("error");
+      },
+      complete: () => {
+        this.isSaving.set(false);
+      },
+    });
   }
 
-  // Append JSON data
-  formData.append("objetivos", JSON.stringify(currentCourse.objetivos));
-  formData.append(
-    "contenidoProgramatico",
-    JSON.stringify(currentCourse.contenidoProgramatico)
-  );
-  formData.append("materiales", JSON.stringify(currentCourse.materiales));
-  formData.append(
-    "equipamiento",
-    JSON.stringify(currentCourse.equipamiento)
-  );
+  resetNuevoCurso(): void {
+    this.selectedFile.set(null);
+    this.nuevoCurso.set({
+      id: 0,
+      nombre: "",
+      duracion_horas: 0,
+      descripcion: "",
+      nivel: "",
+      clave: "",
+      area_id: undefined,
+      especialidad_id: undefined,
+      tipo_curso_id: undefined,
+      firmas: {
+        revisado: { nombre: "", cargo: "Programas de Estudio" },
+        autorizado: { nombre: "", cargo: "Directora Académica" },
+        elaborado: { nombre: "", cargo: "Director General" },
+      },
+      objetivos: {
+        objetivo: "",
+        perfil_ingreso: "",
+        perfil_egreso: "",
+        perfil_del_docente: "",
+        metodologia: "",
+        bibliografia: "",
+        criterios_acreditacion: "",
+        reconocimiento: "",
+      },
+      contenidoProgramatico: { temas: [] },
+      materiales: [],
+      equipamiento: [],
+    });
+  }
 
-  // Determinar si es una actualización o una creación
-  const url = this.selectedCourseId
-    ? `${this.apiUrl()}/cursos/${this.selectedCourseId}`
-    : `${this.apiUrl()}/cursos`;
-
-  const request = this.selectedCourseId
-    ? this.http.put(url, formData)
-    : this.http.post<Modulo>(url, formData);
-
-  request.subscribe({
-    next: (response) => {
-      this.isSaving.set(false);
-      if (this.selectedCourseId) {
-        this.alertMessage.set(`Curso actualizado correctamente con ID: ${this.selectedCourseId}`);
-        this.alertTitle.set("Éxito");
-        this.alertType.set("success");
-      } else {
-        this.modulos.update(modulos => [...modulos, response as Modulo]);
-        this.resetNuevoCurso();
-        this.alertMessage.set("Curso agregado correctamente.");
-        this.alertTitle.set("Éxito");
-        this.alertType.set("success");
-      }
-    },
-    error: (err) => {
-      this.isSaving.set(false);
-      console.error("Error en la operación del curso:", err);
-      this.alertMessage.set(
-        this.selectedCourseId
-          ? "Error al actualizar el curso"
-          : "Error al agregar el curso"
-      );
-      this.alertTitle.set("Error");
-      this.alertType.set("error");
-    },
-    complete: () => {
-      this.isSaving.set(false);
-    },
-  });
-}
-
-resetNuevoCurso(): void {
-  this.selectedFile.set(null);
-  this.nuevoCurso.set({
-    id: 0,
-    nombre: "",
-    duracion_horas: 0,
-    descripcion: "",
-    nivel: "",
-    clave: "",
-    area_id: undefined,
-    especialidad_id: undefined,
-    tipo_curso_id: undefined,
-    firmas: {
-      revisado: { nombre: "", cargo: "Programas de Estudio" },
-      autorizado: { nombre: "", cargo: "Directora Académica" },
-      elaborado: { nombre: "", cargo: "Director General" },
-    },
-    objetivos: {
-      objetivo: "",
-      perfil_ingreso: "",
-      perfil_egreso: "",
-      perfil_del_docente: "",
-      metodologia: "",
-      bibliografia: "",
-      criterios_acreditacion: "",
-      reconocimiento: "",
-    },
-    contenidoProgramatico: { temas: [] },
-    materiales: [],
-    equipamiento: [],
-  });
-}
-
-// Métodos para agregar y eliminar temas
-agregarTema(): void {
-  this.nuevoCurso.update(current => ({
-    ...current,
-    contenidoProgramatico: {
-      temas: [
-        ...current.contenidoProgramatico.temas,
-        {
-          id: null,
-          tema_nombre: "",
-          tiempo: 0,
-          competencias: undefined,
-          evaluacion: undefined,
-          actividades: undefined,
-        }
-      ]
-    }
-  }));
-}
-
-eliminarTema(index: number): void {
-  this.nuevoCurso.update(current => {
-    const newTemas = [...current.contenidoProgramatico.temas];
-    newTemas.splice(index, 1);
-    return {
+  // Métodos para agregar y eliminar temas
+  agregarTema(): void {
+    this.nuevoCurso.update(current => ({
       ...current,
       contenidoProgramatico: {
-        temas: newTemas
+        temas: [
+          ...current.contenidoProgramatico.temas,
+          {
+            id: null,
+            tema_nombre: "",
+            tiempo: 0,
+            competencias: undefined,
+            evaluacion: undefined,
+            actividades: undefined,
+          }
+        ]
       }
-    };
-  });
-}
-
-// Add this method to handle file selection
-onFileSelected(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  if (input.files && input.files.length > 0) {
-    this.selectedFile.set(input.files[0]);
+    }));
   }
-}
+
+  eliminarTema(index: number): void {
+    this.nuevoCurso.update(current => {
+      const newTemas = [...current.contenidoProgramatico.temas];
+      newTemas.splice(index, 1);
+      return {
+        ...current,
+        contenidoProgramatico: {
+          temas: newTemas
+        }
+      };
+    });
+  }
+
+  // Add this method to handle file selection
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile.set(input.files[0]);
+    }
+  }
 
   // Métodos para agregar y eliminar materiales
   // agregarMaterial(): void {
@@ -527,49 +530,49 @@ onFileSelected(event: Event): void {
   //   // console.log("click agregarMaterial")
   // }
 
-eliminarMaterial(index: number) {
-  const materialesActualizados = [...this.nuevoCurso().materiales];
-  materialesActualizados.splice(index, 1);
-  
-  this.nuevoCurso.set({
-    ...this.nuevoCurso(),
-    materiales: materialesActualizados
-  });
-}
+  eliminarMaterial(index: number) {
+    const materialesActualizados = [...this.nuevoCurso().materiales];
+    materialesActualizados.splice(index, 1);
 
-agregarMaterial() {
-  this.nuevoCurso.set({
-    ...this.nuevoCurso(),
-    materiales: [
-      ...this.nuevoCurso().materiales,
-      {
-        id: null,
-        descripcion: '',
-        unidad_de_medida: undefined,
-        cantidad10: undefined,
-        cantidad15: undefined,
-        cantidad20: undefined
-      }
-    ]
-  });
-}
+    this.nuevoCurso.set({
+      ...this.nuevoCurso(),
+      materiales: materialesActualizados
+    });
+  }
 
-agregarEquipamiento() {
-  this.nuevoCurso.set({
-    ...this.nuevoCurso(),
-    equipamiento: [
-      ...this.nuevoCurso().equipamiento,
-      {
-        id: null,
-        descripcion: '',
-        unidad_de_medida: undefined,
-        cantidad10: undefined,
-        cantidad15: undefined,
-        cantidad20: undefined
-      }
-    ]
-  });
-}
+  agregarMaterial() {
+    this.nuevoCurso.set({
+      ...this.nuevoCurso(),
+      materiales: [
+        ...this.nuevoCurso().materiales,
+        {
+          id: null,
+          descripcion: '',
+          unidad_de_medida: undefined,
+          cantidad10: undefined,
+          cantidad15: undefined,
+          cantidad20: undefined
+        }
+      ]
+    });
+  }
+
+  agregarEquipamiento() {
+    this.nuevoCurso.set({
+      ...this.nuevoCurso(),
+      equipamiento: [
+        ...this.nuevoCurso().equipamiento,
+        {
+          id: null,
+          descripcion: '',
+          unidad_de_medida: undefined,
+          cantidad10: undefined,
+          cantidad15: undefined,
+          cantidad20: undefined
+        }
+      ]
+    });
+  }
 
   eliminarEquipamiento(index: number): void {
     this.nuevoCurso().equipamiento.splice(index, 1);

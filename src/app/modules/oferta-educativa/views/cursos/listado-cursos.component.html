@@ -1,108 +1,75 @@
+<div class="p-6 bg-gray-100">
 
-
-<div  class="p-6 bg-gray-100">
-  <!-- <h1 class="text-xl font-bold text-gray-800 mb-4">
-    CONSULTA OFERTA EDUCATIVA
-  </h1> -->
   <h2 class="text-3xl font-bold text-gray-900">
     {{ mostrarOpcionesCursosTipo ? "Agregar Curso" : "Listado de Cursos" }}
   </h2>
   <div class="flex justify-between items-center">
-     
-    <button
-      (click)="toggleFormulario()"
-      class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300"
-    >
+
+    <button (click)="toggleFormulario()"
+      class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300">
       {{ mostrarOpcionesCursosTipo ? "Cancelar" : "Agregar Curso" }}
     </button>
   </div>
 
-<div class="flex justify-center mt-5">
-  <h2 *ngIf="mostrarOpcionesCursosTipo && isLoading" class="text-xl font-semibold">Cargando cursos...</h2>
-</div>
+  <div class="flex justify-center mt-5">
+    <h2 *ngIf="mostrarOpcionesCursosTipo && isLoading" class="text-xl font-semibold">Cargando cursos...</h2>
+  </div>
 
 
   <!-- Filtros -->
-  <div   class="flex flex-wrap gap-4 mb-6">
-    <div  *ngIf="!mostrarOpcionesCursosTipo" class="flex flex-col">
-      <label for="curso" class="mb-2 text-sm text-gray-600"
-        >Buscar por Nombre de Curso:</label
-      >
-      <input
-        id="curso"
-        type="text"
-        [(ngModel)]="searchCurso"
+  <div class="flex flex-wrap gap-4 mb-6">
+    <div *ngIf="!mostrarOpcionesCursosTipo" class="flex flex-col">
+      <label for="curso" class="mb-2 text-sm text-gray-600">Buscar por Nombre de Curso:</label>
+      <input id="curso" type="text" [(ngModel)]="searchCurso"
         class="px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-        placeholder="Nombre del curso"
-      />
+        placeholder="Nombre del curso" />
     </div>
 
-    <div  *ngIf="!mostrarOpcionesCursosTipo" class="flex flex-col">
-      <label for="especialidad" class="mb-2 text-sm text-gray-600"
-        >Buscar Especialidad:</label
-      >
-      <input
-        id="especialidad"
-        type="text"
-        [(ngModel)]="searchEspecialidad"
+    <div *ngIf="!mostrarOpcionesCursosTipo" class="flex flex-col">
+      <label for="especialidad" class="mb-2 text-sm text-gray-600">Buscar Especialidad:</label>
+      <input id="especialidad" type="text" [(ngModel)]="searchEspecialidad"
         class="px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-        placeholder="Especialidad"
-      />
+        placeholder="Especialidad" />
     </div>
 
-    <button  *ngIf="!mostrarOpcionesCursosTipo"
+    <button *ngIf="!mostrarOpcionesCursosTipo"
       class="self-end px-6 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition"
-      (click)="filtrarCursos()"
-    >
+      (click)="filtrarCursos()">
       Buscar
     </button>
-    <button *ngIf="isLoading" class="ui loading button self-end px-6 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition" (click)="cargarCursos()">
-    Recargar
-</button>
-   
+    <button *ngIf="isLoading"
+      class="ui loading button self-end px-6 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition"
+      (click)="cargarCursos()">
+      Recargar
+    </button>
+
     <!-- Tabla -->
     <div *ngIf="!mostrarOpcionesCursosTipo" class="overflow-x-auto">
       <table class="min-w-full bg-white border rounded-md shadow-md">
         <thead class="bg-gray-200">
           <tr>
-            <th
-              class="px-4 py-2 border text-left text-sm font-semibold text-gray-600"
-            >
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">
               ESTADO
             </th>
-            <th
-              class="px-4 py-2 border text-left text-sm font-semibold text-gray-600"
-            >
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">
               ÁREA
             </th>
-            <th
-              class="px-4 py-2 border text-left text-sm font-semibold text-gray-600"
-            >
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">
               ESPECIALIDAD
             </th>
-            <th
-              class="px-4 py-2 border text-left text-sm font-semibold text-gray-600"
-            >
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">
               CLAVE
             </th>
-            <th
-              class="px-4 py-2 border text-left text-sm font-semibold text-gray-600"
-            >
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">
               NOMBRE
             </th>
-            <th
-              class="px-4 py-2 border text-left text-sm font-semibold text-gray-600"
-            >
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">
               TIPO
             </th>
-            <th
-              class="px-4 py-2 border text-left text-sm font-semibold text-gray-600"
-            >
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">
               HORAS
             </th>
-            <th
-              class="px-4 py-2 border text-left text-sm font-semibold text-gray-600"
-            >
+            <th class="px-4 py-2 border text-left text-sm font-semibold text-gray-600">
               DETALLES
             </th>
           </tr>
@@ -110,14 +77,10 @@
         <tbody>
           <tr *ngFor="let curso of paginatedCursos" class="hover:bg-gray-100">
             <td class="px-4 py-2 border text-center">
-              <button
-                [ngClass]="{
+              <button [ngClass]="{
                   'bg-green-500 text-white': curso.activo,
                   'bg-red-500 text-white': !curso.activo
-                }"
-                class="px-4 py-1 rounded-md hover:opacity-90 transition"
-                (click)="toggleEstado(curso)"
-              >
+                }" class="px-4 py-1 rounded-md hover:opacity-90 transition" (click)="toggleEstado(curso)">
                 {{ curso.activo ? "Activo" : "Inactivo" }}
               </button>
             </td>
@@ -140,59 +103,39 @@
               {{ curso.horas }}
             </td>
             <td class="px-4 py-2 border text-center">
-              <button
-                class="px-4 py-1 text-white bg-teal-500 rounded-md hover:bg-teal-600 transition"
-              >
+              <button class="px-4 py-1 text-white bg-teal-500 rounded-md hover:bg-teal-600 transition">
                 Editar
               </button>
-           
 
-            <button
-              type="button"
-              (click)="generarReportePDF(curso.id)"
-              class="px-4 py-1 text-white bg-red-600 rounded-md hover:bg-teal-600 transition"
-              >
-              <i class="fas fa-file-pdf"></i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+
+              <button type="button" (click)="generarReportePDF(curso.id)"
+                class="px-4 py-1 text-white bg-red-600 rounded-md hover:bg-teal-600 transition">
+                <i class="fas fa-file-pdf"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <!-- Paginador -->
-    <div   *ngIf="!mostrarOpcionesCursosTipo" class="flex justify-center items-center mt-4">
-      <button
-        class="px-4 py-2 mx-1 text-sm text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300"
-        [disabled]="currentPage === 1"
-        (click)="prevPage()"
-      >
+    <div *ngIf="!mostrarOpcionesCursosTipo" class="flex justify-center items-center mt-4">
+      <button class="px-4 py-2 mx-1 text-sm text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300"
+        [disabled]="currentPage === 1" (click)="prevPage()">
         Anterior
       </button>
-      <span class="px-4 py-2 mx-1 text-sm font-medium text-gray-700"
-        >Página {{ currentPage }} de {{ totalPages }}</span
-      >
-      <button
-        class="px-4 py-2 mx-1 text-sm text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300"
-        [disabled]="currentPage === totalPages"
-        (click)="nextPage()"
-      >
+      <span class="px-4 py-2 mx-1 text-sm font-medium text-gray-700">Página {{ currentPage }} de {{ totalPages }}</span>
+      <button class="px-4 py-2 mx-1 text-sm text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300"
+        [disabled]="currentPage === totalPages" (click)="nextPage()">
         Siguiente
       </button>
     </div>
   </div>
   <!-- Modal -->
-  <div
-    *ngIf="showModal"
-    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-  >
-    <div
-      class="p-6 rounded-lg text-center"
-      [ngClass]="{
+  <div *ngIf="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="p-6 rounded-lg text-center" [ngClass]="{
         'bg-green-500 text-white': modalType === 'success',
         'bg-red-500 text-white': modalType === 'error'
-      }"
-      style="width: 300px"
-    >
+      }" style="width: 300px">
       <h2 class="text-xl font-bold mb-4">
         {{ modalType === "success" ? "¡Éxito!" : "¡Error!" }}
       </h2>
@@ -211,10 +154,7 @@
     </select>
 
     <div class="course-content">
-      <div
-        class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4"
-        role="alert"
-      >
+      <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
         <p class="font-bold">Opciones de Cursos</p>
         <p>Selecciona un curso de la lista desplegable.</p>
       </div>
@@ -233,5 +173,5 @@
     </div>
   </div>
 </div>
-<app-pdf-example [id]="cursoId" *ngIf="mostrarModalPdf" (cerrarModalEvent)="cerrarModalPdf($event)">
-</app-pdf-example>
+<!-- <app-pdf-example [id]="cursoId" *ngIf="mostrarModalPdf" (cerrarModalEvent)="cerrarModalPdf($event)">
+</app-pdf-example> -->

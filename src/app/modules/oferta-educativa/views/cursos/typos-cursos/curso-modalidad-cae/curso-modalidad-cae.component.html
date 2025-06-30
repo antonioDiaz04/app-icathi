@@ -63,12 +63,23 @@
         <!-- Duración -->
         <div>
           <label class="block text-sm font-medium">Duración (Horas)</label>
+          <input type="number" [(ngModel)]="nuevoCurso().duracion_horas" [value]="duracionCalculada"
+            name="duracion_horas" required disabled
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" placeholder="Duración en horas" />
+
+          <div *ngIf="!nuevoCurso().duracion_horas && cursoForm.submitted" class="text-red-500 text-sm">
+            Este campo es obligatorio.
+          </div>
+
+        </div>
+        <!-- <div>
+          <label class="block text-sm font-medium">Duración (Horas)</label>
           <input type="number" [(ngModel)]="nuevoCurso().duracion_horas" name="duracion_horas" required
             class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" placeholder="Duración en horas" />
           <div *ngIf="!nuevoCurso().duracion_horas && cursoForm.submitted" class="text-red-500 text-sm">
             Este campo es obligatorio.
           </div>
-        </div>
+        </div> -->
       </div>
 
       <!-- Descripción -->
@@ -384,128 +395,130 @@
 
 
 
-<h2 class="text-2xl font-bold text-gray-800 mb-6">Materiales</h2>
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Materiales</h2>
 
-<div class="overflow-x-auto">
-  <table class="w-full border-collapse border border-gray-300 mt-8">
-    <thead>
-      <tr class="bg-gray-100">
-        <th class="border border-gray-300 px-4 py-2 text-left font-semibold" rowspan="2">Descripción</th>
-        <th class="border border-gray-300 px-4 py-2 text-left font-semibold" rowspan="2">Unidad de Medida</th>
-        <th class="border border-gray-300 px-4 py-2 text-left font-semibold" colspan="3">Cantidad por Número de
-          Participantes</th>
-        <th class="border border-gray-300 px-4 py-2 text-left font-semibold" rowspan="2">Acción</th>
-      </tr>
-      <tr class="bg-gray-100">
-        <th class="border border-gray-300 px-4 py-2 text-left font-semibold">10</th>
-        <th class="border border-gray-300 px-4 py-2 text-left font-semibold">15</th>
-        <th class="border border-gray-300 px-4 py-2 text-left font-semibold">20</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let material of nuevoCurso().materiales; let j = index">
-        <td class="border border-gray-300 px-4 py-2">
-          <textarea [(ngModel)]="material.descripcion" [name]="'descripcion' + j"
-            class="border border-gray-300 rounded-md px-2 py-1 w-full">{{material.descripcion}}</textarea>
-        </td>
-        <td class="border border-gray-300 px-4 py-2">
-          <select [(ngModel)]="material.unidad_de_medida" [name]="'unidad_de_medida' + j"
-            class="border border-gray-300 rounded-md px-2 py-1 w-full">
-            <option *ngFor="let option of unitOptions" [value]="option.value" [selected]="option.value === material.unidad_de_medida">
-              {{ option.label }}
-            </option>
-          </select>
-        </td>
-        <td class="border border-gray-300 px-4 py-2">
-          <input type="number" [(ngModel)]="material.cantidad10" [name]="'cantidad10' + j"
-            class="border border-gray-300 rounded-md px-2 py-1 w-full" [value]="material.cantidad10" />
-        </td>
-        <td class="border border-gray-300 px-4 py-2">
-          <input type="number" [(ngModel)]="material.cantidad15" [name]="'cantidad15' + j"
-            class="border border-gray-300 rounded-md px-2 py-1 w-full" [value]="material.cantidad15" />
-        </td>
-        <td class="border border-gray-300 px-4 py-2">
-          <input type="number" [(ngModel)]="material.cantidad20" [name]="'cantidad20' + j"
-            class="border border-gray-300 rounded-md px-2 py-1 w-full" [value]="material.cantidad20" />
-        </td>
-        <td class="border border-gray-300 px-4 py-2 text-center">
-          <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-            (click)="eliminarMaterial(j)">
-            Eliminar
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <button (click)="agregarMaterial(); $event.stopPropagation()"
-    class="mt-4 bg-white hover:bg-gray-200 text-blue-500 font-bold py-2 px-4 rounded border border-gray-200">
-    Agregar Material
-  </button>
-</div>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse border border-gray-300 mt-8">
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="border border-gray-300 px-4 py-2 text-left font-semibold" rowspan="2">Descripción</th>
+              <th class="border border-gray-300 px-4 py-2 text-left font-semibold" rowspan="2">Unidad de Medida</th>
+              <th class="border border-gray-300 px-4 py-2 text-left font-semibold" colspan="3">Cantidad por Número de
+                Participantes</th>
+              <th class="border border-gray-300 px-4 py-2 text-left font-semibold" rowspan="2">Acción</th>
+            </tr>
+            <tr class="bg-gray-100">
+              <th class="border border-gray-300 px-4 py-2 text-left font-semibold">10</th>
+              <th class="border border-gray-300 px-4 py-2 text-left font-semibold">15</th>
+              <th class="border border-gray-300 px-4 py-2 text-left font-semibold">20</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let material of nuevoCurso().materiales; let j = index">
+              <td class="border border-gray-300 px-4 py-2">
+                <textarea [(ngModel)]="material.descripcion" [name]="'descripcion' + j"
+                  class="border border-gray-300 rounded-md px-2 py-1 w-full">{{material.descripcion}}</textarea>
+              </td>
+              <td class="border border-gray-300 px-4 py-2">
+                <select [(ngModel)]="material.unidad_de_medida" [name]="'unidad_de_medida' + j"
+                  class="border border-gray-300 rounded-md px-2 py-1 w-full">
+                  <option *ngFor="let option of unitOptions" [value]="option.value"
+                    [selected]="option.value === material.unidad_de_medida">
+                    {{ option.label }}
+                  </option>
+                </select>
+              </td>
+              <td class="border border-gray-300 px-4 py-2">
+                <input type="number" [(ngModel)]="material.cantidad10" [name]="'cantidad10' + j"
+                  class="border border-gray-300 rounded-md px-2 py-1 w-full" [value]="material.cantidad10" />
+              </td>
+              <td class="border border-gray-300 px-4 py-2">
+                <input type="number" [(ngModel)]="material.cantidad15" [name]="'cantidad15' + j"
+                  class="border border-gray-300 rounded-md px-2 py-1 w-full" [value]="material.cantidad15" />
+              </td>
+              <td class="border border-gray-300 px-4 py-2">
+                <input type="number" [(ngModel)]="material.cantidad20" [name]="'cantidad20' + j"
+                  class="border border-gray-300 rounded-md px-2 py-1 w-full" [value]="material.cantidad20" />
+              </td>
+              <td class="border border-gray-300 px-4 py-2 text-center">
+                <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                  (click)="eliminarMaterial(j)">
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button (click)="agregarMaterial(); $event.stopPropagation()"
+          class="mt-4 bg-white hover:bg-gray-200 text-blue-500 font-bold py-2 px-4 rounded border border-gray-200">
+          Agregar Material
+        </button>
+      </div>
 
-<h2 class="text-2xl font-bold text-gray-800 mb-6">Equipamiento</h2>
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Equipamiento</h2>
 
-<div class="overflow-x-auto">
-  <table class="w-full border-collapse border border-gray-300 mt-8">
-    <thead>
-      <tr class="bg-gray-100">
-        <th class="border border-gray-300 px-4 py-2 text-left font-semibold" rowspan="2">Descripción</th>
-        <th class="border border-gray-300 px-4 py-2 text-left font-semibold" rowspan="2">Unidad de Medida</th>
-        <th class="border border-gray-300 px-4 py-2 text-left font-semibold" colspan="3">Cantidad por Número de
-          Participantes</th>
-        <th class="border border-gray-300 px-4 py-2 text-left font-semibold" rowspan="2">Acción</th>
-      </tr>
-      <tr class="bg-gray-100">
-        <th class="border border-gray-300 px-4 py-2 text-left font-semibold">10</th>
-        <th class="border border-gray-300 px-4 py-2 text-left font-semibold">15</th>
-        <th class="border border-gray-300 px-4 py-2 text-left font-semibold">20</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let equipamiento of nuevoCurso().equipamiento; let k = index">
-        <td class="border border-gray-300 px-4 py-2">
-          <textarea [(ngModel)]="equipamiento.descripcion" [name]="'descripcion-equipamiento' + k"
-            class="border border-gray-300 rounded-md px-2 py-1 w-full">{{equipamiento.descripcion}}</textarea>
-        </td>
-        <td class="border border-gray-300 px-4 py-2">
-          <select [(ngModel)]="equipamiento.unidad_de_medida" [name]="'unidad_de_medida-equipamiento' + k"
-            class="border border-gray-300 rounded-md px-2 py-1 w-full">
-            <option *ngFor="let option of unitOptions" [value]="option.value" [selected]="option.value === equipamiento.unidad_de_medida">
-              {{ option.label }}
-            </option>
-          </select>
-        </td>
-        <td class="border border-gray-300 px-4 py-2">
-          <input type="number" [(ngModel)]="equipamiento.cantidad10" [name]="'cantidad10-equipamiento' + k"
-            class="border border-gray-300 rounded-md px-2 py-1 w-full" [value]="equipamiento.cantidad10" />
-        </td>
-        <td class="border border-gray-300 px-4 py-2">
-          <input type="number" [(ngModel)]="equipamiento.cantidad15" [name]="'cantidad15-equipamiento' + k"
-            class="border border-gray-300 rounded-md px-2 py-1 w-full" [value]="equipamiento.cantidad15" />
-        </td>
-        <td class="border border-gray-300 px-4 py-2">
-          <input type="number" [(ngModel)]="equipamiento.cantidad20" [name]="'cantidad20-equipamiento' + k"
-            class="border border-gray-300 rounded-md px-2 py-1 w-full" [value]="equipamiento.cantidad20" />
-        </td>
-        <td class="border border-gray-300 px-4 py-2 text-center">
-          <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-            (click)="eliminarEquipamiento(k)">
-            Eliminar
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <button class="mt-4 bg-white hover:bg-gray-200 text-blue-500 font-bold py-2 px-4 rounded border border-gray-200"
-    (click)="agregarEquipamiento()">
-    Agregar Equipamiento
-  </button>
-</div>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse border border-gray-300 mt-8">
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="border border-gray-300 px-4 py-2 text-left font-semibold" rowspan="2">Descripción</th>
+              <th class="border border-gray-300 px-4 py-2 text-left font-semibold" rowspan="2">Unidad de Medida</th>
+              <th class="border border-gray-300 px-4 py-2 text-left font-semibold" colspan="3">Cantidad por Número de
+                Participantes</th>
+              <th class="border border-gray-300 px-4 py-2 text-left font-semibold" rowspan="2">Acción</th>
+            </tr>
+            <tr class="bg-gray-100">
+              <th class="border border-gray-300 px-4 py-2 text-left font-semibold">10</th>
+              <th class="border border-gray-300 px-4 py-2 text-left font-semibold">15</th>
+              <th class="border border-gray-300 px-4 py-2 text-left font-semibold">20</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let equipamiento of nuevoCurso().equipamiento; let k = index">
+              <td class="border border-gray-300 px-4 py-2">
+                <textarea [(ngModel)]="equipamiento.descripcion" [name]="'descripcion-equipamiento' + k"
+                  class="border border-gray-300 rounded-md px-2 py-1 w-full">{{equipamiento.descripcion}}</textarea>
+              </td>
+              <td class="border border-gray-300 px-4 py-2">
+                <select [(ngModel)]="equipamiento.unidad_de_medida" [name]="'unidad_de_medida-equipamiento' + k"
+                  class="border border-gray-300 rounded-md px-2 py-1 w-full">
+                  <option *ngFor="let option of unitOptions" [value]="option.value"
+                    [selected]="option.value === equipamiento.unidad_de_medida">
+                    {{ option.label }}
+                  </option>
+                </select>
+              </td>
+              <td class="border border-gray-300 px-4 py-2">
+                <input type="number" [(ngModel)]="equipamiento.cantidad10" [name]="'cantidad10-equipamiento' + k"
+                  class="border border-gray-300 rounded-md px-2 py-1 w-full" [value]="equipamiento.cantidad10" />
+              </td>
+              <td class="border border-gray-300 px-4 py-2">
+                <input type="number" [(ngModel)]="equipamiento.cantidad15" [name]="'cantidad15-equipamiento' + k"
+                  class="border border-gray-300 rounded-md px-2 py-1 w-full" [value]="equipamiento.cantidad15" />
+              </td>
+              <td class="border border-gray-300 px-4 py-2">
+                <input type="number" [(ngModel)]="equipamiento.cantidad20" [name]="'cantidad20-equipamiento' + k"
+                  class="border border-gray-300 rounded-md px-2 py-1 w-full" [value]="equipamiento.cantidad20" />
+              </td>
+              <td class="border border-gray-300 px-4 py-2 text-center">
+                <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                  (click)="eliminarEquipamiento(k)">
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="mt-4 bg-white hover:bg-gray-200 text-blue-500 font-bold py-2 px-4 rounded border border-gray-200"
+          (click)="agregarEquipamiento()">
+          Agregar Equipamiento
+        </button>
+      </div>
 
 
 
 
-      
+
 
       <div class="mt-4">
         <!-- Botón para subir archivo (si no hay URL) -->
@@ -655,5 +668,5 @@
       </form> -->
     </div>
 
- 
+
   </div>

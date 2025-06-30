@@ -31,6 +31,7 @@
     "eva-icons": "^1.1.3",
     "express": "^4.18.2",
     "html2canvas": "^1.4.1",
+
     "icathi": "file:",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",

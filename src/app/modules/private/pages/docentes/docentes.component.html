@@ -1,46 +1,67 @@
-<div class="max-w-7xl mx-auto p-6 space-y-8">
-  <div class="flex justify-between items-center">
-    <h2 class="text-3xl font-bold text-gray-900">
+<div class="p-4 sm:p-6 bg-gray-100 ml-0 sm:ml-64">
+  <!-- Encabezado -->
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-4 sm:mt-6 text-center sm:text-left mb-3">
+    <h2 class="text-2xl sm:text-3xl font-bold text-[#44509D] ml-2">
       Listado de Docentes
     </h2>
     <button (click)="toggleFormulario()"
-      class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300">
-      {{ mostrarFormulario ? 'Cancelar' : 'Agregar Docente' }}
+      class="rounded-full bg-[#F08762] px-5 py-2.5 text-white hover:bg-[#d87552] transition duration-300 flex items-center gap-2 w-full sm:w-auto justify-center">
+      <i class="plus icon"></i> {{ mostrarFormulario ? 'Cancelar' : 'Agregar Docente' }}
     </button>
   </div>
-  <div *ngIf="!mostrarFormulario">
-    <table class="min-w-full border border-gray-300 shadow-lg rounded-lg overflow-hidden">
-      <thead>
-        <tr class="bg-gray-800 text-white">
-          <th class="border border-gray-300 px-4 py-3">ID</th>
-          <th class="border border-gray-300 px-4 py-3">Nombre Completo</th>
-          <th class="border border-gray-300 px-4 py-3">Email</th>
-          <th class="border border-gray-300 px-4 py-3">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let docente of docentes" class="hover:bg-gray-100 transition duration-200">
-          <td class="border border-gray-300 px-4 py-3 text-center">{{ docente.id }}</td>
-          <td class="border border-gray-300 px-4 py-3">{{ docente.nombre }} {{ docente.apellidos }}</td>
-          <td class="border border-gray-300 px-4 py-3 text-center">{{ docente.email }}</td>
-          <td class="border border-gray-300 px-4 py-3 text-center space-x-2">
-            <button (click)="verDetalles(docente)"
-              class="bg-green-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-green-700 transition duration-300">
-              Ver Detalles
-            </button>
-            <button (click)="editarDocente(docente)"
-              class="bg-blue-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
-              Editar
-            </button>
-            <button (click)="eliminarDocente(docente.id)"
-              class="bg-red-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-red-700 transition duration-300">
-              Eliminar
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+
+  <!-- Tabla de docentes -->
+  <div *ngIf="!mostrarFormulario" class="w-full overflow-x-scroll md:overflow-x-auto">
+    <div class="inline-block min-w-full align-middle max-h-[500px] overflow-y-auto rounded-md border border-gray-200">
+      <table class="min-w-full bg-white border rounded-md shadow-md text-sm">
+        <thead class="bg-[#44509D] text-white sticky top-0 z-10">
+          <tr>
+            <th class="px-3 py-3 text-left font-medium uppercase tracking-wider whitespace-nowrap">
+              <i class="hashtag icon mr-1"></i>ID
+            </th>
+            <th class="px-3 py-3 text-left font-medium uppercase tracking-wider whitespace-nowrap min-w-[220px]">
+              <i class="user icon mr-1"></i>Nombre Completo
+            </th>
+            <th class="px-3 py-3 text-left font-medium uppercase tracking-wider whitespace-nowrap">
+              <i class="envelope icon mr-1"></i>Email
+            </th>
+            <th class="px-3 py-3 text-center font-medium uppercase tracking-wider whitespace-nowrap min-w-[150px]">
+              <i class="settings icon mr-1"></i>Acciones
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <tr *ngFor="let docente of docentes" class="hover:bg-gray-50 transition duration-150">
+            <td class="px-3 py-3 text-gray-700 whitespace-nowrap text-center">{{ docente.id }}</td>
+            <td class="px-3 py-3 font-medium text-gray-800 whitespace-nowrap">{{ docente.nombre }} {{ docente.apellidos }}</td>
+            <td class="px-3 py-3 text-gray-700 whitespace-nowrap text-center">{{ docente.email }}</td>
+            <td class="px-3 py-3 text-center whitespace-nowrap">
+              <div class="flex flex-wrap justify-center gap-2">
+                <button
+                  (click)="verDetalles(docente)"
+                  class="bg-green-600 text-white px-3 py-1 rounded-md hover:bg-green-700 transition duration-300">
+                  <i class="eye icon mr-1"></i> Ver
+                </button>
+                <button
+                  (click)="editarDocente(docente)"
+                  class="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition duration-300">
+                  <i class="edit icon mr-1"></i> Editar
+                </button>
+                <button
+                  (click)="eliminarDocente(docente.id)"
+                  class="bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-700 transition duration-300">
+                  <i class="trash alternate icon mr-1"></i> Eliminar
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
+<!-- </div> -->
+
+
   <div *ngIf="mostrarFormulario" class="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
     <h2 class="text-2xl font-bold text-gray-800 mb-6">Registrar Nuevo Docente</h2>
     <form (ngSubmit)="agregarDocente()" #docenteForm="ngForm" class="space-y-6">

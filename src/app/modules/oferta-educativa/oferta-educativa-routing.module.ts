@@ -3,12 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { OfertaEducativaComponent } from './oferta-educativa.component';
 import { HomeComponent } from './views/home/home.component';
 import { ListadoCursosComponent } from './views/cursos/listado-cursos.component';
+import { ReportePdfViewerComponent } from '../../shared/components/reporte-pdf-viewer/reporte-pdf-viewer.component';
 
 const routes: Routes = [
 
   {
     path: '',
-    redirectTo: 'cursos',
+    redirectTo: 'home',
     pathMatch: 'full',
   },
   {
@@ -22,6 +23,10 @@ const routes: Routes = [
       {
         path: 'cursos',
         component: ListadoCursosComponent,
+      },
+      {
+        path: 'reporte/:id',
+        component: ReportePdfViewerComponent,
       },
 
     ]

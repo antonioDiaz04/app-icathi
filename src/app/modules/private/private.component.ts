@@ -7,5 +7,6 @@ import { Component } from '@angular/core';
   styleUrl: './private.component.scss'
 })
 export class PrivateComponent {
-
+logout(){}
+navigateTo(ruta:string){}
 }
