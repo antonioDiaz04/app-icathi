@@ -25,8 +25,15 @@ export interface Modulo {
   vigencia_inicio?: string | undefined; // Fecha de vigencia puede estar indefinida
   fecha_publicacion?: string | undefined; // Fecha de publicación puede estar indefinida
   ultima_actualizacion?: string | undefined; // Última actualización puede estar indefinida
-  
-  
+  // Nuevas propiedades para notas adicionales
+  notas: {
+    materiales?: string | undefined;
+    equipamiento?: string | undefined;
+    requisitos?: string | undefined;
+    evaluacion?: string | undefined;
+    general?: string | undefined;
+  };
+
   firmas: {
     revisado: { nombre: string; cargo: string };
     autorizado: { nombre: string; cargo: string };
@@ -65,6 +72,7 @@ export interface Modulo {
     cantidad15?: number | undefined; // Cantidad para 15 puede estar indefinida
     cantidad20?: number | undefined; // Cantidad para 20 puede estar indefinida
   }>;
+
 }
 
 // export interface EquipmentItem {
@@ -121,7 +129,7 @@ export class CursoModalidadEscuelaComponent implements OnInit, OnChanges {
     area_id: undefined,
     especialidad_id: undefined,
     tipo_curso_id: undefined,
-    
+
     firmas: {
       revisado: { nombre: "", cargo: "Programas de Estudio" },
       autorizado: { nombre: "", cargo: "Directora Académica" },
@@ -142,6 +150,13 @@ export class CursoModalidadEscuelaComponent implements OnInit, OnChanges {
     contenidoProgramatico: { temas: [] },
     materiales: [],
     equipamiento: [],
+    notas: {
+      materiales: "",
+      equipamiento: '',
+      requisitos: '',
+      evaluacion: ''
+    },
+
   };
 
   private apiUrl = `${environment.api}`;
@@ -153,7 +168,7 @@ export class CursoModalidadEscuelaComponent implements OnInit, OnChanges {
   alertType: "success" | "error" = "success";
   btnTtle?: string;
 
-  constructor(private sanitizer: DomSanitizer, private http: HttpClient) {}
+  constructor(private sanitizer: DomSanitizer, private http: HttpClient) { }
 
   ngOnInit(): void {
     this.cargarAreas();
@@ -177,12 +192,12 @@ export class CursoModalidadEscuelaComponent implements OnInit, OnChanges {
       alert(`🔹 ID del Curso actualizado: ${this.selectedCourseId}`);
     }
   }
-  archivoUrl!:any
+  archivoUrl!: any
 
   showCourseDetails(id: number) {
     this.http.get<any>(`${this.apiUrl}/cursos/detalles/${id}`).subscribe({
       next: (data) => {
-        this.archivoUrl= data.archivo_url;
+        this.archivoUrl = data.archivo_url;
 
         this.nuevoCurso = {
           ...this.nuevoCurso, // Mantiene la estructura inicial
@@ -213,69 +228,69 @@ export class CursoModalidadEscuelaComponent implements OnInit, OnChanges {
           contenidoProgramatico: {
             temas: Array.isArray(data.contenidoProgramatico)
               ? data.contenidoProgramatico.map((t: any) => ({
-                  id: Number(t.id),
-                  tema_nombre: t.tema_nombre, // Ajusta al nombre correcto de la propiedad
-                  tiempo: Number(t.tiempo) || 0, // Convierte a número con valor por defecto 0
-                  competencias: t.competencias || undefined,
-                  evaluacion: t.evaluacion || undefined,
-                  actividades: t.actividades || undefined,
-                }))
+                id: Number(t.id),
+                tema_nombre: t.tema_nombre, // Ajusta al nombre correcto de la propiedad
+                tiempo: Number(t.tiempo) || 0, // Convierte a número con valor por defecto 0
+                competencias: t.competencias || undefined,
+                evaluacion: t.evaluacion || undefined,
+                actividades: t.actividades || undefined,
+              }))
               : [],
           },
           materiales: Array.isArray(data.materiales)
             ? data.materiales.map((m: any) => ({
-                id: Number(m.id),
+              id: Number(m.id),
 
-                descripcion: m.descripcion,
-                unidad_de_medida: m.unidad_de_medida || undefined,
-                cantidad10:
-                  m.cantidad_10 !== undefined
-                    ? Number(m.cantidad_10)
-                    : undefined,
-                cantidad15:
-                  m.cantidad_15 !== undefined
-                    ? Number(m.cantidad_15)
-                    : undefined,
-                cantidad20:
-                  m.cantidad_20 !== undefined
-                    ? Number(m.cantidad_20)
-                    : undefined,
-              }))
+              descripcion: m.descripcion,
+              unidad_de_medida: m.unidad_de_medida || undefined,
+              cantidad10:
+                m.cantidad_10 !== undefined
+                  ? Number(m.cantidad_10)
+                  : undefined,
+              cantidad15:
+                m.cantidad_15 !== undefined
+                  ? Number(m.cantidad_15)
+                  : undefined,
+              cantidad20:
+                m.cantidad_20 !== undefined
+                  ? Number(m.cantidad_20)
+                  : undefined,
+            }))
             : [],
           equipamiento: Array.isArray(data.equipamiento)
             ? data.equipamiento.map((e: any) => ({
-                id: Number(e.id),
+              id: Number(e.id),
 
-                descripcion: e.descripcion,
-                unidad_de_medida: e.unidad_de_medida || undefined,
-                cantidad10:
-                  e.cantidad_10 !== undefined
-                    ? Number(e.cantidad_10)
-                    : undefined,
-                cantidad15:
-                  e.cantidad_15 !== undefined
-                    ? Number(e.cantidad_15)
-                    : undefined,
-                cantidad20:
-                  e.cantidad_20 !== undefined
-                    ? Number(e.cantidad_20)
-                    : undefined,
-              }))
+              descripcion: e.descripcion,
+              unidad_de_medida: e.unidad_de_medida || undefined,
+              cantidad10:
+                e.cantidad_10 !== undefined
+                  ? Number(e.cantidad_10)
+                  : undefined,
+              cantidad15:
+                e.cantidad_15 !== undefined
+                  ? Number(e.cantidad_15)
+                  : undefined,
+              cantidad20:
+                e.cantidad_20 !== undefined
+                  ? Number(e.cantidad_20)
+                  : undefined,
+            }))
             : [],
-            firmas: {
-              revisado: {
-                nombre: data.firmas.revisado?.nombre || "",
-                cargo: data.firmas.revisado?.cargo || "",
-              },
-              autorizado: {
-                nombre: data.firmas.autorizado?.nombre || "",
-                cargo: data.firmas.autorizado?.cargo || "",
-              },
-              elaborado: {
-                nombre: data.firmas.elaborado?.nombre || "",
-                cargo: data.firmas.elaborado?.cargo || "",
-              },
-            }
+          firmas: {
+            revisado: {
+              nombre: data.firmas.revisado?.nombre || "",
+              cargo: data.firmas.revisado?.cargo || "",
+            },
+            autorizado: {
+              nombre: data.firmas.autorizado?.nombre || "",
+              cargo: data.firmas.autorizado?.cargo || "",
+            },
+            elaborado: {
+              nombre: data.firmas.elaborado?.nombre || "",
+              cargo: data.firmas.elaborado?.cargo || "",
+            },
+          }
         };
 
         console.log("Curso cargado:", this.nuevoCurso);
@@ -356,7 +371,7 @@ export class CursoModalidadEscuelaComponent implements OnInit, OnChanges {
       this.nuevoCurso.especialidad_id?.toString() || ""
     );
     formData.append("tipo_curso_id", "3");
-    
+
     formData.append(
       "revisado_por",
       this.nuevoCurso.firmas?.revisado?.nombre?.toString() || ""
@@ -386,6 +401,7 @@ export class CursoModalidadEscuelaComponent implements OnInit, OnChanges {
     formData.append("temario", this.selectedFile);
     // Convertir `objetivos` a JSON y agregarlo a FormData
     formData.append("objetivos", JSON.stringify(this.nuevoCurso.objetivos));
+    // formData.append("notas", JSON.stringify(this.nuevoCurso.notas.materiales));
 
     // Convertir `contenidoProgramatico` a JSON y agregarlo
     formData.append(
@@ -393,12 +409,11 @@ export class CursoModalidadEscuelaComponent implements OnInit, OnChanges {
       JSON.stringify(this.nuevoCurso.contenidoProgramatico)
     );
 
-    // Agregar materiales como archivos (si existen)
-    // this.nuevoCurso.materiales.forEach((material, index) => {
-    //   formData.append(`materiales[${index}]`, material);
-    // });
     formData.append("materiales", JSON.stringify(this.nuevoCurso.materiales));
-
+    // En lugar del append de notas_adicionales:
+    formData.append("nota_materiales", this.nuevoCurso.notas?.materiales || '');
+    // formData.append("nota_equipamiento", this.nuevoCurso.notas?.equipamiento || '');
+    // formData.append("nota_evaluacion", this.nuevoCurso.notas?.evaluacion || '');
     // Agregar equipamiento como texto
     formData.append(
       "equipamiento",
@@ -435,8 +450,8 @@ export class CursoModalidadEscuelaComponent implements OnInit, OnChanges {
         this.isSaving = false;
         console.error("Error en la operación del curso:", err);
         this.alertMessage = this.selectedCourseId
-        ? `Error al actualizar el curso`
-        : `Error al agregar el curso`;
+          ? `Error al actualizar el curso`
+          : `Error al agregar el curso`;
 
         this.alertTitle = "Error";
         this.alertType = "error";
@@ -458,6 +473,12 @@ export class CursoModalidadEscuelaComponent implements OnInit, OnChanges {
       area_id: undefined,
       especialidad_id: undefined,
       tipo_curso_id: undefined,
+      notas: {
+        materiales: "",
+        equipamiento: '',
+        requisitos: '',
+        evaluacion: ''
+      },
       firmas: {
         revisado: { nombre: "", cargo: "Programas de Estudio" },
         autorizado: { nombre: "", cargo: "Directora Académica" },
@@ -625,5 +646,5 @@ export class CursoModalidadEscuelaComponent implements OnInit, OnChanges {
     this.page--;
   }
 
-  
+
 }

@@ -11,8 +11,14 @@ export class CaeFormatStrategy implements PdfFormatStrategy {
 
     img.onload = () => {
       helpers.drawBackground(doc, img);
-      helpers.drawHeaderCAE(doc);
-      helpers.drawCourseDetailsCAE(doc, data); // ✅ CORREGIDO
+      helpers.drawHeader(doc, data);;
+      helpers.drawCourseDetails(doc, data);
+      helpers.drawValidityBox(doc, data);
+      helpers.drawSignatureSection(doc, data);
+      helpers.FichaTecnica(doc, data);
+      helpers.agregarContenidoProgramatico(doc, data);
+      helpers.agregarTablaMateriales(doc, data);
+      helpers.agregarTablaEquipamiento(doc, data);
 
       const totalPages = doc.getNumberOfPages();
       for (let i = 2; i <= totalPages; i++) {
