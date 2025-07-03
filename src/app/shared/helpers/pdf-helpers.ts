@@ -480,103 +480,105 @@ export class PdfHelpers {
       },
       theme: 'grid'
     });
+    if (data.TIPO_CURSO_ID == 3) {
       const finalY = (doc as any).lastAutoTable.finalY || 50;
-
       this.agregarNotasMateriales(doc, data, finalY + 15);
+    }
+
 
   }
-agregarNotasMateriales(doc: jsPDF, data: CursoPdfData, startY: number): void {
-  const notaMateriales = data.NOTA_MATERIALES || data.NOTA_MATERIALES;
-  if (!notaMateriales) return;
+  agregarNotasMateriales(doc: jsPDF, data: CursoPdfData, startY: number): void {
+    const notaMateriales = data.NOTA_MATERIALES || data.NOTA_MATERIALES;
+    if (!notaMateriales) return;
 
-  // Asegurarse de que el texto tenga el formato correcto
-  const textoFormateado = notaMateriales.startsWith('*') ? notaMateriales : `*${notaMateriales}`;
-  
-  // Dividir en líneas
-  const lineas = textoFormateado.split('\n');
-  
-  // Configuración de estilo
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'normal');
-  
-  // Ajustes de posición:
-  const margenIzquierdo = 25; // Aumentado a 25 para mayor margen izquierdo (más a la derecha)
-  const espacioEntreLineas = 8; // Aumentado a 8 para más espacio entre líneas
-  
-  // Dibujar cada línea con sangría adicional si empieza con asterisco
-  lineas.forEach((linea, index) => {
-    const posicionX = linea.startsWith('*') ? margenIzquierdo : margenIzquierdo + 5;
-    doc.text(linea, posicionX, startY + (index * espacioEntreLineas));
-  });
-}
+    // Asegurarse de que el texto tenga el formato correcto
+    const textoFormateado = notaMateriales.startsWith('*') ? notaMateriales : `*${notaMateriales}`;
+
+    // Dividir en líneas
+    const lineas = textoFormateado.split('\n');
+
+    // Configuración de estilo
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+
+    // Ajustes de posición:
+    const margenIzquierdo = 25; // Aumentado a 25 para mayor margen izquierdo (más a la derecha)
+    const espacioEntreLineas = 8; // Aumentado a 8 para más espacio entre líneas
+
+    // Dibujar cada línea con sangría adicional si empieza con asterisco
+    lineas.forEach((linea, index) => {
+      const posicionX = linea.startsWith('*') ? margenIzquierdo : margenIzquierdo + 5;
+      doc.text(linea, posicionX, startY + (index * espacioEntreLineas));
+    });
+  }
 
 
-  
- agregarTablaEquipamiento(doc: jsPDF, data: CursoPdfData): void {
-  const equipos = data.EQUIPAMIENTO || [];
-  if (equipos.length === 0) return;
 
-  doc.addPage();
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
-  doc.text('EQUIPAMIENTO', doc.internal.pageSize.getWidth() / 2, 40, { align: 'center' });
+  agregarTablaEquipamiento(doc: jsPDF, data: CursoPdfData): void {
+    const equipos = data.EQUIPAMIENTO || [];
+    if (equipos.length === 0) return;
 
-  autoTable(doc, {
-    startY: 50,
-    head: [
-      [
-        { content: 'DESCRIPCIÓN', rowSpan: 2, styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
-        { content: 'UNIDAD DE MEDIDA', rowSpan: 2, styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
-        { content: 'CANTIDAD POR NÚMERO DE LAS Y/O LOS ALUMNOS', colSpan: 3, styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
+    doc.addPage();
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('EQUIPAMIENTO', doc.internal.pageSize.getWidth() / 2, 40, { align: 'center' });
+
+    autoTable(doc, {
+      startY: 50,
+      head: [
+        [
+          { content: 'DESCRIPCIÓN', rowSpan: 2, styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
+          { content: 'UNIDAD DE MEDIDA', rowSpan: 2, styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
+          { content: 'CANTIDAD POR NÚMERO DE LAS Y/O LOS ALUMNOS', colSpan: 3, styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
+        ],
+        [
+          { content: '10', styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
+          { content: '15', styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
+          { content: '20', styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } }
+        ]
       ],
-      [
-        { content: '10', styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
-        { content: '15', styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
-        { content: '20', styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } }
-      ]
-    ],
-    body: equipos.map((e: any) => {
-      // Función para extraer el valor numérico aunque venga como objeto
-      const getCantidad = (obj: any): string => {
-        if (typeof obj === 'number') return obj.toString();
-        if (typeof obj === 'string') return obj;
-        if (obj && obj.value !== undefined) return obj.value.toString();
-        return '';
-      };
+      body: equipos.map((e: any) => {
+        // Función para extraer el valor numérico aunque venga como objeto
+        const getCantidad = (obj: any): string => {
+          if (typeof obj === 'number') return obj.toString();
+          if (typeof obj === 'string') return obj;
+          if (obj && obj.value !== undefined) return obj.value.toString();
+          return '';
+        };
 
-      return [
-        e.equipamiento_descripcion,
-        e.equipamiento_unidad_de_medida,
-        getCantidad(e.equipamiento_cantidad_10),
-        getCantidad(e.equipamiento_cantidad_15),
-        getCantidad(e.equipamiento_cantidad_20)
-      ];
-    }),
-    styles: {
-      fontSize: 9,
-      cellPadding: 3,
-      lineColor: [0, 0, 0],  // Bordes negros
-      lineWidth: 0.5,        // Grosor del borde
-    },
-    headStyles: {
-      textColor: [0, 0, 0],
-      fontStyle: 'bold',
-      fillColor: [200, 200, 200],
-      halign: 'center',
-      valign: 'middle',
-      lineWidth: 0.5
-    },
-    bodyStyles: {
-      halign: 'center',
-      valign: 'middle',
-      lineWidth: 0.5,fontStyle: 'bold' 
-    },
-    columnStyles: {
-      0: { halign: 'left' } // Descripción alineada a la izquierda
-    },
-    theme: 'grid'
-  });
-}
+        return [
+          e.equipamiento_descripcion,
+          e.equipamiento_unidad_de_medida,
+          getCantidad(e.equipamiento_cantidad_10),
+          getCantidad(e.equipamiento_cantidad_15),
+          getCantidad(e.equipamiento_cantidad_20)
+        ];
+      }),
+      styles: {
+        fontSize: 9,
+        cellPadding: 3,
+        lineColor: [0, 0, 0],  // Bordes negros
+        lineWidth: 0.5,        // Grosor del borde
+      },
+      headStyles: {
+        textColor: [0, 0, 0],
+        fontStyle: 'bold',
+        fillColor: [200, 200, 200],
+        halign: 'center',
+        valign: 'middle',
+        lineWidth: 0.5
+      },
+      bodyStyles: {
+        halign: 'center',
+        valign: 'middle',
+        lineWidth: 0.5, fontStyle: 'bold'
+      },
+      columnStyles: {
+        0: { halign: 'left' } // Descripción alineada a la izquierda
+      },
+      theme: 'grid'
+    });
+  }
 
 
 
