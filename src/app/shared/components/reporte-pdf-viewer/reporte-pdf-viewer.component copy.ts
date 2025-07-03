@@ -1,3 +1,4 @@
+
 // import { Component, OnInit, signal } from '@angular/core';
 // import { ActivatedRoute, Router } from '@angular/router';
 // import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -214,6 +215,13 @@
 //     doc.setFont('helvetica', 'normal');
 //     doc.text(this.cursoData()?.FECHA_PUBLICACION?.split('T')[0] || '2011-11-18', boxX + boxWidth / 2, boxY + boxHeight / 2 + contentMarginTop + 10, { align: 'center' });
 //   }
+
+
+
+
+
+
+
 
 //   private drawSignatureSection(doc: jsPDF): void {
 //     let y = 550;

@@ -12,6 +12,14 @@ export interface CursoPdfData {
   FECHA_PUBLICACION: string;
   FECHA_VALIDACION: string;
   USUARIO_VALIDADOR_ID: string;
+  NOTA_MATERIALES: string;
+  // notas: {
+  //   materiales?: string | undefined;
+  //   equipamiento?: string | undefined;
+  //   requisitos?: string | undefined;
+  //   evaluacion?: string | undefined;
+  //   general?: string | undefined;
+  // };
 
   firmas: {
     REVISADO_POR: {

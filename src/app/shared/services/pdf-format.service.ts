@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { PdfFormatStrategy } from '../interfaces/pdf-format-strategy.interface';
 import { CaeFormatStrategy } from '../components/formats/cae-format.strategy';
-// Importar futuras estrategias cuando estén listas
-// import { VirtualFormatStrategy } from '../formats/virtual-format.strategy';
-// import { EscuelaFormatStrategy } from '../formats/escuela-format.strategy';
-// ...
+import { VirtualFormatStrategy } from '../components/formats/virtual-format.strategy';
+import { EscuelaFormatStrategy } from '../components/formats/escuela-format.strategy';
+
 
 @Injectable({
   providedIn: 'root'
@@ -15,11 +14,11 @@ export class PdfFormatService {
       case 1: // CAE
         return new CaeFormatStrategy();
 
-      // case 2: // Virtual
-      //   return new VirtualFormatStrategy();
+      case 2: // Virtual
+        return new VirtualFormatStrategy();
 
-      // case 3: // Escuela
-      //   return new EscuelaFormatStrategy();
+      case 3: // Escuela
+        return new EscuelaFormatStrategy();
 
       // case 4: // Regular
       //   return new RegularFormatStrategy();
