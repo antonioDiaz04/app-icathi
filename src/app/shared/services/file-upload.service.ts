@@ -12,6 +12,21 @@ export class FileUploadService {
 
   constructor(private http: HttpClient) {}
 
+
+    // Nueva función para subir temarios
+  uploadTemario(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('temario', file); // 'temario' debe coincidir con el nombre en el backend
+    return this.http.post(`${this.apiUrl}/upload-temario_curso`, formData);
+  }
+
+  // Subir currículum
+  uploadCurriculum(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('curriculum', file); // La clave debe coincidir con la usada en el backend
+    return this.http.post(`${this.apiUrl}/upload-curriculum_docente`, formData);
+  }
+
   // Subir foto de perfil
   uploadProfilePhoto(file: File): Observable<any> {
     const formData = new FormData();
@@ -26,12 +41,6 @@ export class FileUploadService {
     return this.http.post(`${this.apiUrl}/upload-cedula_docente`, formData);
   }
 
-  // Subir currículum
-  uploadCurriculum(file: File): Observable<any> {
-    const formData = new FormData();
-    formData.append('curriculum', file); // La clave debe coincidir con la usada en el backend
-    return this.http.post(`${this.apiUrl}/upload-curriculum_docente`, formData);
-  }
 
   // Subir documento de identificación
   uploadDocumentoIdentificacion(file: File): Observable<any> {

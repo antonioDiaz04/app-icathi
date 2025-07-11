@@ -13,7 +13,8 @@ import { HttpClient } from "@angular/common/http";
 import { PDFDocumentProxy } from "ng2-pdf-viewer";
 import { DomSanitizer } from "@angular/platform-browser";
 import { toSignal } from '@angular/core/rxjs-interop';
-import { catchError, of } from 'rxjs';
+import { catchError, Observable, of, switchMap } from 'rxjs';
+import { FileUploadService } from "../../../../../../shared/services/file-upload.service";
 
 export interface Modulo {
   id: number;
@@ -150,7 +151,7 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
 
   private apiUrl = signal(environment.api);
 
-  constructor(private sanitizer: DomSanitizer, private http: HttpClient) { }
+  constructor(private sanitizer: DomSanitizer, private http: HttpClient, private fileUploadService: FileUploadService) { }
 
   ngOnInit(): void {
     this.cargarAreas();
@@ -279,169 +280,128 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
     });
   }
 
-  // Example of computed signal
   hasCourseId = computed(() => this.selectedCourseId > 0);
 
-  // cargarAreas(): void {
-  //   this.http.get<any[]>(`${this.apiUrl}/areas`).subscribe({
-  //     next: (data) => {
-  //       this.areas = data;
-  //     },
-  //     error: (err) => {
-  //       console.error("Error al cargar áreas:", err);
-  //     },
-  //   });
-  // }
   mostrarModalSubirArchivo() {
     this.mostrarFormulario = true;
   }
 
-  // cargarEspecialidades(): void {
-  //   this.http.get<any[]>(`${this.apiUrl}/especialidades`).subscribe({
-  //     next: (data) => {
-  //       this.especialidades = data;
-  //     },
-  //     error: (err) => {
-  //       console.error("Error al cargar especialidades:", err);
-  //     },
-  //   });
-  // }
 
-  // cargarTiposCurso(): void {
-  //   this.http.get<any[]>(`${this.apiUrl}/tiposCurso`).subscribe({
-  //     next: (data) => {
-  //       this.tiposCurso = data;
-  //     },
-  //     error: (err) => {
-  //       console.error("Error al cargar tipos de curso:", err);
-  //     },
-  //   });
-  // }
-  // Add these signals at the top of your component class
   selectedFile = signal<File | null>(null);
   isFileSelected = computed(() => this.selectedFile() !== null);
+
 
   agregarCurso(): void {
     this.isSaving.set(true);
     this.alertMessage.set(null); // Reset previous alert
 
-    // Crear un objeto FormData
-    const formData = new FormData();
     const currentCourse = this.nuevoCurso();
+    const file = this.selectedFile();
 
-    // Agregar propiedades del objeto `nuevoCurso` a FormData
+    // Si hay archivo seleccionado, primero subirlo
+    if (file) {
+      this.fileUploadService.uploadTemario(file).pipe(
+        switchMap((response) => {
+          // Una vez subido el archivo, proceder con el resto de los datos
+          const formData = this.prepareFormData(currentCourse, response.fileUrl);
+          return this.sendCourseRequest(formData);
+        })
+      ).subscribe({
+        next: (response) => this.handleSuccess(response),
+        error: (err) => this.handleError(err)
+      });
+    } else {
+      // Si no hay archivo, proceder normalmente
+      const formData = this.prepareFormData(currentCourse);
+      this.sendCourseRequest(formData).subscribe({
+        next: (response) => this.handleSuccess(response),
+        error: (err) => this.handleError(err)
+      });
+    }
+  }
+
+  // Método auxiliar para preparar el FormData
+  private prepareFormData(currentCourse: any, fileUrl: string = ''): FormData {
+    const formData = new FormData();
+
+    // Agregar propiedades básicas
     formData.append("nombre", currentCourse.nombre);
-    formData.append(
-      "costo",
-      currentCourse.costo !== undefined ? currentCourse.costo.toString() : ""
-    );
-    formData.append(
-      "duracion_horas",
-      currentCourse.duracion_horas.toString()
-    );
+    formData.append("costo", currentCourse.costo?.toString() || "");
+    formData.append("duracion_horas", currentCourse.duracion_horas.toString());
     formData.append("descripcion", currentCourse.descripcion);
     formData.append("nivel", currentCourse.nivel);
-    formData.append(
-      "vigencia_inicio",
-      currentCourse.vigencia_inicio?.toString() || ""
-    );
-    formData.append(
-      "fecha_publicacion",
-      currentCourse.fecha_publicacion?.toString() || ""
-    );
+    formData.append("vigencia_inicio", currentCourse.vigencia_inicio?.toString() || "");
+    formData.append("fecha_publicacion", currentCourse.fecha_publicacion?.toString() || "");
     formData.append("clave", currentCourse.clave?.toString() || "");
     formData.append("area_id", currentCourse.area_id?.toString() || "");
-    formData.append(
-      "especialidad_id",
-      currentCourse.especialidad_id?.toString() || ""
-    );
+    formData.append("especialidad_id", currentCourse.especialidad_id?.toString() || "");
     formData.append("tipo_curso_id", "1");
 
-    // Append firmas data
-    formData.append(
-      "revisado_por",
-      currentCourse.firmas?.revisado?.nombre?.toString() || ""
-    );
-    formData.append(
-      "cargo_revisado_por",
-      currentCourse.firmas?.revisado?.cargo?.toString() || ""
-    );
-    formData.append(
-      "autorizado_por",
-      currentCourse.firmas?.autorizado?.nombre?.toString() || ""
-    );
-    formData.append(
-      "cargo_autorizado_por",
-      currentCourse.firmas?.autorizado?.cargo?.toString() || ""
-    );
-    formData.append(
-      "elaborado_por",
-      currentCourse.firmas?.elaborado?.nombre?.toString() || ""
-    );
-    formData.append(
-      "cargo_elaborado_por",
-      currentCourse.firmas?.elaborado?.cargo?.toString() || ""
-    );
-
-    // Append file if selected
-    const file = this.selectedFile();
-    if (file) {
-      formData.append("temario", file);
+    // Agregar URL del archivo si existe
+    if (fileUrl) {
+      formData.append("archivo_url", fileUrl);
     }
 
-    // Append JSON data
-    formData.append("objetivos", JSON.stringify(currentCourse.objetivos));
-    formData.append(
-      "contenidoProgramatico",
-      JSON.stringify(currentCourse.contenidoProgramatico)
-    );
-    formData.append("materiales", JSON.stringify(currentCourse.materiales));
-    formData.append(
-      "equipamiento",
-      JSON.stringify(currentCourse.equipamiento)
-    );
+    // Firmas
+    formData.append("revisado_por", currentCourse.firmas?.revisado?.nombre?.toString() || "");
+    formData.append("cargo_revisado_por", currentCourse.firmas?.revisado?.cargo?.toString() || "");
+    formData.append("autorizado_por", currentCourse.firmas?.autorizado?.nombre?.toString() || "");
+    formData.append("cargo_autorizado_por", currentCourse.firmas?.autorizado?.cargo?.toString() || "");
+    formData.append("elaborado_por", currentCourse.firmas?.elaborado?.nombre?.toString() || "");
+    formData.append("cargo_elaborado_por", currentCourse.firmas?.elaborado?.cargo?.toString() || "");
 
-    // Determinar si es una actualización o una creación
+    // Datos JSON
+    formData.append("objetivos", JSON.stringify(currentCourse.objetivos));
+    formData.append("contenidoProgramatico", JSON.stringify(currentCourse.contenidoProgramatico));
+    formData.append("materiales", JSON.stringify(currentCourse.materiales));
+    formData.append("equipamiento", JSON.stringify(currentCourse.equipamiento));
+
+    // Debug: Mostrar contenido de FormData
+    console.log("Contenido de FormData:");
+    for (const [key, value] of (formData as any).entries()) {
+      console.log(key, value);
+    }
+
+    return formData;
+  }
+
+  // Método auxiliar para enviar la solicitud
+  private sendCourseRequest(formData: FormData): Observable<any> {
     const url = this.selectedCourseId
       ? `${this.apiUrl()}/cursos/${this.selectedCourseId}`
       : `${this.apiUrl()}/cursos`;
 
-    const request = this.selectedCourseId
+    return this.selectedCourseId
       ? this.http.put(url, formData)
       : this.http.post<Modulo>(url, formData);
-
-    request.subscribe({
-      next: (response) => {
-        this.isSaving.set(false);
-        if (this.selectedCourseId) {
-          this.alertMessage.set(`Curso actualizado correctamente con ID: ${this.selectedCourseId}`);
-          this.alertTitle.set("Éxito");
-          this.alertType.set("success");
-        } else {
-          this.modulos.update(modulos => [...modulos, response as Modulo]);
-          this.resetNuevoCurso();
-          this.alertMessage.set("Curso agregado correctamente.");
-          this.alertTitle.set("Éxito");
-          this.alertType.set("success");
-        }
-      },
-      error: (err) => {
-        this.isSaving.set(false);
-        console.error("Error en la operación del curso:", err);
-        this.alertMessage.set(
-          this.selectedCourseId
-            ? "Error al actualizar el curso"
-            : "Error al agregar el curso"
-        );
-        this.alertTitle.set("Error");
-        this.alertType.set("error");
-      },
-      complete: () => {
-        this.isSaving.set(false);
-      },
-    });
   }
 
+  // Manejo de respuesta exitosa
+  private handleSuccess(response: any): void {
+    this.isSaving.set(false);
+    if (this.selectedCourseId) {
+      this.alertMessage.set(`Curso actualizado correctamente con ID: ${this.selectedCourseId}`);
+    } else {
+      this.modulos.update(modulos => [...modulos, response as Modulo]);
+      this.resetNuevoCurso();
+      this.alertMessage.set("Curso agregado correctamente.");
+    }
+    this.alertTitle.set("Éxito");
+    this.alertType.set("success");
+  }
+
+  // Manejo de errores
+  private handleError(err: any): void {
+    this.isSaving.set(false);
+    console.error("Error en la operación del curso:", err);
+    this.alertMessage.set(
+      this.selectedCourseId
+        ? "Error al actualizar el curso"
+        : "Error al agregar el curso"
+    );
+    this.alertTitle.set("Error");
+    this.alertType.set("error");
+  }
   resetNuevoCurso(): void {
     this.selectedFile.set(null);
     this.nuevoCurso.set({
@@ -600,67 +560,55 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
   mostrarFormulario: boolean = false;
 
   //*************************FILE */}
-  // selectedFile: File | any = null;
-  // isUploading = false;
+
   fileExtension: string = "";
+  isDragging = signal(false);
 
-  // Evento cuando se selecciona un archivo
-
-  // Subir el archivo
-  // uploadFile(file: File): void {
-  //   console.log(file);
-  // }
-
-  // Eliminar archivo
-  removeFile(): void {
-    this.url = "";
+  removeFile() {
     this.selectedFile.set(null);
-    this.fileExtension = "";
   }
-
   // Obtener la extensión del archivo
   getFileExtension(fileName: string): string {
     const ext = fileName.split(".").pop()?.toLowerCase() || "";
     return ext;
   }
 
-  // Manejar eventos de arrastre
-  onDragOver(event: DragEvent): void {
+  onDragOver(event: DragEvent) {
     event.preventDefault();
+    this.isDragging.set(true);
   }
 
-  onDrop(event: DragEvent): void {
+  onDrop(event: DragEvent) {
     event.preventDefault();
-    const file = event.dataTransfer?.files[0];
-    if (file) {
+    this.isDragging.set(false);
+
+    if (event.dataTransfer?.files.length) {
+      const file = event.dataTransfer.files[0];
       this.selectedFile.set(file);
       this.fileExtension = this.getFileExtension(file.name);
-      // this.uploadFile(file);
     }
   }
+
 
   onDragLeave(event: DragEvent): void {
-    // Se puede agregar algún efecto visual para cuando el archivo sale del área
+    this.isDragging.set(false);
   }
+
   url: any = "";
 
-  onFileSelect(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      this.selectedFile = file;
-      this.fileExtension = this.getFileExtension(file.name);
+  onFileSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files?.length) {
+      this.selectedFile.set(input.files[0]);
+      this.fileExtension = this.getFileExtension(input.files[0].name);
 
-      if (this.fileExtension === "pdf") {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          this.url = this.sanitizer.bypassSecurityTrustResourceUrl(
-            URL.createObjectURL(file)
-          );
-        };
-        reader.readAsDataURL(file);
-      }
+
     }
   }
+
+isImageFile(): boolean {
+  return ['jpg', 'jpeg', 'png', 'webp'].includes(this.fileExtension);
+}
 
   page: number = 1;
   totalPages!: number;

@@ -322,6 +322,13 @@ export class CursoModalidadVirtualComponent implements OnInit, OnChanges {
       JSON.stringify(this.nuevoCurso.contenidoProgramatico)
     );
    
+
+
+    console.log("Contenido de FormData:");
+
+for (const [key, value] of (formData as any).entries()) {
+    console.log(key, value);
+}
        // Determinar si es una actualización o una creación
        const url = this.selectedCourseId
          ? `${this.apiUrl}/cursos/${this.selectedCourseId}`
