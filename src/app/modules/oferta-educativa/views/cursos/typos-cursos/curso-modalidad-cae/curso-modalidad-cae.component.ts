@@ -15,6 +15,8 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, Observable, of, switchMap } from 'rxjs';
 import { FileUploadService } from "../../../../../../shared/services/file-upload.service";
+import { FileSizePipe } from "../../../../../../shared/pipes/file-size.pipe";
+import { CommonModule } from "@angular/common";
 
 export interface Modulo {
   id: number;
@@ -83,6 +85,9 @@ export interface UnitOption {
 @Component({
   // selector: "app-curso-modalidad-cae",
   selector: "app-curso-modalidad-cae",
+  // standalone:true,
+  // imports: [ SafeUrlPipe ], // 👈 ahora sí válido
+
 
   templateUrl: "./curso-modalidad-cae.component.html",
   styles: `
@@ -113,7 +118,7 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
   alertMessage = signal<string | null>(null);
   alertTitle = signal<string | null>(null);
   alertType = signal<"success" | "error">("success");
-  btnTitle = signal("Agregar");
+  btnTitle = signal("GUARDAR");
 
   // Main course signal
   nuevoCurso = signal<Modulo>({
@@ -159,7 +164,7 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
     this.cargarTiposCurso();
 
     if (this.selectedCourseId) {
-      this.btnTitle.set("Editar");
+      this.btnTitle.set("GUARDAR CAMBIOS");
       console.log(`🔹 Inicializando con ID: ${this.selectedCourseId}`);
       this.showCourseDetails(this.selectedCourseId);
     }
@@ -381,6 +386,7 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
     this.isSaving.set(false);
     if (this.selectedCourseId) {
       this.alertMessage.set(`Curso actualizado correctamente con ID: ${this.selectedCourseId}`);
+      this.showCourseDetails(this.selectedCourseId)
     } else {
       this.modulos.update(modulos => [...modulos, response as Modulo]);
       this.resetNuevoCurso();
@@ -622,7 +628,99 @@ isImageFile(): boolean {
   nextTep() {
     this.page++;
   }
+  Aceptar() {
+    this.mostrarFormulario=false;
+  }
   prevTep() {
     this.page--;
+  }
+
+
+
+
+
+  // PDF VISUALIZADOR]
+  vistaExpandida = false;
+  
+  // Método para expandir la vista a pantalla completa
+  expandirVista() {
+    this.vistaExpandida = true;
+  }
+  
+  // Cerrar vista expandida
+  cerrarVistaExpandida() {
+    this.vistaExpandida = false;
+  }
+  
+  obtenerNombreArchivo(url: string): string {
+  if (!url) return '';
+  try {
+    const urlObj = new URL(url);
+    const pathname = urlObj.pathname;
+    return pathname.split('/').pop() || 'documento.pdf';
+  } catch {
+    return 'documento.pdf';
+  }
+}
+
+
+
+// Función para abrir en nueva pestaña
+abrirEnNuevaPestana(url: string): void {
+  window.open(url, '_blank');
+}
+// Función para descargar el archivo mejorada
+async descargarArchivo(url: string): Promise<void> {
+  try {
+    // Solución alternativa para problemas de CORS
+    if (url.startsWith('blob:')) {
+      // Si es un blob, usamos el método estándar
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = this.obtenerNombreArchivo(url) || 'documento.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      return;
+    }
+
+    // Para URLs remotas, usamos fetch
+    const response = await fetch(url, {
+      mode: 'cors', // Intenta con CORS
+      cache: 'no-cache'
+    });
+    
+    if (!response.ok) throw new Error('Error al obtener el archivo');
+    
+    const blob = await response.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+    
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = this.obtenerNombreArchivo(url) || 'documento.pdf';
+    link.style.display = 'none';
+    
+    document.body.appendChild(link);
+    link.click();
+    
+    // Limpieza
+    setTimeout(() => {
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    }, 100);
+    
+  } catch (error) {
+    console.error('Error al descargar el archivo:', error);
+    
+    // Fallback: abrir en nueva pestaña si la descarga falla
+    window.open(url, '_blank');
+    
+    // Opcional: mostrar notificación al usuario
+    // this.mostrarNotificacion('Error', 'No se pudo descargar el archivo. Se abrirá en una nueva pestaña.', 'error');
+  }
+}
+  // Cuando se renderiza la miniatura
+  onThumbnailRendered(event: any) {
+    console.log('Miniatura del PDF renderizada');
   }
 }

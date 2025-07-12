@@ -15,16 +15,18 @@ import { CursoModalidadVirtualComponent } from './views/cursos/typos-cursos/curs
   import { TextareaModule } from 'primeng/textarea';
 import { PdfExampleComponent } from './views/pdf-example/pdf-example.component';
 import { PdfViewComponent } from './views/pdf-view/pdf-view.component';
+import { FileSizePipe } from '../../shared/pipes/file-size.pipe';
+import { SafeUrlPipe } from '../../shared/pipes/safe-url.pipe';
 // import { PdfGenerateComponent } from '../../shared/components/pdf-generate/pdf-generate.component';
 // import {InputTextareaModule} from 'primeng/inputtextarea';
 @NgModule({
-  declarations: [PdfExampleComponent,
+  declarations: [FileSizePipe,PdfExampleComponent,
     HomeComponent,CursoModalidadCAEComponent,CursoModalidadEscuelaComponent,CursoModalidadVirtualComponent,OfertaEducativaComponent, HeaderComponent,ListadoCursosComponent, PdfViewComponent
   ],  
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [RouterModule,HttpClientModule,
     TextareaModule,
-    CommonModule,FormsModule ,ReactiveFormsModule,
+    CommonModule,FormsModule ,ReactiveFormsModule,SafeUrlPipe,
     OfertaEducativaRoutingModule
   ]
 })
