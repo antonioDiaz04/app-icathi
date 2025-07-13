@@ -71,7 +71,7 @@ export class CreatePasswordAlumnoComponent implements OnInit {
               const role = await this.authService.getRoleFromToken();
         
               if (role) {
-                console.log('Rol obtenido:', role); // Confirmar el rol
+                // console.log('Rol obtenido:', role); // Confirmar el rol
                 this.router.navigate(['alumno/']); // Redirigir al dashboard del alumno
  
                 // this.redirectByRole(role as ERol); // Redirigir según el rol

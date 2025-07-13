@@ -17,6 +17,8 @@ import { catchError, Observable, of, switchMap } from 'rxjs';
 import { FileUploadService } from "../../../../../../shared/services/file-upload.service";
 import { FileSizePipe } from "../../../../../../shared/pipes/file-size.pipe";
 import { CommonModule } from "@angular/common";
+import { AlertTaiwilService } from "../../../../../../shared/services/alert-taiwil.service";
+import { ConfirmTaiwilService } from "../../../../../../shared/services/confirm-taiwil.service";
 
 export interface Modulo {
   id: number;
@@ -156,7 +158,7 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
 
   private apiUrl = signal(environment.api);
 
-  constructor(private sanitizer: DomSanitizer, private http: HttpClient, private fileUploadService: FileUploadService) { }
+  constructor(private confirmService: ConfirmTaiwilService, private alertTaiwilService: AlertTaiwilService, private sanitizer: DomSanitizer, private http: HttpClient, private fileUploadService: FileUploadService) { }
 
   ngOnInit(): void {
     this.cargarAreas();
@@ -343,9 +345,20 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
     formData.append("tipo_curso_id", "1");
 
     // Agregar URL del archivo si existe
-    if (fileUrl) {
+    // Agregar URL del archivo si existe
+    // if (fileUrl) {
+    //   formData.append("archivo_url", fileUrl);
+    // }
+    // Manejo explícito del archivo:
+    if (this.selectedFile()) {
+      // Caso: Hay un nuevo archivo seleccionado
       formData.append("archivo_url", fileUrl);
+    } else if (this.archivoUrl()) {
+      // Caso: No hay archivo nuevo pero hay URL existente (edición sin modificar archivo)
+      formData.append("archivo_url", this.archivoUrl());
     }
+
+
 
     // Firmas
     formData.append("revisado_por", currentCourse.firmas?.revisado?.nombre?.toString() || "");
@@ -386,11 +399,13 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
     this.isSaving.set(false);
     if (this.selectedCourseId) {
       this.alertMessage.set(`Curso actualizado correctamente con ID: ${this.selectedCourseId}`);
+      this.alertTaiwilService.showTailwindAlert("Curso actualizado correctamente con ID" + this.selectedCourseId, "success");
       this.showCourseDetails(this.selectedCourseId)
     } else {
       this.modulos.update(modulos => [...modulos, response as Modulo]);
       this.resetNuevoCurso();
       this.alertMessage.set("Curso agregado correctamente.");
+      this.alertTaiwilService.showTailwindAlert("Curso agregado correctamente", "success");
     }
     this.alertTitle.set("Éxito");
     this.alertType.set("success");
@@ -405,6 +420,9 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
         ? "Error al actualizar el curso"
         : "Error al agregar el curso"
     );
+    this.alertTaiwilService.showTailwindAlert(this.selectedCourseId
+      ? "Error al actualizar el curso"
+      : "Error al agregar el curso", "error");
     this.alertTitle.set("Error");
     this.alertType.set("error");
   }
@@ -612,9 +630,9 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
     }
   }
 
-isImageFile(): boolean {
-  return ['jpg', 'jpeg', 'png', 'webp'].includes(this.fileExtension);
-}
+  isImageFile(): boolean {
+    return ['jpg', 'jpeg', 'png', 'webp'].includes(this.fileExtension);
+  }
 
   page: number = 1;
   totalPages!: number;
@@ -628,9 +646,9 @@ isImageFile(): boolean {
   nextTep() {
     this.page++;
   }
-  Aceptar() {
-    this.mostrarFormulario=false;
-  }
+  // Aceptar() {
+  //   this.mostrarFormulario=false;
+  // }
   prevTep() {
     this.page--;
   }
@@ -641,86 +659,154 @@ isImageFile(): boolean {
 
   // PDF VISUALIZADOR]
   vistaExpandida = false;
-  
+
   // Método para expandir la vista a pantalla completa
   expandirVista() {
     this.vistaExpandida = true;
   }
-  
+
   // Cerrar vista expandida
   cerrarVistaExpandida() {
     this.vistaExpandida = false;
   }
-  
+
   obtenerNombreArchivo(url: string): string {
-  if (!url) return '';
-  try {
-    const urlObj = new URL(url);
-    const pathname = urlObj.pathname;
-    return pathname.split('/').pop() || 'documento.pdf';
-  } catch {
-    return 'documento.pdf';
+    if (!url) return '';
+    try {
+      const urlObj = new URL(url);
+      const pathname = urlObj.pathname;
+      return pathname.split('/').pop() || 'documento.pdf';
+    } catch {
+      return 'documento.pdf';
+    }
   }
-}
 
 
 
-// Función para abrir en nueva pestaña
-abrirEnNuevaPestana(url: string): void {
-  window.open(url, '_blank');
-}
-// Función para descargar el archivo mejorada
-async descargarArchivo(url: string): Promise<void> {
-  try {
-    // Solución alternativa para problemas de CORS
-    if (url.startsWith('blob:')) {
-      // Si es un blob, usamos el método estándar
+  // Función para abrir en nueva pestaña
+  abrirEnNuevaPestana(url: string): void {
+    window.open(url, '_blank');
+  }
+  // Función para descargar el archivo mejorada
+  async descargarArchivo(url: string): Promise<void> {
+    try {
+      // Solución alternativa para problemas de CORS
+      if (url.startsWith('blob:')) {
+        // Si es un blob, usamos el método estándar
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = this.obtenerNombreArchivo(url) || 'documento.pdf';
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        return;
+      }
+
+      // Para URLs remotas, usamos fetch
+      const response = await fetch(url, {
+        mode: 'cors', // Intenta con CORS
+        cache: 'no-cache'
+      });
+
+      if (!response.ok) throw new Error('Error al obtener el archivo');
+
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+
       const link = document.createElement('a');
-      link.href = url;
+      link.href = blobUrl;
       link.download = this.obtenerNombreArchivo(url) || 'documento.pdf';
+      link.style.display = 'none';
+
       document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
-      return;
-    }
 
-    // Para URLs remotas, usamos fetch
-    const response = await fetch(url, {
-      mode: 'cors', // Intenta con CORS
-      cache: 'no-cache'
-    });
-    
-    if (!response.ok) throw new Error('Error al obtener el archivo');
-    
-    const blob = await response.blob();
-    const blobUrl = window.URL.createObjectURL(blob);
-    
-    const link = document.createElement('a');
-    link.href = blobUrl;
-    link.download = this.obtenerNombreArchivo(url) || 'documento.pdf';
-    link.style.display = 'none';
-    
-    document.body.appendChild(link);
-    link.click();
-    
-    // Limpieza
-    setTimeout(() => {
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(blobUrl);
-    }, 100);
-    
-  } catch (error) {
-    console.error('Error al descargar el archivo:', error);
-    
-    // Fallback: abrir en nueva pestaña si la descarga falla
-    window.open(url, '_blank');
-    
-    // Opcional: mostrar notificación al usuario
-    // this.mostrarNotificacion('Error', 'No se pudo descargar el archivo. Se abrirá en una nueva pestaña.', 'error');
+      // Limpieza
+      setTimeout(() => {
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(blobUrl);
+      }, 100);
+
+    } catch (error) {
+      console.error('Error al descargar el archivo:', error);
+
+      // Fallback: abrir en nueva pestaña si la descarga falla
+      window.open(url, '_blank');
+
+      // Opcional: mostrar notificación al usuario
+      // this.mostrarNotificacion('Error', 'No se pudo descargar el archivo. Se abrirá en una nueva pestaña.', 'error');
+    }
   }
-}
   // Cuando se renderiza la miniatura
   onThumbnailRendered(event: any) {
     console.log('Miniatura del PDF renderizada');
+  }
+  eliminarArchivo() {
+    // this
+    this.confirmService.showTailwindConfirm(
+      '¿Estás seguro de que quieres eliminar este Archivo?',
+      'Sí, eliminar',
+      'Cancelar',
+      'danger'
+    ).subscribe(confirmed => {
+      if (confirmed) {
+        const formData = new FormData();
+
+        formData.append("archivo_url", "");
+        // this.archivoUrl.set(null); // Solo esto, sin los paréntesis ()
+        // Limpiar tanto la URL como el archivo seleccionado
+        this.archivoUrl.set(null);
+        this.selectedFile.set(null); // Asegurarse de limpiar también el archivo seleccionado
+
+        this.obtenerNombreArchivo(this.archivoUrl());
+        // Lógica cuando el usuario acepta
+        console.log('Usuario confirmó la acción');
+      } else {
+        // Lógica cuando el usuario cancela
+        console.log('Usuario canceló la acción');
+      }
+    });
+    console.log('Miniatura del PDF renderizada');
+  }
+
+  // En tu componente TypeScript
+  uploadProgress = 0;
+  isLoadingPreview = false;
+
+  async Aceptar() {
+    const file = this.selectedFile();
+    if (!file) return;
+
+    try {
+      // Mostrar progreso simulado mientras se sube el archivo
+      const uploadInterval = setInterval(() => {
+        this.uploadProgress = Math.min(this.uploadProgress + 10, 90);
+      }, 200);
+
+      // Subir el archivo usando el servicio fileUploadService
+      const fileUrl = await this.fileUploadService.uploadTemario(file).toPromise();
+
+      clearInterval(uploadInterval);
+      this.uploadProgress = 100;
+
+      // Mostrar vista previa
+      this.isLoadingPreview = true;
+      this.archivoUrl.set(fileUrl.fileUrl); // Asumiendo que la respuesta es {fileUrl: string}
+
+      // Pequeño delay para que se vea el 100%
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Cerrar modal
+      this.mostrarFormulario = false;
+    } catch (error) {
+      this.alertTaiwilService.showTailwindAlert("Error al subir el archivo", 'error');
+      // console.error("Error al subir el archivo:", error);
+      // Manejar error
+      // this.showAlert('error', 'Error al subir archivo', error.message);
+    } finally {
+      this.isLoadingPreview = false;
+      this.uploadProgress = 0;
+    }
   }
 }

@@ -41,7 +41,7 @@ export class LoginComponent {
             const rol = await this.authService.getRoleFromToken();
   
             if (rol) {
-              console.log('Rol obtenido:', rol);
+              // console.log('Rol obtenido:', rol);
   
               // Verificamos si el rol es PENDIENTE
               if (rol === 'PENDIENTE') {

@@ -66,10 +66,10 @@
           <input type="number" [(ngModel)]="nuevoCurso().duracion_horas" [value]="duracionCalculada"
             name="duracion_horas" required disabled
             class="mt-1 block w-full border border-gray-300 rounded-lg p-3 shadow-sm" placeholder="Duración en horas" />
-
+          <!-- 
           <div *ngIf="!nuevoCurso().duracion_horas && cursoForm.submitted" class="text-red-500 text-sm">
             Este campo es obligatorio.
-          </div>
+          </div> -->
 
         </div>
         <!-- <div>
@@ -524,119 +524,119 @@
       <div class="mt-6 space-y-6">
         <!-- Sección de archivo -->
         <!-- Contenedor principal mejorado -->
-<div class="mt-8 space-y-6">
-  <!-- Sección de archivo -->
-  <div class="space-y-4">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      <div>
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Temario del curso</h3>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Sube el documento con el contenido del curso (PDF recomendado)</p>
-      </div>
-      
-      <!-- Botón para subir archivo (si no hay URL) -->
-      <button *ngIf="!archivoUrl()" type="button"
-        class="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-        (click)="mostrarModalSubirArchivo()">
-        <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg"
-          fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-        </svg>
-        Subir Archivo
-      </button>
-    </div>
+        <div class="mt-8 space-y-6">
+          <!-- Sección de archivo -->
+          <div class="space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Temario del curso</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Sube el documento con el contenido del curso
+                  (PDF recomendado)</p>
+              </div>
 
-    <!-- Contenedor cuando hay archivo -->
-    <div *ngIf="archivoUrl()" class="space-y-4">
-      <!-- Tarjeta de documento mejorada -->
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 transition-all duration-200 hover:shadow-lg">
-        <!-- Cabecera de la tarjeta -->
-        <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-gray-50 dark:bg-gray-700/50">
-          <div class="flex items-center space-x-3 min-w-0">
-            <div class="flex-shrink-0 bg-red-100 dark:bg-red-900/30 p-2 rounded-lg">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-              </svg>
+              <!-- Botón para subir archivo (si no hay URL) -->
+              <button *ngIf="!archivoUrl()" type="button"
+                class="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                (click)="mostrarModalSubirArchivo()">
+                <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+                Subir Archivo
+              </button>
             </div>
-            <div class="min-w-0">
-              <p class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-                {{ obtenerNombreArchivo(archivoUrl()) || 'Documento PDF' }}
-              </p>
-              <p class="text-xs text-gray-500 dark:text-gray-400">PDF Document</p>
-            </div>
-          </div>
-          
-          <button (click)="mostrarModalSubirArchivo()"
-            class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
-            Reemplazar
-          </button>
-        </div>
 
-        <!-- Vista previa del documento mejorada -->
-        <div class="relative bg-gray-100 dark:bg-gray-700/30">
-          <div class="aspect-w-16 aspect-h-9">
-            <div class="w-full h-64 flex items-center justify-center p-4">
-              <div class="w-full h-full bg-white dark:bg-gray-800 rounded-md shadow-inner overflow-hidden">
-                <iframe [src]="archivoUrl() | safeUrl" width="100%" height="100%" class="border-0"
-                  title="Vista Previa del Documento" (load)="onThumbnailRendered($event)">
-                  Su navegador no soporta la visualización de este documento.
-                </iframe>
+            <!-- Contenedor cuando hay archivo -->
+            <div *ngIf="archivoUrl()" class="space-y-4">
+              <!-- Tarjeta de documento mejorada -->
+              <div
+                class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 transition-all duration-200 hover:shadow-lg">
+                <!-- Cabecera de la tarjeta -->
+                <div
+                  class="px-5 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-gray-50 dark:bg-gray-700/50">
+                  <div class="flex items-center space-x-3 min-w-0">
+                    <div class="flex-shrink-0 bg-red-100 dark:bg-red-900/30 p-2 rounded-lg">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600 dark:text-red-400" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <div class="min-w-0">
+                      <p class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                        {{ obtenerNombreArchivo(archivoUrl()) || 'Documento PDF' }}
+                      </p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400">PDF Document</p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center space-x-4">
+                    <button (click)="mostrarModalSubirArchivo()"
+                      class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
+                      Reemplazar
+                    </button>
+                    <button (click)="eliminarArchivo()"
+                      class="text-sm font-medium text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition-colors">
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Vista previa del documento mejorada -->
+                <!-- Reemplaza la sección de vista previa con esto -->
+                <div class="relative bg-gray-100 dark:bg-gray-700/30 p-4">
+                  <div class="flex flex-col items-center justify-center h-64">
+                    <!-- Estado de carga -->
+                    <div *ngIf="isLoadingPreview" class="flex flex-col items-center">
+                      <svg class="animate-spin h-10 w-10 text-blue-500 mb-2" xmlns="http://www.w3.org/2000/svg"
+                        fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                        </circle>
+                        <path class="opacity-75" fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                        </path>
+                      </svg>
+                      <p class="text-sm text-gray-500 dark:text-gray-400">Cargando vista previa...</p>
+                    </div>
+
+                    <!-- Vista previa del PDF -->
+                    <div *ngIf="!isLoadingPreview"
+                      class="w-full h-full bg-white dark:bg-gray-800 rounded-md shadow-inner overflow-hidden relative">
+                      <iframe [src]="archivoUrl() | safeUrl" width="100%" height="100%" class="border-0"
+                        title="Vista Previa del Documento" (load)="onThumbnailRendered($event)">
+                      </iframe>
+
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Barra de acciones inferior simplificada -->
+                <div
+                  class="px-5 py-3 bg-gray-50 dark:bg-gray-700/30 border-t border-gray-200 dark:border-gray-700 flex items-center justify-end space-x-4">
+                  <button (click)="descargarArchivo(archivoUrl())"
+                    class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="-ml-0.5 mr-1.5 h-4 w-4" fill="none"
+                      viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Descargar
+                  </button>
+                  <button (click)="abrirEnNuevaPestana(archivoUrl())"
+                    class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="-ml-0.5 mr-1.5 h-4 w-4" fill="none"
+                      viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                    Abrir
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-
-          <!-- Superposición con botones de acción flotantes -->
-          <!-- <div class="absolute inset-0 bg-black/0 hover:bg-black/10 dark:hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 hover:opacity-100">
-            <div class="flex space-x-3">
-              <button (click)="descargarArchivo(archivoUrl())"
-                class="p-3 bg-white dark:bg-gray-800 rounded-full shadow-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all transform hover:scale-105"
-                title="Descargar documento">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700 dark:text-gray-300"
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-              </button>
-              <button (click)="abrirEnNuevaPestana(archivoUrl())"
-                class="p-3 bg-white dark:bg-gray-800 rounded-full shadow-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all transform hover:scale-105"
-                title="Abrir en nueva ventana">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700 dark:text-gray-300"
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </button>
-            </div>
-          </div> -->
         </div>
-
-        <!-- Barra de acciones inferior simplificada -->
-        <div class="px-5 py-3 bg-gray-50 dark:bg-gray-700/30 border-t border-gray-200 dark:border-gray-700 flex items-center justify-end space-x-4">
-          <button (click)="descargarArchivo(archivoUrl())"
-            class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="-ml-0.5 mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            Descargar
-          </button>
-          <button (click)="abrirEnNuevaPestana(archivoUrl())"
-            class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="-ml-0.5 mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-            Abrir
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
         <!-- Botón para guardar con mejor feedback visual -->
         <div class="pt-5 border-t border-gray-200">
@@ -729,62 +729,63 @@
         <div class="mt-6">
           <form enctype="multipart/form-data" class="space-y-6">
             <!-- Zona de arrastrar y soltar -->
+            <!-- Reemplaza la zona de arrastrar y soltar con esto -->
             <div
-              class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md transition-colors duration-200"
+              class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md transition-all duration-200"
               [ngClass]="{
-                'border-blue-500 bg-blue-50': isDragging(),
-                'border-gray-300': !isDragging()
-              }" (dragover)="onDragOver($event)" (drop)="onDrop($event)" (dragleave)="onDragLeave($event)">
+       'border-blue-500 bg-blue-50': isDragging(),
+       'border-gray-300': !isDragging(),
+       'border-green-500 bg-green-50': selectedFile()
+     }" (dragover)="onDragOver($event)" (drop)="onDrop($event)" (dragleave)="onDragLeave($event)"
+              (click)="!selectedFile() && fileInput.click()">
 
               <div class="space-y-1 text-center">
                 <input #fileInput type="file" (change)="onFileSelect($event)" class="sr-only" accept=".pdf" />
 
-                <svg *ngIf="!selectedFile()" (click)="fileInput.click()"
-                  class="mx-auto h-12 w-12 text-gray-400 cursor-pointer hover:text-blue-500 transition-colors duration-200"
-                  fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                </svg>
-
-                <div *ngIf="!selectedFile()" class="flex text-sm text-gray-600">
-                  <label
-                    class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
-                    <span>Sube un archivo</span>
-                  </label>
-                  <p class="pl-1">o arrástralo aquí</p>
+                <!-- Estado vacío -->
+                <div *ngIf="!selectedFile()" class="flex flex-col items-center">
+                  <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                  </svg>
+                  <div class="mt-2 flex text-sm text-gray-600">
+                    <label class="relative cursor-pointer rounded-md font-medium text-blue-600 hover:text-blue-500">
+                      <span>Haz clic para subir</span>
+                    </label>
+                    <p class="pl-1">o arrastra tu archivo aquí</p>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-1">
+                    Solo archivos PDF (hasta 10MB)
+                  </p>
                 </div>
-                <p *ngIf="!selectedFile()" class="text-xs text-gray-500">
-                  PDF hasta 10MB
-                </p>
 
-                <!-- Vista previa del archivo -->
+                <!-- Vista previa del archivo seleccionado -->
                 <div *ngIf="selectedFile()" class="flex flex-col items-center">
-                  <div class="flex items-center space-x-4 p-3 bg-gray-50 rounded-md">
-                    <ng-container [ngSwitch]="fileExtension">
-                      <svg *ngSwitchCase="'pdf'" class="w-10 h-10 text-red-500" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9l-7-7z"></path>
-                      </svg>
-                      <div *ngSwitchDefault class="w-10 h-10 bg-gray-200 rounded-md flex items-center justify-center">
-                        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9l-7-7z"></path>
-                        </svg>
-                      </div>
-                    </ng-container>
-                    <div>
+                  <div class="flex items-center space-x-4 p-3 bg-white rounded-md border border-gray-200">
+                    <svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9l-7-7z"></path>
+                    </svg>
+                    <div class="text-left">
                       <p class="text-sm font-medium text-gray-700 truncate max-w-xs">
                         {{ selectedFile()?.name }}
                       </p>
                       <p class="text-xs text-gray-500">
                         {{ selectedFile()?.size | fileSize }}
                       </p>
+                      <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                        <div class="bg-blue-600 h-1.5 rounded-full" [style.width.%]="uploadProgress"></div>
+                      </div>
                     </div>
                   </div>
-                  <button type="button"
-                    class="mt-3 inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                    (click)="removeFile()">
-                    Eliminar archivo
-                  </button>
+                  <div class="mt-3 flex space-x-2">
+                    <button type="button" class="text-xs text-blue-600 hover:text-blue-800" (click)="fileInput.click()">
+                      Cambiar archivo
+                    </button>
+                    <span class="text-gray-400">|</span>
+                    <button type="button" class="text-xs text-red-600 hover:text-red-800" (click)="removeFile()">
+                      Eliminar
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

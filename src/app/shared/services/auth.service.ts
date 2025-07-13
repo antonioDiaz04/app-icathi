@@ -5,6 +5,16 @@ import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { IndexedService } from './indexed.service'; // Importamos IndexedService
 
+// Interfaz para los datos del usuario
+export interface UserData {
+  id: number;
+  email: string;
+  nombre: string;
+  apellidos: string;
+  rol: string;
+  // iat: number;
+  // exp: number;
+}
 export interface LoginResponse {
   token: string;
 }
@@ -23,6 +33,39 @@ export class AuthService {
     private indexedService: IndexedService // Usamos IndexedService
   ) {}
 
+
+   /**
+   * Obtiene todos los datos del usuario desde el token
+   * @returns Promise con los datos del usuario o null si no hay token o hay error
+   */
+  async getUserData(): Promise<UserData | null> {
+    try {
+      const token = await this.getToken();
+      if (token && !this.jwtHelper.isTokenExpired(token)) {
+        const decodedToken = this.jwtHelper.decodeToken(token);
+        return this.mapTokenToUserData(decodedToken);
+      }
+    } catch (error) {
+      console.error('Error obteniendo datos del usuario:', error);
+    }
+    return null;
+  }
+    /**
+   * Mapea el token decodificado a la interfaz UserData
+   * @param decodedToken Token decodificado
+   * @returns Objeto UserData
+   */
+  private mapTokenToUserData(decodedToken: any): UserData {
+    return {
+      id: decodedToken.id,
+      email: decodedToken.email,
+      nombre: decodedToken.nombre,
+      apellidos: decodedToken.apellidos,
+      rol: decodedToken.rol,
+      // iat: decodedToken.iat,
+      // exp: decodedToken.exp
+    };
+  }
   // Método para iniciar sesión
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/signin`, { email, password }).pipe(

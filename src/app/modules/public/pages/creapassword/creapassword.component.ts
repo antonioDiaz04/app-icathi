@@ -83,7 +83,7 @@ export class CreapasswordComponent {
               if (token) {
                 await this.authService.setToken(token); // Guardar el token
                 const rol = await this.authService.getRoleFromToken();
-                console.log('Rol obtenido:', rol); // Para confirmar
+                // console.log('Rol obtenido:', rol); // Para confirmar
                 if (rol) {
                   alert('Inicio de sesión exitoso con rol: ' + rol);
                   this.redirectByRole(rol as ERol); // Asegúrate de castear el rol si es necesario

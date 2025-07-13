@@ -24,7 +24,6 @@ export class AlertTaiwilService {
     icon.style.fontSize = '1.75rem';
     icon.style.marginRight = '10px';
 
-    // Contenedor para el mensaje
     const messageContainer = document.createElement('span');
     messageContainer.textContent = message;
 

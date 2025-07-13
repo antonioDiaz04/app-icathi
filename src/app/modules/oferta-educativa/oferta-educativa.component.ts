@@ -8,6 +8,7 @@ import "jspdf-autotable"; // Ensure this is imported
 import { PDFDocumentProxy } from 'ng2-pdf-viewer';
 
 import { DomSanitizer } from '@angular/platform-browser'; // Import DomSanitizer
+import { AuthService, UserData } from '../../shared/services/auth.service';
 // import { PdfGenerateComponent } from '../../shared/components/pdf-generate/pdf-generate.component';
 
 
@@ -25,8 +26,24 @@ declare module "jspdf" {
 })
 export class OfertaEducativaComponent {
 
+  userData: UserData | null = null;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,private authService:AuthService) { 
+  
+  }
+  ngOnInit(): void {
+    // Aquí puedes inicializar cualquier dato necesario
+    this.getUserData();
+  }
+  getUserData(): void {
+    this.authService.getUserData().then(data => {
+      this.userData = data;
+      console.log('Datos del usuario:', this.userData);
+    }).catch(error => {
+      console.error('Error al obtener los datos del usuario:', error);
+    });
+  }
+  // this.userData =  this.authService.getUserData();
   logout(): void {
     const request = indexedDB.open('authDB'); // Nombre de la base de datos
 
