@@ -404,6 +404,16 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
     } else {
       this.modulos.update(modulos => [...modulos, response as Modulo]);
       this.resetNuevoCurso();
+      // this.eliminarArchivo();
+      const formData = new FormData();
+
+      formData.append("archivo_url", "");
+      // this.archivoUrl.set(null); // Solo esto, sin los paréntesis ()
+      // Limpiar tanto la URL como el archivo seleccionado
+      this.archivoUrl.set(null);
+      this.selectedFile.set(null); // Asegurarse de limpiar también el archivo seleccionado
+
+      this.obtenerNombreArchivo(this.archivoUrl());
       this.alertMessage.set("Curso agregado correctamente.");
       this.alertTaiwilService.showTailwindAlert("Curso agregado correctamente", "success");
     }
@@ -439,7 +449,7 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
       especialidad_id: undefined,
       tipo_curso_id: undefined,
       firmas: {
-        revisado: { nombre: "", cargo: "Programas de Estudio" },
+        revisado: { nombre: "", cargo: "Responsable del proceso de Diseño de  Programas de Estudio" },
         autorizado: { nombre: "", cargo: "Directora Académica" },
         elaborado: { nombre: "", cargo: "Director General" },
       },

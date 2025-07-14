@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, HostListener, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../src/environments/environment.prod';
 import { Router } from '@angular/router';
@@ -27,18 +27,20 @@ declare module "jspdf" {
 export class OfertaEducativaComponent {
 
   userData: UserData | null = null;
+ sidebarVisible = true;
+  isMobileView = false;
+  constructor(private router: Router, private authService: AuthService) {
 
-  constructor(private router: Router,private authService:AuthService) { 
-  
   }
   ngOnInit(): void {
-    // Aquí puedes inicializar cualquier dato necesario
+    this.checkViewport();
+
     this.getUserData();
   }
   getUserData(): void {
     this.authService.getUserData().then(data => {
       this.userData = data;
-      console.log('Datos del usuario:', this.userData);
+      // console.log('Datos del usuario:', this.userData);
     }).catch(error => {
       console.error('Error al obtener los datos del usuario:', error);
     });
@@ -70,9 +72,29 @@ export class OfertaEducativaComponent {
       console.error('Error al abrir la base de datos:', error);
     };
   }
-   redirecto(route: string) {
+  redirecto(route: string) {
     // this.router.navigate(['plantel/',route]);  // Navegar a la ruta proporcionada
     this.router.navigate(['oferta-educativa/home']);  // Navegar a la ruta proporcionada
   }
   // oferta-educativa/home
+
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    this.checkViewport();
+  }
+
+  checkViewport() {
+    this.isMobileView = window.innerWidth < 768; // md breakpoint de Tailwind
+    if (this.isMobileView) {
+      this.sidebarVisible = false;
+    } else {
+      this.sidebarVisible = true;
+    }
+  }
+
+  toggleSidebar() {
+    this.sidebarVisible = !this.sidebarVisible;
+  }
+
 }

@@ -46,7 +46,6 @@ export class CursosService {
   }
 
   getCursosByEspecialidadId(especialidadId: number,plantelId:number): Observable<Curso[]> {
-// router.get('/byEspecialidadId/:especialidadId/plantelId/:plantelId', CursosController.getCursosByEspecialidadId);//obtiene cursos por especialidad seleccionada
 
     const url = `${environment.api}/cursos/byEspecialidadId/${especialidadId}/plantelId/${plantelId}`;
     return this.http.get<Curso[]>(url);

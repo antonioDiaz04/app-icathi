@@ -33,8 +33,8 @@ export class HomeComponent {
   searchCurso = '';
   searchEspecialidad = '';
 
-  
- 
+
+
   // Variables para los filtros
   filtroId: string = '';
   filtroEstado: string = '';
@@ -51,19 +51,19 @@ export class HomeComponent {
   showModal = false;
   modalMessage = '';
   modalType: 'success' | 'error' = 'success'; // Tipo de mensaje (éxito o error)
-    // Para los detalles del curso
-    selectedCursoDetalle: any = null;
-    
-    showDetailModal: boolean = false;
+  // Para los detalles del curso
+  selectedCursoDetalle: any = null;
 
-      // Propiedades para manejar archivos
+  showDetailModal: boolean = false;
+
+  // Propiedades para manejar archivos
   selectedFile: File | any = null;
   fileExtension: string = '';
   url: any = '';
   page: number = 1;
   isLoaded: boolean = false;
 
-  generarReportePdfCursoId!:  any;
+  generarReportePdfCursoId!: any;
   // cursoId!:  any;
   // generarReportePdf:boolean= false;
 
@@ -72,8 +72,8 @@ export class HomeComponent {
     { id: 2, nombre: 'Curso Modalidad Virtual', componente: 'curso2' },
     { id: 3, nombre: 'Curso Modalidad Escuela', componente: 'curso3' }
   ];
-selectedCourseId: number=0;
-  constructor(private http: HttpClient , private  router: Router , private sanitizer: DomSanitizer) {}
+  selectedCourseId: number = 0;
+  constructor(private http: HttpClient, private router: Router, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.cargarCursos();
@@ -81,9 +81,9 @@ selectedCourseId: number=0;
 
 
   verDetalles(curso: any): void {
-    this.isEditCourse = true; 
+    this.isEditCourse = true;
     this.selectedCourseId = curso.id; // Guarda el ID del curso
-  
+
     // Busca la modalidad correspondiente y extrae solo el componente
     const modalidad = this.modalidades.find(m => m.id === curso.tipo_curso_id);
     this.selectedCourse = modalidad ? modalidad.componente : "";
@@ -93,7 +93,7 @@ selectedCourseId: number=0;
     console.log('Selected Component:', this.selectedCourse);
   }
   generarReportePDF(id: number): void {
-    console.log("----<",id)
+    console.log("----<", id)
     this.generarReportePdfCursoId = id;
     // this.generarReportePdf = true;
     // alert("abrio ")
@@ -126,44 +126,52 @@ selectedCourseId: number=0;
   }
 
 
-  // Función para filtrar los datos
-  filtrarCursosBy() {
-   
-    // return this.cursos.filter(curso => {
-    //   return (
-    //     (this.filtroId === '' || curso.id.toString().includes(this.filtroId)) &&
-    //     (this.filtroEstado === '' || (this.filtroEstado === 'activo' ? curso.activo : !curso.activo)) &&
-    //     (this.filtroArea === '' || curso.area.toLowerCase().includes(this.filtroArea.toLowerCase())) &&
-    //     (this.filtroEspecialidad === '' || curso.especialidad.toLowerCase().includes(this.filtroEspecialidad.toLowerCase())) &&
-    //     (this.filtroClave === '' || curso.clave.toLowerCase().includes(this.filtroClave.toLowerCase())) &&
-    //     (this.filtroNombre === '' || curso.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase())) &&
-    //     (this.filtroTipo === '' || curso.tipo.toLowerCase().includes(this.filtroTipo.toLowerCase())) &&
-    //     (this.filtroHoras === '' || curso.horas.toString().includes(this.filtroHoras)) &&
-    //     (this.filtroTipoCurso === '' || curso.tipo_curso.toLowerCase().includes(this.filtroTipoCurso.toLowerCase()))
-    //   );
-    // });
-
-        let filtered = this.cursos.filter(curso => {
-      return (
-        curso.id.toString().includes(this.filtroId.toLowerCase()) &&
-        (curso.activo ? 'activo' : 'inactivo').includes(this.filtroEstado.toLowerCase()) &&
-        curso.area.toLowerCase().includes(this.filtroArea.toLowerCase()) &&
-        curso.especialidad.toLowerCase().includes(this.filtroEspecialidad.toLowerCase()) &&
-        curso.clave.toLowerCase().includes(this.filtroClave.toLowerCase()) &&
-        curso.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()) &&
-        curso.tipo.toLowerCase().includes(this.filtroTipo.toLowerCase()) &&
-        curso.horas.toString().includes(this.filtroHoras.toLowerCase()) &&
-        curso.tipo_curso.toLowerCase().includes(this.filtroTipoCurso.toLowerCase())
-      );
-    });
-
-      this.calcularTotalPaginas(filtered);
-    return this.paginarDatos(filtered);
-  }
+  // // Función para filtrar los datos
+  // filtrarCursosBy() {
 
 
-  
+  //   let filtered = this.cursos.filter(curso => {
+  //     return (
+  //       curso.id.toString().includes(this.filtroId.toLowerCase()) &&
+  //       (curso.activo ? 'activo' : 'inactivo').includes(this.filtroEstado.toLowerCase()) &&
+  //       curso.area.toLowerCase().includes(this.filtroArea.toLowerCase()) &&
+  //       curso.especialidad.toLowerCase().includes(this.filtroEspecialidad.toLowerCase()) &&
+  //       curso.clave.toLowerCase().includes(this.filtroClave.toLowerCase()) &&
+  //       curso.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()) &&
+  //       curso.tipo.toLowerCase().includes(this.filtroTipo.toLowerCase()) &&
+  //       curso.horas.toString().includes(this.filtroHoras.toLowerCase()) &&
+  //       curso.tipo_curso.toLowerCase().includes(this.filtroTipoCurso.toLowerCase())
+  //     );
+  //   });
 
+  //   this.calcularTotalPaginas(filtered);
+  //   return this.paginarDatos(filtered);
+  // }
+
+
+
+filtrarCursosBy() {
+  let filtered = this.cursos.filter(curso => {
+    // Convertir valores null a string vacío para evitar errores
+    const area = curso.area ? curso.area.toLowerCase() : '';
+    const especialidad = curso.especialidad ? curso.especialidad.toLowerCase() : '';
+    
+    return (
+      curso.id.toString().includes(this.filtroId.toLowerCase()) &&
+      (curso.activo ? 'activo' : 'inactivo').includes(this.filtroEstado.toLowerCase()) &&
+      area.includes(this.filtroArea.toLowerCase()) &&
+      especialidad.includes(this.filtroEspecialidad.toLowerCase()) &&
+      curso.clave.toLowerCase().includes(this.filtroClave.toLowerCase()) &&
+      curso.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()) &&
+      curso.tipo.toLowerCase().includes(this.filtroTipo.toLowerCase()) &&
+      curso.horas.toString().includes(this.filtroHoras.toLowerCase()) &&
+      curso.tipo_curso.toLowerCase().includes(this.filtroTipoCurso.toLowerCase())
+    );
+  });
+
+  this.calcularTotalPaginas(filtered);
+  return this.paginarDatos(filtered);
+}
   // Función para paginar los datos
   paginarDatos(data: any[]): any[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
@@ -174,7 +182,7 @@ selectedCourseId: number=0;
   calcularTotalPaginas(data?: any[]): void {
     const datos = data || this.cursos;
     this.totalPages = Math.ceil(datos.length / this.itemsPerPage) || 1;
-    
+
     // Si la página actual es mayor que el total de páginas después de filtrar,
     // volver a la primera página
     if (this.currentPage > this.totalPages) {
@@ -266,13 +274,13 @@ selectedCourseId: number=0;
   verOfertaEducativa(): void {
     this.isAddingCourse = true;
   }
-  
+
   toggleAddCourse() {
     this.showOfertaEducativa = !this.showOfertaEducativa;
     console.log('Vista activada:', this.showOfertaEducativa);
   }
-  
-  
+
+
   cancelAddingCourse(): void {
     this.isAddingCourse = false;
   }
@@ -280,15 +288,17 @@ selectedCourseId: number=0;
   toggleAddingCourse(): void {
     this.isAddingCourse = !this.isAddingCourse;
   }
-  
+
   regresar(): void {
     this.isAddingCourse = false;
+    this.cargarCursos();
+
   }
   regresarEdit(): void {
     this.isEditCourse = false;
     this.selectedCourseId = 0;
   }
-  
+
   verDetalle(cursoId: number): void {
     this.http.get<any>(`${this.apiUrl}/detalles/${cursoId}`).subscribe({
       next: (cursoDetalle) => {
@@ -301,8 +311,8 @@ selectedCourseId: number=0;
       }
     });
   }
-  
-  
+
+
   closeCourseDetails() {
     this.selectedCourseDetails = null;
   }
@@ -338,15 +348,15 @@ selectedCourseId: number=0;
       console.error('No hay datos del curso disponibles para generar el PDF.');
       return;
     }
-  
+
     this.generando = true;
-  
+
     const doc = new jsPDF();
-  
+
     // Agregar imagen de fondo solo en la primera página
     const imageUrl = "https://res.cloudinary.com/dvvhnrvav/image/upload/v1736174056/icathi/tsi14aynpqjer8fthxtz.png";
     doc.addImage(imageUrl, "PNG", 0, 0, doc.internal.pageSize.width, doc.internal.pageSize.height);
-  
+
     const courseData = {
       titulo: "DATOS GENERALES DEL CURSO",
       datosGenerales: [
@@ -357,7 +367,7 @@ selectedCourseId: number=0;
         { label: "ESPECIALIDAD ID:", value: this.cursoData.especialidad_id || "No disponible" },
       ],
     };
-  
+
     // Establecer un margen superior de 50 y usar un tamaño de fuente de 10
     const topMargin = 50;
     doc.setFontSize(10); // Establecer el tamaño de la fuente a 10
@@ -365,44 +375,44 @@ selectedCourseId: number=0;
     doc.setFont("helvetica", "bold");
     // Mostrar el título con un margen superior de 50, alineado a la izquierda
     doc.text(courseData.titulo, 30, topMargin);
-  
+
     // Mostrar los datos generales del curso, alineados a la izquierda
     courseData.datosGenerales.forEach((data, index) => {
       const text = `${data.label} ${data.value}`;
-  
+
       // Aumentar el espacio entre las líneas
       const yPosition = topMargin + 10 + index * 15; // Aumentar la separación en el eje Y (15 unidades de separación)
-  
+
       doc.text(text, 30, yPosition); // Alineado a la izquierda en el eje X (10)
     });
-  
+
     // Agregar datos de "Vigencia"
     doc.setFontSize(10);
-  
+
     // Vigencia
     const vigenciaInicio = this.cursoData.vigencia_inicio
       ? new Date(this.cursoData.vigencia_inicio).toLocaleDateString()
       : "No disponible";
     doc.text("VIGENCIA A PARTIR DE", doc.internal.pageSize.width - 60, topMargin + 20);
     doc.text(vigenciaInicio, doc.internal.pageSize.width - 60, topMargin + 30);
-  
+
     // Datos de "Elaborado por", "Revisado por" y "Autorizado por"
     const fixedPositionData = [
       { label: "Elaborado por:", value: this.cursoData.elaborado_por || "No disponible", yOffset: topMargin + 80 },
       { label: "Revisado por:", value: this.cursoData.revisado_por || "No disponible", yOffset: topMargin + 100 },
       { label: "Autorizado por:", value: this.cursoData.autorizado_por || "No disponible", yOffset: topMargin + 140 },
     ];
-  
+
     fixedPositionData.forEach((data) => {
       doc.text(data.label, doc.internal.pageSize.width - 60, data.yOffset);
       doc.text(data.value, doc.internal.pageSize.width - 60, data.yOffset + 10);
     });
-  
+
     // Mover "Ficha Técnica" a otra página y usar tabla
     doc.addPage();
     doc.setFontSize(16);
     doc.text("FICHA TÉCNICA", 10, 20);
-  
+
     const fichaTecnica = [
       ["Objetivo", this.cursoData.FICHA_TECNICA?.OBJETIVO || "No disponible"],
       ["Perfil de ingreso", this.cursoData.FICHA_TECNICA?.PERFIL_INGRESO || "No disponible"],
@@ -412,7 +422,7 @@ selectedCourseId: number=0;
       ["Bibliografía", this.cursoData.FICHA_TECNICA?.BIBLIOGRAFIA || "No disponible"],
       ["Criterios de acreditación", this.cursoData.FICHA_TECNICA?.CRITERIOS_ACREDITACION || "No disponible"],
     ];
-  
+
     doc.autoTable({
       startY: 30,
       body: fichaTecnica,
@@ -423,13 +433,13 @@ selectedCourseId: number=0;
         1: { halign: "left", fillColor: [255, 255, 255], textColor: [0, 0, 0] }, // Segunda columna sin fondo
       },
     });
-  
+
     // Verificar si los materiales y equipamiento existen
     if (this.cursoData.material && this.cursoData.material.length > 0) {
       doc.addPage();
       doc.setFontSize(16);
       doc.text("MATERIALES", 10, 20);
-  
+
       const materialsTable = [
         ["Descripción", "Unidad de medida", "Cantidad 10", "Cantidad 15", "Cantidad 20"], // Headers
         ...this.cursoData.MATERIALES.map((item: any) => [
@@ -440,7 +450,7 @@ selectedCourseId: number=0;
           item.material_cantidad_20,
         ]),
       ];
-  
+
       doc.autoTable({
         startY: 30, // Positioning the table
         head: materialsTable.slice(0, 1), // Table header
@@ -449,12 +459,12 @@ selectedCourseId: number=0;
         margin: { top: 20 },
       });
     }
-  
+
     if (this.cursoData.EQUIPAMIENTO && this.cursoData.EQUIPAMIENTO.length > 0) {
       doc.addPage();
       doc.setFontSize(16);
       doc.text("EQUIPAMIENTO", 10, 20);
-  
+
       const equipmentTable = [
         ["Descripción", "Unidad de medida", "Cantidad 10", "Cantidad 15", "Cantidad 20"], // Headers
         ...this.cursoData.EQUIPAMIENTO.map((item: any) => [
@@ -465,7 +475,7 @@ selectedCourseId: number=0;
           item.equipamiento_cantidad_20,
         ]),
       ];
-  
+
       doc.autoTable({
         startY: 30, // Positioning the table
         head: equipmentTable.slice(0, 1), // Table header
@@ -474,120 +484,120 @@ selectedCourseId: number=0;
         margin: { top: 20 },
       });
     }
-  
+
     // Guardar el PDF
     doc.save("curso.pdf");
-  
+
     this.generando = false;
   }
-    mostrarFormulario(cursoId: number) {
-      this.http.get(`${environment.api}/cursos/detalles/${cursoId}`).subscribe((data: any) => {
-        this.selectedCourse = data;
-        this.mostrarFormularioFlag = true;
-      });
-    }
-  
-    ocultarFormulario() {
-      this.mostrarFormularioFlag = false;
-      this.selectedCourse = "";
-    }
-
-actualizarCurso(): void {
-  if (!this.selectedCourseDetails) {
-    console.error('No se ha seleccionado un curso para actualizar.');
-    return;
-  }
-  console.log('Curso seleccionado para actualizar:', this.selectedCourseDetails);
-  // Crear un objeto FormData para enviar los datos del curso y el archivo
-  const formData = new FormData();
-
-  // Agregar las propiedades del objeto `nuevoCurso` al FormData
-  formData.append('nombre', this.selectedCourseDetails.nombre);
-  formData.append('duracion_horas', this.selectedCourseDetails.duracion_horas.toString());
-  formData.append('descripcion', this.selectedCourseDetails.descripcion);
-  formData.append('nivel', this.selectedCourseDetails.nivel);
-  formData.append('clave', this.selectedCourseDetails.clave?.toString() || '');
-  formData.append('area_id', this.selectedCourseDetails.area_id?.toString() || '');
-  formData.append('especialidad_id', this.selectedCourseDetails.especialidad_id?.toString() || '');
-  formData.append('tipo_curso_id', this.selectedCourseDetails.tipo_curso_id?.toString() || '');
-  formData.append('revisado_por', this.selectedCourseDetails.revisado_por?.toString() || '');
-  formData.append('autorizado_por', this.selectedCourseDetails.autorizado_por?.toString() || '');
-  formData.append('elaborado_por', this.selectedCourseDetails.elaborado_por?.toString() || '');
-
-  // Si se seleccionó un archivo (por ejemplo, un archivo de temario)
-  if (this.selectedFile) {
-    formData.append('temario', this.selectedFile, this.selectedFile.name);
+  mostrarFormulario(cursoId: number) {
+    this.http.get(`${environment.api}/cursos/detalles/${cursoId}`).subscribe((data: any) => {
+      this.selectedCourse = data;
+      this.mostrarFormularioFlag = true;
+    });
   }
 
-  // Convertir `objetivos` a JSON y agregarlo a FormData
-  formData.append('objetivos', JSON.stringify(this.selectedCourseDetails.objetivos));
+  ocultarFormulario() {
+    this.mostrarFormularioFlag = false;
+    this.selectedCourse = "";
+  }
 
-  // Convertir `contenidoProgramatico` a JSON y agregarlo
-  formData.append('contenidoProgramatico', JSON.stringify(this.selectedCourseDetails.contenidoProgramatico));
-
-  // Agregar materiales como archivos (si existen)
-  formData.append('materiales', JSON.stringify(this.selectedCourseDetails.materiales));
-
-  // Agregar equipamiento como texto
-  formData.append('equipamiento', JSON.stringify(this.selectedCourseDetails.equipamiento));
-
-  // Hacer la solicitud POST a la API para actualizar el curso
-  this.http.post(`${this.apiUrl}/cursos/${this.selectedCourseDetails.id}`, formData).subscribe({
-    next: (response) => {
-      console.log('Curso actualizado correctamente:', response);
-      alert('Curso actualizado con éxito.');
-      this.mostrarModal('Curso actualizado con éxito.', 'success');
-      this.cargarCursos(); // Recargar los cursos para reflejar la actualización
-      this.ocultarFormulario(); // Ocultar el formulario
-    },
-    error: (err) => {
-      console.error('Error al actualizar el curso:', err);
-      alert('Error al actualizar el curso. Intenta más tarde.');
-      this.mostrarModal('Error al actualizar el curso. Intenta más tarde.', 'error');
+  actualizarCurso(): void {
+    if (!this.selectedCourseDetails) {
+      console.error('No se ha seleccionado un curso para actualizar.');
+      return;
     }
-  });
-}
+    console.log('Curso seleccionado para actualizar:', this.selectedCourseDetails);
+    // Crear un objeto FormData para enviar los datos del curso y el archivo
+    const formData = new FormData();
 
-    onFileSelect(event: any): void {
-      const file = event.target.files[0];
-      if (file) {
-        this.selectedFile = file;
-        this.fileExtension = this.getFileExtension(file.name);
-    
-        if (this.fileExtension === 'pdf') {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            this.url = this.sanitizer.bypassSecurityTrustResourceUrl(
-              URL.createObjectURL(file)
-            );
-          };
-          reader.readAsDataURL(file);
-        }
+    // Agregar las propiedades del objeto `nuevoCurso` al FormData
+    formData.append('nombre', this.selectedCourseDetails.nombre);
+    formData.append('duracion_horas', this.selectedCourseDetails.duracion_horas.toString());
+    formData.append('descripcion', this.selectedCourseDetails.descripcion);
+    formData.append('nivel', this.selectedCourseDetails.nivel);
+    formData.append('clave', this.selectedCourseDetails.clave?.toString() || '');
+    formData.append('area_id', this.selectedCourseDetails.area_id?.toString() || '');
+    formData.append('especialidad_id', this.selectedCourseDetails.especialidad_id?.toString() || '');
+    formData.append('tipo_curso_id', this.selectedCourseDetails.tipo_curso_id?.toString() || '');
+    formData.append('revisado_por', this.selectedCourseDetails.revisado_por?.toString() || '');
+    formData.append('autorizado_por', this.selectedCourseDetails.autorizado_por?.toString() || '');
+    formData.append('elaborado_por', this.selectedCourseDetails.elaborado_por?.toString() || '');
+
+    // Si se seleccionó un archivo (por ejemplo, un archivo de temario)
+    if (this.selectedFile) {
+      formData.append('temario', this.selectedFile, this.selectedFile.name);
+    }
+
+    // Convertir `objetivos` a JSON y agregarlo a FormData
+    formData.append('objetivos', JSON.stringify(this.selectedCourseDetails.objetivos));
+
+    // Convertir `contenidoProgramatico` a JSON y agregarlo
+    formData.append('contenidoProgramatico', JSON.stringify(this.selectedCourseDetails.contenidoProgramatico));
+
+    // Agregar materiales como archivos (si existen)
+    formData.append('materiales', JSON.stringify(this.selectedCourseDetails.materiales));
+
+    // Agregar equipamiento como texto
+    formData.append('equipamiento', JSON.stringify(this.selectedCourseDetails.equipamiento));
+
+    // Hacer la solicitud POST a la API para actualizar el curso
+    this.http.post(`${this.apiUrl}/cursos/${this.selectedCourseDetails.id}`, formData).subscribe({
+      next: (response) => {
+        console.log('Curso actualizado correctamente:', response);
+        alert('Curso actualizado con éxito.');
+        this.mostrarModal('Curso actualizado con éxito.', 'success');
+        this.cargarCursos(); // Recargar los cursos para reflejar la actualización
+        this.ocultarFormulario(); // Ocultar el formulario
+      },
+      error: (err) => {
+        console.error('Error al actualizar el curso:', err);
+        alert('Error al actualizar el curso. Intenta más tarde.');
+        this.mostrarModal('Error al actualizar el curso. Intenta más tarde.', 'error');
+      }
+    });
+  }
+
+  onFileSelect(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.fileExtension = this.getFileExtension(file.name);
+
+      if (this.fileExtension === 'pdf') {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          this.url = this.sanitizer.bypassSecurityTrustResourceUrl(
+            URL.createObjectURL(file)
+          );
+        };
+        reader.readAsDataURL(file);
       }
     }
-    
+  }
 
-    callbackFn(pdf: PDFDocumentProxy): void {
-      this.totalPages = pdf.numPages;
-      this.isLoaded = true;
-      console.log('PDF cargado:', pdf);
+
+  callbackFn(pdf: PDFDocumentProxy): void {
+    this.totalPages = pdf.numPages;
+    this.isLoaded = true;
+    console.log('PDF cargado:', pdf);
+  }
+
+  prevTep(): void {
+    if (this.page > 1) {
+      this.page--;
     }
-    
-    prevTep(): void {
-      if (this.page > 1) {
-        this.page--;
-      }
+  }
+
+  nextTep(): void {
+    if (this.page < this.totalPages) {
+      this.page++;
     }
-    
-    nextTep(): void {
-      if (this.page < this.totalPages) {
-        this.page++;
-      }
-    }
-    
-    getFileExtension(fileName: string): string {
-      const ext = fileName.split('.').pop()?.toLowerCase() || '';
-      return ext;
-    }
+  }
+
+  getFileExtension(fileName: string): string {
+    const ext = fileName.split('.').pop()?.toLowerCase() || '';
+    return ext;
+  }
 
 }
