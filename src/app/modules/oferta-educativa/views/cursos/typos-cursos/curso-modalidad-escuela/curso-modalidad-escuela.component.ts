@@ -558,7 +558,7 @@ export class CursoModalidadEscuelaComponent implements OnInit, OnChanges {
     formData.append("nota_materiales", this.nuevoCurso().notas?.materiales || '');
 
     formData.append("equipamiento", JSON.stringify(currentCourse.equipamiento));
-
+    formData.append("nota_equipamiento", this.nuevoCurso().notas?.equipamiento || '');
     // Debug: Mostrar contenido de FormData
     console.log("Contenido de FormData:");
     for (const [key, value] of (formData as any).entries()) {

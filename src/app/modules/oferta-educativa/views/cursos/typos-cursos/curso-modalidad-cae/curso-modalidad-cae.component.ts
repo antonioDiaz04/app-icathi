@@ -35,7 +35,14 @@ export interface Modulo {
   vigencia_inicio?: string | undefined;
   fecha_publicacion?: string | undefined;
   ultima_actualizacion?: string | undefined;
-
+  // Nuevas propiedades para notas adicionales
+  notas: {
+    materiales?: string | undefined;
+    equipamiento?: string | undefined;
+    requisitos?: string | undefined;
+    evaluacion?: string | undefined;
+    general?: string | undefined;
+  };
   firmas: {
     revisado: { nombre: string; cargo: string };
     autorizado: { nombre: string; cargo: string };
@@ -154,6 +161,12 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
     contenidoProgramatico: { temas: [] },
     materiales: [],
     equipamiento: [],
+    notas: {
+      materiales: "",
+      equipamiento: '',
+      requisitos: '',
+      evaluacion: ''
+    },
   });
 
   private apiUrl = signal(environment.api);
@@ -372,8 +385,11 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
     formData.append("objetivos", JSON.stringify(currentCourse.objetivos));
     formData.append("contenidoProgramatico", JSON.stringify(currentCourse.contenidoProgramatico));
     formData.append("materiales", JSON.stringify(currentCourse.materiales));
+    formData.append("nota_materiales", this.nuevoCurso().notas?.materiales || '');
+
     formData.append("equipamiento", JSON.stringify(currentCourse.equipamiento));
 
+    formData.append("nota_equipamiento", this.nuevoCurso().notas?.equipamiento || '');
     // Debug: Mostrar contenido de FormData
     console.log("Contenido de FormData:");
     for (const [key, value] of (formData as any).entries()) {
@@ -448,6 +464,12 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
       area_id: undefined,
       especialidad_id: undefined,
       tipo_curso_id: undefined,
+      notas: {
+        materiales: "",
+        equipamiento: '',
+        requisitos: '',
+        evaluacion: ''
+      },
       firmas: {
         revisado: { nombre: "", cargo: "Responsable del proceso de Diseño de  Programas de Estudio" },
         autorizado: { nombre: "", cargo: "Directora Académica" },
