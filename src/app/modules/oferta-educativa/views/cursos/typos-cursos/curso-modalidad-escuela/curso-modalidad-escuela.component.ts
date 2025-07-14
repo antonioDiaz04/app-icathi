@@ -481,34 +481,33 @@ export class CursoModalidadEscuelaComponent implements OnInit, OnChanges {
   }
 
 
-  agregarCurso(): void {
-    this.isSaving.set(true);
-    this.alertMessage.set(null); // Reset previous alert
+agregarCurso(): void {
+  this.isSaving.set(true);
+  this.alertMessage.set(null); // Reset previous alert
 
-    const currentCourse = this.nuevoCurso();
-    const file = this.selectedFile();
+  const currentCourse = this.nuevoCurso();
+  const file = this.selectedFile();
 
-    // Si hay archivo seleccionado, primero subirlo
-    if (file) {
-      this.fileUploadService.uploadTemario(file).pipe(
-        switchMap((response) => {
-          // Una vez subido el archivo, proceder con el resto de los datos
-          const formData = this.prepareFormData(currentCourse, response.fileUrl);
-          return this.sendCourseRequest(formData);
-        })
-      ).subscribe({
-        next: (response) => this.handleSuccess(response),
-        error: (err) => this.handleError(err)
-      });
-    } else {
-      // Si no hay archivo, proceder normalmente
-      const formData = this.prepareFormData(currentCourse);
-      this.sendCourseRequest(formData).subscribe({
-        next: (response) => this.handleSuccess(response),
-        error: (err) => this.handleError(err)
-      });
-    }
+  // Si hay archivo seleccionado Y no ha sido subido aún (en Aceptar())
+  if (file && !this.alreadyUploadedFileUrl) {
+    this.fileUploadService.uploadTemario(file).pipe(
+      switchMap((response) => {
+        const formData = this.prepareFormData(currentCourse, response.fileUrl);
+        return this.sendCourseRequest(formData);
+      })
+    ).subscribe({
+      next: (response) => this.handleSuccess(response),
+      error: (err) => this.handleError(err)
+    });
+  } else {
+    // Usar la URL ya subida o proceder sin archivo
+    const formData = this.prepareFormData(currentCourse, this.alreadyUploadedFileUrl || undefined);
+    this.sendCourseRequest(formData).subscribe({
+      next: (response) => this.handleSuccess(response),
+      error: (err) => this.handleError(err)
+    });
   }
+}
 
   // Método auxiliar para preparar el FormData
   private prepareFormData(currentCourse: any, fileUrl: string = ''): FormData {
@@ -1098,41 +1097,78 @@ fileExtension: string = "";
   // En tu componente TypeScript
   uploadProgress = 0;
   isLoadingPreview = false;
+private alreadyUploadedFileUrl: string | null = null;
 
-  async Aceptar() {
-    const file = this.selectedFile();
-    if (!file) return;
+async Aceptar() {
+  const file = this.selectedFile();
+  if (!file) return;
 
-    try {
-      // Mostrar progreso simulado mientras se sube el archivo
-      const uploadInterval = setInterval(() => {
-        this.uploadProgress = Math.min(this.uploadProgress + 10, 90);
-      }, 200);
+  try {
+    // Mostrar progreso simulado mientras se sube el archivo
+    const uploadInterval = setInterval(() => {
+      this.uploadProgress = Math.min(this.uploadProgress + 10, 90);
+    }, 200);
 
-      // Subir el archivo usando el servicio fileUploadService
-      const fileUrl = await this.fileUploadService.uploadTemario(file).toPromise();
+    // Subir el archivo usando el servicio fileUploadService
+    const fileUrl = await this.fileUploadService.uploadTemario(file).toPromise();
+    
+    // Guardar la URL para usarla luego en agregarCurso()
+    this.alreadyUploadedFileUrl = fileUrl.fileUrl;
 
-      clearInterval(uploadInterval);
-      this.uploadProgress = 100;
+    clearInterval(uploadInterval);
+    this.uploadProgress = 100;
 
-      // Mostrar vista previa
-      this.isLoadingPreview = true;
-      this.archivoUrl.set(fileUrl.fileUrl); // Asumiendo que la respuesta es {fileUrl: string}
+    // Mostrar vista previa
+    this.isLoadingPreview = true;
+    this.archivoUrl.set(fileUrl.fileUrl);
 
-      // Pequeño delay para que se vea el 100%
-      await new Promise(resolve => setTimeout(resolve, 500));
+    // Pequeño delay para que se vea el 100%
+    await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Cerrar modal
-      this.mostrarFormulario = false;
-    } catch (error) {
-      this.alertTaiwilService.showTailwindAlert("Error al subir el archivo", 'error');
-      // console.error("Error al subir el archivo:", error);
-      // Manejar error
-      // this.showAlert('error', 'Error al subir archivo', error.message);
-    } finally {
-      this.isLoadingPreview = false;
-      this.uploadProgress = 0;
-    }
+    // Cerrar modal
+    this.mostrarFormulario = false;
+  } catch (error) {
+    this.alertTaiwilService.showTailwindAlert("Error al subir el archivo", 'error');
+    this.alreadyUploadedFileUrl = null; // Resetear en caso de error
+  } finally {
+    this.isLoadingPreview = false;
+    this.uploadProgress = 0;
   }
+}
+  // async Aceptar() {
+  //   const file = this.selectedFile();
+  //   if (!file) return;
+
+  //   try {
+  //     // Mostrar progreso simulado mientras se sube el archivo
+  //     const uploadInterval = setInterval(() => {
+  //       this.uploadProgress = Math.min(this.uploadProgress + 10, 90);
+  //     }, 200);
+
+  //     // Subir el archivo usando el servicio fileUploadService
+  //     const fileUrl = await this.fileUploadService.uploadTemario(file).toPromise();
+
+  //     clearInterval(uploadInterval);
+  //     this.uploadProgress = 100;
+
+  //     // Mostrar vista previa
+  //     this.isLoadingPreview = true;
+  //     this.archivoUrl.set(fileUrl.fileUrl); // Asumiendo que la respuesta es {fileUrl: string}
+
+  //     // Pequeño delay para que se vea el 100%
+  //     await new Promise(resolve => setTimeout(resolve, 500));
+
+  //     // Cerrar modal
+  //     this.mostrarFormulario = false;
+  //   } catch (error) {
+  //     this.alertTaiwilService.showTailwindAlert("Error al subir el archivo", 'error');
+  //     // console.error("Error al subir el archivo:", error);
+  //     // Manejar error
+  //     // this.showAlert('error', 'Error al subir archivo', error.message);
+  //   } finally {
+  //     this.isLoadingPreview = false;
+  //     this.uploadProgress = 0;
+  //   }
+  // }
 
 }
