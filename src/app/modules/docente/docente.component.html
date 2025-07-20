@@ -4,7 +4,7 @@
 
   <aside
     class="w-64 bg-white text-gray-800 shadow-lg flex flex-col transition hover:shadow-xl"
-    *ngIf="!isMobile"
+    *ngIf="!isMobile()"
   >    <!-- Encabezado del Menú con Logo -->
     <div class="p-6 text-center border-b border-gray-300 shadow-sm">
       <img
@@ -35,10 +35,10 @@
           <i class="user icon mr-3" style="color: #F08762;"></i>
           Perfil 
           <div 
-            *ngIf="pendingCount > 0"
+            *ngIf="pendingCount() > 0"
             class="ui red circular label"
           >
-            {{ pendingCount }}
+            {{ pendingCount() }}
           </div>
         </a>
           <!-- <a
@@ -109,11 +109,11 @@
   <header
 
   class="bg-[#ffffff] border border-[#44509D] text-black py-4 px-6 rounded-lg sm:rounded-2xl mb-6 shadow-md flex justify-between items-center transition hover:shadow-lg hover:border-[#F08762]"
-  *ngIf="docenteData"
+  *ngIf="docenteData()"
 >
   <!-- Botón de menú hamburguesa (solo en móvil) -->
   <button
-    (click)="visible_docente = true"
+    (click)="visible_docente.set(true)"
     class="lg:hidden flex items-center text-[#F08762] p-2 space-x-6 justify-center mb-4 mr-4"
   >
     <i class="bars icon text-2xl"></i>
@@ -122,14 +122,14 @@
   <!-- Sección de bienvenida -->
   <div class="flex-grow mr-4">
     <h1 class="text-sm md:text-xl font-medium mb-1">
-      Bienvenido, <span class="text-[#F08762]">{{ docenteData?.nombre || 'Docente' }}</span>
+      Bienvenido, <span class="text-[#F08762]">{{ docenteData()?.nombre || 'Docente' }}</span>
     </h1>
-    <p class="text-xs md:text-sm" style="color: #D8566C;">Correo :{{ docenteData.email }}</p>
+    <p class="text-xs md:text-sm" style="color: #D8566C;">Correo :{{ docenteData().email }}</p>
   </div>
 
   <!-- Imagen del docente -->
   <img
-    [src]="docenteData.foto_url || 'https://via.placeholder.com/150'"
+    [src]="docenteData().foto_url || 'https://via.placeholder.com/150'"
     alt="Foto de docente"
     class="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover ml-4 border border-[#F08762] shadow-sm"
   />
@@ -160,10 +160,10 @@
   <!-- Encabezado personalizado -->
   <div class="flex items-center justify-between bg-white text-gray-800 px-4 py-3 border-b border-gray-200">
     <h1 class=" md:text-lg font-bold mb-1">
-      Bienvenido, <span class="text-[#F08762]">{{ docenteData.nombre }}</span>
+      Bienvenido, <span class="text-[#F08762]">{{ docenteData()?.nombre }}</span>
     </h1>    <button
       class="text-xl font-bold text-gray-800 hover:text-[#F08762] transition-transform transform hover:scale-110"
-      (click)="visible_docente = false"
+  (click)="visible_docente.set(false)"
     >
       ✖
     </button>
@@ -199,10 +199,10 @@
     <i class="user icon" style="color: #D8566C;"></i>
     Perfil
     <div 
-      *ngIf="pendingCount > 0"
+      *ngIf="pendingCount() > 0"
       class="ui red circular label"
     >
-      {{ pendingCount }}
+      {{ pendingCount() }}
     </div>
   </a>
   

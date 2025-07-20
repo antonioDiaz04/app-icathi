@@ -1,18 +1,23 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+// pending-alert.service.ts
+import { Injectable, signal } from '@angular/core';
+import { computed } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PendingAlertService {
-  private pendingAlertsSubject = new BehaviorSubject<string[]>([]);
-  pendingAlerts$ = this.pendingAlertsSubject.asObservable();
+  private _pendingAlerts = signal<string[]>([]);
 
-  getPendingCount(): number {
-    return this.pendingAlertsSubject.value.length;
+  // Acceso a los valores
+  readonly pendingAlerts = computed(() => this._pendingAlerts());
+  readonly pendingCount = computed(() => this._pendingAlerts().length);
+
+  // Actualización
+  update(alerts: string[]): void {
+    this._pendingAlerts.set(alerts);
   }
 
-  updatePendingAlerts(alerts: string[]): void {
-    this.pendingAlertsSubject.next(alerts);
+  clear(): void {
+    this._pendingAlerts.set([]);
   }
 }

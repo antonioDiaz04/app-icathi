@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DocenteDataService {
-  docenteData: any = null;  // Almacenar los datos del docente
+  docenteData = signal<any>(null); // debe ser una señal, NO un valor plano
 
   constructor() { }
 }
