@@ -84,6 +84,10 @@ export interface Modulo {
     cantidad15?: number | undefined;
     cantidad20?: number | undefined;
   }>;
+  reviso_aprobo_texto?: string;
+  codigo_formato?: string;
+  version_formato?: number;
+  fecha_emision_formato?: string;
 }
 
 export interface UnitOption {
@@ -167,6 +171,11 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
       requisitos: '',
       evaluacion: ''
     },
+    reviso_aprobo_texto: "Coordinación de Gestión de la Calidad",
+    codigo_formato: "DA-PP-CAE-01",
+    version_formato: 1,
+    fecha_emision_formato: new Date().toISOString().split('T')[0], // YYYY-MM-DD
+
   });
 
   private apiUrl = signal(environment.api);
@@ -182,6 +191,13 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
       this.btnTitle.set("GUARDAR CAMBIOS");
       console.log(`🔹 Inicializando con ID: ${this.selectedCourseId}`);
       this.showCourseDetails(this.selectedCourseId);
+    }
+    if (!this.nuevoCurso().fecha_emision_formato) {
+      const hoy = new Date().toISOString().split('T')[0];
+      this.nuevoCurso.update(curso => ({
+        ...curso,
+        fecha_emision_formato: hoy
+      }));
     }
   }
 
@@ -310,33 +326,33 @@ export class CursoModalidadCAEComponent implements OnInit, OnChanges {
   selectedFile = signal<File | null>(null);
   isFileSelected = computed(() => this.selectedFile() !== null);
 
-agregarCurso(): void {
-  this.isSaving.set(true);
-  this.alertMessage.set(null); // Reset previous alert
+  agregarCurso(): void {
+    this.isSaving.set(true);
+    this.alertMessage.set(null); // Reset previous alert
 
-  const currentCourse = this.nuevoCurso();
-  const file = this.selectedFile();
+    const currentCourse = this.nuevoCurso();
+    const file = this.selectedFile();
 
-  // Si hay archivo seleccionado Y no ha sido subido aún (en Aceptar())
-  if (file && !this.alreadyUploadedFileUrl) {
-    this.fileUploadService.uploadTemario(file).pipe(
-      switchMap((response) => {
-        const formData = this.prepareFormData(currentCourse, response.fileUrl);
-        return this.sendCourseRequest(formData);
-      })
-    ).subscribe({
-      next: (response) => this.handleSuccess(response),
-      error: (err) => this.handleError(err)
-    });
-  } else {
-    // Usar la URL ya subida o proceder sin archivo
-    const formData = this.prepareFormData(currentCourse, this.alreadyUploadedFileUrl || undefined);
-    this.sendCourseRequest(formData).subscribe({
-      next: (response) => this.handleSuccess(response),
-      error: (err) => this.handleError(err)
-    });
+    // Si hay archivo seleccionado Y no ha sido subido aún (en Aceptar())
+    if (file && !this.alreadyUploadedFileUrl) {
+      this.fileUploadService.uploadTemario(file).pipe(
+        switchMap((response) => {
+          const formData = this.prepareFormData(currentCourse, response.fileUrl);
+          return this.sendCourseRequest(formData);
+        })
+      ).subscribe({
+        next: (response) => this.handleSuccess(response),
+        error: (err) => this.handleError(err)
+      });
+    } else {
+      // Usar la URL ya subida o proceder sin archivo
+      const formData = this.prepareFormData(currentCourse, this.alreadyUploadedFileUrl || undefined);
+      this.sendCourseRequest(formData).subscribe({
+        next: (response) => this.handleSuccess(response),
+        error: (err) => this.handleError(err)
+      });
+    }
   }
-}
 
   // Método auxiliar para preparar el FormData
   private prepareFormData(currentCourse: any, fileUrl: string = ''): FormData {
@@ -388,6 +404,12 @@ agregarCurso(): void {
     formData.append("equipamiento", JSON.stringify(currentCourse.equipamiento));
 
     formData.append("nota_equipamiento", this.nuevoCurso().notas?.equipamiento || '');
+
+    formData.append("codigo_formato", currentCourse.codigo_formato || '');
+    formData.append("version_formato", currentCourse.version_formato?.toString() || '1');
+    formData.append("fecha_emision_formato", currentCourse.fecha_emision_formato || '');
+    formData.append("reviso_aprobo_texto", currentCourse.reviso_aprobo_texto || '');
+
     // Debug: Mostrar contenido de FormData
     console.log("Contenido de FormData:");
     for (const [key, value] of (formData as any).entries()) {
@@ -462,6 +484,11 @@ agregarCurso(): void {
       area_id: undefined,
       especialidad_id: undefined,
       tipo_curso_id: undefined,
+      version_formato: 1, // Valor por defecto
+      fecha_emision_formato: "", // O podrías usar new Date().toISOString() para fecha actual
+      codigo_formato: "",
+      reviso_aprobo_texto: "",
+
       notas: {
         materiales: "",
         equipamiento: '',
@@ -803,44 +830,44 @@ agregarCurso(): void {
   // En tu componente TypeScript
   uploadProgress = 0;
   isLoadingPreview = false;
-private alreadyUploadedFileUrl: string | null = null;
+  private alreadyUploadedFileUrl: string | null = null;
 
-async Aceptar() {
-  const file = this.selectedFile();
-  if (!file) return;
+  async Aceptar() {
+    const file = this.selectedFile();
+    if (!file) return;
 
-  try {
-    // Mostrar progreso simulado mientras se sube el archivo
-    const uploadInterval = setInterval(() => {
-      this.uploadProgress = Math.min(this.uploadProgress + 10, 90);
-    }, 200);
+    try {
+      // Mostrar progreso simulado mientras se sube el archivo
+      const uploadInterval = setInterval(() => {
+        this.uploadProgress = Math.min(this.uploadProgress + 10, 90);
+      }, 200);
 
-    // Subir el archivo usando el servicio fileUploadService
-    const fileUrl = await this.fileUploadService.uploadTemario(file).toPromise();
-    
-    // Guardar la URL para usarla luego en agregarCurso()
-    this.alreadyUploadedFileUrl = fileUrl.fileUrl;
+      // Subir el archivo usando el servicio fileUploadService
+      const fileUrl = await this.fileUploadService.uploadTemario(file).toPromise();
 
-    clearInterval(uploadInterval);
-    this.uploadProgress = 100;
+      // Guardar la URL para usarla luego en agregarCurso()
+      this.alreadyUploadedFileUrl = fileUrl.fileUrl;
 
-    // Mostrar vista previa
-    this.isLoadingPreview = true;
-    this.archivoUrl.set(fileUrl.fileUrl);
+      clearInterval(uploadInterval);
+      this.uploadProgress = 100;
 
-    // Pequeño delay para que se vea el 100%
-    await new Promise(resolve => setTimeout(resolve, 500));
+      // Mostrar vista previa
+      this.isLoadingPreview = true;
+      this.archivoUrl.set(fileUrl.fileUrl);
 
-    // Cerrar modal
-    this.mostrarFormulario = false;
-  } catch (error) {
-    this.alertTaiwilService.showTailwindAlert("Error al subir el archivo", 'error');
-    this.alreadyUploadedFileUrl = null; // Resetear en caso de error
-  } finally {
-    this.isLoadingPreview = false;
-    this.uploadProgress = 0;
+      // Pequeño delay para que se vea el 100%
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Cerrar modal
+      this.mostrarFormulario = false;
+    } catch (error) {
+      this.alertTaiwilService.showTailwindAlert("Error al subir el archivo", 'error');
+      this.alreadyUploadedFileUrl = null; // Resetear en caso de error
+    } finally {
+      this.isLoadingPreview = false;
+      this.uploadProgress = 0;
+    }
   }
-}
   // async Aceptar() {
   //   const file = this.selectedFile();
   //   if (!file) return;

@@ -77,7 +77,10 @@ export interface Modulo {
     cantidad15?: number | undefined; // Cantidad para 15 puede estar indefinida
     cantidad20?: number | undefined; // Cantidad para 20 puede estar indefinida
   }>;
-
+  reviso_aprobo_texto?: string;
+  codigo_formato?: string;
+  version_formato?: number;
+  fecha_emision_formato?: string;
 }
 
 // export interface EquipmentItem {
@@ -128,45 +131,7 @@ export class CursoModalidadEscuelaComponent implements OnInit, OnChanges {
   alertType = signal<"success" | "error">("success");
   btnTitle = signal("GUARDAR");
     isSaving = signal(false);
-  // nuevoCurso: Modulo = {
-  //   id: 0,
-  //   nombre: "",
-  //   duracion_horas: 0,
-  //   descripcion: "",
-  //   nivel: "",
-  //   clave: "",
-  //   area_id: undefined,
-  //   especialidad_id: undefined,
-  //   tipo_curso_id: undefined,
 
-  //   firmas: {
-  //     revisado: { nombre: "", cargo: "Programas de Estudio" },
-  //     autorizado: { nombre: "", cargo: "Directora Académica" },
-  //     elaborado: { nombre: "", cargo: "Director General" },
-  //   },
-  //   vigencia_inicio: undefined,
-  //   fecha_publicacion: undefined,
-  //   objetivos: {
-  //     objetivo: "",
-  //     perfil_ingreso: "",
-  //     perfil_egreso: "",
-  //     perfil_del_docente: "",
-  //     metodologia: "",
-  //     bibliografia: "",
-  //     criterios_acreditacion: "",
-  //     reconocimiento: "",
-  //   },
-  //   contenidoProgramatico: { temas: [] },
-  //   materiales: [],
-  //   equipamiento: [],
-  //   notas: {
-  //     materiales: "",
-  //     equipamiento: '',
-  //     requisitos: '',
-  //     evaluacion: ''
-  //   },
-
-  // };
 
     nuevoCurso = signal<Modulo>({
       id: 0,
@@ -205,32 +170,21 @@ export class CursoModalidadEscuelaComponent implements OnInit, OnChanges {
       requisitos: '',
       evaluacion: ''
     },
+        reviso_aprobo_texto: "Coordinación de Gestión de la Calidad",
+    codigo_formato: "DA-PP-CAE-01",
+    version_formato: 1,
+    fecha_emision_formato: new Date().toISOString().split('T')[0], // YYYY-MM-DD
     });
   // private apiUrl = `${environment.api}`;
   private apiUrl = signal(environment.api);
 
-  // For loading state and alert message
-  // isSaving = false;
-  // alertMessage: string | null = null;
-  // alertTitle: string | null = null;
-  // alertType: "success" | "error" = "success";
+
   btnTtle?: string;
 
   // constructor(private sanitizer: DomSanitizer, private http: HttpClient) { }
 
   constructor(private confirmService: ConfirmTaiwilService, private alertTaiwilService: AlertTaiwilService, private sanitizer: DomSanitizer, private http: HttpClient, private fileUploadService: FileUploadService) { }
-  // ngOnInit(): void {
-  //   this.cargarAreas();
-  //   this.cargarEspecialidades();
-  //   this.cargarTiposCurso();
-  //   if (this.selectedCourseId) {
-  //     this.btnTtle = "Editar";
-  //     console.log(`🔹 Inicializando con ID: ${this.selectedCourseId}`);
-  //     this.showCourseDetails(this.selectedCourseId);
-  //   } else {
-  //     this.btnTtle = "Agregar";
-  //   }
-  // }
+
     ngOnInit(): void {
     this.cargarAreas();
     this.cargarEspecialidades();
@@ -339,113 +293,7 @@ export class CursoModalidadEscuelaComponent implements OnInit, OnChanges {
         },
       });
     }
-  // showCourseDetails(id: number) {
-  //   this.http.get<any>(`${this.apiUrl}/cursos/detalles/${id}`).subscribe({
-  //     next: (data) => {
-  //       this.archivoUrl = data.archivo_url;
 
-  //       this.nuevoCurso = {
-  //         ...this.nuevoCurso, // Mantiene la estructura inicial
-  //         ...data, // Sobrescribe los datos con los valores obtenidos
-  //         // Convertir las fechas ISO a timestamps
-  //         vigencia_inicio: isNaN(new Date(data.vigencia_inicio).getTime())
-  //           ? ""
-  //           : new Date(data.vigencia_inicio).toISOString().split("T")[0],
-  //         fecha_publicacion: isNaN(new Date(data.fecha_publicacion).getTime())
-  //           ? ""
-  //           : new Date(data.fecha_publicacion).toISOString().split("T")[0],
-  //         duracion_horas: Number(data.duracion_horas),
-  //         costo: data.costo !== undefined ? Number(data.costo) : undefined,
-  //         area_id:
-  //           data.area_id !== undefined ? Number(data.area_id) : undefined,
-  //         especialidad_id:
-  //           data.especialidad_id !== undefined
-  //             ? Number(data.especialidad_id)
-  //             : undefined,
-  //         tipo_curso_id:
-  //           data.tipo_curso_id !== undefined
-  //             ? Number(data.tipo_curso_id)
-  //             : undefined,
-  //         objetivos: {
-  //           ...this.nuevoCurso.objetivos,
-  //           ...data.fichaTecnica, // Mapea los datos de ficha técnica
-  //         },
-  //         contenidoProgramatico: {
-  //           temas: Array.isArray(data.contenidoProgramatico)
-  //             ? data.contenidoProgramatico.map((t: any) => ({
-  //               id: Number(t.id),
-  //               tema_nombre: t.tema_nombre, // Ajusta al nombre correcto de la propiedad
-  //               tiempo: Number(t.tiempo) || 0, // Convierte a número con valor por defecto 0
-  //               competencias: t.competencias || undefined,
-  //               evaluacion: t.evaluacion || undefined,
-  //               actividades: t.actividades || undefined,
-  //             }))
-  //             : [],
-  //         },
-  //         materiales: Array.isArray(data.materiales)
-  //           ? data.materiales.map((m: any) => ({
-  //             id: Number(m.id),
-
-  //             descripcion: m.descripcion,
-  //             unidad_de_medida: m.unidad_de_medida || undefined,
-  //             cantidad10:
-  //               m.cantidad_10 !== undefined
-  //                 ? Number(m.cantidad_10)
-  //                 : undefined,
-  //             cantidad15:
-  //               m.cantidad_15 !== undefined
-  //                 ? Number(m.cantidad_15)
-  //                 : undefined,
-  //             cantidad20:
-  //               m.cantidad_20 !== undefined
-  //                 ? Number(m.cantidad_20)
-  //                 : undefined,
-  //           }))
-  //           : [],
-  //         equipamiento: Array.isArray(data.equipamiento)
-  //           ? data.equipamiento.map((e: any) => ({
-  //             id: Number(e.id),
-
-  //             descripcion: e.descripcion,
-  //             unidad_de_medida: e.unidad_de_medida || undefined,
-  //             cantidad10:
-  //               e.cantidad_10 !== undefined
-  //                 ? Number(e.cantidad_10)
-  //                 : undefined,
-  //             cantidad15:
-  //               e.cantidad_15 !== undefined
-  //                 ? Number(e.cantidad_15)
-  //                 : undefined,
-  //             cantidad20:
-  //               e.cantidad_20 !== undefined
-  //                 ? Number(e.cantidad_20)
-  //                 : undefined,
-  //           }))
-  //           : [],
-  //         firmas: {
-  //           revisado: {
-  //             nombre: data.firmas.revisado?.nombre || "",
-  //             cargo: data.firmas.revisado?.cargo || "",
-  //           },
-  //           autorizado: {
-  //             nombre: data.firmas.autorizado?.nombre || "",
-  //             cargo: data.firmas.autorizado?.cargo || "",
-  //           },
-  //           elaborado: {
-  //             nombre: data.firmas.elaborado?.nombre || "",
-  //             cargo: data.firmas.elaborado?.cargo || "",
-  //           },
-  //         }
-  //       };
-
-  //       console.log("Curso cargado:", this.nuevoCurso);
-  //     },
-  //     error: (err) => {
-  //       console.error("Error al cargar los detalles del curso:", err);
-  //       alert("Error al cargar los detalles del curso. Intenta más tarde.");
-  //     },
-  //   });
-  // }
 
   cargarAreas(): void {
     this.http.get<any[]>(`${this.apiUrl}/areas`).subscribe({
@@ -558,6 +406,12 @@ agregarCurso(): void {
 
     formData.append("equipamiento", JSON.stringify(currentCourse.equipamiento));
     formData.append("nota_equipamiento", this.nuevoCurso().notas?.equipamiento || '');
+
+
+        formData.append("codigo_formato", currentCourse.codigo_formato || '');
+    formData.append("version_formato", currentCourse.version_formato?.toString() || '1');
+    formData.append("fecha_emision_formato", currentCourse.fecha_emision_formato || '');
+    formData.append("reviso_aprobo_texto", currentCourse.reviso_aprobo_texto || '');
     // Debug: Mostrar contenido de FormData
     console.log("Contenido de FormData:");
     for (const [key, value] of (formData as any).entries()) {
@@ -613,33 +467,7 @@ agregarCurso(): void {
     this.alertTitle.set("Error");
     this.alertType.set("error");
   }
-  //   eliminarArchivo() {
-  //   // this
-  //   this.confirmService.showTailwindConfirm(
-  //     '¿Estás seguro de que quieres eliminar este Archivo?',
-  //     'Sí, eliminar',
-  //     'Cancelar',
-  //     'danger'
-  //   ).subscribe(confirmed => {
-  //     if (confirmed) {
-  //       const formData = new FormData();
 
-  //       formData.append("archivo_url", "");
-  //       // this.archivoUrl.set(null); // Solo esto, sin los paréntesis ()
-  //       // Limpiar tanto la URL como el archivo seleccionado
-  //       this.archivoUrl.set(null);
-  //       this.selectedFile.set(null); // Asegurarse de limpiar también el archivo seleccionado
-
-  //       this.obtenerNombreArchivo(this.archivoUrl());
-  //       // Lógica cuando el usuario acepta
-  //       console.log('Usuario confirmó la acción');
-  //     } else {
-  //       // Lógica cuando el usuario cancela
-  //       console.log('Usuario canceló la acción');
-  //     }
-  //   });
-  //   console.log('Miniatura del PDF renderizada');
-  // }
     obtenerNombreArchivo(url: string): string {
     if (!url) return '';
     try {
@@ -651,132 +479,7 @@ agregarCurso(): void {
     }
   }
 
-  // agregarCurso(): void {
-  //   this.isSaving = true;
-  //   this.alertMessage = null; // Reset previous alert
-
-  //   // Crear un objeto FormData
-  //   const formData = new FormData();
-
-  //   // Agregar propiedades del objeto `nuevoCurso` a FormData
-  //   formData.append("nombre", this.nuevoCurso.nombre);
-  //   formData.append(
-  //     "costo",
-  //     this.nuevoCurso.costo !== undefined
-  //       ? this.nuevoCurso.costo.toString()
-  //       : ""
-  //   );
-  //   formData.append(
-  //     "duracion_horas",
-  //     this.nuevoCurso.duracion_horas.toString()
-  //   );
-  //   formData.append("descripcion", this.nuevoCurso.descripcion);
-  //   formData.append("nivel", this.nuevoCurso.nivel);
-  //   formData.append(
-  //     "vigencia_inicio",
-  //     this.nuevoCurso.vigencia_inicio?.toString() || ""
-  //   );
-  //   formData.append(
-  //     "fecha_publicacion",
-  //     this.nuevoCurso.fecha_publicacion?.toString() || ""
-  //   );
-  //   formData.append("clave", this.nuevoCurso.clave?.toString() || "");
-  //   formData.append("area_id", this.nuevoCurso.area_id?.toString() || "");
-  //   formData.append(
-  //     "especialidad_id",
-  //     this.nuevoCurso.especialidad_id?.toString() || ""
-  //   );
-  //   formData.append("tipo_curso_id", "3");
-
-  //   formData.append(
-  //     "revisado_por",
-  //     this.nuevoCurso.firmas?.revisado?.nombre?.toString() || ""
-  //   );
-  //   formData.append(
-  //     "cargo_revisado_por",
-  //     this.nuevoCurso.firmas?.revisado?.cargo?.toString() || ""
-  //   );
-
-  //   formData.append(
-  //     "autorizado_por",
-  //     this.nuevoCurso.firmas?.autorizado?.nombre?.toString() || ""
-  //   );
-  //   formData.append(
-  //     "cargo_autorizado_por",
-  //     this.nuevoCurso.firmas?.autorizado?.cargo?.toString() || ""
-  //   );
-
-  //   formData.append(
-  //     "elaborado_por",
-  //     this.nuevoCurso.firmas?.elaborado?.nombre?.toString() || ""
-  //   );
-  //   formData.append(
-  //     "cargo_elaborado_por",
-  //     this.nuevoCurso.firmas?.elaborado?.cargo?.toString() || ""
-  //   );
-  //   formData.append("temario", this.selectedFile);
-  //   // Convertir `objetivos` a JSON y agregarlo a FormData
-  //   formData.append("objetivos", JSON.stringify(this.nuevoCurso.objetivos));
-  //   // formData.append("notas", JSON.stringify(this.nuevoCurso.notas.materiales));
-
-  //   // Convertir `contenidoProgramatico` a JSON y agregarlo
-  //   formData.append(
-  //     "contenidoProgramatico",
-  //     JSON.stringify(this.nuevoCurso.contenidoProgramatico)
-  //   );
-
-  //   formData.append("materiales", JSON.stringify(this.nuevoCurso.materiales));
-  //   // En lugar del append de notas_adicionales:
-  //   formData.append("nota_materiales", this.nuevoCurso.notas?.materiales || '');
-  //   // formData.append("nota_equipamiento", this.nuevoCurso.notas?.equipamiento || '');
-  //   // formData.append("nota_evaluacion", this.nuevoCurso.notas?.evaluacion || '');
-  //   // Agregar equipamiento como texto
-  //   formData.append(
-  //     "equipamiento",
-  //     JSON.stringify(this.nuevoCurso.equipamiento)
-  //   );
-
-  //   // Determinar si es una actualización o una creación
-  //   const url = this.selectedCourseId
-  //     ? `${this.apiUrl}/cursos/${this.selectedCourseId}`
-  //     : `${this.apiUrl}/cursos`;
-
-  //   // ternario que verifica si hay id,deciendo la url depende si lo hay
-
-  //   const request = this.selectedCourseId
-  //     ? this.http.put(url, formData)
-  //     : this.http.post<Modulo>(url, formData);
-
-  //   request.subscribe({
-  //     next: (response) => {
-  //       this.isSaving = false;
-  //       if (this.selectedCourseId) {
-  //         alert(
-  //           `🔹 Curso actualizado correctamente con ID: ${this.selectedCourseId}`
-  //         );
-  //       } else {
-  //         this.modulos.push(response as Modulo);
-  //         this.resetNuevoCurso();
-  //         this.alertMessage = "Curso agregado correctamente.";
-  //         this.alertTitle = "Éxito";
-  //         this.alertType = "success";
-  //       }
-  //     },
-  //     error: (err) => {
-  //       this.isSaving = false;
-  //       console.error("Error en la operación del curso:", err);
-  //       this.alertMessage = this.selectedCourseId
-  //         ? `Error al actualizar el curso`
-  //         : `Error al agregar el curso`;
-
-  //       this.alertTitle = "Error";
-  //       this.alertType = "error";
-  //     },
-  //     complete: () => {
-  //       this.isSaving = false;
-  //     },
-  //   });
-  // }
+ 
 
   resetNuevoCurso(): void {
     this.selectedFile.set(null);
@@ -790,6 +493,10 @@ agregarCurso(): void {
       area_id: undefined,
       especialidad_id: undefined,
       tipo_curso_id: undefined,
+                  version_formato: 1, // Valor por defecto
+      fecha_emision_formato: "", 
+      codigo_formato: "",
+      reviso_aprobo_texto: "",
       notas: {
         materiales: "",
         equipamiento: '',
@@ -1135,40 +842,6 @@ async Aceptar() {
     this.uploadProgress = 0;
   }
 }
-  // async Aceptar() {
-  //   const file = this.selectedFile();
-  //   if (!file) return;
 
-  //   try {
-  //     // Mostrar progreso simulado mientras se sube el archivo
-  //     const uploadInterval = setInterval(() => {
-  //       this.uploadProgress = Math.min(this.uploadProgress + 10, 90);
-  //     }, 200);
-
-  //     // Subir el archivo usando el servicio fileUploadService
-  //     const fileUrl = await this.fileUploadService.uploadTemario(file).toPromise();
-
-  //     clearInterval(uploadInterval);
-  //     this.uploadProgress = 100;
-
-  //     // Mostrar vista previa
-  //     this.isLoadingPreview = true;
-  //     this.archivoUrl.set(fileUrl.fileUrl); // Asumiendo que la respuesta es {fileUrl: string}
-
-  //     // Pequeño delay para que se vea el 100%
-  //     await new Promise(resolve => setTimeout(resolve, 500));
-
-  //     // Cerrar modal
-  //     this.mostrarFormulario = false;
-  //   } catch (error) {
-  //     this.alertTaiwilService.showTailwindAlert("Error al subir el archivo", 'error');
-  //     // console.error("Error al subir el archivo:", error);
-  //     // Manejar error
-  //     // this.showAlert('error', 'Error al subir archivo', error.message);
-  //   } finally {
-  //     this.isLoadingPreview = false;
-  //     this.uploadProgress = 0;
-  //   }
-  // }
 
 }

@@ -586,12 +586,20 @@ export class PdfHelpers {
 
 
 
+  formatDate(fechaIso: string): string {
+    const date = new Date(fechaIso);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
 
 
 
 
 
-  drawFooter(doc: jsPDF): void {
+  drawFooter(doc: jsPDF, data: CursoPdfData): void {
+    console.log("data", data);
     const pageNumber = doc.getCurrentPageInfo().pageNumber;
     const totalPages = doc.getNumberOfPages();
     if (pageNumber <= 1) return;
@@ -613,14 +621,31 @@ export class PdfHelpers {
       tableWidth * 0.23,
       tableWidth * 0.12
     ];
-
     const fields = [
-      { title: 'Revisó y Aprobó:', value: 'Coordinación de Gestión de la Calidad' },
-      { title: 'Código:', value: 'DA-PP-CAE-01' },
-      { title: 'Versión No:', value: '2' },
-      { title: 'Fecha de Emisión:', value: '01/10/2018' },
-      { title: 'Hoja:', value: `${pageNumber} de ${totalPages}` }
+      {
+        title: 'Revisó y Aprobó:',
+        value: data.reviso_aprobo_texto || 'Coordinación de Gestión de la Calidad'
+      },
+      {
+        title: 'Código:',
+        value: data.codigo_formato || 'DA-PP-CAE-01'
+      },
+      {
+        title: 'Versión No:',
+        value: data.version_formato?.toString() || '1'
+      },
+      {
+        title: 'Fecha de Emisión:',
+        value: data.fecha_emision_formato
+          ? this.formatDate(data.fecha_emision_formato)
+          : '01/01/2024'
+      },
+      {
+        title: 'Hoja:',
+        value: `${pageNumber} de ${totalPages}`
+      }
     ];
+
 
     // 🔹 Texto superior en negro
     const topText = doc.splitTextToSize(

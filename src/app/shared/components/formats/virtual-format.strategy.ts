@@ -21,7 +21,7 @@ export class VirtualFormatStrategy implements PdfFormatStrategy {
       const totalPages = doc.getNumberOfPages();
       for (let i = 2; i <= totalPages; i++) {
         doc.setPage(i);
-        helpers.drawFooter(doc);
+        helpers.drawFooter(doc,data);
       }
 
       helpers.finalize(doc);

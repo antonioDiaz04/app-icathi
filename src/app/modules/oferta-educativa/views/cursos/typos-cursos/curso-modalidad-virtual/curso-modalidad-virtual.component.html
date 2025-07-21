@@ -166,6 +166,52 @@
           </div>
         </div>
       </div>
+            <!-- Campos del cintillo (solo si modalidad es CAE o Campus Virtual) -->
+      <!-- CINTILLO DEL FORMATO -->
+      <div class="col-span-full mt-10 border-t pt-6">
+        <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
+          <span class="material-symbols-outlined text-blue-500">descripcion</span>
+          Cintillo del Formato (solo procesos certificados)
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <!-- Código del Formato -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Código del Formato</label>
+            <input type="text" [(ngModel)]="nuevoCurso().codigo_formato" name="codigo_formato"
+              placeholder="DA-PP-CAE-01"
+              class="mt-1 w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" />
+          </div>
+
+          <!-- Versión del Formato -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Versión del Formato</label>
+            <input type="number" [(ngModel)]="nuevoCurso().version_formato" name="version_formato" min="1"
+              class="mt-1 w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" />
+          </div>
+
+          <!-- Fecha de Emisión del Formato -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Fecha de Emisión del Formato</label>
+
+            <input type="date" [ngModel]="nuevoCurso().fecha_emision_formato | date:'yyyy-MM-dd'"
+              (ngModelChange)="nuevoCurso().fecha_emision_formato = $event" name="fecha_emision_formato"
+              class="mt-1 w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" />
+
+          </div>
+
+          <!-- Revisó y Aprobó -->
+          <div class="col-span-full">
+            <label class="block text-sm font-medium text-gray-700">Revisó y Aprobó</label>
+            <input type="text" [(ngModel)]="nuevoCurso().reviso_aprobo_texto" name="reviso_aprobo_texto"
+              placeholder="Coordinación de Gestión de la Calidad"
+              class="mt-1 w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" />
+          </div>
+
+        </div>
+      </div>
+
 
       <h2 class="text-2xl font-bold text-gray-800 mb-6">Objetivos del Curso</h2>
 
