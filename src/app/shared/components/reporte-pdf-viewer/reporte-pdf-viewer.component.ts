@@ -93,15 +93,39 @@ cargarDetallesCurso(): void {
   });
 }
 
-  generarPDF(): void {
-    const doc = new jsPDF({ unit: 'pt', format: 'letter' });
-    const modalidad = this.cursoData().TIPO_CURSO_ID;
-    const strategy = this.pdfFormatService.getStrategy(modalidad);
+  // generarPDF(): void {
+  //   const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+  //   const modalidad = this.cursoData().TIPO_CURSO_ID;
+  //   const strategy = this.pdfFormatService.getStrategy(modalidad);
 
-    const helpers = new PdfHelpers((finalDoc) => this.finalizePDF(finalDoc));
+  //   const helpers = new PdfHelpers((finalDoc) => this.finalizePDF(finalDoc));
 
-    strategy.generate(doc, this.cursoData(), helpers);
+  //   strategy.generate(doc, this.cursoData(), helpers);
+  // }
+generarPDF(): void {
+  const modalidad = this.cursoData().TIPO_CURSO_ID;
+  console.log("modalidad", modalidad);
+
+  let doc: jsPDF;
+
+  if (modalidad === 4 || modalidad === 5) {
+    doc = new jsPDF({
+      orientation: 'landscape',
+      unit: 'pt',
+      format: 'letter'
+    });
+  } else {
+    doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'pt',
+      format: 'letter'
+    });
   }
+
+  const strategy = this.pdfFormatService.getStrategy(modalidad);
+  const helpers = new PdfHelpers((finalDoc) => this.finalizePDF(finalDoc));
+  strategy.generate(doc, this.cursoData(), helpers);
+}
 
 
   private finalizePDF(doc: jsPDF): void {

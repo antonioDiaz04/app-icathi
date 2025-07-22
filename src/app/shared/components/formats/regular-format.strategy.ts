@@ -4,17 +4,21 @@ import { PdfHelpers } from '../../helpers/pdf-helpers';
 import { CursoPdfData } from '../../types/curso-pdf-data.type';
 
 export class RegularFormatStrategy implements PdfFormatStrategy {
+  // https://res.cloudinary.com/da8iqyp0e/image/upload/v1753208164/Imagen2_emcpzp.jpg
   generate(doc: jsPDF, data: CursoPdfData, helpers: PdfHelpers): void {
+    console.log("data",data)
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    img.src = helpers.logoUrl;
+    img.src = 'https://res.cloudinary.com/da8iqyp0e/image/upload/v1753208165/Imagen1_jtme8k.png';
 
     img.onload = () => {
-      helpers.drawBackground(doc, img);
-      helpers.drawHeader(doc, data);;
-      helpers.drawCourseDetails(doc, data);
-    //   helpers.drawValidityBox(doc, data);
-    //   helpers.drawSignatureSection(doc, data);
+      helpers.drawBackgroundTipoRegular_SEP(doc, img);
+      helpers.drawHeaderTipoRegular_SEP(doc, data);;
+      helpers.drawCourseDetailsTipoRegular(doc, data);
+      helpers.drawValidityBoxTipoRegular_SEP(doc, data);
+      helpers.drawSignatureSectionRegular(doc, data);
+      // helpers.drawFichaPagina2(doc, data);
+      helpers.FichaTecnicaTipoRegular(doc, data);
     //   helpers.FichaTecnica(doc, data);
     //   helpers.agregarContenidoProgramatico(doc, data);
     //   helpers.agregarTablaMateriales(doc, data);

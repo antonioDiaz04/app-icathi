@@ -18,6 +18,12 @@ export interface CursoPdfData {
   codigo_formato: string;
   reviso_aprobo_texto: string;
 
+
+  presentacion: string;
+  objetivo_especialidad: string;
+  aplicacion_laboral: string;
+  directorio: string;
+
   firmas: {
     REVISADO_POR: {
       nombre: string;
