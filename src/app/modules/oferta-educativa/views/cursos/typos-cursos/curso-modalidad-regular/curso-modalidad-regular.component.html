@@ -4,11 +4,9 @@
   <div class="ui dimmer" [ngClass]="{ active: isSaving() }" [ngStyle]="{ position: isSaving() ? 'fixed' : 'relative' }">
     <div class="ui mini text loader">Loading</div>
   </div>
-  <!-- <p>Contenido de la página</p> -->
-  <!-- </div> -->
-  <!-- Formulario para agregar curso -->
+
   <div class="bg-white p-8 rounded-lg border border-gray-200">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">Información del Curso Modalidad CAE</h2>
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Información del Curso Modalidad Regular</h2>
     <form #cursoForm="ngForm" class="space-y-6">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Área -->
@@ -271,6 +269,37 @@
           <tbody>
             <tr>
               <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+                PRESENTACIÓN
+              </td>
+              <td class="border border-gray-300 px-4 py-2 w-3/4">
+                <textarea pTextarea [autoResize]="true" [(ngModel)]="nuevoCurso().objetivos.presentacion"
+                  name="presentacion" class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                  rows="3"></textarea>
+              </td>
+            </tr>
+            <tr>
+              <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+                OBJETIVO DE LA ESPECIALIDAD
+              </td>
+              <td class="border border-gray-300 px-4 py-2 w-3/4">
+                <textarea pTextarea [autoResize]="true" [(ngModel)]="nuevoCurso().objetivos.objetivo_especialidad"
+                  name="objetivo_especialidad" class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                  rows="3"></textarea>
+              </td>
+            </tr>
+            <!-- <tr>
+              <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+                MAPA DE LA ESPECIALIDAD
+              </td>
+              <td class="border border-gray-300 px-4 py-2 w-3/4">
+                <textarea pTextarea [autoResize]="true" [(ngModel)]="nuevoCurso().objetivos.mapa_especialidad"
+                  name="mapa_especialidad" class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                  rows="3"></textarea>
+              </td>
+            </tr> -->
+
+            <tr>
+              <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
                 OBJETIVO DEL CURSO
               </td>
               <td class="border border-gray-300 px-4 py-2 w-3/4">
@@ -297,7 +326,39 @@
                   name="perfil_egreso" class="w-full border border-gray-300 rounded-md p-2 resize-none"
                   class="w-full border border-gray-300 rounded-md p-2 resize-none" rows="3"></textarea>
             </tr>
+            <tr>
+              <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+                APLICACIÓN LABORAL
+              </td>
+              <td class="border border-gray-300 px-4 py-2 w-3/4">
+                <textarea pTextarea [autoResize]="true" [(ngModel)]="nuevoCurso().objetivos.aplicacion_laboral"
+                  name="aplicacion_laboral" class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                  rows="3"></textarea>
+              </td>
+            </tr>
 
+
+
+            <tr>
+              <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+                 ACREDITACIÓN
+              </td>
+              <td class="border border-gray-300 px-4 py-2 w-3/4">
+                <textarea pTextarea [autoResize]="true" [(ngModel)]="nuevoCurso().objetivos.criterios_acreditacion"
+                  name="criterios_acreditacion" class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                  rows="3"></textarea>
+              </td>
+            </tr>
+            <tr>
+              <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
+                RECONOCIMIENTO 
+              </td>
+              <td class="border border-gray-300 px-4 py-2 w-3/4">
+                <textarea pTextarea [autoResize]="true" [(ngModel)]="nuevoCurso().objetivos.reconocimiento"
+                  name="reconocimiento" class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                  rows="3"></textarea>
+              </td>
+            </tr>
             <tr>
               <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
                 PERFIL DEL DOCENTE / INSTRUCTOR
@@ -317,9 +378,10 @@
                   rows="3"></textarea>
               </td>
             </tr>
+
             <tr>
               <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
-                BIBLIOGRAFÍA
+                BIBLIOGRAFÍA / WEBGRAFÍA
               </td>
               <td class="border border-gray-300 px-4 py-2 w-3/4">
                 <textarea pTextarea [autoResize]="true" [(ngModel)]="nuevoCurso().objetivos.bibliografia"
@@ -329,21 +391,11 @@
             </tr>
             <tr>
               <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
-                CRITERIOS DE ACREDITACIÓN
+                DIRECTORIO
               </td>
               <td class="border border-gray-300 px-4 py-2 w-3/4">
-                <textarea pTextarea [autoResize]="true" [(ngModel)]="nuevoCurso().objetivos.criterios_acreditacion"
-                  name="criterios_acreditacion" class="w-full border border-gray-300 rounded-md p-2 resize-none"
-                  rows="3"></textarea>
-              </td>
-            </tr>
-            <tr>
-              <td class="border border-gray-300 px-4 py-2 font-medium w-1/4">
-                RECONOCIMIENTO A LA PERSONA EGRESADA
-              </td>
-              <td class="border border-gray-300 px-4 py-2 w-3/4">
-                <textarea pTextarea [autoResize]="true" [(ngModel)]="nuevoCurso().objetivos.reconocimiento"
-                  name="reconocimiento" class="w-full border border-gray-300 rounded-md p-2 resize-none"
+                <textarea pTextarea [autoResize]="true" [(ngModel)]="nuevoCurso().objetivos.directorio"
+                  name="directorio" class="w-full border border-gray-300 rounded-md p-2 resize-none"
                   rows="3"></textarea>
               </td>
             </tr>

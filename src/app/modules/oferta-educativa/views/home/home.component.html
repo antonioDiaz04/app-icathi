@@ -176,8 +176,8 @@
       <option value="curso1">Curso Modalidad CAE</option>
       <option value="curso2">Curso Modalidad Virtual</option>
       <option value="curso3">Curso Modalidad Escuela</option>
-      <option value="curso5">Cursos Modalidad Regular</option>
-      <option value="curso6">Cursos Modalidad SEP</option>
+      <option value="curso4">Cursos Modalidad Regular</option>
+      <option value="curso5">Cursos Modalidad SEP</option>
     </select>
   </div>
 
@@ -192,6 +192,12 @@
       </ng-container>
       <ng-container *ngSwitchCase="'curso3'">
         <app-curso-modalidad-escuela></app-curso-modalidad-escuela>
+      </ng-container>
+      <ng-container *ngSwitchCase="'curso4'">
+        <app-curso-modalidad-regular></app-curso-modalidad-regular>
+      </ng-container>
+      <ng-container *ngSwitchCase="'curso5'">
+        <app-curso-modalidad-sep></app-curso-modalidad-sep>
       </ng-container>
       <ng-container *ngSwitchDefault>
         <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
@@ -224,6 +230,12 @@
       </ng-container>
       <ng-container *ngSwitchCase="'curso3'">
         <app-curso-modalidad-escuela [selectedCourseId]="selectedCourseId"></app-curso-modalidad-escuela>
+      </ng-container>
+      <ng-container *ngSwitchCase="'curso4'">
+        <app-curso-modalidad-regular [selectedCourseId]="selectedCourseId"></app-curso-modalidad-regular>
+      </ng-container>
+      <ng-container *ngSwitchCase="'curso5'">
+        <app-curso-modalidad-sep [selectedCourseId]="selectedCourseId"></app-curso-modalidad-sep>
       </ng-container>
       <ng-container *ngSwitchDefault>
         <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">

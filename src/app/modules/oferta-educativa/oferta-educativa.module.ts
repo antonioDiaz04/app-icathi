@@ -11,22 +11,23 @@ import { ListadoCursosComponent } from './views/cursos/listado-cursos.component'
 import { CursoModalidadCAEComponent } from './views/cursos/typos-cursos/curso-modalidad-cae/curso-modalidad-cae.component';
 import { CursoModalidadEscuelaComponent } from './views/cursos/typos-cursos/curso-modalidad-escuela/curso-modalidad-escuela.component';
 import { CursoModalidadVirtualComponent } from './views/cursos/typos-cursos/curso-modalidad-virtual/curso-modalidad-virtual.component';
-  import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-  import { TextareaModule } from 'primeng/textarea';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TextareaModule } from 'primeng/textarea';
 import { PdfExampleComponent } from './views/pdf-example/pdf-example.component';
 import { PdfViewComponent } from './views/pdf-view/pdf-view.component';
 import { FileSizePipe } from '../../shared/pipes/file-size.pipe';
 import { SafeUrlPipe } from '../../shared/pipes/safe-url.pipe';
-// import { PdfGenerateComponent } from '../../shared/components/pdf-generate/pdf-generate.component';
-// import {InputTextareaModule} from 'primeng/inputtextarea';
+import { CursoModalidadRegularComponent } from './views/cursos/typos-cursos/curso-modalidad-regular/curso-modalidad-regular.component';
+import { CursoModalidadSepComponent } from './views/cursos/typos-cursos/curso-modalidad-sep/curso-modalidad-sep.component';
+
 @NgModule({
-  declarations: [FileSizePipe,PdfExampleComponent,
-    HomeComponent,CursoModalidadCAEComponent,CursoModalidadEscuelaComponent,CursoModalidadVirtualComponent,OfertaEducativaComponent, HeaderComponent,ListadoCursosComponent, PdfViewComponent
-  ],  
+  declarations: [FileSizePipe, PdfExampleComponent,
+    HomeComponent, CursoModalidadCAEComponent, CursoModalidadEscuelaComponent, CursoModalidadVirtualComponent, CursoModalidadRegularComponent,CursoModalidadSepComponent, OfertaEducativaComponent, HeaderComponent, ListadoCursosComponent, PdfViewComponent, CursoModalidadSepComponent
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  imports: [RouterModule,HttpClientModule,
+  imports: [RouterModule, HttpClientModule,
     TextareaModule,
-    CommonModule,FormsModule ,ReactiveFormsModule,SafeUrlPipe,
+    CommonModule, FormsModule, ReactiveFormsModule, SafeUrlPipe,
     OfertaEducativaRoutingModule
   ]
 })

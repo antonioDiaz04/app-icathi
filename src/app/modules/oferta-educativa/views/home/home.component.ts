@@ -70,7 +70,9 @@ export class HomeComponent {
   modalidades = [
     { id: 1, nombre: 'Curso Modalidad CAE', componente: 'curso1' },
     { id: 2, nombre: 'Curso Modalidad Virtual', componente: 'curso2' },
-    { id: 3, nombre: 'Curso Modalidad Escuela', componente: 'curso3' }
+    { id: 3, nombre: 'Curso Modalidad Escuela', componente: 'curso3' },
+    { id: 4, nombre: 'Cursos  Modalidad Regular', componente: 'curso4' },
+    { id: 5, nombre: 'Cursos Modalidad SEP', componente: 'curso5' }
   ];
   selectedCourseId: number = 0;
   constructor(private http: HttpClient, private router: Router, private sanitizer: DomSanitizer) { }
@@ -81,6 +83,7 @@ export class HomeComponent {
 
 
   verDetalles(curso: any): void {
+    console.log('Curso seleccionado:', curso);
     this.isEditCourse = true;
     this.selectedCourseId = curso.id; // Guarda el ID del curso
 
