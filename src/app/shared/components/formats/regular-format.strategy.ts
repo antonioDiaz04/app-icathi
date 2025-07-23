@@ -17,12 +17,10 @@ export class RegularFormatStrategy implements PdfFormatStrategy {
       helpers.drawCourseDetailsTipoRegular(doc, data);
       helpers.drawValidityBoxTipoRegular_SEP(doc, data);
       helpers.drawSignatureSectionRegular(doc, data);
-      // helpers.drawFichaPagina2(doc, data);
       helpers.FichaTecnicaTipoRegular(doc, data);
-    //   helpers.FichaTecnica(doc, data);
-    //   helpers.agregarContenidoProgramatico(doc, data);
-    //   helpers.agregarTablaMateriales(doc, data);
-    //   helpers.agregarTablaEquipamiento(doc, data);
+      helpers.agregarContenidoProgramaticoTipoRegular(doc, data);
+      helpers.agregarTablaMaterialesTipoRegular(doc, data);
+      helpers.agregarTablaEquipamientoTipoRegular(doc, data);
 
       const totalPages = doc.getNumberOfPages();
       for (let i = 2; i <= totalPages; i++) {

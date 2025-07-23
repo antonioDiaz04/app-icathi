@@ -7,15 +7,15 @@ export class SepFormatStrategy implements PdfFormatStrategy {
   generate(doc: jsPDF, data: CursoPdfData, helpers: PdfHelpers): void {
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    img.src = helpers.logoUrl;
-
+    img.src = 'https://res.cloudinary.com/da8iqyp0e/image/upload/v1753208165/Imagen1_jtme8k.png';
     img.onload = () => {
-      helpers.drawBackground(doc, img);
-      helpers.drawHeader(doc, data);;
-      helpers.drawCourseDetails(doc, data);
-    //   helpers.drawValidityBox(doc, data);
-    //   helpers.drawSignatureSection(doc, data);
-    //   helpers.FichaTecnica(doc, data);
+      helpers.drawBackgroundTipoRegular_SEP(doc, img);
+      helpers.drawHeaderTipoRegular_SEP(doc, data);;
+      helpers.drawCourseDetailsTipoSEP(doc, data);
+      helpers.drawValidityBoxTipoRegular_SEP(doc, data);
+      helpers.drawSignatureSectionRegular(doc, data);
+
+      helpers.FichaTecnicaSEP(doc, data,img);
     //   helpers.agregarContenidoProgramatico(doc, data);
     //   helpers.agregarTablaMateriales(doc, data);
     //   helpers.agregarTablaEquipamiento(doc, data);

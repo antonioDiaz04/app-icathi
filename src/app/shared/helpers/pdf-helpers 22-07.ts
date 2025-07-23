@@ -509,21 +509,27 @@
 //     });
 //   }
 
-
 //   FichaTecnicaTipoRegular(doc: jsPDF, data: CursoPdfData): void {
 //     const ficha = data.FICHA_TECNICA;
-//     const etiquetas = ficha?.ETIQUETAS || [];
 //     const marginLeft = 50;
 //     const marginRight = 50;
 //     const maxWidth = doc.internal.pageSize.getWidth() - marginLeft - marginRight;
 
-//     const LINE_HEIGHT = 8;
-//     const SECTION_SPACING = 18;
-//     const TITLE_MARGIN_BOTTOM = 10;
-//     const PARAGRAPH_LINE_SPACING = 6;
+//     // Constantes optimizadas
+//     const LINE_HEIGHT = 14;
+//     const SECTION_SPACING = 20;
+//     const TITLE_MARGIN_BOTTOM = 12;
+//     const PARAGRAPH_LINE_SPACING = 8;
 //     const HEADER_LOGO_SIZE = { width: 100, height: 50 };
 //     const HEADER_TITLE_MARGIN_BOTTOM = 15;
 //     const BULLET_POINT_INDENT = 15;
+//     const TEXT_INDENT = 25;
+//     const COLON_SPACING = 14;
+//     const BOX_PADDING = 15;
+//     const BOX_RADIUS = 8;
+//     const BULLET_SPACING = 5;
+//     const LONG_TEXT_INDENT = 10;
+//     const MIN_BOX_HEIGHT = 40; // Altura mínima del recuadro
 
 //     const LOGO_URL = 'https://res.cloudinary.com/da8iqyp0e/image/upload/v1753208164/Imagen2_emcpzp.jpg';
 
@@ -531,160 +537,197 @@
 //       doc.addImage(LOGO_URL, 'JPEG', x, y, width, height);
 //     };
 
-//     const drawEncabezadoFija = () => {
-//       // Logo alineado a la izquierda
+//     const drawEncabezado = (isFirstPage: boolean = false) => {
 //       drawLogo(marginLeft, 20, HEADER_LOGO_SIZE.width, HEADER_LOGO_SIZE.height);
 
-//       doc.setFont('helvetica', 'bold');
-//       doc.setFontSize(16);
-//       doc.setTextColor(40, 40, 40);
-//       doc.text('FICHA TÉCNICA DE CURSO REGULAR', doc.internal.pageSize.getWidth() / 2, 60, { align: 'center' });
+//       if (!isFirstPage) {
+//         doc.setFont('helvetica', 'bold');
+//         doc.setFontSize(16);
+//         doc.setTextColor(40, 40, 40);
+//         doc.text('FICHA TÉCNICA DE CURSO REGULAR', doc.internal.pageSize.getWidth() / 2, 60, { align: 'center' });
+//       }
 
 //       doc.setDrawColor(100, 100, 100);
 //       doc.setLineWidth(0.5);
-//       const lineY = 65 + HEADER_TITLE_MARGIN_BOTTOM;
-//       // doc.line(marginLeft, lineY, doc.internal.pageSize.getWidth() - marginLeft, lineY);
-
-//       return lineY + 10;
-//     };
-//     const drawEncabezado2 = () => {
-//       // Logo alineado a la izquierda
-//       drawLogo(marginLeft, 20, HEADER_LOGO_SIZE.width, HEADER_LOGO_SIZE.height);
-
-//       doc.setFont('helvetica', 'bold');
-//       doc.setFontSize(16);
-//       doc.setTextColor(40, 40, 40);
-//       // doc.text('FICHA TÉCNICA DE CURSO REGULAR', doc.internal.pageSize.getWidth() / 2, 60, { align: 'center' });
-
-//       doc.setDrawColor(100, 100, 100);
-//       doc.setLineWidth(0.5);
-//       const lineY = 65 + HEADER_TITLE_MARGIN_BOTTOM;
-//       // doc.line(marginLeft, lineY, doc.internal.pageSize.getWidth() - marginLeft, lineY);
-
-//       return lineY + 10;
+//       return 65 + HEADER_TITLE_MARGIN_BOTTOM + 10;
 //     };
 
-//     const formatContentWithBullets = (content: string): string[] => {
+//     const drawRoundedRect = (x: number, y: number, width: number, height: number, radius: number) => {
+//       doc.setDrawColor(0, 0, 0);
+//       doc.setFillColor(255, 255, 255);
+//       doc.roundedRect(x, y, width, height, radius, radius, 'FD');
+//     };
+
+//     const calculateContentHeight = (content: string, isBoxed: boolean): number => {
+//       const availableWidth = isBoxed ? maxWidth - 2 * BOX_PADDING : maxWidth - TEXT_INDENT;
+//       let totalHeight = 0;
 //       const lines = content.split('\n');
-//       const formattedLines: string[] = [];
+
 //       lines.forEach(line => {
-//         if (line.trim().startsWith('-')) {
-//           formattedLines.push('• ' + line.substring(1).trim());
-//         } else {
-//           formattedLines.push(line);
+//         const trimmedLine = line.trim();
+
+//         if (trimmedLine.startsWith('-')) {
+//           const bulletText = trimmedLine.substring(1);
+//           const textLines = doc.splitTextToSize(bulletText, availableWidth - BULLET_POINT_INDENT);
+//           totalHeight += (textLines.length * LINE_HEIGHT) + BULLET_SPACING;
+//         }
+//         else if (trimmedLine.endsWith(':')) {
+//           totalHeight += LINE_HEIGHT + COLON_SPACING;
+//         }
+//         else if (trimmedLine) {
+//           const textLines = doc.splitTextToSize(trimmedLine, availableWidth);
+//           totalHeight += (textLines.length * LINE_HEIGHT) + PARAGRAPH_LINE_SPACING;
+//         }
+//         else {
+//           totalHeight += LINE_HEIGHT;
 //         }
 //       });
-//       return formattedLines;
+
+//       return Math.max(totalHeight, MIN_BOX_HEIGHT);
 //     };
+
+//     const drawBulletItem = (text: string, x: number, y: number, availableWidth: number): number => {
+//       const bulletText = text.substring(1).trim();
+//       const lines = doc.splitTextToSize(bulletText, availableWidth - BULLET_POINT_INDENT);
+
+//       doc.setFont('helvetica', 'bold');
+//       doc.text('•', x, y + 2);
+
+//       lines.forEach((line: string | string[], index: number) => {
+//         const lineY = y + (index * LINE_HEIGHT);
+//         doc.text(line, x + BULLET_POINT_INDENT, lineY, {
+//           maxWidth: availableWidth - BULLET_POINT_INDENT,
+//           lineHeightFactor: 1.8
+//         });
+
+//         if (index > 0) {
+//           doc.text('→', x + LONG_TEXT_INDENT, lineY + 2);
+//         }
+//       });
+
+//       doc.setFont('helvetica', 'normal');
+//       return lines.length;
+//     };
+
 //     const drawSection = (title: string, content: string, yStart: number): number => {
 //       let y = yStart;
 
-//       const sectionHeaderHeight = 40;
-//       const sectionImageHeight = 22;
+//       // Encabezado de sección
+//       const sectionHeaderHeight = 42;
+//       const sectionImageHeight = 24;
 //       const sectionImageWidth = doc.internal.pageSize.getWidth() - marginLeft - marginRight;
 
-//       // Dibujar imagen de fondo degradado
-//       const gradientImageBase64 = 'https://res.cloudinary.com/da8iqyp0e/image/upload/v1753227103/finalgrad_xoy34s.png'; // <- pega aquí tu imagen
-
+//       // Fondo de sección
+//       const gradientImageBase64 = 'https://res.cloudinary.com/da8iqyp0e/image/upload/v1753227103/finalgrad_xoy34s.png';
 //       doc.addImage(gradientImageBase64, 'PNG', marginLeft, y, sectionImageWidth, sectionImageHeight);
 
-//       // Título encima de la imagen
+//       // Título
 //       doc.setFont('helvetica', 'bold');
-//       doc.setFontSize(12.5);
+//       doc.setFontSize(13);
 //       doc.setTextColor(0, 0, 0);
-//       doc.text(title, marginLeft + 2, y + 10); // Ajusta verticalmente
+//       doc.text(title, marginLeft + 5, y + 12);
 
 //       y += sectionHeaderHeight;
 
+//       // Configuración común de texto
 //       doc.setFont('helvetica', 'normal');
 //       doc.setFontSize(11);
-//       doc.setTextColor(20, 20, 20);
-//       doc.setLineHeightFactor(1.4);
+//       doc.setTextColor(25, 25, 25);
+//       doc.setLineHeightFactor(1.8);
 
-//       const formattedContent = formatContentWithBullets(content || 'No disponible');
-//       const lines = doc.splitTextToSize(formattedContent.join('\n'), maxWidth);
+//       // Determinar si la sección va en recuadro
+//       const boxedSections = ['OBJETIVO DEL CURSO', 'PERFIL DE EGRESO'];
+//       const isBoxed = boxedSections.includes(title);
 
-//       lines.forEach((line: string) => {
-//         if (line.startsWith('•')) {
-//           doc.text('•', marginLeft, y);
-//           doc.text(line.substring(1), marginLeft + BULLET_POINT_INDENT, y, {
-//             maxWidth: maxWidth - BULLET_POINT_INDENT
-//           });
-//         } else {
-//           doc.text(line, marginLeft, y, { maxWidth });
+//       // Calcular altura del contenido para el recuadro
+//       let contentHeight = 0;
+//       if (isBoxed) {
+//         contentHeight = calculateContentHeight(content, true);
+//         drawRoundedRect(marginLeft, y, maxWidth, contentHeight + 2 * BOX_PADDING, BOX_RADIUS);
+//       }
+
+//       let currentY = isBoxed ? y + BOX_PADDING : y;
+//       const availableWidth = isBoxed ? maxWidth - 2 * BOX_PADDING : maxWidth - TEXT_INDENT;
+//       const startX = isBoxed ? marginLeft + BOX_PADDING : marginLeft + TEXT_INDENT;
+
+//       // Procesar cada línea del contenido
+//       content.split('\n').forEach(line => {
+//         const trimmedLine = line.trim();
+
+//         if (trimmedLine.startsWith('-')) {
+//           const linesCount = drawBulletItem(trimmedLine, startX, currentY, availableWidth);
+//           currentY += (linesCount * LINE_HEIGHT) + BULLET_SPACING;
 //         }
-
-//         y += LINE_HEIGHT + PARAGRAPH_LINE_SPACING;
-//         if (line.trim() === '') {
-//           y += LINE_HEIGHT;
+//         else if (trimmedLine.endsWith(':')) {
+//           doc.setFont('helvetica', 'bold');
+//           doc.text(trimmedLine, startX, currentY);
+//           currentY += LINE_HEIGHT + COLON_SPACING;
+//           doc.setFont('helvetica', 'normal');
+//         }
+//         else if (trimmedLine) {
+//           const lines = doc.splitTextToSize(trimmedLine, availableWidth);
+//           lines.forEach((lineText: string | string[], i: number) => {
+//             doc.text(lineText, startX, currentY + (i * LINE_HEIGHT), {
+//               maxWidth: availableWidth,
+//               lineHeightFactor: 1.8
+//             });
+//           });
+//           currentY += (lines.length * LINE_HEIGHT) + PARAGRAPH_LINE_SPACING;
+//         }
+//         else {
+//           currentY += LINE_HEIGHT;
 //         }
 //       });
 
-//       return y + SECTION_SPACING + 5;
+//       return isBoxed
+//         ? y + contentHeight + 2 * BOX_PADDING + SECTION_SPACING
+//         : currentY + SECTION_SPACING;
 //     };
 
-//     // const drawSection = (title: string, content: string, yStart: number): number => {
-//     //   let y = yStart;
-
-//     //   doc.setFont('helvetica', 'bold');
-//     //   doc.setFontSize(13);
-//     //   doc.setTextColor(30, 30, 30);
-//     //   doc.text(title, marginLeft, y);
-//     //   y += TITLE_MARGIN_BOTTOM + 5;
-
-//     //   doc.setDrawColor(180, 180, 180);
-//     //   doc.setLineWidth(0.4);
-//     //   doc.line(marginLeft, y, doc.internal.pageSize.getWidth() - marginLeft, y);
-//     //   y += SECTION_SPACING;
-
-//     //   doc.setFont('helvetica', 'normal');
-//     //   doc.setFontSize(11);
-//     //   doc.setTextColor(20, 20, 20);
-//     //   doc.setLineHeightFactor(1.4);
-
-//     //   const formattedContent = formatContentWithBullets(content || 'No disponible');
-//     //   const lines = doc.splitTextToSize(formattedContent.join('\n'), maxWidth);
-
-//     //   lines.forEach((line: string) => {
-//     //     if (line.startsWith('•')) {
-//     //       doc.text('•', marginLeft, y);
-//     //       doc.text(line.substring(1), marginLeft + BULLET_POINT_INDENT, y, {
-//     //         maxWidth: maxWidth - BULLET_POINT_INDENT
-//     //       });
-//     //     } else {
-//     //       doc.text(line, marginLeft, y, { maxWidth });
-//     //     }
-
-//     //     y += LINE_HEIGHT + PARAGRAPH_LINE_SPACING;
-
-//     //     if (line.trim() === '') {
-//     //       y += LINE_HEIGHT;
-//     //     }
-//     //   });
-
-//     //   return y + SECTION_SPACING + 5;
-//     // };
-
-//     // === Página 3: Presentación y Objetivo de la Especialidad ===
+//     // === Generación del documento ===
 //     doc.addPage('l');
-//     let y = drawEncabezado2() + 20;
+//     let y = drawEncabezado(true) + 20;
 //     y = drawSection('PRESENTACIÓN', data.presentacion, y);
 //     y = drawSection('OBJETIVO DE LA ESPECIALIDAD', data.objetivo_especialidad, y);
 
-//     // === Página 4: Objetivo del Curso y Perfil de Ingreso ===
 //     doc.addPage('l');
-//     y = drawEncabezadoFija() + 20;
+//     y = drawEncabezado() + 20;
 //     y = drawSection('OBJETIVO DEL CURSO', ficha.OBJETIVO, y);
+
+
+//     // === Título "DEL ALUMNO" centrado con líneas decorativas ===
+//     const alumnoTitle = 'DEL ALUMNO';
+//     doc.setFont('helvetica', 'bold');
+//     doc.setFontSize(14);
+//     doc.setTextColor(0, 0, 0); // Verde oscuro
+
+//     const centerX = doc.internal.pageSize.getWidth() / 2;
+//     doc.text(alumnoTitle, centerX, y, { align: 'center' });
+
+//     // Medir el ancho del texto
+//     const textWidth = doc.getTextWidth(alumnoTitle);
+
+//     // Líneas debajo del texto
+//     const lineY = y + 4;
+//     const lineGap = 4;
+
+//     // Línea gris oscuro debajo del texto
+//     doc.setDrawColor(90, 90, 90);
+//     doc.setLineWidth(0.7);
+//     doc.line(centerX - textWidth / 2, lineY, centerX + textWidth / 2, lineY);
+
+//     // Segunda línea más abajo
+//     doc.line(centerX - textWidth / 2, lineY + lineGap, centerX + textWidth / 2, lineY + lineGap);
+
+//     // Incrementar Y para evitar solapamientos
+//     y += 20;
+
 //     y = drawSection('PERFIL DE INGRESO', ficha.PERFIL_INGRESO, y);
 
-//     // === Página 5: Perfil de Egreso ===
 //     doc.addPage('l');
-//     y = drawEncabezadoFija() + 20;
+//     y = drawEncabezado() + 20;
 //     drawSection('PERFIL DE EGRESO', ficha.PERFIL_EGRESO, y);
 //   }
-
-
-
 //   FichaTecnicaVirtual(doc: jsPDF, data: CursoPdfData): void {
 //     const ficha = data.FICHA_TECNICA;
 //     const etiquetas = (ficha?.ETIQUETAS || []).filter((e: any) => e.NOMBRE.toUpperCase() !== 'BIBLIOGRAFÍA');
