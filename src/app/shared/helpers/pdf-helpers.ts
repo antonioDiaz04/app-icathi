@@ -3,6 +3,14 @@ import { SafeResourceUrl } from '@angular/platform-browser';
 import jsPDF from 'jspdf';
 import { CursoPdfData } from '../types/curso-pdf-data.type';
 import autoTable from 'jspdf-autotable';
+interface SectionConfig {
+  title: string;
+  content: string;
+  type?: 'paragraph' | 'list' | 'bibliography' | 'indented';
+  lineHeight?: number;
+  paragraphSpacing?: number;
+  firstLineIndent?: number;
+}
 
 export class PdfHelpers {
   constructor(private finalizeCallback: (doc: jsPDF) => void) { }
@@ -586,225 +594,502 @@ export class PdfHelpers {
       data.firmas.AUTORIZADO_POR?.cargo ?? ''
     );
   }
+  FichaTecnicaSEP(doc: jsPDF, data: CursoPdfData, img: HTMLImageElement): void {
+    const ficha = data.FICHA_TECNICA;
+    const etiquetas = ficha?.ETIQUETAS || [];
 
-
-
-/**
- * Genera la ficha técnica SEP en un documento PDF
- * @param doc Instancia de jsPDF
- * @param data Datos del curso
- * @param img Imagen de fondo para las páginas
- */
- FichaTecnicaSEP(doc: jsPDF, data: CursoPdfData, img: HTMLImageElement): void {
-  // Configuraciones iniciales
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
-  const margin = {
-    left: 50,
-    right: 40,
-    top: 50,
-    bottom: 40
-  };
-  const usableWidth = pageWidth - margin.left - margin.right;
-  const lineHeight = 7;
-  const sectionSpacing = 15;
-  const paragraphSpacing = 10;
-  
-  // Establecer fuente por defecto
-  doc.setFont('helvetica');
-  doc.setTextColor(0, 0, 0); // Color negro
-
-  /**
-   * Escribe un título centrado
-   * @param title Texto del título
-   * @param y Posición vertical inicial
-   * @returns Nueva posición vertical
-   */
-  const writeTitle = (title: string, y: number): number => {
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
-    doc.text(title.toUpperCase(), pageWidth / 2, y, { align: 'center' });
-    return y + sectionSpacing;
-  };
-
-  /**
-   * Escribe un párrafo normal
-   * @param text Texto del párrafo
-   * @param y Posición vertical inicial
-   * @param options Opciones adicionales
-   * @returns Nueva posición vertical
-   */
-  const writeParagraph = (
-    text: string, 
-    y: number, 
-    options: { indent?: number; align?: 'left' | 'center' | 'right' | 'justify' } = {}
-  ): number => {
-    const { indent = 0, align = 'left' } = options;
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(11);
-    
-    const lines = doc.splitTextToSize(text, usableWidth - indent);
-    doc.text(lines, margin.left + indent, y, { align });
-    
-    return y + (lines.length * lineHeight) + paragraphSpacing;
-  };
 
-  /**
-   * Escribe una lista con viñetas
-   * @param items Elementos de la lista
-   * @param y Posición vertical inicial
-   * @param options Opciones adicionales
-   * @returns Nueva posición vertical
-   */
-  const writeBullets = (
-    items: string[], 
-    y: number,
-    options: { bulletChar?: string; indent?: number } = {}
-  ): number => {
-    const { bulletChar = '•', indent = 15 } = options;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(11);
-    
-    items.forEach((item) => {
-      // Agregar viñeta al inicio
-      const bulletText = `${bulletChar} ${item}`;
-      const lines = doc.splitTextToSize(bulletText, usableWidth - indent);
-      
-      lines.forEach((line: string | string[], idx: number) => {
-        const bulletPos = idx === 0 ? margin.left : margin.left + indent;
-        doc.text(line, bulletPos, y);
-        y += lineHeight;
+    // Configuración de página con márgenes aumentados
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const marginTop = 100;
+    const marginSide = 72; // Aumentado de 40 a 50 para mayor sangría lateral
+    const maxWidth = pageWidth - marginSide * 2;
+
+    // Configuración por defecto con sangrías aumentadas
+    const defaultLineHeight = 20;
+    const defaultParagraphSpacing = 10;
+    const defaultFirstLineIndent = 25; // Aumentado de 15 a 25 para mayor sangría de primera línea
+    let y = marginTop;
+
+    // Función para manejar saltos de página (sin cambios)
+    const checkPageBreak = (spaceNeeded: number) => {
+      if (y + spaceNeeded > pageHeight - marginTop) {
+        doc.addPage('landscape');
+        doc.addImage(img, 'PNG', 0, 0, pageWidth, pageHeight);
+        y = marginTop;
+      }
+    };
+
+    // Función para procesar contenido con ajustes de sangría
+    const processContent = (text: string, config: {
+      type?: 'paragraph' | 'list' | 'indented';
+      lineHeight?: number;
+      paragraphSpacing?: number;
+      firstLineIndent?: number;
+    }) => {
+      const {
+        type = 'paragraph',
+        lineHeight = defaultLineHeight,
+        paragraphSpacing = defaultParagraphSpacing,
+        firstLineIndent = defaultFirstLineIndent
+      } = config;
+
+      // Normalizar texto manteniendo saltos de línea significativos
+      // const paragraphs = text.trim().split(/\n\s*\n/);
+      const paragraphs = text.trim().split(/(?:\.\s+|\n\s*\n)/);
+
+      paragraphs.forEach((paragraph: string) => {
+        const cleanParagraph = paragraph.replace(/\s+/g, ' ').trim();
+
+        if (type === 'list') {
+          // Procesar elementos de lista con sangría aumentada
+          const items = cleanParagraph.split(/\n(?=\s*[-•♦]|\d+\.)/);
+          items.forEach((item, index) => {
+            if (item.trim() === '') return;
+
+            const bullet = item.match(/^(\s*[-•♦]|\d+\.)/)?.[0] || '• ';
+            const itemText = item.replace(/^(\s*[-•♦]|\d+\.)/, '').trim();
+
+            const lines = doc.splitTextToSize(bullet + itemText, maxWidth - 15); // Reducción de ancho para mayor sangría
+
+            lines.forEach((line: string, lineIndex: number) => {
+              checkPageBreak(lineHeight);
+              const x = marginSide + (lineIndex === 0 ? 0 : 20); // Sangría aumentada de 10 a 20 para líneas subsiguientes
+              doc.text(line, x, y, { align: 'left' });
+              y += lineHeight;
+            });
+
+            if (index < items.length - 1) {
+              y += lineHeight * 0.8;
+            }
+          });
+        } else {
+          // Procesar párrafos con sangría aumentada
+          const lines = doc.splitTextToSize(cleanParagraph, maxWidth - (type === 'indented' ? firstLineIndent : 0));
+
+          y += lineHeight * 0.5;
+
+          lines.forEach((line: string, lineIndex: number) => {
+            checkPageBreak(lineHeight);
+            const x = marginSide + (lineIndex === 0 && type === 'indented' ? firstLineIndent : 0);
+            doc.text(line, x, y, { align: 'justify' });
+            y += lineHeight;
+          });
+        }
+
+        y += paragraphSpacing;
       });
-      
-      y += 2; // Espacio extra entre elementos
-    });
-    
-    return y;
-  };
+    };
 
-  /**
-   * Escribe un párrafo con formato especial (ejemplo en negritas)
-   * @param text Texto del párrafo
-   * @param y Posición vertical inicial
-   * @returns Nueva posición vertical
-   */
-  const writeFormattedParagraph = (text: string, y: number): number => {
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(11);
-    
-    // Procesar texto para formato especial
-    const paragraphs = text.split('\n\n');
-    
-    paragraphs.forEach(paragraph => {
-      const lines = doc.splitTextToSize(paragraph, usableWidth);
-      
-      lines.forEach((line: string) => {
-        // Dividir la línea en partes para formato especial
-        const parts = line.split(/(\*ejemplo\*)/gi);
-        let x = margin.left;
-        
-        parts.forEach(part => {
-          if (part.toLowerCase() === '*ejemplo*') {
-            doc.setFont('helvetica', 'bold');
-            doc.text(part.replace(/\*/g, ''), x, y);
-            x += doc.getTextWidth(part.replace(/\*/g, ''));
-            doc.setFont('helvetica', 'normal');
-          } else {
-            doc.text(part, x, y);
-            x += doc.getTextWidth(part);
-          }
-        });
-        
-        y += lineHeight;
-      });
-      
-      y += paragraphSpacing;
-    });
-    
-    return y;
-  };
-
-  /**
-   * Añade una nueva página con fondo
-   * @param y Posición vertical inicial (opcional)
-   * @returns Posición vertical inicial
-   */
-  const addPageWithBackground = (initialY?: number): number => {
-    doc.addPage();
+    // Crear página inicial (sin cambios)
+    doc.addPage('landscape');
     doc.addImage(img, 'PNG', 0, 0, pageWidth, pageHeight);
-    return initialY || margin.top;
-  };
 
-  // --- Generación del contenido ---
+    // Configuración de secciones (sin cambios en estructura)
 
-  // Página 2: Justificación, Presentación y Objetivo
-  let y = addPageWithBackground(120);
-  
-  y = writeTitle('Justificación', y);
-  y = writeFormattedParagraph(
-    `Existen elementos fundamentales para el correcto funcionamiento en una organización, uno que resulta imprescindible, es la comunicación 
-asertiva, considerada como una herramienta clave, para que los empleados sean capaces de expresar ideas y opiniones de manera clara y respetuosa, 
-creando un ambiente propicio para la colaboración e innovación.
 
-La comunicación asertiva permite la evolución constante de las personas, la sociedad y las organizaciones. El identificar la importancia de la 
-comunicación asertiva, abre las oportunidades para que un administrador pueda acercarse de manera segura y efectiva a su capital humano, 
-potencializando las fortalezas de cada uno, empoderándolo en los procesos administrativos y asegurando que la identidad corporativa se enfoca hacia 
-el logro de los objetivos y el éxito.`, y);
 
-  y = writeTitle('Presentación', y);
-  y = writeFormattedParagraph(
-    `El programa "Comunicación asertiva en la organización", surge como respuesta a la necesidad de fortalecer las habilidades comunicativas del personal...`, y);
+    const etiquetaAcreditacion = ficha.ETIQUETAS.find(e => e.NOMBRE === 'CRITERIOS DE ACREDITACIÓN');
+    const textoAcreditacion = etiquetaAcreditacion?.DATO || 'Información no disponible';
 
-  y = writeTitle('Objetivo General del Curso', y);
-  y = writeFormattedParagraph(
-    `Al finalizar el curso, los participantes tendrán los conocimientos necesarios para aplicar herramientas de comunicación efectiva en su entorno laboral.`, y);
 
-  // Página 3: Requisitos, Acreditación y Reconocimiento
-  y = addPageWithBackground();
-  
-  y = writeTitle('Requisitos de Admisión', y);
-  y = writeParagraph(
-    `La persona que desee ingresar al curso de Comunicación Asertiva deberá contar con escolaridad mínima de nivel medio superior.`, 
-    y + 5
-  );
-  
-  y = writeTitle('Acreditación', y);
-  y = writeParagraph(
-    `Para la acreditación de este curso, el alumno deberá asistir al 90% de las sesiones y entregar las actividades asignadas.`, 
-    y + 5
-  );
-  
-  y = writeTitle('Reconocimiento al Alumno', y);
-  y = writeParagraph(
-    `Al concluir y aprobar el curso, la persona egresada recibirá un reconocimiento oficial expedido por el ICATHI.`, 
-    y + 5
-  );
+    const etiquetaRECONOCIMI = ficha.ETIQUETAS.find(e => e.NOMBRE === 'RECONOCIMIENTO A LA PERSONA EGRESADA');
+    const textoRECONOCIMI = etiquetaRECONOCIMI?.DATO || 'Información no disponible';
+    const sections = [
+      {
+        title: 'JUSTIFICACIÓN',
+        content: data.objetivo_especialidad,
+        type: 'indented' as const, // Cambiado a 'indented' para aplicar sangría
+        lineHeight: undefined,
+        paragraphSpacing: undefined,
+        firstLineIndent: 30 // Sangría especial para esta sección
+      },
+      {
+        title: 'PRESENTACIÓN',
+        content: data.presentacion,
+        type: 'indented' as const,
+        lineHeight: undefined,
+        paragraphSpacing: undefined,
+        firstLineIndent: 30
+      },
+      {
+        title: 'OBJETIVO GENERAL DEL CURSO',
+        content: ficha.OBJETIVO,
+        type: 'indented' as const,
+        lineHeight: undefined,
+        paragraphSpacing: undefined,
+        firstLineIndent: 30
+      },
+      {
+        title: 'REQUISITOS DE ADMISIÓN',
+        content: ficha.PERFIL_INGRESO,
+        type: 'indented' as const,
+        lineHeight: undefined,
+        paragraphSpacing: undefined,
+        firstLineIndent: 30
+      },
+      {
+        title: 'ACREDITACIÓN',
+        content: textoAcreditacion,
+        type: 'indented' as const,
+        lineHeight: undefined,
+        paragraphSpacing: undefined,
+        firstLineIndent: 30
+      },
+      {
+        title: 'RECONOCIMIENTO AL ALUMNO',
+        content: textoRECONOCIMI,
+        type: 'indented' as const,
+        lineHeight: undefined,
+        paragraphSpacing: undefined,
+        firstLineIndent: 30
+      }
+    ];
 
-  // Página 4: Metodología
-  y = addPageWithBackground();
-  
-  y = writeTitle('Metodología de Capacitación', y);
-  y = writeParagraph(
-    `El proceso de capacitación del ICATHI deberá considerar un enfoque práctico, centrado en el desarrollo de competencias y basado en aprendizaje significativo.`, 
-    y + 5
-  );
+    // Procesar cada sección (sin cambios en lógica)
+    sections.forEach(({ title, content, type, lineHeight, paragraphSpacing, firstLineIndent }) => {
+      checkPageBreak(30);
 
-  const bullets = [
-    "El proceso de enseñanza y aprendizaje deberá realizarse aplicando 80 % práctico y 20 % teórico.",
-    "El Docente/Instructor deberá actuar como facilitador del aprendizaje y adaptarse a los distintos estilos de los participantes.",
-    "El Docente/Instructor será responsable de atender los procesos de evaluación diagnóstica, formativa y sumativa.",
-    "Es responsabilidad del Docente/Instructor establecer las acciones correctivas necesarias durante el desarrollo del curso.",
-    "El Docente/Instructor deberá cumplir con la normatividad institucional vigente."
-  ];
-  
-  y = writeBullets(bullets, y, { bulletChar: 'A)', indent: 10 });
-}
-  // FichaTecnicaSEP(doc: jsPDF, data: CursoPdfData,img: HTMLImageElement): void {
-  //    doc.addImage(img, 'PNG', 0, 0, 792, 612);
-  //   doc.setFont('helvetica', 'bold');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(13);
+      doc.text(title, pageWidth / 2, y, { align: 'center' });
+      y += 15;
 
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(11);
+
+      processContent(content, {
+        type,
+        lineHeight,
+        paragraphSpacing,
+        firstLineIndent
+      });
+
+      y += 15;
+    });
+  }
+  drawMetodologiaYBibliografia(
+    doc: jsPDF,
+    metodologia: string,
+    bibliografia: string,
+    img?: HTMLImageElement
+  ): number {
+    if (!doc || typeof doc.text !== 'function') {
+      throw new Error("Invalid jsPDF document provided");
+    }
+
+    if (!metodologia && !bibliografia) {
+      console.warn("Both methodology and bibliography are empty");
+    }
+
+    const PAGE_CONFIG = {
+      marginLeft: 50,
+      marginRight: 50,
+      lineHeight: 14,
+      paragraphSpacing: 8,
+      textIndent: 25,
+      initialY: 70,
+      titleSpacing: 42,
+      sectionSpacing: 20,
+      pageHeight: doc.internal.pageSize.getHeight(),
+      maxContentHeight: doc.internal.pageSize.getHeight() - 100
+    };
+
+    const {
+      marginLeft,
+      marginRight,
+      lineHeight,
+      paragraphSpacing,
+      textIndent,
+      initialY,
+      titleSpacing,
+      sectionSpacing,
+      pageHeight,
+      maxContentHeight
+    } = PAGE_CONFIG;
+
+    const maxWidth = doc.internal.pageSize.getWidth() - marginLeft - marginRight;
+    const startX = marginLeft + textIndent;
+    let y = initialY;
+
+    const drawBackgroundIfExists = (): void => {
+      if (img) {
+        try {
+          doc.addImage(
+            img,
+            'PNG',
+            0,
+            0,
+            doc.internal.pageSize.getWidth(),
+            doc.internal.pageSize.getHeight()
+          );
+        } catch (error) {
+          console.error("Failed to add background image:", error);
+        }
+      }
+    };
+    const drawSectionHeader = (title: string): void => {
+      if (y > maxContentHeight) {
+        doc.addPage('l');
+        y = initialY;
+        drawBackgroundIfExists();
+      }
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.setTextColor(0, 0, 0);
+      y += titleSpacing;
+
+      // Calcular el ancho del texto y centrarlo
+      const textWidth = doc.getStringUnitWidth(title) * doc.getFontSize() / doc.internal.scaleFactor;
+      const x = (doc.internal.pageSize.width - textWidth) / 2;
+
+      doc.text(title, x, y);
+      y += sectionSpacing;
+    };
+
+    const drawTextWithPagination = (text: string, isBullet: boolean = false): void => {
+      const fallbackText = "No se proporcionó contenido";
+      const content = text?.trim() || fallbackText;
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(11);
+      doc.setTextColor(0, 0, 0);
+      doc.setLineHeightFactor(1.6);
+
+      const lines = content.split('\n');
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed) {
+          y += lineHeight / 2;
+          continue;
+        }
+
+        if (y > maxContentHeight) {
+          doc.addPage('l');
+          y = initialY;
+          drawBackgroundIfExists();
+        }
+
+        if (isBullet) {
+          const cleanText = trimmed.replace(/^•\s*/, '');
+          const wrapped = doc.splitTextToSize(cleanText, maxWidth - textIndent - 8);
+
+          doc.setFont('helvetica', 'bold');
+          doc.text('•', startX, y + 2);
+          doc.setFont('helvetica', 'normal');
+          doc.text(wrapped, startX + 8, y);
+
+          y += (wrapped.length * lineHeight) + paragraphSpacing;
+        } else {
+          const wrapped = doc.splitTextToSize(trimmed, maxWidth - textIndent);
+          doc.text(wrapped, startX, y);
+          y += (wrapped.length * lineHeight) + paragraphSpacing;
+        }
+      }
+    };
+
+    try {
+      // Página para metodología
+      doc.addPage('l');
+      y = initialY;
+      drawBackgroundIfExists();
+
+      if (metodologia?.trim()) {
+        drawSectionHeader('METODOLOGÍA DE CAPACITACIÓN');
+        drawTextWithPagination(metodologia, true);
+      }
+
+      // Página nueva para bibliografía
+      if (bibliografia?.trim()) {
+        doc.addPage('l');
+        y = initialY;
+        drawBackgroundIfExists();
+        drawSectionHeader('BIBLIOGRAFÍA / WEBGRAFÍA');
+        drawTextWithPagination(bibliografia, true);
+      }
+
+      return y;
+    } catch (error) {
+      console.error("Error drawing methodology and bibliography:", error);
+      doc.addPage('l');
+      return initialY;
+    }
+  }
+
+  // FichaTecnicaSEP(doc: jsPDF, data: CursoPdfData, img: HTMLImageElement): void {
+  //   const ficha = data.FICHA_TECNICA;
+  //   const etiquetas = ficha?.ETIQUETAS || [];
+
+  //   doc.setFont('helvetica', 'normal');
+
+  //   // Configuración de página
+  //   const pageWidth = doc.internal.pageSize.getWidth();
+  //   const pageHeight = doc.internal.pageSize.getHeight();
+  //   const marginTop = 80;
+  //   const marginSide = 40;
+  //   const maxWidth = pageWidth - marginSide * 2;
+
+  //   // Configuración por defecto
+  //   const defaultLineHeight = 18; // Aumentado para mejor legibilidad
+  //   const defaultParagraphSpacing = 12; // Espaciado aumentado entre párrafos
+  //   const defaultFirstLineIndent = 15;
+  //   let y = marginTop;
+
+  //   // Función para manejar saltos de página
+  //   const checkPageBreak = (spaceNeeded: number) => {
+  //     if (y + spaceNeeded > pageHeight - marginTop) {
+  //       doc.addPage('landscape');
+  //       doc.addImage(img, 'PNG', 0, 0, pageWidth, pageHeight);
+  //       y = marginTop;
+  //     }
+  //   };
+
+  //   // Función para procesar diferentes tipos de contenido
+  //   const processContent = (text: string, config: {
+  //     type?: 'paragraph' | 'list' | 'indented';
+  //     lineHeight?: number;
+  //     paragraphSpacing?: number;
+  //     firstLineIndent?: number;
+  //   }) => {
+  //     const {
+  //       type = 'paragraph',
+  //       lineHeight = defaultLineHeight,
+  //       paragraphSpacing = defaultParagraphSpacing,
+  //       firstLineIndent = defaultFirstLineIndent
+  //     } = config;
+
+  //     // Normalizar texto manteniendo saltos de línea significativos
+  //     const paragraphs = text.trim().split(/\n\s*\n/);
+
+  //     paragraphs.forEach((paragraph: string) => {
+  //       const cleanParagraph = paragraph.replace(/\s+/g, ' ').trim();
+
+  //       if (type === 'list') {
+  //         // Procesar elementos de lista
+  //         const items = cleanParagraph.split(/\n(?=\s*[-•♦]|\d+\.)/);
+  //         items.forEach((item, index) => {
+  //           if (item.trim() === '') return;
+
+  //           const bullet = item.match(/^(\s*[-•♦]|\d+\.)/)?.[0] || '• ';
+  //           const itemText = item.replace(/^(\s*[-•♦]|\d+\.)/, '').trim();
+
+  //           const lines = doc.splitTextToSize(bullet + itemText, maxWidth - 10);
+
+  //           lines.forEach((line: string, lineIndex: number) => {
+  //             checkPageBreak(lineHeight);
+  //             const x = marginSide + (lineIndex === 0 ? 0 : 10);
+  //             doc.text(line, x, y, { align: 'left' });
+  //             y += lineHeight;
+  //           });
+
+  //           if (index < items.length - 1) {
+  //             y += lineHeight * 0.8; // Espacio aumentado entre items
+  //           }
+  //         });
+  //       } else {
+  //         // Procesar párrafos normales con mejor espaciado
+  //         const lines = doc.splitTextToSize(cleanParagraph, maxWidth - (type === 'indented' ? firstLineIndent : 0));
+
+  //         // Añadir espacio adicional antes del párrafo
+  //         y += lineHeight * 0.5;
+
+  //         lines.forEach((line: string, lineIndex: number) => {
+  //           checkPageBreak(lineHeight);
+  //           const x = marginSide + (lineIndex === 0 && type === 'indented' ? firstLineIndent : 0);
+  //           doc.text(line, x, y, { align: 'justify' });
+  //           y += lineHeight;
+  //         });
+  //       }
+
+  //       // Espacio después del párrafo
+  //       y += paragraphSpacing;
+  //     });
+  //   };
+
+  //   // Crear página inicial
+  //   doc.addPage('landscape');
+  //   doc.addImage(img, 'PNG', 0, 0, pageWidth, pageHeight);
+
+  //   // Configuración de secciones
+  //   const sections = [
+  //     { 
+  //       title: 'JUSTIFICACIÓN', 
+  //       content: data.objetivo_especialidad,
+  //       type: 'paragraph' as const,
+  //       lineHeight: undefined,
+  //       paragraphSpacing: undefined,
+  //       firstLineIndent: undefined
+  //     },
+  //     { 
+  //       title: 'PRESENTACIÓN', 
+  //       content: data.presentacion,
+  //       type: 'paragraph' as const,
+  //       lineHeight: undefined,
+  //       paragraphSpacing: undefined,
+  //       firstLineIndent: undefined
+  //     },
+  //     { 
+  //       title: 'OBJETIVO GENERAL DEL CURSO', 
+  //       content: ficha.OBJETIVO,
+  //       type: 'paragraph' as const,
+  //       lineHeight: undefined,
+  //       paragraphSpacing: undefined,
+  //       firstLineIndent: undefined
+  //     },
+  //     { 
+  //       title: 'REQUISITOS DE ADMISIÓN', 
+  //       content: ficha.PERFIL_INGRESO,
+  //       type: 'paragraph' as const,
+  //       lineHeight: undefined,
+  //       paragraphSpacing: undefined,
+  //       firstLineIndent: undefined
+  //     },
+  //     { 
+  //       title: 'ACREDITACIÓN', 
+  //       content: ficha.PERFIL_EGRESO,
+  //       type: 'paragraph' as const,
+  //       lineHeight: undefined,
+  //       paragraphSpacing: undefined,
+  //       firstLineIndent: undefined
+  //     },
+  //     { 
+  //       title: 'RECONOCIMIENTO AL ALUMNO', 
+  //       content: ficha.PERFIL_DEL_DOCENTE,
+  //       type: 'paragraph' as const,
+  //       lineHeight: undefined,
+  //       paragraphSpacing: undefined,
+  //       firstLineIndent: undefined
+  //     }
+  //   ];
+
+  //   // Procesar cada sección
+  //   sections.forEach(({ title, content, type, lineHeight, paragraphSpacing, firstLineIndent }) => {
+  //     checkPageBreak(30); // Más espacio antes de nuevas secciones
+
+  //     // Título de la sección
+  //     doc.setFont('helvetica', 'bold');
+  //     doc.setFontSize(13);
+  //     doc.text(title, pageWidth / 2, y, { align: 'center' });
+  //     y += 15; // Más espacio después del título
+
+  //     // Contenido de la sección
+  //     doc.setFont('helvetica', 'normal');
+  //     doc.setFontSize(11);
+
+  //     processContent(content, {
+  //       type,
+  //       lineHeight,
+  //       paragraphSpacing,
+  //       firstLineIndent
+  //     });
+
+  //     y += 15; // Espacio aumentado entre secciones
+  //   });
   // }
-
 
   FichaTecnica(doc: jsPDF, data: CursoPdfData): void {
     const ficha = data.FICHA_TECNICA;
@@ -1445,7 +1730,7 @@ el logro de los objetivos y el éxito.`, y);
 
     doc.addPage('l');
     y = drawEncabezado() + 20;
-    const etiquetaBibliografia = ficha.ETIQUETAS.find(e => e.NOMBRE === 'BIBLIOGRAFÍA');
+    const etiquetaBibliografia = ficha.ETIQUETAS.find(e => e.NOMBRE === 'BIBLIOGRAFÍA / WEBGRAFÍA');
     const textoBibliografia = etiquetaBibliografia?.DATO || 'Información no disponible';
     y = drawBibliographySection('BIBLIOGRAFÍA / WEBGRAFÍA', textoBibliografia, y);
     doc.addPage('l');
@@ -1765,11 +2050,122 @@ el logro de los objetivos y el éxito.`, y);
       }
     });
   }
+  agregarContenidoProgramaticoSEP(doc: jsPDF, data: CursoPdfData, img?: HTMLImageElement): void {
+    const drawBackgroundIfExists = (): void => {
+      if (img) {
+        try {
+          // Añadir la imagen con opacidad si es necesario
+          doc.addImage(
+            img,
+            'PNG',
+            0,
+            0,
+            doc.internal.pageSize.getWidth(),
+            doc.internal.pageSize.getHeight()
+          );
+        } catch (error) {
+          console.error("Failed to add background image:", error);
+        }
+      }
+    };
+
+    const contenidoProgramatico = data.CONTENIDOPROGRAMATICO;
+
+    doc.addPage('l');
+    // Dibujar el fondo primero
+    drawBackgroundIfExists();
+
+    // Configurar el texto del título
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0); // Asegurar color negro
+    doc.text('CONTENIDO PROGRAMÁTICO', doc.internal.pageSize.getWidth() / 2, 100, { align: 'center' });
+
+    if (!contenidoProgramatico || contenidoProgramatico.length === 0) {
+      doc.setFont('helvetica', 'normal');
+      doc.text('No se ha definido contenido programático para este curso.', 15, 40);
+      return;
+    }
+
+    const encabezados = data.TIPO_CURSO_ID === 2
+      ? [
+        ['NO. Y NOMBRE DEL TEMA', 'TIEMPO (HRS)', 'CRITERIOS DE EVALUACIÓN', 'EVIDENCIAS', 'ACTIVIDADES DE ENSEÑANZA-APRENDIZAJE']
+      ]
+      : [
+        ['NO. Y NOMBRE DEL TEMA', 'TIEMPO (HRS)', 'COMPETENCIAS A DESARROLLAR', 'INSTRUMENTOS DE EVALUACIÓN', 'ACTIVIDADES DE ENSEÑANZA-APRENDIZAJE']
+      ];
+
+    const body = contenidoProgramatico.map((tema: any) => [
+      (tema.tema_nombre || '').replace(/\n/g, '\n'),
+      tema.tiempo ? tema.tiempo.toString() : '0',
+      (tema.competencias || '').replace(/\n/g, '\n'),
+      (tema.evaluacion || '').replace(/\n/g, '\n'),
+      (tema.actividades || '')
+    ]);
+
+    const totalHoras = contenidoProgramatico
+      .reduce((total: number, tema: any) => total + (parseInt(tema.tiempo) || 0), 0)
+      .toString();
+
+    if (data.TIPO_CURSO_ID === 2) {
+      body.push(['Total horas', totalHoras, '', '', '']);
+    } else {
+      body.push(['Evaluacion', '2', '', '', '']);
+      body.push(['Total horas', totalHoras, '', '', '']);
+    }
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 15;
+    const availableWidth = pageWidth - margin * 2;
 
 
+    (doc as any).autoTable({
+      startY: 120, // Aumentado para dejar espacio para el título
+      head: encabezados,
+      body: body,
+      theme: 'grid',
+      showHead: 'everyPage', // Mostrar encabezados en cada página
+      rowPageBreak: 'avoid', // Evitar dividir filas entre páginas
+      styles: {
+        fontSize: 10,
+        font: 'helvetica',
+        cellPadding: 3,
+        // minCellHeight: 10, // Altura mínima de celda
 
-
-
+        valign: 'top',
+        overflow: 'linebreak',
+        textColor: [0, 0, 0],
+        lineColor: [0, 0, 0],
+        lineWidth: 0.5
+      },
+      headStyles: {
+        halign: 'center',
+        fillColor: [200, 200, 200],
+        textColor: [0, 0, 0],
+        fontStyle: 'bold'
+      },
+      columnStyles: {
+        0: { cellWidth: availableWidth * 0.25 },
+        1: { cellWidth: availableWidth * 0.10, halign: 'center' },
+        2: { cellWidth: availableWidth * 0.20 },
+        3: { cellWidth: availableWidth * 0.20 },
+        4: { cellWidth: availableWidth * 0.25 }
+      },
+      margin: { top: 50, left: margin, right: margin },
+      tableWidth: 'auto',
+      didDrawCell: (data: any) => {
+        // Restaurar estilos después de dibujar cada celda
+        doc.setFillColor(255, 255, 255);
+        if (data.row.index === body.length - 1 || data.row.index === body.length - 2) {
+          doc.setFont('helvetica', 'bold');
+        }
+      },
+      // willDrawCell: (data: any) => {
+      //   // Asegurar fondo blanco antes de dibujar cada celda
+      //   doc.setFillColor(255, 255, 255);
+      // }
+    });
+  }
 
   agregarTablaMateriales(doc: jsPDF, data: CursoPdfData): void {
     const materiales = data.MATERIALES || [];

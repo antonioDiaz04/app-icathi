@@ -15,15 +15,25 @@ export class SepFormatStrategy implements PdfFormatStrategy {
       helpers.drawValidityBoxTipoRegular_SEP(doc, data);
       helpers.drawSignatureSectionRegular(doc, data);
 
-      helpers.FichaTecnicaSEP(doc, data,img);
-    //   helpers.agregarContenidoProgramatico(doc, data);
-    //   helpers.agregarTablaMateriales(doc, data);
-    //   helpers.agregarTablaEquipamiento(doc, data);
+      helpers.FichaTecnicaSEP(doc, data, img);
+
+      console.log('data.FICHA_TECNICA', data.FICHA_TECNICA.METODOLOGIA);
+      helpers.drawMetodologiaYBibliografia(
+        doc,
+        data.FICHA_TECNICA.METODOLOGIA,
+        data.FICHA_TECNICA.ETIQUETAS.find(e => e.NOMBRE === 'BIBLIOGRAFÍA')?.DATO || '',
+        img,
+        
+      );
+
+        helpers.agregarContenidoProgramaticoSEP(doc, data,   img);
+      //   helpers.agregarTablaMateriales(doc, data);
+      //   helpers.agregarTablaEquipamiento(doc, data);
 
       const totalPages = doc.getNumberOfPages();
       for (let i = 2; i <= totalPages; i++) {
         doc.setPage(i);
-        helpers.drawFooter(doc,data);
+        // helpers.drawFooter(doc,data);
       }
 
       helpers.finalize(doc);

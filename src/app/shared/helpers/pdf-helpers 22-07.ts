@@ -3,6 +3,14 @@
 // import jsPDF from 'jspdf';
 // import { CursoPdfData } from '../types/curso-pdf-data.type';
 // import autoTable from 'jspdf-autotable';
+// interface SectionConfig {
+//   title: string;
+//   content: string;
+//   type?: 'paragraph' | 'list' | 'bibliography' | 'indented';
+//   lineHeight?: number;
+//   paragraphSpacing?: number;
+//   firstLineIndent?: number;
+// }
 
 // export class PdfHelpers {
 //   constructor(private finalizeCallback: (doc: jsPDF) => void) { }
@@ -56,6 +64,8 @@
 //     }
 //   }
 
+
+
 //   drawHeaderTipoRegular_SEP(doc: jsPDF, data: CursoPdfData): void {
 //     console.log("data", data);
 
@@ -74,19 +84,82 @@
 //       }
 
 //       case 5: {
-//         doc.setFontSize(14);
+//         doc.setFontSize(11);
 //         const centerText = (text: string, offset = 18) => {
 //           doc.text(text, pageWidth / 2, y, { align: 'center' });
 //           y += offset;
 //         };
 //         centerText('PROGRAMA DE ESTUDIO');
-//         centerText(`"${data.TIPO_CURSO.toUpperCase()}"`);
 //         break;
 //       }
 //     }
 //   }
 
 
+
+//   // drawCourseDetailsTipoRegular(doc: jsPDF, data: CursoPdfData): void {
+//   //   const marginLeft = 71; // ≈ 2.5 cm
+//   //   const marginRight = doc.internal.pageSize.getWidth() - marginLeft;
+//   //   const maxTextWidth = 420;
+//   //   const lineHeight = 13;
+
+//   //   let y = 120;
+
+//   //   // Espacio extra si es tipo curso 4
+//   //   if (data.TIPO_CURSO_ID === 4) {
+//   //     y += 60;
+//   //   }
+
+//   //   // ======= NOMBRE =======
+//   //   doc.setFont('helvetica', 'bold');
+//   //   doc.setFontSize(18);
+//   //   const nombre = data.NOMBRE || '';
+//   //   const nombreLines = doc.splitTextToSize(nombre, maxTextWidth);
+//   //   nombreLines.forEach((line: string | string[]) => {
+//   //     doc.text(line, marginRight, y, { align: 'right' });
+//   //     y += lineHeight;
+//   //   });
+//   //   y += 5; // Espacio debajo de nombre
+
+//   //   // ======= CLAVE =======
+//   //   doc.setFont('helvetica', 'bold');
+//   //   doc.setFontSize(12);
+//   //   const clave = `CLAVE: ${data.CLAVE?.toUpperCase() || ''}`;
+//   //   doc.text(clave, marginRight, y, { align: 'right' });
+//   //   y += 15; // Reducido ligeramente
+
+//   //   // ======= LÍNEAS =======
+//   //   doc.setDrawColor(0, 100, 0); // Verde oscuro
+//   //   doc.setLineWidth(1.5);
+//   //   doc.line(marginLeft, y, marginRight, y);
+//   //   y += 5;
+
+//   //   doc.setDrawColor(150); // Gris claro
+//   //   doc.setLineWidth(1.5);
+//   //   doc.line(marginLeft, y, marginRight, y);
+//   //   y += 30; // Espacio después de líneas
+
+//   //   // ======= ÁREA (MISMA LÍNEA) =======
+//   //   doc.setFont('helvetica', 'normal');
+//   //   doc.setFontSize(11);
+//   //   const areaLabel = 'ÁREA:';
+//   //   doc.text(areaLabel, marginLeft, y);
+
+//   //   const areaText = data.AREA_NOMBRE?.toUpperCase() || '';
+//   //   doc.setFont('helvetica', 'bold');
+//   //   doc.text(areaText, marginLeft + doc.getTextWidth(areaLabel) + 5, y);
+
+//   //   y += lineHeight + 5;
+
+//   //   // ======= ESPECIALIDAD (MISMA LÍNEA) =======
+//   //   doc.setFont('helvetica', 'normal');
+//   //   const espLabel = 'ESPECIALIDAD:';
+//   //   doc.text(espLabel, marginLeft, y);
+
+//   //   const espText = data.ESPECIALIDAD_NOMBRE?.toUpperCase() || '';
+//   //   doc.setFont('helvetica', 'bold');
+//   //   doc.text(espText, marginLeft + doc.getTextWidth(espLabel) + 5, y);
+//   // }
 
 //   drawCourseDetailsTipoRegular(doc: jsPDF, data: CursoPdfData): void {
 //     const marginLeft = 71; // ≈ 2.5 cm
@@ -151,6 +224,7 @@
 //     doc.setFont('helvetica', 'bold');
 //     doc.text(espText, marginLeft + doc.getTextWidth(espLabel) + 5, y);
 //   }
+
 //   drawValidityBoxTipoRegular_SEP(doc: jsPDF, data: CursoPdfData): void {
 //     const pageWidth = doc.internal.pageSize.getWidth(); // 792 en landscape
 //     const marginRight = 71;
@@ -159,18 +233,25 @@
 //     const offsetRight = 55; // Posición más a la derecha
 //     const boxX = pageWidth - marginRight - boxWidth + offsetRight;
 
-//     const boxY = 340; // 🔽 Antes: 260 → ahora todo baja 20 unidades
+//     let boxY = 340;
+//     if (data.TIPO_CURSO_ID !== 4) {
+//       boxY = 260; // Posición calculada
+//     }
+
 //     const contentMarginTop = 15;
 
-//     // === TÍTULO CENTRAL SUPERIOR EN GRIS CLARO ===
-//     doc.setFontSize(12);
-//     doc.setFont('helvetica', 'bold');
-//     doc.setTextColor(160); // Gris claro
-//     doc.text('FICHA TECNICA DE CURSO REGULAR', pageWidth / 2, boxY - 3, { align: 'center' });
+//     if (data.TIPO_CURSO_ID === 4) {
+//       // y += 60;
+//       doc.setFontSize(12);
+//       doc.setFont('helvetica', 'bold');
+//       doc.setTextColor(160); // Gris claro
+//       doc.text('FICHA TECNICA DE CURSO REGULAR', pageWidth / 2, boxY - 3, { align: 'center' });
 
-//     // Restaurar color y tamaño para contenido
+//       // Restaurar color y tamaño para contenido
+//     }
 //     doc.setTextColor(0);
 //     doc.setFontSize(8.5);
+//     // === TÍTULO CENTRAL SUPERIOR EN GRIS CLARO ===
 
 //     // ==== VIGENCIA ====
 //     doc.setFont('helvetica', 'bold');
@@ -203,34 +284,34 @@
 //   }
 
 
-
 //   drawCourseDetailsTipoSEP(doc: jsPDF, data: CursoPdfData): void {
-//     const marginLeft = 71; // 2.5 cm
+//     const marginLeft = 130; // 2.5 cm
 //     const maxTextWidth = 420;
 //     const lineHeight = 13;
-//     let y = 120;
+//     let y = 210; // Aumenté este valor para bajar un poco toda la sección
 
 //     const renderField = (label: string, value: string) => {
 //       doc.setFont('helvetica', 'bold');
-//       doc.setFontSize(11);
-//       const labelText = `${label}:`;
-//       doc.text(labelText, marginLeft, y);
-//       y += lineHeight;
+//       doc.setFontSize(14);
 
-//       doc.setFont('helvetica', 'normal');
-//       const lines = doc.splitTextToSize(value, maxTextWidth);
-//       lines.forEach((line: string | string[]) => {
+//       // Combinar label y valor en la misma línea
+//       const fullText = `${label}: ${value.toUpperCase()}`;
+
+//       // Dividir el texto en líneas si es necesario
+//       const lines = doc.splitTextToSize(fullText, maxTextWidth);
+//       lines.forEach((line: string) => {
 //         doc.text(line, marginLeft, y);
 //         y += lineHeight;
 //       });
 
-//       y += 24;
+//       y += 10; // Espacio entre campos (reducido de 24 a 10)
 //     };
 
-//     renderField('NOMBRE DEL CURSO', data.NOMBRE.toUpperCase() || '');
-//     renderField('CLAVE DEL CURSO', data.CLAVE?.toUpperCase() || '');
-//     renderField('DURACIÓN DEL CURSO', `${(data.CONTENIDOPROGRAMATICO || []).reduce((total: number, tema: any) => total + (parseInt(tema.tiempo) || 0), 0)} HORAS`);
-//     renderField('ÁREA FORMATIVA', data.AREA_NOMBRE?.toUpperCase() || '');
+//     renderField('CURSO', data.NOMBRE || '');
+//     renderField('CLAVE DEL CURSO', data.CLAVE || '');
+
+//     // Ajustar posición Y después de todos los campos si es necesario
+//     y += 10;
 //   }
 
 //   drawCourseDetailsESCUELA(doc: jsPDF, data: CursoPdfData): void {
@@ -390,9 +471,74 @@
 //       data.firmas.AUTORIZADO_POR.cargo
 //     );
 //   }
+
+//   // drawSignatureSectionRegular(doc: jsPDF, data: CursoPdfData): void {
+//   //   let y = 400; // 🔼 Subido un poco más (antes 550)
+//   //   const marginLeft = 71; // Posicionado a la izquierda
+//   //   const posX = marginLeft;
+
+//   //   const wrapText = (text: string, maxWidth: number, fontSize: number): string[] => {
+//   //     const tempDoc = new jsPDF();
+//   //     tempDoc.setFontSize(fontSize);
+//   //     return tempDoc.splitTextToSize(text, maxWidth);
+//   //   };
+
+//   //   const drawSignature = (title: string, nombre: string, cargo: string) => {
+//   //     const maxWidth = 120;
+//   //     const fontSize = 9;
+
+//   //     doc.setFontSize(fontSize);
+//   //     doc.setFont('helvetica', 'bold');
+//   //     doc.text(title, posX, y, { align: 'left' });
+//   //     y += 10;
+
+//   //     doc.setFont('helvetica', 'normal');
+//   //     if (nombre) {
+//   //       doc.text(nombre, posX, y, { align: 'left' });
+//   //       y += 10;
+//   //     }
+
+//   //     if (cargo) {
+//   //       const lines = wrapText(cargo, maxWidth, fontSize);
+//   //       lines.forEach(line => {
+//   //         doc.text(line, posX, y, { align: 'left' });
+//   //         y += 8;
+//   //       });
+//   //     } else {
+//   //       doc.text('No disponible', posX, y, { align: 'left' });
+//   //       y += 10;
+//   //     }
+
+//   //     y += 18;
+//   //   };
+
+//   //   drawSignature(
+//   //     'Elaborado por:',
+//   //     data.firmas.ELABORADO_POR.nombre,
+//   //     data.firmas.ELABORADO_POR.cargo
+//   //   );
+
+//   //   drawSignature(
+//   //     'Revisado por:',
+//   //     data.firmas.REVISADO_POR.nombre,
+//   //     data.firmas.REVISADO_POR.cargo
+//   //   );
+
+//   //   drawSignature(
+//   //     'Autorizado por:',
+//   //     data.firmas.AUTORIZADO_POR.nombre,
+//   //     data.firmas.AUTORIZADO_POR.cargo
+//   //   );
+//   // }
 //   drawSignatureSectionRegular(doc: jsPDF, data: CursoPdfData): void {
-//     let y = 400; // 🔼 Subido un poco más (antes 550)
-//     const marginLeft = 71; // Posicionado a la izquierda
+//     let y = 400;
+//     let marginLeft = 71; // Valor por defecto
+
+//     if (data.TIPO_CURSO_ID === 5) {
+//       marginLeft = 130;
+//       y = 280;
+//     }
+
 //     const posX = marginLeft;
 
 //     const wrapText = (text: string, maxWidth: number, fontSize: number): string[] => {
@@ -432,747 +578,360 @@
 
 //     drawSignature(
 //       'Elaborado por:',
-//       data.firmas.ELABORADO_POR.nombre,
-//       data.firmas.ELABORADO_POR.cargo
+//       data.firmas.ELABORADO_POR?.nombre ?? '',
+//       data.firmas.ELABORADO_POR?.cargo ?? ''
 //     );
 
 //     drawSignature(
 //       'Revisado por:',
-//       data.firmas.REVISADO_POR.nombre,
-//       data.firmas.REVISADO_POR.cargo
+//       data.firmas.REVISADO_POR?.nombre ?? '',
+//       data.firmas.REVISADO_POR?.cargo ?? ''
 //     );
 
 //     drawSignature(
 //       'Autorizado por:',
-//       data.firmas.AUTORIZADO_POR.nombre,
-//       data.firmas.AUTORIZADO_POR.cargo
+//       data.firmas.AUTORIZADO_POR?.nombre ?? '',
+//       data.firmas.AUTORIZADO_POR?.cargo ?? ''
 //     );
 //   }
+// // interface SectionConfig {
+// //   title: string;
+// //   content: string;
+// //   type?: 'paragraph' | 'list' | 'bibliography' | 'indented';
+// //   lineHeight?: number;
+// //   paragraphSpacing?: number;
+// //   firstLineIndent?: number;
+// // }
 
+//  FichaTecnicaSEP(doc: jsPDF, data: CursoPdfData, img: HTMLImageElement): void {
+//   const ficha = data.FICHA_TECNICA;
+//   const etiquetas = ficha?.ETIQUETAS || [];
 
+//   doc.setFont('helvetica', 'normal');
 
+//   // Configuración de página
+//   const pageWidth = doc.internal.pageSize.getWidth();
+//   const pageHeight = doc.internal.pageSize.getHeight();
+//   const marginTop = 30;
+//   const marginSide = 40;
+//   const maxWidth = pageWidth - marginSide * 2;
 
+//   // Configuración por defecto
+//   const defaultLineHeight = 6.5;
+//   const defaultParagraphSpacing = 10;
+//   const defaultFirstLineIndent = 15;
+//   let y = marginTop;
 
+//   // Función para manejar saltos de página
+//   const checkPageBreak = (spaceNeeded: number) => {
+//     if (y + spaceNeeded > pageHeight - marginTop) {
+//       doc.addPage('landscape');
+//       doc.addImage(img, 'PNG', 0, 0, pageWidth, pageHeight);
+//       y = marginTop;
+//     }
+//   };
 
-//   FichaTecnica(doc: jsPDF, data: CursoPdfData): void {
-//     const ficha = data.FICHA_TECNICA;
-//     const etiquetas = ficha?.ETIQUETAS || [];
-//     doc.addPage();
-//     doc.setFont('helvetica', 'normal');
+//   // Función para procesar diferentes tipos de contenido
+//   const processContent = (text: string, config: {
+//     type?: 'paragraph' | 'list' | 'bibliography' | 'indented';
+//     lineHeight?: number;
+//     paragraphSpacing?: number;
+//     firstLineIndent?: number;
+//   }) => {
+//     const {
+//       type = 'paragraph',
+//       lineHeight = defaultLineHeight,
+//       paragraphSpacing = defaultParagraphSpacing,
+//       firstLineIndent = defaultFirstLineIndent
+//     } = config;
 
-//     const rows: any[] = [
-//       ['OBJETIVO DEL CURSO', ficha.OBJETIVO],
-//       ['PERFIL DE INGRESO', ficha.PERFIL_INGRESO],
-//       ['PERFIL DE EGRESO', ficha.PERFIL_EGRESO],
-//       ['PERFIL DEL INSTRUCTOR / DOCENTE', ficha.PERFIL_DEL_DOCENTE],
-//       ['METODOLOGÍA DE CAPACITACIÓN', ficha.METODOLOGIA],
-//       ...etiquetas.map((e: any) => [e.NOMBRE.toUpperCase(), e.DATO])
-//     ];
+//     // Normalizar texto
+//     const normalizedText = text.replace(/\s*\n\s*/g, ' ').trim();
+//     const paragraphs = normalizedText.split(/\n{2,}/);
 
-//     autoTable(doc, {
-//       startY: 30,
-//       body: rows,
-//       theme: 'grid',
-//       styles: {
-//         fontSize: 10,
-//         font: 'helvetica',
-//         cellPadding: 5,
-
-//         valign: 'top',
-//         textColor: [0, 0, 0],
-//         lineColor: [0, 0, 0],
-//         lineWidth: 0.8,
-//         overflow: 'linebreak'
-//       },
-//       didParseCell: (data) => {
-//         if (data.row.index === 7 && data.column.index === 0) {
-//           data.cell.styles.fontSize = 6;
-//         }
-//       },
-//       columnStyles: {
-//         0: {
-//           fontStyle: 'bold',
-//           fillColor: [180, 180, 180],
-//           halign: 'center',
-//           valign: 'middle',
-//         },
-//         1: {
-//           fontStyle: 'normal',
-//           halign: 'left',
-//           valign: 'top',
-//           cellWidth: 460,
-//         }
-//       },
-//       margin: { top: 30, left: 30, right: 30 },
-
-
-//     });
-//   }
-
-//   FichaTecnicaTipoRegular(doc: jsPDF, data: CursoPdfData): void {
-//     const ficha = data.FICHA_TECNICA;
-//     const marginLeft = 50;
-//     const marginRight = 50;
-//     const maxWidth = doc.internal.pageSize.getWidth() - marginLeft - marginRight;
-
-//     // Constantes optimizadas
-//     const LINE_HEIGHT = 14;
-//     const SECTION_SPACING = 20;
-//     const TITLE_MARGIN_BOTTOM = 12;
-//     const PARAGRAPH_LINE_SPACING = 8;
-//     const HEADER_LOGO_SIZE = { width: 100, height: 50 };
-//     const HEADER_TITLE_MARGIN_BOTTOM = 15;
-//     const BULLET_POINT_INDENT = 15;
-//     const TEXT_INDENT = 25;
-//     const COLON_SPACING = 14;
-//     const BOX_PADDING = 15;
-//     const BOX_RADIUS = 8;
-//     const BULLET_SPACING = 5;
-//     const LONG_TEXT_INDENT = 10;
-//     const MIN_BOX_HEIGHT = 40; // Altura mínima del recuadro
-
-//     const LOGO_URL = 'https://res.cloudinary.com/da8iqyp0e/image/upload/v1753208164/Imagen2_emcpzp.jpg';
-
-//     const drawLogo = (x: number, y: number, width = 80, height = 40) => {
-//       doc.addImage(LOGO_URL, 'JPEG', x, y, width, height);
-//     };
-
-//     const drawEncabezado = (isFirstPage: boolean = false) => {
-//       drawLogo(marginLeft, 20, HEADER_LOGO_SIZE.width, HEADER_LOGO_SIZE.height);
-
-//       if (!isFirstPage) {
-//         doc.setFont('helvetica', 'bold');
-//         doc.setFontSize(16);
-//         doc.setTextColor(40, 40, 40);
-//         doc.text('FICHA TÉCNICA DE CURSO REGULAR', doc.internal.pageSize.getWidth() / 2, 60, { align: 'center' });
-//       }
-
-//       doc.setDrawColor(100, 100, 100);
-//       doc.setLineWidth(0.5);
-//       return 65 + HEADER_TITLE_MARGIN_BOTTOM + 10;
-//     };
-
-//     const drawRoundedRect = (x: number, y: number, width: number, height: number, radius: number) => {
-//       doc.setDrawColor(0, 0, 0);
-//       doc.setFillColor(255, 255, 255);
-//       doc.roundedRect(x, y, width, height, radius, radius, 'FD');
-//     };
-
-//     const calculateContentHeight = (content: string, isBoxed: boolean): number => {
-//       const availableWidth = isBoxed ? maxWidth - 2 * BOX_PADDING : maxWidth - TEXT_INDENT;
-//       let totalHeight = 0;
-//       const lines = content.split('\n');
-
-//       lines.forEach(line => {
-//         const trimmedLine = line.trim();
-
-//         if (trimmedLine.startsWith('-')) {
-//           const bulletText = trimmedLine.substring(1);
-//           const textLines = doc.splitTextToSize(bulletText, availableWidth - BULLET_POINT_INDENT);
-//           totalHeight += (textLines.length * LINE_HEIGHT) + BULLET_SPACING;
-//         }
-//         else if (trimmedLine.endsWith(':')) {
-//           totalHeight += LINE_HEIGHT + COLON_SPACING;
-//         }
-//         else if (trimmedLine) {
-//           const textLines = doc.splitTextToSize(trimmedLine, availableWidth);
-//           totalHeight += (textLines.length * LINE_HEIGHT) + PARAGRAPH_LINE_SPACING;
-//         }
-//         else {
-//           totalHeight += LINE_HEIGHT;
-//         }
-//       });
-
-//       return Math.max(totalHeight, MIN_BOX_HEIGHT);
-//     };
-
-//     const drawBulletItem = (text: string, x: number, y: number, availableWidth: number): number => {
-//       const bulletText = text.substring(1).trim();
-//       const lines = doc.splitTextToSize(bulletText, availableWidth - BULLET_POINT_INDENT);
-
-//       doc.setFont('helvetica', 'bold');
-//       doc.text('•', x, y + 2);
-
-//       lines.forEach((line: string | string[], index: number) => {
-//         const lineY = y + (index * LINE_HEIGHT);
-//         doc.text(line, x + BULLET_POINT_INDENT, lineY, {
-//           maxWidth: availableWidth - BULLET_POINT_INDENT,
-//           lineHeightFactor: 1.8
-//         });
-
-//         if (index > 0) {
-//           doc.text('→', x + LONG_TEXT_INDENT, lineY + 2);
-//         }
-//       });
-
-//       doc.setFont('helvetica', 'normal');
-//       return lines.length;
-//     };
-
-//     const drawSection = (title: string, content: string, yStart: number): number => {
-//       let y = yStart;
-
-//       // Encabezado de sección
-//       const sectionHeaderHeight = 42;
-//       const sectionImageHeight = 24;
-//       const sectionImageWidth = doc.internal.pageSize.getWidth() - marginLeft - marginRight;
-
-//       // Fondo de sección
-//       const gradientImageBase64 = 'https://res.cloudinary.com/da8iqyp0e/image/upload/v1753227103/finalgrad_xoy34s.png';
-//       doc.addImage(gradientImageBase64, 'PNG', marginLeft, y, sectionImageWidth, sectionImageHeight);
-
-//       // Título
-//       doc.setFont('helvetica', 'bold');
-//       doc.setFontSize(13);
-//       doc.setTextColor(0, 0, 0);
-//       doc.text(title, marginLeft + 5, y + 12);
-
-//       y += sectionHeaderHeight;
-
-//       // Configuración común de texto
-//       doc.setFont('helvetica', 'normal');
-//       doc.setFontSize(11);
-//       doc.setTextColor(25, 25, 25);
-//       doc.setLineHeightFactor(1.8);
-
-//       // Determinar si la sección va en recuadro
-//       const boxedSections = ['OBJETIVO DEL CURSO', 'PERFIL DE EGRESO'];
-//       const isBoxed = boxedSections.includes(title);
-
-//       // Calcular altura del contenido para el recuadro
-//       let contentHeight = 0;
-//       if (isBoxed) {
-//         contentHeight = calculateContentHeight(content, true);
-//         drawRoundedRect(marginLeft, y, maxWidth, contentHeight + 2 * BOX_PADDING, BOX_RADIUS);
-//       }
-
-//       let currentY = isBoxed ? y + BOX_PADDING : y;
-//       const availableWidth = isBoxed ? maxWidth - 2 * BOX_PADDING : maxWidth - TEXT_INDENT;
-//       const startX = isBoxed ? marginLeft + BOX_PADDING : marginLeft + TEXT_INDENT;
-
-//       // Procesar cada línea del contenido
-//       content.split('\n').forEach(line => {
-//         const trimmedLine = line.trim();
-
-//         if (trimmedLine.startsWith('-')) {
-//           const linesCount = drawBulletItem(trimmedLine, startX, currentY, availableWidth);
-//           currentY += (linesCount * LINE_HEIGHT) + BULLET_SPACING;
-//         }
-//         else if (trimmedLine.endsWith(':')) {
-//           doc.setFont('helvetica', 'bold');
-//           doc.text(trimmedLine, startX, currentY);
-//           currentY += LINE_HEIGHT + COLON_SPACING;
-//           doc.setFont('helvetica', 'normal');
-//         }
-//         else if (trimmedLine) {
-//           const lines = doc.splitTextToSize(trimmedLine, availableWidth);
-//           lines.forEach((lineText: string | string[], i: number) => {
-//             doc.text(lineText, startX, currentY + (i * LINE_HEIGHT), {
-//               maxWidth: availableWidth,
-//               lineHeightFactor: 1.8
-//             });
+//     paragraphs.forEach((paragraph: string) => {
+//       const cleanParagraph = paragraph.replace(/\s+/g, ' ').trim();
+      
+//       if (type === 'list' || type === 'bibliography') {
+//         // Procesar elementos de lista
+//         const items = cleanParagraph.split(/\n(?=\s*[-•♦]|\d+\.)/); // Detecta viñetas o números
+//         items.forEach((item, index) => {
+//           if (item.trim() === '') return;
+          
+//           const bullet = type === 'bibliography' ? '' : (item.match(/^(\s*[-•♦]|\d+\.)/)?.[0] || '• ');
+//           const itemText = type === 'bibliography' ? item : item.replace(/^(\s*[-•♦]|\d+\.)/, '').trim();
+          
+//           const lines = doc.splitTextToSize(bullet + itemText, maxWidth - (type === 'bibliography' ? 0 : 10));
+          
+//           lines.forEach((line: string, lineIndex: number) => {
+//             checkPageBreak(lineHeight);
+//             const x = marginSide + (lineIndex === 0 ? 0 : 10);
+//             doc.text(line, x, y, { align: type === 'bibliography' ? 'justify' : 'left' });
+//             y += lineHeight;
 //           });
-//           currentY += (lines.length * LINE_HEIGHT) + PARAGRAPH_LINE_SPACING;
-//         }
-//         else {
-//           currentY += LINE_HEIGHT;
-//         }
-//       });
-
-//       return isBoxed
-//         ? y + contentHeight + 2 * BOX_PADDING + SECTION_SPACING
-//         : currentY + SECTION_SPACING;
-//     };
-
-//     // === Generación del documento ===
-//     doc.addPage('l');
-//     let y = drawEncabezado(true) + 20;
-//     y = drawSection('PRESENTACIÓN', data.presentacion, y);
-//     y = drawSection('OBJETIVO DE LA ESPECIALIDAD', data.objetivo_especialidad, y);
-
-//     doc.addPage('l');
-//     y = drawEncabezado() + 20;
-//     y = drawSection('OBJETIVO DEL CURSO', ficha.OBJETIVO, y);
-
-
-//     // === Título "DEL ALUMNO" centrado con líneas decorativas ===
-//     const alumnoTitle = 'DEL ALUMNO';
-//     doc.setFont('helvetica', 'bold');
-//     doc.setFontSize(14);
-//     doc.setTextColor(0, 0, 0); // Verde oscuro
-
-//     const centerX = doc.internal.pageSize.getWidth() / 2;
-//     doc.text(alumnoTitle, centerX, y, { align: 'center' });
-
-//     // Medir el ancho del texto
-//     const textWidth = doc.getTextWidth(alumnoTitle);
-
-//     // Líneas debajo del texto
-//     const lineY = y + 4;
-//     const lineGap = 4;
-
-//     // Línea gris oscuro debajo del texto
-//     doc.setDrawColor(90, 90, 90);
-//     doc.setLineWidth(0.7);
-//     doc.line(centerX - textWidth / 2, lineY, centerX + textWidth / 2, lineY);
-
-//     // Segunda línea más abajo
-//     doc.line(centerX - textWidth / 2, lineY + lineGap, centerX + textWidth / 2, lineY + lineGap);
-
-//     // Incrementar Y para evitar solapamientos
-//     y += 20;
-
-//     y = drawSection('PERFIL DE INGRESO', ficha.PERFIL_INGRESO, y);
-
-//     doc.addPage('l');
-//     y = drawEncabezado() + 20;
-//     drawSection('PERFIL DE EGRESO', ficha.PERFIL_EGRESO, y);
-//   }
-//   FichaTecnicaVirtual(doc: jsPDF, data: CursoPdfData): void {
-//     const ficha = data.FICHA_TECNICA;
-//     const etiquetas = (ficha?.ETIQUETAS || []).filter((e: any) => e.NOMBRE.toUpperCase() !== 'BIBLIOGRAFÍA');
-
-//     // const etiquetas = ficha?.ETIQUETAS || [];
-//     doc.addPage();
-//     doc.setFont('helvetica', 'normal');
-//     console.log("ficha", ficha)
-//     const rows: any[] = [
-//       ['OBJETIVO DEL CURSO', ficha.OBJETIVO],
-//       ['PERFIL DE INGRESO', ficha.PERFIL_INGRESO],
-//       ['PERFIL DE EGRESO', ficha.PERFIL_EGRESO],
-//       ['PERFIL DEL INSTRUCTOR / DOCENTE', ficha.PERFIL_DEL_DOCENTE],
-//       ['METODOLOGÍA DE CAPACITACIÓN', ficha.METODOLOGIA],
-//       ...etiquetas.map((e: any) => [e.NOMBRE.toUpperCase(), e.DATO])
-//     ];
-
-//     autoTable(doc, {
-//       startY: 30,
-//       body: rows,
-//       theme: 'grid',
-//       styles: {
-//         fontSize: 10,
-//         font: 'helvetica',
-//         cellPadding: 5,
-
-//         valign: 'top',
-//         textColor: [0, 0, 0],
-//         lineColor: [0, 0, 0],
-//         lineWidth: 0.8,
-//         overflow: 'linebreak'
-//       },
-//       didParseCell: (data) => {
-//         if (data.row.index === 6 && data.column.index === 0) {
-//           data.cell.styles.fontSize = 8;
-//         }
-//       },
-//       columnStyles: {
-//         0: {
-//           fontStyle: 'bold',
-//           fillColor: [180, 180, 180],
-//           halign: 'center',
-//           valign: 'middle',
-//         },
-//         1: {
-//           fontStyle: 'normal',
-//           halign: 'left',
-//           valign: 'top',
-//           cellWidth: 460,
-//         }
-//       },
-//       margin: { top: 30, left: 30, right: 30 },
-
-
-//     });
-//   }
-
-
-
-
-
-
-
-
-
-//   agregarContenidoProgramatico(doc: jsPDF, data: CursoPdfData): void {
-//     const contenidoProgramatico = data.CONTENIDOPROGRAMATICO;
-
-//     doc.addPage();
-//     doc.setFont('helvetica', 'bold');
-//     doc.setFontSize(12);
-//     doc.text('CONTENIDO PROGRAMÁTICO', doc.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
-
-//     if (!contenidoProgramatico || contenidoProgramatico.length === 0) {
-//       doc.setFont('helvetica', 'normal');
-//       doc.text('No se ha definido contenido programático para este curso.', 15, 40);
-//       return;
-//     }
-//     const encabezados = data.TIPO_CURSO_ID === 2
-//       ? [
-//         ['NO. Y NOMBRE DEL TEMA', 'TIEMPO (HRS)', 'CRITERIOS DE EVALUACIÓN', 'EVIDENCIAS', 'ACTIVIDADES DE ENSEÑANZA-APRENDIZAJE']
-//       ]
-//       : [
-//         ['NO. Y NOMBRE DEL TEMA', 'TIEMPO (HRS)', 'COMPETENCIAS A DESARROLLAR', 'INSTRUMENTOS DE EVALUACIÓN', 'ACTIVIDADES DE ENSEÑANZA-APRENDIZAJE']
-//       ];
-//     const body = contenidoProgramatico.map((tema: any) => [
-//       (tema.tema_nombre || '').replace(/\n/g, '\n'),
-//       tema.tiempo ? tema.tiempo.toString() : '0',
-//       (tema.competencias || '').replace(/\n/g, '\n'),
-//       (tema.evaluacion || '').replace(/\n/g, '\n'),
-//       (tema.actividades || '')
-//     ]);
-
-//     const totalHoras = contenidoProgramatico
-//       .reduce((total: number, tema: any) => total + (parseInt(tema.tiempo) || 0), 0)
-//       .toString();
-
-//     if (data.TIPO_CURSO_ID === 2) {
-//       body.push(['Total horas', totalHoras, '', '', '']);
-//     } else {
-//       body.push(['Evaluacion', '2', '', '', '']);
-//       body.push(['Total horas', totalHoras, '', '', '']);
-//     }
-
-
-//     const pageWidth = doc.internal.pageSize.getWidth();
-//     const margin = 15;
-//     const availableWidth = pageWidth - margin * 2;
-
-//     autoTable(doc, {
-//       startY: 30,
-//       head: encabezados,
-//       body,
-//       theme: 'grid',
-//       showHead: 'everyPage', // Mostrar encabezados en cada página
-//       rowPageBreak: 'avoid', // Evitar dividir filas entre páginas
-//       styles: {
-//         fontSize: 10,
-//         font: 'helvetica',
-//         cellPadding: 3,
-//         // minCellHeight: 10, // Altura mínima de celda
-
-//         valign: 'top',
-//         overflow: 'linebreak',
-//         textColor: [0, 0, 0],
-//         lineColor: [0, 0, 0],
-//         lineWidth: 0.5
-//       },
-//       headStyles: {
-//         halign: 'center',
-//         fillColor: [200, 200, 200],
-//         textColor: [0, 0, 0],
-//         fontStyle: 'bold'
-//       },
-//       columnStyles: {
-//         0: { cellWidth: availableWidth * 0.25 },
-//         1: { cellWidth: availableWidth * 0.10, halign: 'center' },
-//         2: { cellWidth: availableWidth * 0.20 },
-//         3: { cellWidth: availableWidth * 0.20 },
-//         4: { cellWidth: availableWidth * 0.25 }
-//       },
-//       margin: { top: 50, left: margin, right: margin },
-//       tableWidth: 'auto',
-//       didDrawCell: (data) => {
-//         // Aplicar estilo bold a las filas adicionales
-//         if (data.row.index === body.length - 1 || data.row.index === body.length - 2) {
-//           doc.setFont('helvetica', 'bold');
-//         }
+          
+//           if (index < items.length - 1) {
+//             y += lineHeight * 0.5; // Espacio reducido entre items
+//           }
+//         });
+//       } else {
+//         // Procesar párrafos normales
+//         const lines = doc.splitTextToSize(cleanParagraph, maxWidth - (type === 'indented' ? firstLineIndent : 0));
+        
+//         lines.forEach((line: string, lineIndex: number) => {
+//           checkPageBreak(lineHeight);
+//           const x = marginSide + (lineIndex === 0 && type === 'indented' ? firstLineIndent : 0);
+//           doc.text(line, x, y, { align: 'justify' });
+//           y += lineHeight;
+//         });
 //       }
+      
+//       y += paragraphSpacing;
 //     });
-//   }
+//   };
 
+//   // Crear página inicial
+//   doc.addPage('landscape');
+//   doc.addImage(img, 'PNG', 0, 0, pageWidth, pageHeight);
 
+//   // Configuración de secciones
+//   const sections: SectionConfig[] = [
+//     { 
+//       title: 'JUSTIFICACIÓN', 
+//       content: data.objetivo_especialidad,
+//       type: 'paragraph'
+//     },
+//     { 
+//       title: 'PRESENTACIÓN', 
+//       content: data.presentacion,
+//       type: 'paragraph'
+//     },
+//     { 
+//       title: 'OBJETIVO GENERAL DEL CURSO', 
+//       content: ficha.OBJETIVO,
+//       type: 'paragraph'
+//     },
+//     { 
+//       title: 'PERFIL DE INGRESO', 
+//       content: ficha.PERFIL_INGRESO,
+//       type: 'paragraph'
+//     },
+//     { 
+//       title: 'PERFIL DE EGRESO', 
+//       content: ficha.PERFIL_EGRESO,
+//       type: 'paragraph'
+//     },
+//     { 
+//       title: 'PERFIL DEL INSTRUCTOR / DOCENTE', 
+//       content: ficha.PERFIL_DEL_DOCENTE,
+//       type: 'paragraph'
+//     },
+//     { 
+//       title: 'METODOLOGÍA DE CAPACITACIÓN', 
+//       content: ficha.METODOLOGIA,
+//       type: 'paragraph'
+//     },
+//     // Para etiquetas, puedes especificar el tipo según el contenido
+//     ...etiquetas.map((e: any) => ({
+//       title: e.NOMBRE.toUpperCase(),
+//       content: e.DATO,
+//       type: e.NOMBRE.includes('BIBLIOGRAFÍA') ? 'bibliography' as 'bibliography'
+//         : e.NOMBRE.includes('CONTENIDO') ? 'list' as 'list'
+//         : 'paragraph' as 'paragraph'
+//     }))
+//   ];
 
+//   // Procesar cada sección
+//   sections.forEach(({ title, content, type, lineHeight, paragraphSpacing, firstLineIndent }) => {
+//     checkPageBreak(25);
 
-
-
-//   agregarTablaMateriales(doc: jsPDF, data: CursoPdfData): void {
-//     const materiales = data.MATERIALES || [];
-//     if (materiales.length === 0) return;
-
-//     doc.addPage();
-//     doc.setFontSize(12);
+//     // Título de la sección
 //     doc.setFont('helvetica', 'bold');
-//     doc.text('MATERIAL', doc.internal.pageSize.getWidth() / 2, 40, { align: 'center' });
+//     doc.setFontSize(13);
+//     doc.text(title, pageWidth / 2, y, { align: 'center' });
+//     y += 10;
 
-//     autoTable(doc, {
-//       startY: 50,
-//       head: [
-//         [
-//           { content: 'DESCRIPCIÓN', rowSpan: 2, styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
-//           { content: 'UNIDAD DE MEDIDA', rowSpan: 2, styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
-//           { content: 'CANTIDAD POR NÚMERO DE LAS Y/O LOS ALUMNOS', colSpan: 3, styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
-//         ],
-//         [
-//           { content: '10', styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
-//           { content: '15', styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
-//           { content: '20', styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } }
-//         ]
-//       ]
-//       ,
-
-//       body: materiales.map((m: any) => [
-//         m.material_descripcion,
-//         m.material_unidad_de_medida,
-//         m.material_cantidad_10 !== undefined ? String(m.material_cantidad_10) : '',
-//         m.material_cantidad_15 !== undefined ? String(m.material_cantidad_15) : '',
-//         m.material_cantidad_20 !== undefined ? String(m.material_cantidad_20) : ''
-//       ]),
-//       styles: {
-//         fontSize: 9,
-//         cellPadding: 3,
-//         lineColor: [0, 0, 0],
-//         lineWidth: 0.5,
-//       },
-//       headStyles: {
-//         textColor: [0, 0, 0],
-//         fontStyle: 'bold',
-//         fillColor: [200, 200, 200],
-//         halign: 'center',
-//         valign: 'middle',
-//         lineWidth: 0.5
-//       },
-//       bodyStyles: {
-//         halign: 'center',
-//         valign: 'middle',
-//         lineWidth: 0.5, fontStyle: 'bold'
-//       },
-//       columnStyles: {
-//         0: { halign: 'left' }
-//       },
-//       theme: 'grid'
-//     });
-//     if (data.TIPO_CURSO_ID == 3) {
-//       const finalY = (doc as any).lastAutoTable.finalY || 50;
-//       this.agregarNotasMateriales(doc, data, finalY + 15);
-//     }
-
-
-//   }
-//   agregarNotasMateriales(doc: jsPDF, data: CursoPdfData, startY: number): void {
-//     const notaMateriales = data.NOTA_MATERIALES || data.NOTA_MATERIALES;
-//     if (!notaMateriales) return;
-
-//     // Asegurarse de que el texto tenga el formato correcto
-//     const textoFormateado = notaMateriales.startsWith('*') ? notaMateriales : `*${notaMateriales}`;
-
-//     // Dividir en líneas
-//     const lineas = textoFormateado.split('\n');
-
-//     // Configuración de estilo
-//     doc.setFontSize(9);
+//     // Contenido de la sección
 //     doc.setFont('helvetica', 'normal');
-
-//     // Ajustes de posición:
-//     const margenIzquierdo = 25; // Aumentado a 25 para mayor margen izquierdo (más a la derecha)
-//     const espacioEntreLineas = 8; // Aumentado a 8 para más espacio entre líneas
-
-//     // Dibujar cada línea con sangría adicional si empieza con asterisco
-//     lineas.forEach((linea, index) => {
-//       const posicionX = linea.startsWith('*') ? margenIzquierdo : margenIzquierdo + 5;
-//       doc.text(linea, posicionX, startY + (index * espacioEntreLineas));
-//     });
-//   }
-
-
-
-//   agregarTablaEquipamiento(doc: jsPDF, data: CursoPdfData): void {
-//     const equipos = data.EQUIPAMIENTO || [];
-//     if (equipos.length === 0) return;
-
-//     doc.addPage();
-//     doc.setFontSize(12);
-//     doc.setFont('helvetica', 'bold');
-//     doc.text('EQUIPAMIENTO', doc.internal.pageSize.getWidth() / 2, 40, { align: 'center' });
-
-//     autoTable(doc, {
-//       startY: 50,
-//       head: [
-//         [
-//           { content: 'DESCRIPCIÓN', rowSpan: 2, styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
-//           { content: 'UNIDAD DE MEDIDA', rowSpan: 2, styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
-//           { content: 'CANTIDAD POR NÚMERO DE LAS Y/O LOS ALUMNOS', colSpan: 3, styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
-//         ],
-//         [
-//           { content: '10', styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
-//           { content: '15', styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } },
-//           { content: '20', styles: { halign: 'center', valign: 'middle', fillColor: [200, 200, 200], fontStyle: 'bold' } }
-//         ]
-//       ],
-//       body: equipos.map((e: any) => {
-//         // Función para extraer el valor numérico aunque venga como objeto
-//         const getCantidad = (obj: any): string => {
-//           if (typeof obj === 'number') return obj.toString();
-//           if (typeof obj === 'string') return obj;
-//           if (obj && obj.value !== undefined) return obj.value.toString();
-//           return '';
-//         };
-
-//         return [
-//           e.equipamiento_descripcion,
-//           e.equipamiento_unidad_de_medida,
-//           getCantidad(e.equipamiento_cantidad_10),
-//           getCantidad(e.equipamiento_cantidad_15),
-//           getCantidad(e.equipamiento_cantidad_20)
-//         ];
-//       }),
-//       styles: {
-//         fontSize: 9,
-//         cellPadding: 3,
-//         lineColor: [0, 0, 0],  // Bordes negros
-//         lineWidth: 0.5,        // Grosor del borde
-//       },
-//       headStyles: {
-//         textColor: [0, 0, 0],
-//         fontStyle: 'bold',
-//         fillColor: [200, 200, 200],
-//         halign: 'center',
-//         valign: 'middle',
-//         lineWidth: 0.5
-//       },
-//       bodyStyles: {
-//         halign: 'center',
-//         valign: 'middle',
-//         lineWidth: 0.5, fontStyle: 'bold'
-//       },
-//       columnStyles: {
-//         0: { halign: 'left' } // Descripción alineada a la izquierda
-//       },
-//       theme: 'grid'
-//     });
-//   }
-
-
-
-
-
-
-
-//   formatDate(fechaIso: string): string {
-//     const date = new Date(fechaIso);
-//     const day = String(date.getDate()).padStart(2, '0');
-//     const month = String(date.getMonth() + 1).padStart(2, '0');
-//     const year = date.getFullYear();
-//     return `${day}/${month}/${year}`;
-//   }
-
-
-
-
-
-//   drawFooter(doc: jsPDF, data: CursoPdfData): void {
-//     console.log("data", data);
-//     const pageNumber = doc.getCurrentPageInfo().pageNumber;
-//     const totalPages = doc.getNumberOfPages();
-//     if (pageNumber <= 1) return;
-
-//     const pageWidth = doc.internal.pageSize.width;
-//     const pageHeight = doc.internal.pageSize.height;
-//     const footerY = pageHeight - 40;
-
-//     const marginX = 20;
-//     const tableWidth = pageWidth - marginX * 2;
-//     const topCellHeight = 12;
-//     const bottomCellHeight = 24; // 🔹 Más alto para contener el nuevo espaciado
-//     // const bottomCellHeight = 28; // 🔹 Más alto para contener el nuevo espaciado
-
-//     const colWidths = [
-//       tableWidth * 0.34,
-//       tableWidth * 0.19,
-//       tableWidth * 0.12,
-//       tableWidth * 0.23,
-//       tableWidth * 0.12
-//     ];
-//     const fields = [
-//       {
-//         title: 'Revisó y Aprobó:',
-//         value: data.reviso_aprobo_texto || 'Coordinación de Gestión de la Calidad'
-//       },
-//       {
-//         title: 'Código:',
-//         value: data.codigo_formato || 'DA-PP-CAE-01'
-//       },
-//       {
-//         title: 'Versión No:',
-//         value: data.version_formato?.toString() || '1'
-//       },
-//       {
-//         title: 'Fecha de Emisión:',
-//         value: data.fecha_emision_formato
-//           ? this.formatDate(data.fecha_emision_formato)
-//           : '01/01/2024'
-//       },
-//       {
-//         title: 'Hoja:',
-//         value: `${pageNumber} de ${totalPages}`
-//       }
-//     ];
-
-
-//     // 🔹 Texto superior en negro
-//     const topText = doc.splitTextToSize(
-//       'El usuario es responsable de consultar e imprimir la versión vigente de este formato',
-//       tableWidth - 40
-//     );
-//     const topTextY = footerY + (topCellHeight - 4) / 2 + 4;
-
-//     doc.setDrawColor(150);
-//     doc.setFontSize(8);
-//     doc.setFont('helvetica', 'normal');
-//     doc.setTextColor(0);
-//     doc.rect(marginX, footerY, tableWidth, topCellHeight);
-//     doc.text(topText, pageWidth / 2, topTextY, {
-//       align: 'center',
-//       lineHeightFactor: 1.5
+//     doc.setFontSize(11);
+    
+//     processContent(content, {
+//       type,
+//       lineHeight,
+//       paragraphSpacing,
+//       firstLineIndent
 //     });
 
-//     // 🔹 Segunda fila
-//     const secondRowY = footerY + topCellHeight;
-//     let currentX = marginX;
-
-//     fields.forEach((field, i) => {
-//       const colWidth = colWidths[i];
-//       const padding = 3;
-//       const textWidth = colWidth - 2 * padding;
-//       const lineHeight = 3;
-//       const lineGap = 3; // 🔸 espacio entre título y valor
-//       const lineHeightFactor = 2.0; // 🔸 mayor separación entre líneas
-
-//       doc.rect(currentX, secondRowY, colWidth, bottomCellHeight);
-
-//       const titleLines = doc.splitTextToSize(field.title, textWidth);
-//       const valueLines = doc.splitTextToSize(field.value, textWidth);
-
-//       const totalHeight =
-//         titleLines.length * lineHeight * lineHeightFactor +
-//         valueLines.length * lineHeight * lineHeightFactor +
-//         lineGap;
-
-//       const startY = secondRowY + (bottomCellHeight - totalHeight) / 2 + lineHeight;
-
-//       // Título
-//       doc.setFont('helvetica', 'bold');
-//       doc.setTextColor(0);
-//       doc.text(titleLines, currentX + colWidth / 2, startY, {
-//         align: 'center',
-//         lineHeightFactor: lineHeightFactor
-//       });
-
-//       // Valor
-//       const valueY = startY + titleLines.length * lineHeight * lineHeightFactor + lineGap;
-//       doc.setFont('helvetica', 'normal');
-//       doc.text(valueLines, currentX + colWidth / 2, valueY, {
-//         align: 'center',
-//         lineHeightFactor: lineHeightFactor
-//       });
-
-//       currentX += colWidth;
-//     });
-//   }
-
-
-
-
-//   finalize(doc: jsPDF) {
-//     this.finalizeCallback(doc);
-//   }
+//     y += 10; // Espacio entre secciones
+//   });
 // }
+//   // FichaTecnicaSEP(doc: jsPDF, data: CursoPdfData, img: HTMLImageElement): void {
+//   //   const ficha = data.FICHA_TECNICA;
+//   //   const etiquetas = ficha?.ETIQUETAS || [];
+
+//   //   doc.setFont('helvetica', 'normal');
+
+//   //   const pageWidth = doc.internal.pageSize.getWidth();
+//   //   const pageHeight = doc.internal.pageSize.getHeight();
+//   //   const margin = 40;
+//   //   const maxWidth = pageWidth - margin * 2;
+//   //   const lineHeight = 7;
+//   //   const paragraphSpacing = 10;
+//   //   const firstLineIndent = 12;
+//   //   let y = margin;
+
+//   //   const checkPageBreak = (requiredSpace: number) => {
+//   //     if (y + requiredSpace > pageHeight - margin) {
+//   //       doc.addPage();
+//   //       doc.addImage(img, 'PNG', 0, 0, pageWidth, pageHeight);
+//   //       y = margin;
+//   //     }
+//   //   };
+
+//   //   doc.addPage();
+//   //   doc.addImage(img, 'PNG', 0, 0, pageWidth, pageHeight);
+
+//   //   const content = [
+//   //     { titulo: 'JUSTIFICACIÓN', texto: data.objetivo_especialidad },
+//   //     { titulo: 'PRESENTACIÓN', texto: data.presentacion},
+//   //     { titulo: 'OBJETIVO GENERAL DEL CURSO', texto: ficha.OBJETIVO },
+//   //     { titulo: 'PERFIL DE INGRESO', texto: ficha.PERFIL_INGRESO },
+//   //     { titulo: 'PERFIL DE EGRESO', texto: ficha.PERFIL_EGRESO },
+//   //     { titulo: 'PERFIL DEL INSTRUCTOR / DOCENTE', texto: ficha.PERFIL_DEL_DOCENTE },
+//   //     { titulo: 'METODOLOGÍA DE CAPACITACIÓN', texto: ficha.METODOLOGIA },
+//   //     ...etiquetas.map((e: any) => ({
+//   //       titulo: e.NOMBRE.toUpperCase(),
+//   //       texto: e.DATO
+//   //     }))
+//   //   ];
+
+//   //   content.forEach(({ titulo, texto }) => {
+//   //     checkPageBreak(30);
+
+//   //     // Título centrado
+//   //     doc.setFont('helvetica', 'bold');
+//   //     doc.setFontSize(13);
+//   //     doc.text(titulo, pageWidth / 2, y, { align: 'center' });
+//   //     y += 15;
+
+//   //     doc.setFont('helvetica', 'normal');
+//   //     doc.setFontSize(11);
+
+//   //     const paragraphs = texto.split('\n').filter((p: string) => p.trim() !== '');
+//   //     paragraphs.forEach((paragraph: string) => {
+//   //       const lines = doc.splitTextToSize(paragraph.trim(), maxWidth - firstLineIndent);
+
+//   //       // Primera línea con sangría
+//   //       if (lines.length > 0) {
+//   //         checkPageBreak(lineHeight);
+//   //         doc.text(lines[0], margin + firstLineIndent, y, { align: 'justify' });
+//   //         y += lineHeight;
+
+//   //         // Líneas subsiguientes sin sangría
+//   //         for (let i = 1; i < lines.length; i++) {
+//   //           checkPageBreak(lineHeight);
+//   //           doc.text(lines[i], margin, y, { align: 'justify' });
+//   //           y += lineHeight;
+//   //         }
+//   //       }
+
+//   //       y += paragraphSpacing;
+//   //     });
+
+//   //     y += 15; // Espacio entre secciones
+//   //   });
+//   // }
+
+//   // FichaTecnicaSEP(doc: jsPDF, data: CursoPdfData, img: HTMLImageElement): void {
+//   //   const ficha = data.FICHA_TECNICA;
+//   //   const etiquetas = ficha?.ETIQUETAS || [];
+
+//   //   // Configuración tipográfica profesional
+//   //   doc.setFont('helvetica', 'normal');
+
+//   //   // Dimensiones y márgenes
+//   //   const pageWidth = doc.internal.pageSize.getWidth();
+//   //   const pageHeight = doc.internal.pageSize.getHeight();
+//   //   const margin = 50;
+//   //   const maxWidth = pageWidth - margin * 2;
+//   //   let y = margin;
+
+//   //   // Control de paginación
+//   //   const checkPageBreak = (requiredSpace: number) => {
+//   //     if (y + requiredSpace > pageHeight - margin) {
+//   //       doc.addPage();
+//   //       doc.addImage(img, 'PNG', 0, 0, pageWidth, pageHeight);
+//   //       y = margin;
+//   //     }
+//   //   };
+
+//   //   // Página inicial
+//   //   doc.addPage();
+//   //   doc.addImage(img, 'PNG', 0, 0, pageWidth, pageHeight);
+
+//   //   // Contenido
+//   //   const content = [
+//   //     { titulo: 'JUSTIFICACIÓN', texto: data.objetivo_especialidad },
+//   //     { titulo: 'PERFIL DE INGRESO', texto: ficha.PERFIL_INGRESO },
+//   //     { titulo: 'PERFIL DE EGRESO', texto: ficha.PERFIL_EGRESO },
+//   //     { titulo: 'PERFIL DEL INSTRUCTOR / DOCENTE', texto: ficha.PERFIL_DEL_DOCENTE },
+//   //     { titulo: 'METODOLOGÍA DE CAPACITACIÓN', texto: ficha.METODOLOGIA },
+//   //     ...etiquetas.map((e: any) => ({
+//   //       titulo: e.NOMBRE.toUpperCase(),
+//   //       texto: e.DATO
+//   //     }))
+//   //   ];
+
+//   //   // Procesamiento de contenido con formato mejorado
+//   //   content.forEach(({ titulo, texto }) => {
+//   //     checkPageBreak(30);
+
+//   //     // Estilo para títulos
+//   //     doc.setFont('helvetica', 'bold');
+//   //     doc.setFontSize(14);
+//   //     doc.text(titulo, pageWidth / 2, y, { align: 'center' });
+//   //     y += 20;
+
+//   //     // Configuración avanzada de párrafos
+//   //     const lineHeight = 7;
+//   //     const paragraphSpacing = 12;
+//   //     const firstLineIndent = 15;
+//   //     const bulletIndent = 10;
+//   //     const bulletSpacing = 5;
+
+//   //     // Detectar si es una lista (bibliografía)
+//   //     const isList = titulo === 'BIBLIOGRAFÍA' || texto.includes('•') || texto.includes('\n•');
+
+//   //     if (isList) {
+//   //       // Formato especial para listas/bibliografía
+//   //       const items = texto.split(/\n•|\n \•|\n-\s|\n\*\s/).filter((item: string) => item.trim() !== '');
+
+//   //       items.forEach((item: string) => {
+//   //         checkPageBreak(lineHeight * 3);
+
+//   //         // Viñeta o bullet point
+//   //         doc.setFont('helvetica', 'bold');
+//   //         doc.text('•', margin + bulletIndent, y + lineHeight/2);
+
+//   //         // Texto del item
+//   //         doc.setFont('helvetica', 'normal');
+//   //         const lines = doc.splitTextToSize(item.trim(), maxWidth - bulletIndent - 5);
+
+//   //         lines.forEach((line: string, index: number) => {
+//   //           checkPageBreak(lineHeight);
+//   //           const xPos = index === 0 ? margin + bulletIndent + 5 : margin + bulletIndent + 5;
+//   //           doc.text(line, xPos, y, {
+//   //             align: 'left',
+//   //             maxWidth: maxWidth - bulletIndent - 5
+//   //           });
+//   //           y += lineHeight;
+//   //         });
+
+//   //         y += bulletSpacing;
+//   //       });
+//   //     } else {
+//   //       // Formato estándar para párrafos normales
+//   //       const paragraphs = texto.split('\n').filter((p: string) => p.trim() !== '');
+
+//   //       paragraphs.forEach((paragraph: string) => {
+//   //         const lines = doc.splitTextToSize(paragraph.trim(), maxWidth - 
