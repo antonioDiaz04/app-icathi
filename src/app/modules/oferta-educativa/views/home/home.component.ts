@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { PDFDocumentProxy } from 'ng2-pdf-viewer';
 import { environment } from '../../../../../environments/environment.prod';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import jsPDF from 'jspdf';
 
@@ -75,13 +75,27 @@ export class HomeComponent {
     { id: 5, nombre: 'Cursos Modalidad SEP', componente: 'curso5' }
   ];
   selectedCourseId: number = 0;
-  constructor(private http: HttpClient, private router: Router, private sanitizer: DomSanitizer) { }
+  constructor(private http: HttpClient, private router: Router, private sanitizer: DomSanitizer,  private route: ActivatedRoute
+) { }
 
   ngOnInit(): void {
     this.cargarCursos();
+    this.route.queryParams.subscribe(params => {
+      if (params['agregar'] === 'true') {
+        this.isAddingCourse =true;
+      }else{
+          this.isAddingCourse =false;      }
+    });
   }
 
 
+  cancelAddingCourse(): void {
+    this.isAddingCourse = false;
+  }
+
+  toggleAddingCourse(): void {
+    this.isAddingCourse = !this.isAddingCourse;
+  }
   verDetalles(curso: any): void {
     console.log('Curso seleccionado:', curso);
     this.isEditCourse = true;
@@ -153,28 +167,28 @@ export class HomeComponent {
 
 
 
-filtrarCursosBy() {
-  let filtered = this.cursos.filter(curso => {
-    // Convertir valores null a string vacío para evitar errores
-    const area = curso.area ? curso.area.toLowerCase() : '';
-    const especialidad = curso.especialidad ? curso.especialidad.toLowerCase() : '';
-    
-    return (
-      curso.id.toString().includes(this.filtroId.toLowerCase()) &&
-      (curso.activo ? 'activo' : 'inactivo').includes(this.filtroEstado.toLowerCase()) &&
-      area.includes(this.filtroArea.toLowerCase()) &&
-      especialidad.includes(this.filtroEspecialidad.toLowerCase()) &&
-      curso.clave.toLowerCase().includes(this.filtroClave.toLowerCase()) &&
-      curso.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()) &&
-      curso.tipo.toLowerCase().includes(this.filtroTipo.toLowerCase()) &&
-      curso.horas.toString().includes(this.filtroHoras.toLowerCase()) &&
-      curso.tipo_curso.toLowerCase().includes(this.filtroTipoCurso.toLowerCase())
-    );
-  });
+  filtrarCursosBy() {
+    let filtered = this.cursos.filter(curso => {
+      // Convertir valores null a string vacío para evitar errores
+      const area = curso.area ? curso.area.toLowerCase() : '';
+      const especialidad = curso.especialidad ? curso.especialidad.toLowerCase() : '';
 
-  this.calcularTotalPaginas(filtered);
-  return this.paginarDatos(filtered);
-}
+      return (
+        curso.id.toString().includes(this.filtroId.toLowerCase()) &&
+        (curso.activo ? 'activo' : 'inactivo').includes(this.filtroEstado.toLowerCase()) &&
+        area.includes(this.filtroArea.toLowerCase()) &&
+        especialidad.includes(this.filtroEspecialidad.toLowerCase()) &&
+        curso.clave.toLowerCase().includes(this.filtroClave.toLowerCase()) &&
+        curso.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()) &&
+        curso.tipo.toLowerCase().includes(this.filtroTipo.toLowerCase()) &&
+        curso.horas.toString().includes(this.filtroHoras.toLowerCase()) &&
+        curso.tipo_curso.toLowerCase().includes(this.filtroTipoCurso.toLowerCase())
+      );
+    });
+
+    this.calcularTotalPaginas(filtered);
+    return this.paginarDatos(filtered);
+  }
   // Función para paginar los datos
   paginarDatos(data: any[]): any[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
@@ -284,17 +298,11 @@ filtrarCursosBy() {
   }
 
 
-  cancelAddingCourse(): void {
-    this.isAddingCourse = false;
-  }
-
-  toggleAddingCourse(): void {
-    this.isAddingCourse = !this.isAddingCourse;
-  }
 
   regresar(): void {
     this.isAddingCourse = false;
     this.cargarCursos();
+      this.router.navigate(['/oferta-educativa/home'], { queryParams: { agregar: false } });
 
   }
   regresarEdit(): void {

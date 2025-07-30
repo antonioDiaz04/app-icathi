@@ -1,4 +1,4 @@
-import { Component, HostListener, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, HostListener, Inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../src/environments/environment.prod';
 import { Router } from '@angular/router';
@@ -9,6 +9,7 @@ import { PDFDocumentProxy } from 'ng2-pdf-viewer';
 
 import { DomSanitizer } from '@angular/platform-browser'; // Import DomSanitizer
 import { AuthService, UserData } from '../../shared/services/auth.service';
+import { HomeComponent } from './views/home/home.component';
 // import { PdfGenerateComponent } from '../../shared/components/pdf-generate/pdf-generate.component';
 
 
@@ -27,8 +28,9 @@ declare module "jspdf" {
 export class OfertaEducativaComponent {
 
   userData: UserData | null = null;
- sidebarVisible = true;
+  sidebarVisible = true;
   isMobileView = false;
+  // homeComponent = Inject(HomeComponent)
   constructor(private router: Router, private authService: AuthService) {
 
   }
@@ -74,7 +76,7 @@ export class OfertaEducativaComponent {
   }
   redirecto(route: string) {
     // this.router.navigate(['plantel/',route]);  // Navegar a la ruta proporcionada
-    this.router.navigate(['oferta-educativa/home']);  // Navegar a la ruta proporcionada
+    this.router.navigate(['/oferta-educativa/home']);  // Navegar a la ruta proporcionada
   }
   // oferta-educativa/home
 
@@ -95,6 +97,13 @@ export class OfertaEducativaComponent {
 
   toggleSidebar() {
     this.sidebarVisible = !this.sidebarVisible;
+  }
+
+  // mostrarCrear(){
+  //   this.homeComponent.toggleAddingCourse();
+  // }
+  mostrarCrear() {
+    this.router.navigate(['/oferta-educativa/home'], { queryParams: { agregar: true } });
   }
 
 }
