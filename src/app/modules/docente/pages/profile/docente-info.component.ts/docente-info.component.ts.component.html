@@ -1,0 +1,38 @@
+<div class="text-center">
+    <img [src]="docente?.foto_url || 'https://via.placeholder.com/150'" alt="Foto de docente"
+        class="w-32 h-32 rounded-full border-4 border-[#44509D] mx-auto transform transition hover:scale-105 animate__animated animate__pulse" />
+
+    <h2
+        class="text-2xl font-bold text-[#44509D] mt-4 hover:text-[#F08762] transition animate__animated animate__fadeInUp">
+        {{ docente?.nombre || 'Nombre no registrado' }}
+    </h2>
+
+    <p class="text-[#D8566C] text-lg animate__animated animate__fadeInUp">
+        {{ docente?.apellidos || 'Apellidos no registrados' }}
+    </p>
+
+    <div class="flex justify-center gap-4 mt-2 text-gray-600 animate__animated animate__fadeIn">
+        <p class="flex items-center gap-2">
+            <i class="phone icon" style="color: #44509D;"></i>
+            {{ docente?.telefono || 'Teléfono no registrado' }}
+        </p>
+        <p class="flex items-center gap-2">
+            <i class="envelope icon" style="color: #F08762;"></i>
+            {{ docente?.email || 'No registrado' }}
+        </p>
+    </div>
+</div>
+
+<!-- Botones de Acción -->
+<div class="mt-8 flex justify-center gap-6 animate__animated animate__fadeInUp">
+    <button
+        class="bg-[#44509D] text-white px-5 py-3 rounded-full shadow-md hover:bg-[#F08762] hover:shadow-lg transition"
+        (click)="onEditProfile()">
+        <i class="edit icon"></i>Editar Perfil
+    </button>
+    <button
+        class="bg-[#D8566C] text-white px-5 py-3 rounded-full shadow-md hover:bg-[#F08762] hover:shadow-lg transition"
+        (click)="onViewClasses()">
+        <i class="book icon"></i>Ver Clases
+    </button>
+</div>

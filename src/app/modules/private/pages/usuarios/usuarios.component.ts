@@ -112,10 +112,19 @@ export class UsuariosComponent implements OnInit {
   }
   
   abrirModalregistro() {
+    console.log("Abrir modal para registrar nuevo usuario");
     // this.usuarioEditado = { ...usuario }; // Copia del usuario seleccionado
     this.mostrarModalregistro = true;
   }
   cerrarModalregistro() {
+      this.nuevoUsuario = {
+          nombre: '',
+          apellidos: '',
+          email: '',
+          username: '',
+          password: '',
+          rol: 'USER'
+        };
     // this.usuarioEditado = { ...usuario }; // Copia del usuario seleccionado
     this.mostrarModalregistro = false;
   }

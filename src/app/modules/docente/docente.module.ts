@@ -20,8 +20,9 @@ import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [
+    
     DocenteComponent,
-    ProfileComponent,
+    // ProfileComponent,
     CoursesComponent,
     StatisticsComponent,
     AlumnosCursosComponent,
