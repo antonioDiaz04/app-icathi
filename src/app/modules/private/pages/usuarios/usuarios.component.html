@@ -78,7 +78,7 @@
 
 
 
-   <!-- Modal para editar detalles del usuario -->
+  <!-- Modal para editar detalles del usuario -->
   <div class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
     *ngIf="mostrarModalEditar">
     <div class="bg-white rounded-lg shadow-lg w-96 p-6">
@@ -144,5 +144,79 @@
         </button>
       </div>
     </div>
+  </div>
+</div>
+
+
+
+
+<!-- Modal de Alta Usuario -->
+<!-- Modal de Alta Usuario -->
+<div *ngIf="mostrarModalregistro" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+  <div class="bg-white rounded-lg shadow-lg w-96 p-6">
+    <h3 class="text-xl font-semibold text-gray-800 mb-4">Alta de Usuario</h3>
+
+    <!-- Formulario de Alta Usuario -->
+    <form (ngSubmit)="crearUsuario()">
+      <!-- Campo Nombre -->
+      <div class="mb-4">
+        <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
+        <input id="nombre" type="text" [(ngModel)]="nuevoUsuario.nombre" name="nombre" class="w-full p-2 border rounded"
+          required />
+      </div>
+
+      <!-- Campo Apellidos -->
+      <div class="mb-4">
+        <label for="apellidos" class="block text-sm font-medium text-gray-700">Apellidos</label>
+        <input id="apellidos" type="text" [(ngModel)]="nuevoUsuario.apellidos" name="apellidos"
+          class="w-full p-2 border rounded" required />
+      </div>
+
+      <!-- Campo Email -->
+      <div class="mb-4">
+        <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+        <input id="email" type="email" [(ngModel)]="nuevoUsuario.email" name="email" class="w-full p-2 border rounded"
+          required />
+      </div>
+
+      <!-- Campo Username -->
+      <div class="mb-4">
+        <label for="username" class="block text-sm font-medium text-gray-700">Nombre de Usuario</label>
+        <input id="username" type="text" [(ngModel)]="nuevoUsuario.username" name="username"
+          class="w-full p-2 border rounded" required />
+      </div>
+
+      <!-- Campo Contraseña con ver/ocultar -->
+      <!-- Campo Contraseña con ver/ocultar -->
+      <div class="mb-4 relative">
+        <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+        <input id="password" [type]="mostrarPassword ? 'text' : 'password'" [(ngModel)]="nuevoUsuario.password"
+          name="password" class="w-full p-2 border rounded" required />
+        <button type="button" (click)="togglePasswordVisibility()"
+          class="absolute top-1/2 right-4 transform -translate-y-1/2 text-gray-600">
+          <!-- Icono de ver/ocultar con Semantic UI -->
+          <i [class]="mostrarPassword ? 'eye slash icon' : 'eye icon'"></i>
+        </button>
+      </div>
+
+      <!-- Campo Rol -->
+      <div class="mb-4">
+        <label for="rol" class="block text-sm font-medium text-gray-700">Rol</label>
+        <select id="rol" [(ngModel)]="nuevoUsuario.rol" name="rol" class="w-full p-2 border rounded" required>
+          <option *ngFor="let rol of roles" [value]="rol">{{ rol }}</option>
+
+        </select>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="flex justify-between">
+        <button type="button" (click)="cerrarModalregistro()" class="px-6 py-2 bg-gray-400 text-white rounded-lg">
+          Cancelar
+        </button>
+        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg">
+          Guardar
+        </button>
+      </div>
+    </form>
   </div>
 </div>

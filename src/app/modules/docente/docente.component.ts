@@ -1,159 +1,215 @@
-import { DocenteDataService } from './commons/services/docente-data.service';
-import { Component, OnInit, signal, computed, effect, Signal } from '@angular/core';
-import { AuthService } from '../../shared/services/auth.service';
-import { ValidadorDocenteService } from '../validador/commons/services/validador-docente.service';
-import { Router } from '@angular/router';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { PendingAlertService } from '../../shared/services/pending-alert.service';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable } from 'rxjs';
+// import type { DocenteDataService } from "./commons/services/docente-data.service"
+import { Component, type OnInit, signal, computed, effect, type OnDestroy } from "@angular/core"
+
+import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
+// import type { PendingAlertService } from "../../shared/services/pending-alert.service"
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop"
+import { filter } from "rxjs/operators"
+import { AuthService } from "../../shared/services/auth.service"
+import { PendingAlertService } from "../../shared/services/pending-alert.service"
+import { DocenteDataService } from "./commons/services/docente-data.service"
+import { NavigationEnd, Router } from "@angular/router"
+import { ValidadorDocenteService } from "../validador/commons/services/validador-docente.service";
 
 @Component({
-  selector: 'app-docente',
-  templateUrl: './docente.component.html',
-  styleUrls: ['./docente.component.scss'],
-  standalone: false
+  selector: "app-docente",
+  templateUrl: "./docente.component.html",
+  styleUrls: ["./docente.component.scss"],
+  standalone: false,
 })
-export class DocenteComponent implements OnInit {
-  id = signal<number | null>(null); // ID del usuario
-  isAuthenticated = signal(false); // Estado de autenticación
-  docenteData = signal<any>(null); // Datos del docente
-  isMobile = signal(false); // Variable para verificar si está en móvil
-  // pendingCount = signal(0);
-  selectedEspecialidades_doce = signal<number[]>([]); // Solo los IDs de las especialidades
-  sidebarDocenteVisible = signal(false);
-  visible_docente = signal(false);
+export class DocenteComponent implements OnInit, OnDestroy {
+  id = signal<number | null>(null)
+  isAuthenticated = signal(false)
+  docenteData = signal<any>(null)
+  isMobile = signal(false)
+  selectedEspecialidades_doce = signal<number[]>([])
+  sidebarDocenteVisible = signal(false)
+  visible_docente = signal(false)
 
-  pendingCount = computed(() => this.pendingAlertService.pendingCount());
+  // Computed signals para alertas
+  pendingCount = computed(() => this.pendingAlertService.pendingCount())
+  highPriorityCount = computed(() => this.pendingAlertService.highPriorityCount())
+  pendingAlerts = computed(() => this.pendingAlertService.pendingAlerts())
 
-    // Observable original (si lo necesitas)
-  pendingAlerts$!: Observable<string[]>;
+  // Computed para mostrar diferentes tipos de alertas
+  documentAlerts = computed(() => this.pendingAlertService.documentAlerts())
+  validationAlerts = computed(() => this.pendingAlertService.validationAlerts())
 
-  // Signal derivada del observable (solo lectura)
-  readonlyPendingAlerts!: Signal<string[]>;
+  // Effect para actualizar alertas cuando cambien los datos
+  private updateAlertsEffect = effect(() => {
+    const docente = this.docenteData()
+    const especialidades = this.selectedEspecialidades_doce()
+
+    if (docente) {
+      this.pendingAlertService.updatePendingAlerts(docente, especialidades)
+    }
+  })
+
   constructor(
     private authService: AuthService,
     private pendingAlertService: PendingAlertService,
     private docenteDataService: DocenteDataService,
     private router: Router,
     private breakpointObserver: BreakpointObserver,
-    private validadorDocenteService: ValidadorDocenteService
+    private validadorDocenteService: ValidadorDocenteService,
   ) {
-
+    // Escuchar cambios de ruta para actualizar alertas
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntilDestroyed(),
+      )
+      .subscribe(() => {
+        // Pequeño delay para asegurar que los datos estén cargados
+        setTimeout(() => {
+          this.refreshPendingAlerts()
+        }, 100)
+      })
   }
 
   ngOnInit(): void {
-
-    this.loadUserDetails();
-    this.detectScreenSize();
-    this.updatePendingAlerts();
-  // Asignar observable base
-    // this.pendingAlerts$ = this.pendingAlertService.pendingAlerts$;
-
-    // // Convertir a Signal (sin usar takeUntilDestroyed aquí)
-    // this.readonlyPendingAlerts = toSignal(this.pendingAlerts$, {
-    //   initialValue: []
-    // });
+    this.loadUserDetails()
+    this.detectScreenSize()
   }
 
-  updatePendingAlerts() {
-    const alerts: string[] = [];
-    const docente = this.docenteData();
+  ngOnDestroy(): void {
+    this.pendingAlertService.clearAlerts()
+  }
 
-    // Verificar que docente no sea null o undefined antes de acceder a sus propiedades
-    if (!docente?.cedula_profesional) {
-      alerts.push('Cédula profesional pendiente');
+  /**
+   * Refresca las alertas pendientes
+   */
+  private refreshPendingAlerts(): void {
+    const docente = this.docenteData()
+    const especialidades = this.selectedEspecialidades_doce()
+
+    if (docente) {
+      this.pendingAlertService.updatePendingAlerts(docente, especialidades)
     }
-    if (!docente?.curriculum_url) {
-      alerts.push('Curriculum pendiente');
-    }
-    if (!docente?.documento_identificacion) {
-      alerts.push('Documento de identificación pendiente');
-    }
-    if (!this.selectedEspecialidades_doce()?.length) {
-      alerts.push('Especialidad pendiente');
-    }
-    if (!docente?.estatus_id) {
-      alerts.push('Validación pendiente');
-    }
-    if (!docente?.usuario_validador_id) {
-      alerts.push('Asignación de validador pendiente');
-    }
-    // this.pendingAlertService.updatePendingAlerts(alerts);
   }
 
   private detectScreenSize(): void {
     this.breakpointObserver
       .observe([Breakpoints.Handset])
+      .pipe(takeUntilDestroyed())
       .subscribe((result) => {
-        this.isMobile.set(result.matches);
-      });
+        this.isMobile.set(result.matches)
+      })
   }
 
   private async loadUserDetails(): Promise<void> {
-    this.updatePendingAlerts();
-
     try {
-      // Verificar autenticación
-      this.isAuthenticated.set(await this.authService.isAuthenticated());
+      this.isAuthenticated.set(await this.authService.isAuthenticated())
 
       if (this.isAuthenticated()) {
-        // Obtener el ID del token
-        const id = await this.authService.getIdFromToken();
-        this.id.set(id);
-        console.log('ID del usuario:', this.id());
+        const id = await this.authService.getIdFromToken()
+        this.id.set(id)
 
-        // Obtener los datos del docente
         if (this.id() !== null) {
-          this.getDocenteData(this.id()!);
+          await this.getDocenteData(this.id()!)
+          await this.loadEspecialidades()
         }
       } else {
-        console.warn('Usuario no autenticado');
+        console.warn("Usuario no autenticado")
+        this.router.navigate(["/public/login"])
       }
     } catch (error) {
-      console.error('Error al cargar los detalles del usuario:', error);
+      console.error("Error al cargar los detalles del usuario:", error)
     }
   }
 
-  private getDocenteData(id: number): void {
-    this.validadorDocenteService.getDocentesByUserId(id.toString()).subscribe({
-      next: (data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          this.docenteData.set(data[0]); // Obtén el primer elemento
-        } else {
-          this.docenteData.set(null); // Maneja el caso en que no hay datos
-        }
-        console.log('Datos del docente:', this.docenteData());
-        // this.docenteDataService.docenteData = this.docenteData();
-        this.docenteDataService.docenteData.set(this.docenteData());
+  private getDocenteData(id: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.validadorDocenteService.getDocentesByUserId(id.toString()).subscribe({
+        next: (data) => {
+          if (Array.isArray(data) && data.length > 0) {
+            this.docenteData.set(data[0])
+            this.docenteDataService.docenteData.set(data[0])
+          } else {
+            this.docenteData.set(null)
+          }
+          resolve()
+        },
+        error: (error) => {
+          console.error("Error al obtener los datos del docente:", error)
+          reject(error)
+        },
+      })
+    })
+  }
 
-        this.updatePendingAlerts();
-      },
-      error: (error) => {
-        console.error('Error al obtener los datos del docente:', error);
-      },
-    });
+  /**
+   * Carga las especialidades del docente
+   */
+  private async loadEspecialidades(): Promise<void> {
+    try {
+      // Aquí deberías cargar las especialidades del docente
+      // Por ejemplo, desde un servicio
+      // const especialidades = await this.especialidadesService.getEspecialidadesByDocenteId(this.id()!);
+      // this.selectedEspecialidades_doce.set(especialidades.map(e => e.id));
+      // Por ahora, simulamos la carga
+      // this.selectedEspecialidades_doce.set([]);
+    } catch (error) {
+      console.error("Error al cargar especialidades:", error)
+    }
+  }
+
+  /**
+   * Obtiene el texto del badge según la prioridad
+   */
+  getBadgeClass(): string {
+    const highPriority = this.highPriorityCount()
+    if (highPriority > 0) {
+      return "ui red circular label"
+    }
+    return "ui orange circular label"
+  }
+
+  /**
+   * Obtiene el tooltip con información detallada
+   */
+  getPendingAlertsTooltip(): string {
+    const alerts = this.pendingAlerts()
+    if (alerts.length === 0) return "No hay alertas pendientes"
+
+    const highPriority = alerts.filter((a) => a.priority === "high")
+    const mediumPriority = alerts.filter((a) => a.priority === "medium")
+    const lowPriority = alerts.filter((a) => a.priority === "low")
+
+    let tooltip = "Alertas pendientes:\n"
+
+    if (highPriority.length > 0) {
+      tooltip += `\n🔴 Alta prioridad (${highPriority.length}):\n`
+      highPriority.forEach((alert) => (tooltip += `• ${alert.message}\n`))
+    }
+
+    if (mediumPriority.length > 0) {
+      tooltip += `\n🟡 Media prioridad (${mediumPriority.length}):\n`
+      mediumPriority.forEach((alert) => (tooltip += `• ${alert.message}\n`))
+    }
+
+    if (lowPriority.length > 0) {
+      tooltip += `\n🟢 Baja prioridad (${lowPriority.length}):\n`
+      lowPriority.forEach((alert) => (tooltip += `• ${alert.message}\n`))
+    }
+
+    return tooltip.trim()
   }
 
   async logout(): Promise<void> {
-    await this.authService.clearToken();
-    this.router.navigate(['/public/login']);
+    this.pendingAlertService.clearAlerts()
+    await this.authService.clearToken()
+    this.router.navigate(["/public/login"])
   }
 
-  editarPerfil(): void {
-    console.log('Redirigir a la página de edición del perfil');
+  closeDrawer(): void {
+    this.visible_docente.set(false)
   }
 
-  verClases(): void {
-    console.log('Redirigir a la página de clases');
-  }
-
-  show() {
-    this.sidebarDocenteVisible.set(true);
-  }
-
-  closeDrawer() {
-    this.visible_docente.set(false);
+  /**
+   * Método para forzar actualización de alertas (útil para debugging)
+   */
+  forceUpdateAlerts(): void {
+    this.refreshPendingAlerts()
   }
 }

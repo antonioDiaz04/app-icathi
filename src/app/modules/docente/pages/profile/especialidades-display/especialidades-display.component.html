@@ -1,0 +1,32 @@
+
+    <div class="mt-8">
+      <h3 class="text-xl font-semibold text-center text-[#44509D] mb-4 animate__animated animate__fadeIn">
+        Especialidades del Docente
+      </h3>
+      
+      <div *ngIf="!especialidades || especialidades.length === 0"
+        class="text-center text-[#D8566C] font-medium mt-4">
+        No hay especialidades cargadas actualmente.
+      </div>
+      
+      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div *ngFor="let especialidad of especialidades"
+          class="p-4 rounded-lg shadow-md transition hover:shadow-lg transform hover:scale-105 animate__animated animate__fadeInUp"
+          [ngClass]="getEspecialidadClass(especialidad.estatus)">
+          
+          <div class="flex items-center gap-2">
+            <i class="big icon" 
+              [ngClass]="getEspecialidadIcon(especialidad.estatus)"
+              [style.color]="getEspecialidadColor(especialidad.estatus)"></i>
+            <span class="text-sm font-medium text-[#4A5568]">
+              {{ especialidad.especialidad }}
+            </span>
+          </div>
+          
+          <span class="block mt-2 text-lg font-bold capitalize animate__animated animate__fadeInRight"
+            [style.color]="getEspecialidadColor(especialidad.estatus)">
+            {{ especialidad.estatus }}
+          </span>
+        </div>
+      </div>
+    </div>

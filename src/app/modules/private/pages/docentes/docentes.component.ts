@@ -21,10 +21,10 @@ export interface Docente {
 }
 
 @Component({
-    selector: 'app-docentes',
-    templateUrl: './docentes.component.html',
-    styleUrls: ['./docentes.component.scss'],
-    standalone: false
+  selector: 'app-docentes',
+  templateUrl: './docentes.component.html',
+  styleUrls: ['./docentes.component.scss'],
+  standalone: false
 })
 export class DocentesComponent implements OnInit {
   docentes: Docente[] = [];
@@ -34,6 +34,14 @@ export class DocentesComponent implements OnInit {
 
   docenteSeleccionado: Docente | null = null;
   docenteDetalleSeleccionado: Docente | null = null;
+  // busqueda
+  // busqueda
+  // busqueda
+  // busqueda
+  terminoBusqueda: string = '';
+  // docentes: any[] = []; // Tus docentes originales
+  // 
+  docentesFiltrados: any[] = []; // Docentes filtrados
 
   nuevoDocente: Partial<Docente> = {
     nombre: '',
@@ -54,7 +62,7 @@ export class DocentesComponent implements OnInit {
 
   private apiUrl = `${environment.api}`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.cargarDocentes();
@@ -68,13 +76,31 @@ export class DocentesComponent implements OnInit {
       next: (data) => {
         console.log('Datos recibidos:', data);
         this.docentes = data;
+
+        this.docentesFiltrados = [...this.docentes];
       },
       error: (err) => {
         console.error('Error al cargar los docentes:', err);
       },
     });
+
   }
 
+  filtrarDocentes(): void {
+    if (!this.terminoBusqueda) {
+      this.docentesFiltrados = [...this.docentes];
+      return;
+    }
+
+    const termino = this.terminoBusqueda.toLowerCase();
+    this.docentesFiltrados = this.docentes.filter(docente =>
+      docente.nombre.toLowerCase().includes(termino) ||
+      docente.apellidos.toLowerCase().includes(termino) ||
+      docente.email.toLowerCase().includes(termino) ||
+      docente.id.toString().includes(termino) ||
+      (docente.especialidad && docente.especialidad.toLowerCase().includes(termino))
+    );
+  }
   toggleFormulario(): void {
     this.mostrarFormulario = !this.mostrarFormulario;
     if (this.mostrarFormulario) {
