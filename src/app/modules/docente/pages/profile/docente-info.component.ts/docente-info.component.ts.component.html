@@ -1,38 +1,81 @@
-<div class="text-center">
-    <img [src]="docente?.foto_url || 'https://via.placeholder.com/150'" alt="Foto de docente"
-        class="w-32 h-32 rounded-full border-4 border-[#44509D] mx-auto transform transition hover:scale-105 animate__animated animate__pulse" />
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Card Principal -->
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
 
-    <h2
-        class="text-2xl font-bold text-[#44509D] mt-4 hover:text-[#F08762] transition animate__animated animate__fadeInUp">
-        {{ docente?.nombre || 'Nombre no registrado' }}
-    </h2>
+        <!-- Header -->
+        <div class="bg-gray-50 px-6 sm:px-8 py-8 sm:py-12 border-b border-gray-200">
+            <div class="text-center space-y-6">
 
-    <p class="text-[#D8566C] text-lg animate__animated animate__fadeInUp">
-        {{ docente?.apellidos || 'Apellidos no registrados' }}
-    </p>
+                <!-- Foto de Perfil -->
+                <div class="flex justify-center">
+                    <div class="relative group">
+                        <img [src]="docente?.foto_url || 'https://via.placeholder.com/150'" alt="Foto de docente" class="w-28 h-28 sm:w-36 sm:h-36 lg:w-44 lg:h-44 rounded-full border-4 border-blue-800 object-cover shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105"
+                        />
+                        <!-- Indicador de estado -->
+                        <span class="absolute bottom-2 right-2 w-4 h-4 sm:w-5 sm:h-5 bg-green-500 border-2 border-white rounded-full shadow-sm"></span>
+                    </div>
+                </div>
 
-    <div class="flex justify-center gap-4 mt-2 text-gray-600 animate__animated animate__fadeIn">
-        <p class="flex items-center gap-2">
-            <i class="phone icon" style="color: #44509D;"></i>
-            {{ docente?.telefono || 'Teléfono no registrado' }}
-        </p>
-        <p class="flex items-center gap-2">
-            <i class="envelope icon" style="color: #F08762;"></i>
-            {{ docente?.email || 'No registrado' }}
-        </p>
+                <!-- Datos Personales -->
+                <div>
+                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-blue-800 hover:text-orange-500 transition-colors duration-200">
+                        {{ docente?.nombre || 'Nombre no registrado' }}
+                    </h1>
+                    <p class="text-lg sm:text-xl text-pink-600 font-semibold">
+                        {{ docente?.apellidos || 'Apellidos no registrados' }}
+                    </p>
+                </div>
+
+                <!-- Contacto -->
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 text-gray-700">
+                    <div class="flex items-center gap-3 p-3 rounded-lg hover:bg-white hover:shadow-md transition-all duration-200">
+                        <i class="phone icon text-blue-800 text-xl"></i>
+                        <span class="text-sm sm:text-base font-medium">
+              {{ docente?.telefono || 'Teléfono no registrado' }}
+            </span>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 rounded-lg hover:bg-white hover:shadow-md transition-all duration-200">
+                        <i class="envelope icon text-orange-500 text-xl"></i>
+                        <span class="text-sm sm:text-base font-medium truncate max-w-[220px] sm:max-w-xs">
+              {{ docente?.email || 'No registrado' }}
+            </span>
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 pt-4">
+                    <button class="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-blue-800 text-white font-semibold rounded-lg shadow-md hover:bg-orange-500 hover:shadow-lg focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 transform hover:-translate-y-0.5"
+                        (click)="onEditProfile()">
+            <i class="edit icon text-lg"></i> Editar Perfil
+          </button>
+                    <button class="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-pink-600 text-white font-semibold rounded-lg shadow-md hover:bg-orange-500 hover:shadow-lg focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 transition-all duration-200 transform hover:-translate-y-0.5"
+                        (click)="onViewClasses()">
+            <i class="book icon text-lg"></i> Ver Clases
+          </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenido -->
+        <div class="p-6 sm:p-8 space-y-8">
+
+            <!-- Estado Perfil -->
+            <div class="text-center">
+                <h2 class="text-xl sm:text-2xl font-bold text-blue-800 mb-6">Estado del Perfil</h2>
+                <div class="inline-block px-6 py-4 rounded-xl text-lg font-semibold shadow-md transition-all duration-200 hover:shadow-lg" [ngClass]="getStatusClass(status)">
+                    {{ status || 'Estado no registrado' }}
+                </div>
+            </div>
+
+            <!-- Pendientes -->
+
+
+            <!-- Sin Pendientes -->
+            <div *ngIf="!pendingItems?.length" class="text-center py-8 text-gray-400">
+                <i class="check circle icon text-5xl mb-4"></i>
+                <h3 class="text-lg font-semibold text-gray-600 mb-2">¡Perfil Completo!</h3>
+                <p class="text-sm text-gray-500">No tienes elementos pendientes en tu perfil</p>
+            </div>
+        </div>
     </div>
-</div>
-
-<!-- Botones de Acción -->
-<div class="mt-8 flex justify-center gap-6 animate__animated animate__fadeInUp">
-    <button
-        class="bg-[#44509D] text-white px-5 py-3 rounded-full shadow-md hover:bg-[#F08762] hover:shadow-lg transition"
-        (click)="onEditProfile()">
-        <i class="edit icon"></i>Editar Perfil
-    </button>
-    <button
-        class="bg-[#D8566C] text-white px-5 py-3 rounded-full shadow-md hover:bg-[#F08762] hover:shadow-lg transition"
-        (click)="onViewClasses()">
-        <i class="book icon"></i>Ver Clases
-    </button>
 </div>

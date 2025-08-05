@@ -89,11 +89,11 @@ export class ProfileComponent {
     if (!data.usuario_validador_id) {
       items.push({ condition: true, message: "Asignación de validador pendiente", type: "pending" })
     } else {
-      items.push({
-        condition: true,
-        message: this.getValidadorStatus(data.usuario_validador_id),
-        type: "completed",
-      })
+      // items.push({
+      //   condition: true,
+      //   message: this.getValidadorStatus(data.usuario_validador_id),
+      //   type: "completed",
+      // })
     }
 
     return items
@@ -334,13 +334,13 @@ export class ProfileComponent {
     }
   }
 
-  private getValidadorStatus(usuarioValidadorId: number): string {
-    if (!usuarioValidadorId) {
-      return "Asignación de validador pendiente"
-    }
-    if (usuarioValidadorId > 0) {
-      return "El validador ya está asignado y el perfil está en proceso de revisión"
-    }
-    return "Estado desconocido"
-  }
+  // private getValidadorStatus(usuarioValidadorId: number): string {
+  //   if (!usuarioValidadorId) {
+  //     return "Asignación de validador pendiente"
+  //   }
+  //   if (usuarioValidadorId > 0) {
+  //     return "El validador ya está asignado y el perfil está en proceso de revisión"
+  //   }
+  //   return "Estado desconocido"
+  // }
 }

@@ -107,7 +107,6 @@ export class DocenteComponent implements OnInit, OnDestroy {
 
         if (this.id() !== null) {
           await this.getDocenteData(this.id()!)
-          await this.loadEspecialidades()
         }
       } else {
         console.warn("Usuario no autenticado")
@@ -138,32 +137,11 @@ export class DocenteComponent implements OnInit, OnDestroy {
     })
   }
 
-  /**
-   * Carga las especialidades del docente
-   */
-  private async loadEspecialidades(): Promise<void> {
-    try {
-      // Aquí deberías cargar las especialidades del docente
-      // Por ejemplo, desde un servicio
-      // const especialidades = await this.especialidadesService.getEspecialidadesByDocenteId(this.id()!);
-      // this.selectedEspecialidades_doce.set(especialidades.map(e => e.id));
-      // Por ahora, simulamos la carga
-      // this.selectedEspecialidades_doce.set([]);
-    } catch (error) {
-      console.error("Error al cargar especialidades:", error)
-    }
-  }
+
 
   /**
    * Obtiene el texto del badge según la prioridad
    */
-  getBadgeClass(): string {
-    const highPriority = this.highPriorityCount()
-    if (highPriority > 0) {
-      return "ui red circular label"
-    }
-    return "ui orange circular label"
-  }
 
   /**
    * Obtiene el tooltip con información detallada
