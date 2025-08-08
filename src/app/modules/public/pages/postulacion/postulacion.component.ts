@@ -30,7 +30,7 @@ export class PostulacionComponent {
       lastName2: ['', [Validators.required, Validators.minLength(2)]], // Apellido materno
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      specialty: ['', Validators.required]
+      // specialty: ['', Validators.required]
     });
   }
   soloNumeros(event: KeyboardEvent): boolean {

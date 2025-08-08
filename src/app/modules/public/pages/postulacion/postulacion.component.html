@@ -35,7 +35,7 @@
 
     <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div *ngIf="isLoading" class="ui active inverted dimmer">
-            <div class="ui text loader">Enviando...</div>
+            <div class="ui text loader">Validando...</div>
         </div>
 
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -117,21 +117,6 @@
                     </div>
                 </div>
 
-                <!-- Paso 4: Especialidad -->
-                <!-- <div *ngIf="currentStep === 4">
-                    <label for="specialty" class="block text-sm font-medium text-gray-700">Especialidad</label>
-                    <select formControlName="specialty" id="specialty" class="custom-input">
-            <option value="">Selecciona una especialidad</option>
-            <option value="matematicas">Matemáticas</option>
-            <option value="ciencias">Ciencias</option>
-            <option value="informatica">Informática</option>
-            <option value="idiomas">Idiomas</option>
-            <option value="otra">Otra</option>
-          </select>
-                    <div *ngIf="postulationForm.get('specialty')?.touched && postulationForm.get('specialty')?.invalid" class="text-sm text-red-500 mt-2">
-                        <div *ngIf="postulationForm.get('specialty')?.errors?.['required']">La especialidad es obligatoria.</div>
-                    </div>
-                </div> -->
 
                 <!-- Botones de navegación -->
                 <div class="flex justify-between items-center mt-6">
