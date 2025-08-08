@@ -2,11 +2,13 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PostulacionService } from '../../../../shared/services/postulacion.service';
 import { Router } from '@angular/router';
+import { VerificacionService } from '../../../../shared/services/verificacion.service';
+import { AlertTaiwilService } from '../../../../shared/services/alert-taiwil.service';
 @Component({
-    selector: 'app-postulacion',
-    templateUrl: './postulacion.component.html',
-    styleUrls: ['./postulacion.component.scss'],
-    standalone: false
+  selector: 'app-postulacion',
+  templateUrl: './postulacion.component.html',
+  styleUrls: ['./postulacion.component.scss'],
+  standalone: false
 })
 export class PostulacionComponent {
   postulationForm: FormGroup;
@@ -17,6 +19,8 @@ export class PostulacionComponent {
   isLoading = false;
 
   constructor(
+    private alertTaiwilService: AlertTaiwilService,
+    private verificacionService: VerificacionService, // <- nuevo
     private fb: FormBuilder,
     private router: Router,
     private postulacionService: PostulacionService) { // Inyecta el servicio
@@ -29,15 +33,86 @@ export class PostulacionComponent {
       specialty: ['', Validators.required]
     });
   }
-
-  // Avanza al siguiente paso si los campos del paso actual son válidos
+  soloNumeros(event: KeyboardEvent): boolean {
+  const charCode = (event.which) ? event.which : event.keyCode;
+  // Solo permitir números (0-9)
+  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+    return false;
+  }
+  return true;
+}
   nextStep() {
     if (this.isStepValid()) {
-      this.currentStep++;
+      // Paso 2: Verificación de correo
+      if (this.currentStep === 2) {
+        const email = this.postulationForm.get('email')?.value;
+        if (email) {
+          this.isLoading = true;
+          this.verificacionService.verificarCorreo(email).subscribe({
+            next: (res) => {
+              if (res?.valido) {
+                this.currentStep++;
+              } else {
+                this.alertTaiwilService.showTailwindAlert(res?.message || 'El correo no es válido.', 'error');
+              }
+              this.isLoading = false;
+            },
+            error: (err) => {
+              this.isLoading = false;
+              if (err.status === 409 && err.error?.message) {
+                this.alertTaiwilService.showTailwindAlert(err.error.message, 'error');
+              } else {
+                this.alertTaiwilService.showTailwindAlert('El correo no es válido', 'error');
+              }
+            }
+          });
+        }
+
+        // Paso 3: Verificación de teléfono
+      } else if (this.currentStep === 3) {
+        const telefono = this.postulationForm.get('phone')?.value;
+        if (telefono) {
+          this.isLoading = true;
+          this.verificacionService.verificarTelefono(telefono).subscribe({
+            next: (res) => {
+              if (res?.valido) {
+                this.currentStep++;
+              } else {
+                this.alertTaiwilService.showTailwindAlert(res?.message || 'El teléfono no es válido.', 'error');
+              }
+              this.isLoading = false;
+            },
+            error: (err) => {
+              this.isLoading = false;
+              if (err.status === 409 && err.error?.message) {
+                this.alertTaiwilService.showTailwindAlert(err.error.message, 'error');
+              } else {
+                this.alertTaiwilService.showTailwindAlert('El teléfono no es válido', 'error');
+              }
+            }
+          });
+        }
+
+        // Otros pasos normales
+      } else {
+        this.currentStep++;
+      }
+
     } else {
       this.validateCurrentStepFields();
     }
   }
+
+
+
+  // Avanza al siguiente paso si los campos del paso actual son válidos
+  // nextStep() {
+  //   if (this.isStepValid()) {
+  //     this.currentStep++;
+  //   } else {
+  //     this.validateCurrentStepFields();
+  //   }
+  // }
   goHome() {
     this.router.navigate(['/']); // Redirige a la ruta principal
   }
@@ -64,7 +139,9 @@ export class PostulacionComponent {
       this.postulacionService.registrarUsuario(postulationData).subscribe({
         next: (response) => {
           console.log('Registro exitoso:', response);
-          alert('¡Registro enviado con éxito! Verifica tu correo electrónico.');
+          // alert('¡Registro enviado con éxito! Verifica tu correo electrónico.');
+          this.alertTaiwilService.showTailwindAlert('¡Registro enviado con éxito! Verifica tu correo electrónico.', 'success');
+
           this.postulationForm.reset();
           this.currentStep = 1; // Reinicia el formulario
           this.username = postulationData.name; // Almacena el username recibido
@@ -76,11 +153,15 @@ export class PostulacionComponent {
           console.error('Error al registrar:', error);
           if (error.status === 400) {
             // Si el correo ya existe
-            alert('El correo proporcionado ya está registrado. Intenta con otro correo.');
+            this.alertTaiwilService.showTailwindAlert('El correo proporcionado ya está registrado. Intenta con otro correo.', 'error');
+            // alert('El correo proporcionado ya está registrado. Intenta con otro correo.');
           } else {
-            alert('Ocurrió un error al enviar el registro. Inténtalo nuevamente.');
+            this.alertTaiwilService.showTailwindAlert('Ocurrió un error al enviar el registro. Inténtalo nuevamente.', 'error');
+            // alert('Ocurrió un error al enviar el registro. Inténtalo nuevamente.');
           }
-          alert('Ocurrió un error al enviar el registro. Inténtalo nuevamente.');
+          this.alertTaiwilService.showTailwindAlert('Ocurrió un error al enviar el registro. Inténtalo nuevamente.', 'error');
+
+          // alert('Ocurrió un error al enviar el registro. Inténtalo nuevamente.');
           this.isLoading = false;
         }
       });

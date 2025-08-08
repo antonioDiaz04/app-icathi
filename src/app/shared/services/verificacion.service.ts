@@ -7,18 +7,9 @@ import { environment } from '../../../environments/environment.prod';
   providedIn: 'root'
 })
 export class VerificacionService {
-  // private readonly baseUrl = 'http://localhost:3000/verificar-correo';
   private apiUrl = `${environment.api}/verificar-correo`; // Cambia a tu URL del servidor
 
   constructor(private http: HttpClient) {}
-
-  /**
-   * Verifica un correo electrónico.
-   * @param email Correo a verificar
-   */
-  verificarCorreo(email: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/`, { email });
-  }
 
   /**
    * Verifica un número de teléfono.
@@ -27,4 +18,12 @@ export class VerificacionService {
   verificarTelefono(telefono: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/telefono`, { telefono });
   }
+  /**
+   * Verifica un correo electrónico.
+   * @param email Correo a verificar
+   */
+  verificarCorreo(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/`, { email });
+  }
+
 }
