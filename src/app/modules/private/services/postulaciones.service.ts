@@ -23,10 +23,9 @@ export class PostulacionesService {
 private baseUrl = `${environment.api}/adminreporte/docentes`;
   constructor(private http: HttpClient) {}
 
-  asignarPassword(usuarioId: number, password: string) {
-  // Ajusta la URL si tu backend define otra ruta
-  return this.http.patch<{ ok: boolean }>(`/admin/usuarios/${usuarioId}/password`, { password })
-}
+//   asignarPassword(usuarioId: number, password: string) {
+//   return this.http.put<{ ok: boolean }>(`/admin/usuarios/${usuarioId}/password`, { password })
+// }
 
   list(params: ListPostulacionesParams): Observable<PostulacionesResponse> {
     let httpParams = new HttpParams();

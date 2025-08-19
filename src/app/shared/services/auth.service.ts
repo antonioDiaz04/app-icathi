@@ -167,6 +167,10 @@ export class AuthService {
     const body = { email, nuevaContraseña };
     return this.http.post(`${this.apiUrl2}/postulacion/crear-password`, body);
   }
+  crearContraseñaADMIN(email: string, nuevaContraseña: string): Observable<any> {
+    const body = { email, nuevaContraseña };
+    return this.http.post(`${this.apiUrl2}/postulacion/crear-password-admin`, body);
+  }
   private isBrowser(): boolean {
     try {
       return typeof window !== 'undefined';
