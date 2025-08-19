@@ -14,6 +14,7 @@ import { DocentesComponent } from './pages/docentes/docentes.component';
 // import { ListadoCursosComponent } from './pages/listado-cursos/listado-cursos.component';
 // import { PdfExampleComponent } from './pages/pdf-example/pdf-example.component';
 import { ViewerExplorerComponent } from './pages/viewer-explorer/viewer-explorer.component';
+import { AdminPostulacionesComponent } from './pages/admin-postulaciones/admin-postulaciones.component';
 
 const routes: Routes = [
   {
@@ -72,6 +73,10 @@ const routes: Routes = [
       {
         path: 'docentes',
         component: DocentesComponent,
+      },
+      {
+        path: 'postulaciones',
+        component: AdminPostulacionesComponent,
       },
     ],
   },

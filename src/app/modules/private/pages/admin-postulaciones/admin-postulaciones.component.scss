@@ -1,0 +1,61 @@
+.transition {
+    transition: all 0.2s ease-in-out;
+}
+
+.hover\:brightness-95:hover {
+    filter: brightness(0.95);
+}
+
+.brightness-90 {
+    filter: brightness(0.9);
+}
+
+// Animaciones suaves para las filas expandidas
+tr {
+    transition: background-color 0.2s ease;
+}
+
+// Mejores estilos para botones pequeños
+button {
+    transition: all 0.15s ease;
+    &:disabled {
+        cursor: not-allowed;
+    }
+    &.text-xs {
+        font-size: 0.75rem;
+        line-height: 1rem;
+    }
+}
+
+// Estilos para respuestas de acción
+.bg-green-50 {
+    animation: fadeIn 0.3s ease-in;
+}
+
+.bg-red-50 {
+    animation: fadeIn 0.3s ease-in;
+}
+
+.bg-yellow-50 {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Mejores estilos para el stepper
+.space-y-2>*+* {
+    margin-top: 0.5rem;
+}
+
+.space-y-4>*+* {
+    margin-top: 1rem;
+}

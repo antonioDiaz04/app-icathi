@@ -24,15 +24,13 @@ import { PdfExampleComponent } from './pages/pdf-example/pdf-example.component';
 import { CursoModalidadCAEComponent } from './pages/cursos/typos-cursos/curso-modalidad-cae/curso-modalidad-cae.component';
 import { CursoModalidadVirtualComponent } from './pages/cursos/typos-cursos/curso-modalidad-virtual/curso-modalidad-virtual.component';
 import { CursoModalidadEscuelaComponent } from './pages/cursos/typos-cursos/curso-modalidad-escuela/curso-modalidad-escuela.component';
-// =======
-// import { OfertaEducativaComponent } from '../oferta-educativa/oferta-educativa.component';
-// >>>>>>> origin/padilla
+import { AdminPostulacionesComponent } from './pages/admin-postulaciones/admin-postulaciones.component';
 
- 
   
 
 @NgModule({
   declarations: [
+    AdminPostulacionesComponent,
     PrivateComponent,
     HomeComponent,
     HeaderComponent,CursoModalidadCAEComponent,CursoModalidadVirtualComponent,CursoModalidadEscuelaComponent,
