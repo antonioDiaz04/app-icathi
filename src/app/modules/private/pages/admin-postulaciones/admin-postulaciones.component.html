@@ -22,22 +22,19 @@
                                     clip-rule="evenodd"></path>
                             </svg>
                         </div>
-                        <input type="text" [(ngModel)]="terminoBusqueda" (input)="onInputBuscar()"
-                            class="block w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#44509D] focus:border-transparent transition"
-                            placeholder="Buscar por nombre, email..." />
+                        <input type="text" [(ngModel)]="terminoBusqueda" (input)="onInputBuscar()" class="block w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#44509D] focus:border-transparent transition" placeholder="Buscar por nombre, email..."
+                        />
                     </div>
 
                     <div>
-                        <select [(ngModel)]="filtroEstatus" (change)="onChangeFiltros()"
-                            class="block w-full sm:w-56 px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#44509D]">
+                        <select [(ngModel)]="filtroEstatus" (change)="onChangeFiltros()" class="block w-full sm:w-56 px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#44509D]">
                             <option *ngFor="let e of estatusOpciones" [ngValue]="e.id">{{ e.label }}</option>
                         </select>
                     </div>
                 </ng-container>
 
                 <!-- Back solo en DETALLE -->
-                <button *ngIf="activeTab==='detail'" (click)="volverAlListado()"
-                    class="px-3 py-2 rounded-lg border bg-white hover:bg-gray-50 text-sm">
+                <button *ngIf="activeTab==='detail'" (click)="volverAlListado()" class="px-3 py-2 rounded-lg border bg-white hover:bg-gray-50 text-sm">
                     ← Volver al listado
                 </button>
             </div>
@@ -95,8 +92,7 @@
                     <thead class="bg-[#44509D] text-white">
                         <tr>
                             <th class="px-3 py-3 text-left font-medium uppercase tracking-wider">ID</th>
-                            <th class="px-3 py-3 text-left font-medium uppercase tracking-wider whitespace-nowrap cursor-pointer"
-                                (click)="cambiarOrden('p.docente_created_at')">Fecha</th>
+                            <th class="px-3 py-3 text-left font-medium uppercase tracking-wider whitespace-nowrap cursor-pointer" (click)="cambiarOrden('p.docente_created_at')">Fecha</th>
                             <th class="px-3 py-3 text-left font-medium uppercase tracking-wider">Nombre</th>
                             <th class="px-3 py-3 text-left font-medium uppercase tracking-wider">Email</th>
                             <th class="px-3 py-3 text-left font-medium uppercase tracking-wider">Estatus</th>
@@ -106,8 +102,7 @@
                     <tbody class="divide-y divide-gray-200">
                         <tr *ngFor="let p of postulacionesFiltradas" class="hover:bg-gray-50 transition">
                             <td class="px-3 py-3 text-gray-700 text-center">{{ p.docente_id }}</td>
-                            <td class="px-3 py-3 text-gray-700 text-center">{{ p.docente_created_at | date:'dd/MM/yyyy
-                                HH:mm' }}</td>
+                            <td class="px-3 py-3 text-gray-700 text-center">{{ p.docente_created_at | date:'dd/MM/yyyy HH:mm' }}</td>
                             <td class="px-3 py-3 font-medium text-gray-800">{{ p.nombre }} {{ p.apellidos }}</td>
                             <td class="px-3 py-3 text-gray-700">{{ p.email }}</td>
                             <td class="px-3 py-3">
@@ -118,8 +113,7 @@
                 }">{{ p.estatus_valor }}</span>
                             </td>
                             <td class="px-3 py-3 text-center">
-                                <button (click)="verDetalles(p)"
-                                    class="bg-indigo-600 text-white px-2 py-1 rounded text-xs hover:bg-indigo-700 transition">
+                                <button (click)="verDetalles(p)" class="bg-indigo-600 text-white px-2 py-1 rounded text-xs hover:bg-indigo-700 transition">
                                     Mostrar detalles
                                 </button>
                             </td>
@@ -139,10 +133,8 @@
                 Mostrando {{ offset + 1 }}–{{ Math.min(offset + limit, total) }} de {{ total }}
             </div>
             <div class="flex gap-2">
-                <button (click)="cambiarPagina('prev')" [disabled]="offset === 0"
-                    class="px-3 py-1.5 rounded border bg-white hover:bg-gray-50 disabled:opacity-50">Anterior</button>
-                <button (click)="cambiarPagina('next')" [disabled]="offset + limit >= total"
-                    class="px-3 py-1.5 rounded border bg-white hover:bg-gray-50 disabled:opacity-50">Siguiente</button>
+                <button (click)="cambiarPagina('prev')" [disabled]="offset === 0" class="px-3 py-1.5 rounded border bg-white hover:bg-gray-50 disabled:opacity-50">Anterior</button>
+                <button (click)="cambiarPagina('next')" [disabled]="offset + limit >= total" class="px-3 py-1.5 rounded border bg-white hover:bg-gray-50 disabled:opacity-50">Siguiente</button>
             </div>
         </div>
     </ng-container>
@@ -196,8 +188,7 @@
 
         <div *ngIf="!cargando" class="mx-auto">
             <!-- feedback -->
-            <div *ngIf="selectedId && actionResponses.get(selectedId) as resp"
-                class="mb-3 text-sm rounded border px-3 py-2" [ngClass]="{
+            <div *ngIf="selectedId && actionResponses.get(selectedId) as resp" class="mb-3 text-sm rounded border px-3 py-2" [ngClass]="{
         'border-green-200 text-green-700 bg-green-50': resp.type==='success',
         'border-yellow-200 text-yellow-700 bg-yellow-50': resp.type==='warning',
         'border-red-200 text-red-700 bg-red-50': resp.type==='error'
@@ -211,12 +202,9 @@
                 <div class="flex items-start justify-between gap-4">
                     <div class="flex items-center gap-4">
                         <!-- Avatar -->
-                        <img *ngIf="detalle?.foto_url; else avatarFallback" [src]="detalle?.foto_url"
-                            alt="Foto de {{ detalle?.nombre }}"
-                            class="h-14 w-14 rounded-xl object-cover border border-gray-200" />
+                        <img *ngIf="detalle?.foto_url; else avatarFallback" [src]="detalle?.foto_url" alt="Foto de {{ detalle?.nombre }}" class="h-14 w-14 rounded-xl object-cover border border-gray-200" />
                         <ng-template #avatarFallback>
-                            <div class="h-14 w-14 rounded-xl bg-gray-100 text-gray-600 grid place-content-center border border-gray-200"
-                                aria-hidden="true">
+                            <div class="h-14 w-14 rounded-xl bg-gray-100 text-gray-600 grid place-content-center border border-gray-200" aria-hidden="true">
                                 <span class="text-lg font-semibold">
                                     {{ (detalle?.nombre?.[0] || 'U') + (detalle?.apellidos?.[0] || '') }}
                                 </span>
@@ -228,8 +216,7 @@
                                 {{ detalle?.nombre }} {{ detalle?.apellidos }}
                             </h3>
                             <p class="text-sm text-gray-600">
-                                <a class="hover:underline" [href]="'mailto:'+detalle?.email">{{ detalle?.email }}</a> •
-                                {{ detalle?.telefono || '—' }}
+                                <a class="hover:underline" [href]="'mailto:'+detalle?.email">{{ detalle?.email }}</a> • {{ detalle?.telefono || '—' }}
                             </p>
                             <p class="text-xs text-gray-500" *ngIf="detalle?.especialidad">
                                 Especialidad: {{ detalle?.especialidad }}
@@ -261,8 +248,7 @@
                     </span>
 
                     <!-- Correo validado (corrige el nombre del campo) -->
-                    <span class="px-2 py-1 rounded-full text-xs font-medium"
-                        [ngClass]="badge(detalle?.usuario_correo_validado)">
+                    <span class="px-2 py-1 rounded-full text-xs font-medium" [ngClass]="badge(detalle?.usuario_correo_validado)">
                         {{ detalle?.usuario_correo_validado ? 'Correo validado' : 'Correo sin validar' }}
                     </span>
 
@@ -271,8 +257,7 @@
                     </span>
 
                     <!-- Password -->
-                    <span class="px-2 py-1 rounded-full text-xs font-medium"
-                        [ngClass]="badge(!detalle?.usuario_password_es_default)">
+                    <span class="px-2 py-1 rounded-full text-xs font-medium" [ngClass]="badge(!detalle?.usuario_password_es_default)">
                         {{ detalle?.usuario_password_es_default ? 'contraseña default' : 'Password personalizada' }}
                     </span>
                 </div>
@@ -285,23 +270,17 @@
                         <h2 class="font-semibold text-blue-800 mb-1">Estado del perfil</h2>
                         <p class="text-blue-600">
                             <!-- Lógica corregida para mostrar el estado correcto -->
-                            {{ detalle?.usuario_activo ?
-                            (detalle?.usuario_password_es_default ?
-                            'Usuario activo pero debe cambiar su contraseña predeterminada' :
-                            'Usuario activo con acceso  al sistema') :
-                            'Usuario inactivo Sin acceso al sistema'
-                            }}
+                            {{ detalle?.usuario_activo ? (detalle?.usuario_password_es_default ? 'Usuario activo pero debe cambiar su contraseña predeterminada' : 'Usuario activo con acceso al sistema') : 'Usuario inactivo Sin acceso al sistema' }}
                         </p>
 
-                
+
                     </div>
                 </div>
- 
+
 
                 <!-- Botón inicial -->
                 <div class="mt-6" *ngIf="!editandoPass">
-                    <button class="px-4 py-2 rounded bg-indigo-600 text-white text-sm hover:bg-indigo-700"
-                        (click)="editandoPass = true">
+                    <button class="px-4 py-2 rounded bg-indigo-600 text-white text-sm hover:bg-indigo-700" (click)="editandoPass = true">
                         Editar contraseña
                     </button>
                 </div>
@@ -312,27 +291,18 @@
 
                     <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full">
                         <div class="relative w-full sm:w-80">
-                            <input [type]="showPass ? 'text' : 'password'" [(ngModel)]="newPassword"
-                                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm pr-10"
-                                placeholder="Nueva contraseña (mín. 8 caracteres)" />
-                            <button type="button"
-                                class="absolute inset-y-0 right-0 px-3 text-xs text-gray-600 hover:text-gray-900"
-                                (click)="showPass = !showPass"
-                                [attr.aria-label]="showPass ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                            <input [type]="showPass ? 'text' : 'password'" [(ngModel)]="newPassword" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm pr-10" placeholder="Nueva contraseña (mín. 8 caracteres)" />
+                            <button type="button" class="absolute inset-y-0 right-0 px-3 text-xs text-gray-600 hover:text-gray-900" (click)="showPass = !showPass" [attr.aria-label]="showPass ? 'Ocultar contraseña' : 'Mostrar contraseña'">
                                 {{ showPass ? 'Ocultar' : 'Mostrar' }}
                             </button>
                         </div>
 
-                        <button (click)="asignarPassword()"
-                            class="px-3 py-2 rounded bg-indigo-600 text-white text-xs hover:bg-indigo-700 disabled:opacity-50"
-                            [disabled]="isLoading(selectedId!) || !canAssignPass()">
+                        <button (click)="asignarPassword()" class="px-3 py-2 rounded bg-indigo-600 text-white text-xs hover:bg-indigo-700 disabled:opacity-50" [disabled]="isLoading(selectedId!) || !canAssignPass()">
                             Asignar
                         </button>
 
                         <!-- Cancelar edición -->
-                        <button type="button"
-                            class="px-3 py-2 rounded bg-gray-200 text-gray-700 text-xs hover:bg-gray-300"
-                            (click)="cancelarEdicion()">
+                        <button type="button" class="px-3 py-2 rounded bg-gray-200 text-gray-700 text-xs hover:bg-gray-300" (click)="cancelarEdicion()">
                             Cancelar
                         </button>
                     </div>
@@ -348,7 +318,6 @@
 
                     <p class="text-xs text-gray-500 mt-2">
                         Usa “Asignar” para establecer una contraseña manual (mínimo 8 caracteres).
-                        “Reset pass” envía una temporal por correo.
                     </p>
                 </div>
 

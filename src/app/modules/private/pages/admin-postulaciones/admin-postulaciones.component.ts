@@ -126,6 +126,7 @@ export class AdminPostulacionesComponent {
 
   // --- NUEVO: ver detalle y volver ---
   verDetalles(p: Postulacion) {
+    console.log("Ver detalles de:", p)
     this.cargando = true
     this.selectedId = p.docente_id
     this.detalle = null
@@ -201,7 +202,13 @@ export class AdminPostulacionesComponent {
         });
         this.newPassword = '';
         this.setLoading(this.selectedId!, false);
-        this.volverAlListado()
+        console.log("Contraseña asignada:", this.newPassword);
+        this.editandoPass = false; // cerrar edición
+        console.log("this.detalle*******++", this.detalle);
+              this.recargarDetalle();
+
+        // this.verDetalles(this.detalle!); // recargar detalle para ver cambios
+        // this.volverAlListado()
       },
       error: (err) => {
         console.error('Error al asignar contraseña:', err);
@@ -216,22 +223,23 @@ export class AdminPostulacionesComponent {
     });
 
 
-    // // Requiere endpoint en backend. Ver método en el service más abajo.
-    // this.service.asignarPassword(this.detalle.usuario_id, this.newPassword).subscribe({
-    //   next: () => {
-    //     this.showActionResponse(this.selectedId!, { success:true, type:'success', message:'Contraseña asignada.' })
-    //     this.newPassword = ''
-    //     this.setLoading(this.selectedId!, false)
-    //   },
-    //   error: (e) => {
-    //     console.error(e)
-    //     // Fallback: si no existe el endpoint, avisa usar resetPassword
-    //     this.showActionResponse(this.selectedId!, { success:false, type:'error', message:'No se pudo asignar. Verifica el endpoint o usa "Reset pass".' })
-    //     this.setLoading(this.selectedId!, false)
-    //   }
-    // })
-  }
 
+  }
+recargarDetalle() {
+  if (!this.selectedId) return;
+  
+  this.setLoading(this.selectedId, true);
+  this.service.getById(this.selectedId).subscribe({
+    next: (resp) => {
+      this.detalle = resp.data;
+      this.setLoading(this.selectedId!, false);
+    },
+    error: (e) => {
+      console.error('Error al recargar detalle:', e);
+      this.setLoading(this.selectedId!, false);
+    }
+  });
+}
   resetPassword() {
     if (!this.detalle?.usuario_id) {
       if (this.selectedId) this.showActionResponse(this.selectedId, { success: false, type: 'warning', message: 'Sin usuario asociado.' })
@@ -290,5 +298,7 @@ cancelarEdicion() {
   this.newPassword = '';
   this.showPass = false;
 }
+
+
 
 }
