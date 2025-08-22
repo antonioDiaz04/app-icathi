@@ -68,10 +68,10 @@
                     {{ docenteData().email }}
                 </p>
             </div>
-
+            <!-- [src]="docente?.foto_url || '/image/use.png'" -->
             <!-- Avatar -->
             <div class="flex-shrink-0">
-                <img [src]="docenteData().foto_url || 'https://via.placeholder.com/150'" alt="Foto de docente" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-orange-200 shadow-sm" />
+                <img [src]="docenteData().foto_url  || '/image/use.png'" alt="Foto de docente" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-orange-200 shadow-sm" />
             </div>
         </header>
 

@@ -11,8 +11,33 @@ import { Router } from '@angular/router';
     standalone: false
 })
 export class CoursesComponent implements OnInit{
+    docente = {
+    nombre: 'María',
+    apellidos: 'López',
+    email: 'maria.lopez@ejemplo.edu.mx'
+  };
+  // Métricas estáticas de ejemplo
+  metrics = {
+    cursosActivos: 3,
+    sesionesHoy: 2,
+    asistenciaPromedio: 96,
+    pendientes: 4
+  };
+
+  // Cursos asignados (estático)
+  courses = [
+    { id: 1, nombre: 'Excel Intermedio', horario: 'Lun y Mié 10:00–12:00', aula: 'B-203' },
+    { id: 2, nombre: 'Introducción a JavaScript', horario: 'Mar y Jue 16:00–18:00', aula: 'Lab 2' },
+    { id: 3, nombre: 'Comunicación Efectiva', horario: 'Vie 09:00–11:00', aula: 'A-105' },
+  ];
+
+  // Próximas sesiones (estático)
+  upcoming = [
+    { idCurso: 2, curso: 'Introducción a JavaScript', fecha: new Date(), horario: '16:00–18:00', aula: 'Lab 2' },
+    { idCurso: 1, curso: 'Excel Intermedio', fecha: this.addHours(new Date(), 20), horario: '10:00–12:00', aula: 'B-203' },
+  ];
   // Datos de los cursos
-  courses :any = [];
+  // courses :any = [];
   //   { name: 'Curso de Programación Web', schedule: 'Lunes y Miércoles - 10:00 AM a 12:00 PM', link: '/courses/web-development' },
   //   { name: 'Curso de Marketing Digital', schedule: 'Martes y Jueves - 2:00 PM a 4:00 PM', link: '/courses/digital-marketing' },
   //   { name: 'Curso de Inglés Intermedio', schedule: 'Viernes - 9:00 AM a 1:00 PM', link: '/courses/intermediate-english' }
@@ -39,6 +64,18 @@ ngOnInit() {
 }
 docenteData: any = null; // Datos del docente
 
+  marcarAsistencia(id: number) {
+    // Simulación de acción
+    console.log('Asistencia marcada para curso:', id);
+    // Aquí puedes integrar tu servicio real de asistencia/toast.
+  }
+  
+// Helper simple para ejemplo
+ addHours(date: Date, h: number) {
+  const d = new Date(date);
+  d.setHours(d.getHours() + h);
+  return d;
+}
 updatePendingAlerts() {
   const alerts: string[] = [];
 

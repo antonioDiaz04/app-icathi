@@ -1,0 +1,82 @@
+<div class="max-w-7xl mx-auto p-6">
+  <!-- Encabezado -->
+  <h1 class="text-2xl font-bold text-gray-900 mb-6">Panel de Docente</h1>
+
+  <!-- Aviso -->
+
+  <!-- Aviso -->
+  <div *ngIf="!courses || courses.length === 0" class="mt-6 mb-6 px-4">
+    <div class="relative bg-white p-8 rounded-lg shadow-lg border-4 animate-border border-gradient">
+      <div class="flex flex-col md:flex-row items-center md:space-x-4 space-y-4 md:space-y-0">
+        <!-- Ícono -->
+        <i class="ui info circular icon text-5xl text-blue-500 animate-icon"></i>
+        
+        <!-- Contenido -->
+        <div>
+          <h3 class="text-gray-800 font-semibold text-xl md:text-2xl">¡Atención!</h3>
+          <p class="text-gray-700 text-sm md:text-base">
+            No se han encontrado cursos asignados. Esto puede deberse a una de las siguientes razones:
+          </p>
+          <ul class="text-gray-700 text-sm md:text-base mt-2 space-y-1 list-disc list-inside">
+            <li>Su perfil está en revisión.</li>
+            <li>Faltan datos importantes en su perfil como docente.</li>
+            <li>No se le han asignado cursos aún.</li>
+          </ul>
+          <p class="text-gray-700 mt-4 font-medium">
+            Para resolver esta situación, siga estos pasos:
+          </p>
+          <ol class="text-gray-700 text-sm md:text-base mt-2 space-y-1 list-decimal list-inside">
+            <li>Acceda a su perfil y complete los datos requeridos.</li>
+            <li>Verifique si su perfil ha sido aprobado.</li>
+            <li>Si el problema persiste, comuníquese con soporte técnico.</li>
+          </ol>
+          <a
+            routerLink="/docente/perfil"
+            class="mt-4 inline-block px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
+          >
+            Completar Perfil
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de Cursos -->
+  <div *ngIf="courses && courses.length > 0" class="mb-12">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Cursos Asignados</h2>
+    <table class="min-w-full table-auto mt-4 border border-gray-300 shadow-md rounded-lg overflow-hidden">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="px-6 py-3 text-left text-sm text-gray-600">Curso</th>
+          <th class="px-6 py-3 text-left text-sm text-gray-600">Horario</th>
+          <th class="px-6 py-3 text-left text-sm text-gray-600">Asistencia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let course of courses" class="border-b hover:bg-gray-50">
+          <td class="px-6 py-3 text-sm text-gray-700">{{ course.nombre }}</td>
+          <td class="px-6 py-3 text-sm text-gray-700">{{ course.horario }}</td>
+          <td class="px-6 py-3 text-sm text-gray-700">
+            <button (click)="markAttendance(course.id)"
+              class="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition duration-200 ease-in-out transform hover:scale-105">
+              Marcar Asistencia
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Enlaces Importantes -->
+  <div class="mb-12">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Enlaces Importantes</h2>
+    <ul class="mt-4 space-y-4">
+      <li><a routerLink="/docente/perfil" class="text-blue-500 hover:text-blue-600 transition duration-300 ease-in-out">
+        <i class="ui user circle icon"></i> Perfil Docente</a></li>
+      <li><a routerLink="/docente/tareas" class="text-blue-500 hover:text-blue-600 transition duration-300 ease-in-out">
+        <i class="ui tasks icon"></i> Tareas y Evaluaciones</a></li>
+      <li><a routerLink="/docente/calendario" class="text-blue-500 hover:text-blue-600 transition duration-300 ease-in-out">
+        <i class="ui calendar icon"></i> Calendario Académico</a></li>
+    </ul>
+  </div>
+</div>
