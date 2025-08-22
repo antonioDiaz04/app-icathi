@@ -1,12 +1,12 @@
 // import type { DocenteDataService } from "./commons/services/docente-data.service"
-import { Component, type OnInit, signal, computed, effect, type OnDestroy } from "@angular/core"
+import { Component, type OnInit, signal, computed, effect, type OnDestroy, Injector, inject, runInInjectionContext } from "@angular/core"
 
 import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 // import type { PendingAlertService } from "../../shared/services/pending-alert.service"
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop"
 import { filter } from "rxjs/operators"
 import { AuthService } from "../../shared/services/auth.service"
-import { PendingAlertService } from "../../shared/services/pending-alert.service"
+// import { PendingAlertService } from "../../shared/services/pending-alert.service"
 import { DocenteDataService } from "./commons/services/docente-data.service"
 import { NavigationEnd, Router } from "@angular/router"
 import { ValidadorDocenteService } from "../validador/commons/services/validador-docente.service";
@@ -26,28 +26,29 @@ export class DocenteComponent implements OnInit, OnDestroy {
   sidebarDocenteVisible = signal(false)
   visible_docente = signal(false)
 
+private injector = inject(Injector);
   // Computed signals para alertas
-  pendingCount = computed(() => this.pendingAlertService.pendingCount())
-  highPriorityCount = computed(() => this.pendingAlertService.highPriorityCount())
-  pendingAlerts = computed(() => this.pendingAlertService.pendingAlerts())
+  // pendingCount = computed(() => this.pendingAlertService.pendingCount())
+  // highPriorityCount = computed(() => this.pendingAlertService.highPriorityCount())
+  // pendingAlerts = computed(() => this.pendingAlertService.pendingAlerts())
 
-  // Computed para mostrar diferentes tipos de alertas
-  documentAlerts = computed(() => this.pendingAlertService.documentAlerts())
-  validationAlerts = computed(() => this.pendingAlertService.validationAlerts())
+  // // Computed para mostrar diferentes tipos de alertas
+  // documentAlerts = computed(() => this.pendingAlertService.documentAlerts())
+  // validationAlerts = computed(() => this.pendingAlertService.validationAlerts())
 
   // Effect para actualizar alertas cuando cambien los datos
   private updateAlertsEffect = effect(() => {
     const docente = this.docenteData()
     const especialidades = this.selectedEspecialidades_doce()
 
-    if (docente) {
-      this.pendingAlertService.updatePendingAlerts(docente, especialidades)
-    }
+    // if (docente) {
+    //   this.pendingAlertService.updatePendingAlerts(docente, especialidades)
+    // }
   })
 
   constructor(
     private authService: AuthService,
-    private pendingAlertService: PendingAlertService,
+    // private pendingAlertService: PendingAlertService,
     private docenteDataService: DocenteDataService,
     private router: Router,
     private breakpointObserver: BreakpointObserver,
@@ -70,10 +71,12 @@ export class DocenteComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadUserDetails()
     this.detectScreenSize()
+
+    
   }
 
   ngOnDestroy(): void {
-    this.pendingAlertService.clearAlerts()
+    // this.pendingAlertService.clearAlerts()
   }
 
   /**
@@ -84,18 +87,26 @@ export class DocenteComponent implements OnInit, OnDestroy {
     const especialidades = this.selectedEspecialidades_doce()
 
     if (docente) {
-      this.pendingAlertService.updatePendingAlerts(docente, especialidades)
+      // this.pendingAlertService.updatePendingAlerts(docente, especialidades)
     }
   }
 
-  private detectScreenSize(): void {
+  // private detectScreenSize(): void {
+  //   this.breakpointObserver
+  //     .observe([Breakpoints.Handset])
+  //     .pipe(takeUntilDestroyed())
+  //     .subscribe((result) => {
+  //       this.isMobile.set(result.matches)
+  //     })
+  // }
+private detectScreenSize(): void {
+  runInInjectionContext(this.injector, () => {
     this.breakpointObserver
       .observe([Breakpoints.Handset])
       .pipe(takeUntilDestroyed())
-      .subscribe((result) => {
-        this.isMobile.set(result.matches)
-      })
-  }
+      .subscribe(result => this.isMobile.set(result.matches));
+  });
+}
 
   private async loadUserDetails(): Promise<void> {
     try {
@@ -145,37 +156,37 @@ export class DocenteComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene el tooltip con información detallada
-   */
-  getPendingAlertsTooltip(): string {
-    const alerts = this.pendingAlerts()
-    if (alerts.length === 0) return "No hay alertas pendientes"
+  //  */
+  // getPendingAlertsTooltip(): string {
+  //   const alerts = this.pendingAlerts()
+  //   if (alerts.length === 0) return "No hay alertas pendientes"
 
-    const highPriority = alerts.filter((a) => a.priority === "high")
-    const mediumPriority = alerts.filter((a) => a.priority === "medium")
-    const lowPriority = alerts.filter((a) => a.priority === "low")
+  //   const highPriority = alerts.filter((a) => a.priority === "high")
+  //   const mediumPriority = alerts.filter((a) => a.priority === "medium")
+  //   const lowPriority = alerts.filter((a) => a.priority === "low")
 
-    let tooltip = "Alertas pendientes:\n"
+  //   let tooltip = "Alertas pendientes:\n"
 
-    if (highPriority.length > 0) {
-      tooltip += `\n🔴 Alta prioridad (${highPriority.length}):\n`
-      highPriority.forEach((alert) => (tooltip += `• ${alert.message}\n`))
-    }
+  //   if (highPriority.length > 0) {
+  //     tooltip += `\n🔴 Alta prioridad (${highPriority.length}):\n`
+  //     highPriority.forEach((alert) => (tooltip += `• ${alert.message}\n`))
+  //   }
 
-    if (mediumPriority.length > 0) {
-      tooltip += `\n🟡 Media prioridad (${mediumPriority.length}):\n`
-      mediumPriority.forEach((alert) => (tooltip += `• ${alert.message}\n`))
-    }
+  //   if (mediumPriority.length > 0) {
+  //     tooltip += `\n🟡 Media prioridad (${mediumPriority.length}):\n`
+  //     mediumPriority.forEach((alert) => (tooltip += `• ${alert.message}\n`))
+  //   }
 
-    if (lowPriority.length > 0) {
-      tooltip += `\n🟢 Baja prioridad (${lowPriority.length}):\n`
-      lowPriority.forEach((alert) => (tooltip += `• ${alert.message}\n`))
-    }
+  //   if (lowPriority.length > 0) {
+  //     tooltip += `\n🟢 Baja prioridad (${lowPriority.length}):\n`
+  //     lowPriority.forEach((alert) => (tooltip += `• ${alert.message}\n`))
+  //   }
 
-    return tooltip.trim()
-  }
+  //   return tooltip.trim()
+  // }
 
   async logout(): Promise<void> {
-    this.pendingAlertService.clearAlerts()
+    // this.pendingAlertService.clearAlerts()
     await this.authService.clearToken()
     this.router.navigate(["/public/login"])
   }
