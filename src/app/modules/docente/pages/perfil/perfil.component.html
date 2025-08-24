@@ -4,16 +4,21 @@
     <header class="flex items-start justify-between gap-4 mb-3">
         <div>
             <h1 class="m-0 font-bold text-2xl sm:text-[28px] text-slate-900">Mi Perfil</h1>
-            <p class="text-slate-500 text-[15px]">Gestiona tu información y configuración de cuenta</p>
+            <p class="text-slate-500 text-[15px]">Gestiona tu información </p>
         </div>
-
         <div class="flex items-center gap-3" *ngIf="docenteData() as docente">
-            <span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium"
-                [ngClass]="statusClass(docente.estatus_id)">
+            <span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium" [ngClass]="statusClass(docente.estatus_id)">
                 {{ docente.estatus_valor }}
             </span>
+
+            <!-- Botón Editar -->
+            <button type="button" class="p-2 rounded-lg border border-slate-200 hover:bg-slate-100" (click)="toggleEdit()" [attr.aria-pressed]="editMode">
+                <!-- Ícono simple -->
+                <span *ngIf="!editMode">✏️</span>
+                <span *ngIf="editMode">✅</span>
+            </button>
         </div>
-       
+
     </header>
 
     <!-- Tabs -->
@@ -36,15 +41,14 @@
             <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-5">
                 <!-- Foto -->
                 <div class="flex flex-col items-center gap-2">
-                    <div
-                        class="w-40 h-40 rounded-full overflow-hidden border-4 border-white outline outline-1 outline-slate-200 shadow-sm">
-                        <img class="w-full h-full object-cover"
-                            [src]="fotoPreview() || 'https://placehold.co/160x160?text=Foto'" alt="Foto de perfil" />
+                    <div class="w-40 h-40 rounded-full overflow-hidden border-4 border-white outline outline-1 outline-slate-200 shadow-sm">
+                        <img class="w-full h-full object-cover" [src]="fotoPreview() || 'https://placehold.co/160x160?text=Foto'" alt="Foto de perfil" />
                     </div>
 
-                    <label
-                        class="cursor-pointer inline-flex items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-900 px-4 py-2 text-sm hover:bg-slate-100">
-                        <input type="file" accept="image/png,image/jpeg,image/gif" hidden
+                    <label class="cursor-pointer inline-flex items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-900 px-4 py-2 text-sm hover:bg-slate-100">
+                        <input  [ngClass]="{
+    'pointer-events-none cursor-not-allowed': !editMode
+  }"type="file" accept="image/png,image/jpeg,image/gif" hidden
                             (change)="onChangePhoto($event)" />
                         📷 Cambiar foto
                     </label>
@@ -57,42 +61,54 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div class="flex flex-col gap-1.5">
                             <label class="font-medium text-slate-900">Nombre(s)</label>
-                            <input formControlName="nombre" type="text" placeholder="Nombre"
-                                class="rounded-lg border border-slate-200 px-3 py-2.5 text-[15px] focus:outline-none focus:ring-4 focus:ring-slate-900/10 focus:border-slate-900" />
+                            <input [ngClass]="{
+    'pointer-events-none cursor-not-allowed': !editMode
+  }" formControlName="nombre" type="text" placeholder="Nombre" [ngClass]="{
+    'pointer-events-none cursor-not-allowed': !editMode
+  }" class="rounded-lg border border-slate-200 px-3 py-2.5 text-[15px]
+         focus:outline-none focus:ring-4 focus:ring-slate-900/10 focus:border-slate-900" />
+
+
                         </div>
 
                         <div class="flex flex-col gap-1.5">
                             <label class="font-medium text-slate-900">Apellidos</label>
-                            <input formControlName="apellidos" type="text" placeholder="Apellidos"
-                                class="rounded-lg border border-slate-200 px-3 py-2.5 text-[15px] focus:outline-none focus:ring-4 focus:ring-slate-900/10 focus:border-slate-900" />
+                            <input [ngClass]="{
+    'pointer-events-none cursor-not-allowed': !editMode
+  }" formControlName="apellidos" type="text" placeholder="Apellidos" class="rounded-lg border border-slate-200 px-3 py-2.5 text-[15px] focus:outline-none focus:ring-4 focus:ring-slate-900/10 focus:border-slate-900" />
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div class="flex flex-col gap-1.5">
                             <label class="font-medium text-slate-900">Correo electrónico</label>
-                            <input formControlName="email" type="email" placeholder="correo@ejemplo.com"
-                                class="rounded-lg border border-slate-200 px-3 py-2.5 text-[15px] focus:outline-none focus:ring-4 focus:ring-slate-900/10 focus:border-slate-900" />
+                            <input [ngClass]="{
+    'pointer-events-none cursor-not-allowed': !editMode
+  }" formControlName="email" type="email" placeholder="correo@ejemplo.com" class="rounded-lg border border-slate-200 px-3 py-2.5 text-[15px] focus:outline-none focus:ring-4 focus:ring-slate-900/10 focus:border-slate-900" />
                         </div>
 
                         <div class="flex flex-col gap-1.5">
                             <label class="font-medium text-slate-900">Teléfono</label>
-                            <input formControlName="telefono" type="tel" placeholder="+52 55 1234 5678"
-                                class="rounded-lg border border-slate-200 px-3 py-2.5 text-[15px] focus:outline-none focus:ring-4 focus:ring-slate-900/10 focus:border-slate-900" />
+                            <input [ngClass]="{
+    'pointer-events-none cursor-not-allowed': !editMode
+  }" formControlName="telefono" type="tel" placeholder="+52 55 1234 5678" class="rounded-lg border border-slate-200 px-3 py-2.5 text-[15px] focus:outline-none focus:ring-4 focus:ring-slate-900/10 focus:border-slate-900" />
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div class="flex flex-col gap-1.5">
+                    <div class="grid grid-cols-1 md:grid-cols-1 gap-3">
+                        <!-- <div class="flex flex-col gap-1.5">
                             <label class="font-medium text-slate-900">WhatsApp</label>
-                            <input formControlName="whatsapp" type="tel" placeholder="+52 55 1234 5678"
-                                class="rounded-lg border border-slate-200 px-3 py-2.5 text-[15px] focus:outline-none focus:ring-4 focus:ring-slate-900/10 focus:border-slate-900" />
-                        </div>
+                            <input  [ngClass]="{
+    'pointer-events-none cursor-not-allowed': !editMode
+  }"       
+ formControlName="whatsapp" type="tel" placeholder="+52 55 1234 5678" class="rounded-lg border border-slate-200 px-3 py-2.5 text-[15px] focus:outline-none focus:ring-4 focus:ring-slate-900/10 focus:border-slate-900" />
+                        </div> -->
 
                         <div class="flex flex-col gap-1.5">
                             <label class="font-medium text-slate-900">Dirección</label>
-                            <input formControlName="direccion" type="text" placeholder="Calle, Colonia, Ciudad"
-                                class="rounded-lg border border-slate-200 px-3 py-2.5 text-[15px] focus:outline-none focus:ring-4 focus:ring-slate-900/10 focus:border-slate-900" />
+                            <input [ngClass]="{
+    'pointer-events-none cursor-not-allowed': !editMode
+  }" formControlName="direccion" type="text" placeholder="Calle, Colonia, Ciudad" class="rounded-lg border border-slate-200 px-3 py-2.5 text-[15px] focus:outline-none focus:ring-4 focus:ring-slate-900/10 focus:border-slate-900" />
                         </div>
                     </div>
                 </form>
@@ -100,13 +116,10 @@
 
             <!-- Acciones -->
             <div class="flex justify-end gap-2 mt-4">
-                <button type="button"
-                    class="rounded-lg border border-slate-200 bg-white text-slate-900 px-4 py-2.5 text-sm hover:bg-slate-50"
-                    (click)="onCancel()">
+                <button type="button" class="rounded-lg border border-slate-200 bg-white text-slate-900 px-4 py-2.5 text-sm hover:bg-slate-50" (click)="onCancel()">
                     Cancelar
                 </button>
-                <button type="button" class="rounded-lg bg-slate-900 text-white px-4 py-2.5 text-sm disabled:opacity-60"
-                    [disabled]="saving()" (click)="onSave()">
+                <button type="button" class="rounded-lg bg-slate-900 text-white px-4 py-2.5 text-sm disabled:opacity-60" [disabled]="saving()" (click)="onSave()">
                     <span *ngIf="!saving()">💾 Guardar cambios</span>
                     <span *ngIf="saving()">Guardando…</span>
                 </button>
@@ -118,66 +131,31 @@
             <h2 class="text-[18px] font-semibold mb-1">Documentación</h2>
             <p class="text-slate-500 text-sm mb-4">Cédula, identificación y CV del docente</p>
 
-            <form [formGroup]="form" class="flex flex-col gap-3">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div class="flex flex-col gap-1.5">
-                        <label class="font-medium text-slate-900">Especialidad</label>
-                        <input formControlName="especialidad" type="text" placeholder="Ej. Matemáticas"
-                            class="rounded-lg border border-slate-200 px-3 py-2.5 text-[15px] focus:outline-none focus:ring-4 focus:ring-slate-900/10 focus:border-slate-900" />
-                    </div>
+            <form [formGroup]="form" class="flex flex-col gap-4">
+                <!-- Fila 1 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
+                    <app-pdf-uploader-preview class="h-full" [label]="'Documento de Identificación (PDF)'" [placeholder]="'https://...'" [url]="form.get('documento_identificacion')?.value" [targetFolder]="'documentos_identificacion_docentes'" [uploadFn]="uploadIdentificacionFn"
+                        (urlChange)="form.get('documento_identificacion')?.setValue($event)">
+                    </app-pdf-uploader-preview>
 
-                    <div class="flex items-end">
-                        <label class="inline-flex items-center gap-2 text-slate-900">
-                            <input type="checkbox" formControlName="certificado_profesional"
-                                class="size-4 rounded border-slate-300" />
-                            <span>Certificado profesional</span>
-                        </label>
-                    </div>
-                </div>
+                    <app-pdf-uploader-preview class="h-full" [label]="'Cédula Profesional (PDF)'" [url]="form.get('cedula_profesional')?.value" [targetFolder]="'cedulas_docentes'" [uploadFn]="uploadCedulaFn" (urlChange)="form.get('cedula_profesional')?.setValue($event)">
+                    </app-pdf-uploader-preview>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div class="flex flex-col gap-1.5">
-                        <label class="font-medium text-slate-900">Número de documento de identificación</label>
-                        <input formControlName="num_documento_identificacion" type="text" placeholder="ID / Folio"
-                            class="rounded-lg border border-slate-200 px-3 py-2.5 text-[15px] focus:outline-none focus:ring-4 focus:ring-slate-900/10 focus:border-slate-900" />
-                    </div>
-
-                    <div class="flex flex-col gap-1.5">
-                        <label class="font-medium text-slate-900">URL Documento de Identificación</label>
-                        <input formControlName="documento_identificacion" type="url" placeholder="https://..."
-                            class="rounded-lg border border-slate-200 px-3 py-2.5 text-[15px] focus:outline-none focus:ring-4 focus:ring-slate-900/10 focus:border-slate-900" />
-                        <a *ngIf="form.value.documento_identificacion" class="text-slate-900 underline text-sm"
-                            [href]="form.value.documento_identificacion" target="_blank">Ver documento</a>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div class="flex flex-col gap-1.5">
-                        <label class="font-medium text-slate-900">URL Cédula Profesional</label>
-                        <input formControlName="cedula_profesional" type="url" placeholder="https://..."
-                            class="rounded-lg border border-slate-200 px-3 py-2.5 text-[15px] focus:outline-none focus:ring-4 focus:ring-slate-900/10 focus:border-slate-900" />
-                        <a *ngIf="form.value.cedula_profesional" class="text-slate-900 underline text-sm"
-                            [href]="form.value.cedula_profesional" target="_blank">Ver cédula</a>
-                    </div>
-
-                    <div class="flex flex-col gap-1.5">
-                        <label class="font-medium text-slate-900">URL Curriculum (CV)</label>
-                        <input formControlName="curriculum_url" type="url" placeholder="https://..."
-                            class="rounded-lg border border-slate-200 px-3 py-2.5 text-[15px] focus:outline-none focus:ring-4 focus:ring-slate-900/10 focus:border-slate-900" />
-                        <a *ngIf="form.value.curriculum_url" class="text-slate-900 underline text-sm"
-                            [href]="form.value.curriculum_url" target="_blank">Ver CV</a>
-                    </div>
+                    <app-pdf-uploader-preview class="h-full" [label]="'Curriculum (CV en PDF)'" [url]="form.get('curriculum_url')?.value" [targetFolder]="'cv_docentes'" [uploadFn]="uploadCvFn" (urlChange)="form.get('curriculum_url')?.setValue($event)">
+                    </app-pdf-uploader-preview>
+                    <app-pdf-uploader-preview class="h-full" [label]="'Curriculum (CV en PDF)'" [url]="form.get('curriculum_url')?.value" [targetFolder]="'cv_docentes'" [uploadFn]="uploadCvFn" (urlChange)="form.get('curriculum_url')?.setValue($event)">
+                    </app-pdf-uploader-preview>
+                    <app-pdf-uploader-preview class="h-full" [label]="'Curriculum (CV en PDF)'" [url]="form.get('curriculum_url')?.value" [targetFolder]="'cv_docentes'" [uploadFn]="uploadCvFn" (urlChange)="form.get('curriculum_url')?.setValue($event)">
+                    </app-pdf-uploader-preview>
                 </div>
             </form>
 
+
             <div class="flex justify-end gap-2 mt-4">
-                <button type="button"
-                    class="rounded-lg border border-slate-200 bg-white text-slate-900 px-4 py-2.5 text-sm hover:bg-slate-50"
-                    (click)="onCancel()">
+                <button type="button" class="rounded-lg border border-slate-200 bg-white text-slate-900 px-4 py-2.5 text-sm hover:bg-slate-50" (click)="onCancel()">
                     Cancelar
                 </button>
-                <button type="button" class="rounded-lg bg-slate-900 text-white px-4 py-2.5 text-sm disabled:opacity-60"
-                    [disabled]="saving()" (click)="onSave()">
+                <button type="button" class="rounded-lg bg-slate-900 text-white px-4 py-2.5 text-sm disabled:opacity-60" [disabled]="saving()" (click)="onSave()">
                     💾 Guardar cambios
                 </button>
             </div>

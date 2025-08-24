@@ -1,9 +1,13 @@
-import { Component, computed, effect, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ValidadorDocenteService } from '../../../validador/commons/services/validador-docente.service';
 import { DocenteDataService } from '../../commons/services/docente-data.service';
 import { AuthService } from '../../../../shared/services/auth.service';
+// import { PdfUploaderPreviewComponent } from '../../../../shared/components/pdf-uploader-preview/pdf-uploader-preview.component';
+
+import { HttpClient } from '@angular/common/http';
+import { PdfUploaderPreviewComponent } from '../../../../shared/components/pdf-uploader-preview/pdf-uploader-preview.component';
 
 type TabKey = 'personal' | 'documentacion' | 'configuracion' | 'seguridad';
 
@@ -34,7 +38,7 @@ export interface Docente {
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, PdfUploaderPreviewComponent],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.scss',
 })
@@ -59,37 +63,6 @@ export class PerfilComponent {
   docenteData = signal<any>(null)
   id = signal<number | null>(null)
 
-  // // Simulación: datos recibidos desde tu API
-  // docente: Docente = {
-  //   "id": 379,
-  //   "nombre": "Claudio",
-  //   "apellidos": "franco escamilla",
-  //   "email": "20211036@uthh.edu.mx",
-  //   "telefono": "7711512740",
-  //   "especialidad": null,
-  //   "certificado_profesional": false,
-  //   "cedula_profesional": "https://iicathi-api-yiit.onrender.com/archivos/descargar?folder=cedulas_docentes&nombre=sewss-1755849120790-307066525.pdf",
-  //   "documento_identificacion": "https://iicathi-api-yiit.onrender.com/archivos/descargar?folder=documentos_identificacion_docentes&nombre=Doc1-1755848993017-260800619.pdf",
-  //   "num_documento_identificacion": null,
-  //   "curriculum_url": null,
-  //   "estatus_tipo": "DOCENTE",
-  //   "estatus_valor": "Pendiente de validación",
-  //   "created_at": "2025-08-21T23:41:21.105Z",
-  //   "updated_at": "2025-08-22T07:55:20.291Z",
-  //   "usuario_validador_id": null,
-  //   "fecha_validacion": null,
-  //   "foto_url": "https://iicathi-api-yiit.onrender.com/archivos/descargar?folder=perfiles_docentes&nombre=ChatGPT_Image_23_jul_2025_20_59_56-1755849313266-454937655.png",
-  //   "validador_nombre": null,
-  //   "validador_apellidos": null
-  // };
-
-  // get chipColor() {
-  //   const v = (this.docente.estatus_valor || '').toLowerCase();
-  //   if (v.includes('verific') || v.includes('validado')) return 'chip--ok';
-  //   if (v.includes('pendiente')) return 'chip--warn';
-  //   return 'chip';
-  // }
-  // Computed para el color del chip de estado
   chipColor = computed(() => {
     const docente = this.docenteData();
     if (!docente || !docente.estatus_valor) return 'chip';
@@ -99,14 +72,15 @@ export class PerfilComponent {
     if (v.includes('pendiente')) return 'chip--warn';
     return 'chip';
   });
-
+  // private fb = inject(FormBuilder);
+  private http = inject(HttpClient);
   constructor(private fb: FormBuilder
     , private validadorDocenteService: ValidadorDocenteService,
     private docenteDataService: DocenteDataService,
     private authService: AuthService,
   ) {
     this.form = this.fb.group({
-      nombre: ['', [Validators.required, Validators.maxLength(100)]],
+      nombre: ['', [Validators.required, Validators.maxLength(100)],],
       apellidos: ['', [Validators.required, Validators.maxLength(100)]],
       email: ['', [Validators.required, Validators.email]],
       telefono: [''],
@@ -123,6 +97,7 @@ export class PerfilComponent {
       foto_url: [''],
     });
 
+
     effect(() => {
       const data = this.docenteData();
       if (data) {
@@ -130,7 +105,40 @@ export class PerfilComponent {
       }
     });
   }
+  // === Implementación genérica de subida ===
+  private async uploadToServer(file: File, folder: string): Promise<string> {
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('folder', folder);
 
+    // Espera que tu backend responda con { url: 'https://...' }
+    const resp = await this.http.post<{ url: string }>("API_UPLOAD", fd).toPromise();
+    if (!resp?.url) throw new Error('El backend no devolvió la URL del archivo.');
+    return resp.url;
+  }
+
+  // Validador sencillo de URL opcional
+  private urlOrEmptyValidator = (control: any) => {
+    const v: string = control.value;
+    if (!v) return null;
+    try {
+      // valida formato URL cuando hay algo
+      new URL(v);
+      return null;
+    } catch {
+      return { invalidUrl: true };
+    }
+  };
+
+  // === UploadFns que pasamos al hijo ===
+  uploadIdentificacionFn = (file: File) =>
+    this.uploadToServer(file, 'documentos_identificacion_docentes');
+
+  uploadCedulaFn = (file: File) =>
+    this.uploadToServer(file, 'cedulas_docentes');
+
+  uploadCvFn = (file: File) =>
+    this.uploadToServer(file, 'cv_docentes');
 
   ngOnInit(): void {
 
@@ -186,9 +194,9 @@ export class PerfilComponent {
     });
 
     // Establecer la vista previa de la foto si existe
-    if (docente.foto_url) {
-      this.fotoPreview.set(docente.foto_url);
-    }
+    // if (docente.foto_url) {
+    //   this.fotoPreview.set(docente.foto_url);
+    // }
   }
   onChangePhoto(ev: Event) {
     const input = ev.target as HTMLInputElement;
@@ -230,24 +238,30 @@ export class PerfilComponent {
       this.patchFromDocente(docente);
     }
   }
-statusClass(v: Number) {
+  statusClass(v: Number) {
     console.log("estatus_id", v);
-    
+
     if (v == 4) { // Activo
-        return ['bg-emerald-100', 'text-emerald-800'];
-      }
-      if (v == 5) { // Inactivo
-        return ['bg-gray-100', 'text-gray-800'];
-      }
-      if (v == 6) { // Pendiente de validación
-        // return ['bg-emerald-100', 'text-emerald-800'];
-        return ['bg-yellow-200', 'text-yellow-800'];
+      return ['bg-emerald-100', 'text-emerald-800'];
+    }
+    if (v == 5) { // Inactivo
+      return ['bg-gray-100', 'text-gray-800'];
+    }
+    if (v == 6) { // Pendiente de validación
+      // return ['bg-emerald-100', 'text-emerald-800'];
+      return ['bg-yellow-200', 'text-yellow-800'];
     }
     if (v == 7) { // Suspendido
-        return ['bg-red-100', 'text-red-800'];
+      return ['bg-red-100', 'text-red-800'];
     }
-    
+
     // Estado por defecto para valores no reconocidos
     return ['bg-gray-200', 'text-gray-900'];
-}
+  }
+  editMode = false;
+
+  toggleEdit() {
+    this.editMode = !this.editMode;
+  }
+
 }
