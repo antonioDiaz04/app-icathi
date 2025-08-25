@@ -140,22 +140,22 @@
             <p class="text-slate-500 text-sm mb-4">Cédula, identificación y CV del docente</p>
 
             <form [formGroup]="form" class="flex flex-col gap-4">
-                <!-- Fila 1 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
                     <app-pdf-uploader-preview class="h-full" [label]="'Documento de Identificación (PDF)'" [placeholder]="'https://...'" [url]="form.get('documento_identificacion')?.value" [targetFolder]="'documentos_identificacion_docentes'" [uploadFn]="uploadIdentificacionFn"
-                        (urlChange)="form.get('documento_identificacion')?.setValue($event)">
+                        (urlChange)="form.get('documento_identificacion')?.setValue($event)" [allowUpload]="editMode">
                     </app-pdf-uploader-preview>
 
-                    <app-pdf-uploader-preview class="h-full" [label]="'Cédula Profesional (PDF)'" [url]="form.get('cedula_profesional')?.value" [targetFolder]="'cedulas_docentes'" [uploadFn]="uploadCedulaFn" (urlChange)="form.get('cedula_profesional')?.setValue($event)">
+                    <app-pdf-uploader-preview class="h-full" [label]="'Cédula Profesional (PDF)'" [url]="form.get('cedula_profesional')?.value" [targetFolder]="'cedulas_docentes'" [uploadFn]="uploadCedulaFn" (urlChange)="form.get('cedula_profesional')?.setValue($event)"
+                        [allowUpload]="editMode">
                     </app-pdf-uploader-preview>
 
-                    <app-pdf-uploader-preview class="h-full" [label]="'Curriculum (CV en PDF)'" [url]="form.get('curriculum_url')?.value" [targetFolder]="'cv_docentes'" [uploadFn]="uploadCvFn" (urlChange)="form.get('curriculum_url')?.setValue($event)">
+                    <app-pdf-uploader-preview class="h-full" [label]="'Curriculum (CV en PDF)'" [url]="form.get('curriculum_url')?.value" [targetFolder]="'cv_docentes'" [uploadFn]="uploadCurriculumFn" (urlChange)="form.get('curriculum_url')?.setValue($event)" [allowUpload]="editMode">
                     </app-pdf-uploader-preview>
-
                 </div>
             </form>
+
             <!-- [disabled]="!editMode" -->
-            <div class="flex justify-end gap-2 mt-4">
+            <div class="flex justify-end gap-2 mt-4" *ngIf="editMode">
                 <button type="button" class="rounded-lg border border-slate-200 bg-white text-slate-900 px-4 py-2.5 text-sm hover:bg-slate-50" (click)="onCancel()">
                     Cancelar
                 </button>

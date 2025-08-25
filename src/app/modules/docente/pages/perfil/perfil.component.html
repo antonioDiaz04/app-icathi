@@ -170,17 +170,10 @@
 
         </ng-container>
 
-        <!-- Configuración -->
-        <ng-container *ngIf="isActive('configuracion')()">
-            <h2 class="text-[18px] font-semibold mb-2">Configuración</h2>
-            <ul class="list-disc pl-5 text-slate-800 space-y-1">
-                <li>Preferencias de notificaciones (próximamente).</li>
-                <li>Idioma y zona horaria (próximamente).</li>
-            </ul>
-        </ng-container>
+
 
         <!-- Seguridad -->
-        <ng-container *ngIf="isActive('seguridad')()">
+        <!-- <ng-container *ngIf="isActive('seguridad')()">
             <h2 class="text-[18px] font-semibold mb-2">Seguridad</h2>
             <ul class="list-disc pl-5 text-slate-800 space-y-1">
                 <li>Cambiar contraseña</li>
@@ -192,6 +185,84 @@
                     Cerrar todas las sesiones
                 </button>
             </div>
+        </ng-container> -->
+        <!-- Seguridad -->
+        <ng-container *ngIf="isActive('seguridad')()">
+            <div class=" bg-white/70  p-5">
+                <!-- Header -->
+                <h3 class="text-[18px] font-semibold text-slate-900">Seguridad de la cuenta</h3>
+                <p class="text-sm text-slate-500 mt-1">Mantén tu cuenta segura</p>
+
+                <!-- Cambiar contraseña -->
+                <form [formGroup]="passwordForm" class="mt-5 space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-800 mb-1">Contraseña actual</label>
+                        <div class="relative">
+                            <input [type]="show.current ? 'text' : 'password'" class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10" formControlName="currentPassword" placeholder="••••••••" autocomplete="current-password"
+                            />
+                            <button type="button" class="absolute inset-y-0 right-2 my-auto text-slate-500 hover:text-slate-800" (click)="toggleShow('current')">
+                                <span class="material-symbols-outlined text-[18px]">{{ show.current ? 'visibility_off' :
+                                    'visibility' }}</span>
+                            </button>
+                        </div>
+                        <p *ngIf="passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid" class="mt-1 text-xs text-red-600">La contraseña actual es obligatoria.</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-800 mb-1">Nueva contraseña</label>
+                        <div class="relative">
+                            <input [type]="show.new ? 'text' : 'password'" class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10" formControlName="newPassword" placeholder="••••••••" autocomplete="new-password"
+                            />
+                            <button type="button" class="absolute inset-y-0 right-2 my-auto text-slate-500 hover:text-slate-800" (click)="toggleShow('new')">
+                                <span class="material-symbols-outlined text-[18px]">{{ show.new ? 'visibility_off' :
+                                    'visibility' }}</span>
+                            </button>
+                        </div>
+
+                        <!-- Medidor de fuerza -->
+                        <!-- <div class="mt-2 h-1.5 w-full rounded-full bg-slate-100">
+                            <div class="h-1.5 rounded-full transition-all" [ngClass]="strength().barClass" [style.width.%]="strength().value"></div>
+                        </div> -->
+                        <!-- Indicador de fuerza -->
+                        <div class="mt-2 w-full sm:w-80">
+                            <div class="h-2 w-full rounded bg-gray-200 overflow-hidden">
+                                <div class="h-2" [ngClass]="strengthBarClass()" [style.width.%]="passwordStrength() * 25"></div>
+                            </div>
+                            <div class="mt-1 text-xs text-gray-600">Fortaleza: {{ strengthLabel() }}</div>
+                        </div>
+
+
+                        <ul class="mt-1 text-[11px] text-slate-500 list-disc pl-4">
+                            <li>Mínimo 8 caracteres</li>
+                            <li>Incluye mayúscula, minúscula, número y símbolo</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-800 mb-1">Confirmar nueva contraseña</label>
+                        <div class="relative">
+                            <input [type]="show.confirm ? 'text' : 'password'" class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10" formControlName="confirmPassword" placeholder="••••••••" autocomplete="new-password"
+                            />
+                            <button type="button" class="absolute inset-y-0 right-2 my-auto text-slate-500 hover:text-slate-800" (click)="toggleShow('confirm')">
+                                <span class="material-symbols-outlined text-[18px]">{{ show.confirm ? 'visibility_off' :
+                                    'visibility' }}</span>
+                            </button>
+                        </div>
+                        <p *ngIf="passwordForm.hasError('mismatch') && passwordForm.get('confirmPassword')?.touched" class="mt-1 text-xs text-red-600">Las contraseñas no coinciden.</p>
+                    </div>
+
+                    <div>
+                        <button type="button" class="rounded-lg bg-slate-900 text-white px-4 py-2.5 text-sm disabled:opacity-60" [disabled]="passwordForm.invalid || changingPassword" (click)="onChangePassword()">
+                            {{ changingPassword ? 'Guardando…' : 'Cambiar contraseña' }}
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Separador -->
+                <div class="my-6 h-px w-full bg-slate-200"></div>
+            </div>
         </ng-container>
+
+
     </section>
 </div>

@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ValidadorDocenteService } from '../../../validador/commons/services/validador-docente.service';
 import { DocenteDataService } from '../../commons/services/docente-data.service';
 import { AuthService } from '../../../../shared/services/auth.service';
@@ -15,6 +15,17 @@ import { FileUploadService } from '../../../../shared/services/file-upload.servi
 import { AlertTaiwilService } from '../../../../shared/services/alert-taiwil.service';
 
 type TabKey = 'personal' | 'documentacion' | 'configuracion' | 'seguridad';
+// Reglas de contraseña fuerte
+// Reglas de contraseña fuerte
+const STRONG_PWD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
+
+// Validador de coincidencia new/confirm
+function matchPassword(group: AbstractControl): ValidationErrors | null {
+  const pass = group.get('newPassword')?.value ?? '';
+  const confirm = group.get('confirmPassword')?.value ?? '';
+  return pass && confirm && pass !== confirm ? { mismatch: true } : null;
+}
+
 
 
 export interface Docente {
@@ -77,6 +88,10 @@ export class PerfilComponent {
   form: FormGroup;
   docenteData = signal<any>(null)
   id = signal<number | null>(null)
+  // form: FormGroup;
+  passwordForm!: FormGroup;
+  show = { current: false, new: false, confirm: false };
+  changingPassword = false;
 
   chipColor = computed(() => {
     const docente = this.docenteData();
@@ -118,7 +133,15 @@ export class PerfilComponent {
       curriculum_url: [''],
       foto_url: [''],
     });
-
+   // Form seguridad
+    this.passwordForm = this.fb.group(
+      {
+        currentPassword: ['', [Validators.required]],
+        newPassword: ['', [Validators.required, Validators.pattern(STRONG_PWD)]],
+        confirmPassword: ['', [Validators.required]],
+      },
+      { validators: matchPassword }
+    );
 
     effect(() => {
       const data = this.docenteData();
@@ -137,9 +160,73 @@ export class PerfilComponent {
       ''
     );
   }
+ // Fuerza de contraseña (para la barra)
+  // strength = computed(() => {
+  //   const v: string = this.passwordForm?.get('newPassword')?.value || '';
+  //   let score = 0;
+  //   if (v.length >= 8) score += 25;
+  //   if (/[a-z]/.test(v) && /[A-Z]/.test(v)) score += 25;
+  //   if (/\d/.test(v)) score += 25;
+  //   if (/[^\w\s]/.test(v)) score += 25;
 
+  //   const label = score < 50 ? 'Débil' : score < 75 ? 'Media' : 'Fuerte';
+  //   const barClass = score < 50 ? 'bg-red-500' : score < 75 ? 'bg-amber-500' : 'bg-emerald-500';
+  //   return { value: score, label, barClass };
+  // });
 
+  toggleShow(which: 'current' | 'new' | 'confirm') {
+    this.show[which] = !this.show[which];
+  }
+  async onChangePassword() {
+    if (this.passwordForm.invalid) {
+      this.passwordForm.markAllAsTouched();
+      return;
+    }
+    this.changingPassword = true;
+    try {
+      const payload = this.passwordForm.value;
+      // Ejemplo:
+      // await this.authService.changePassword(payload).toPromise();
+      // this.alertTaiwilService.showTailwindAlert('Contraseña actualizada', 'success');
+      this.passwordForm.reset();
+    } catch (e) {
+      console.error(e);
+      // this.alertTaiwilService.showTailwindAlert('No se pudo cambiar la contraseña', 'error');
+    } finally {
+      this.changingPassword = false;
+    }
+  }
 
+private get newPassword(): string {
+  return (this.passwordForm?.get('newPassword')?.value ?? '') as string;
+}
+passwordStrength(): 0 | 1 | 2 | 3 | 4 {
+  const p = this.newPassword || '';
+  let score = 0 as 0 | 1 | 2 | 3 | 4;
+
+  if (p.length >= 8) score = (score + 1) as 0 | 1 | 2 | 3 | 4;
+  if (/[A-Z]/.test(p)) score = (score + 1) as 0 | 1 | 2 | 3 | 4;
+  if (/[a-z]/.test(p)) score = (score + 1) as 0 | 1 | 2 | 3 | 4;
+  if (/\d/.test(p)) score = (score + 1) as 0 | 1 | 2 | 3 | 4;
+  if (/[^A-Za-z0-9]/.test(p)) score = (score + 1) as 0 | 1 | 2 | 3 | 4;
+
+  // cap a 4
+  return (score > 4 ? 4 : score) as 0 | 1 | 2 | 3 | 4;
+}
+
+strengthLabel(): string {
+  const s = this.passwordStrength();
+  return ['Muy débil', 'Débil', 'Media', 'Fuerte', 'Muy fuerte'][s];
+}
+strengthBarClass() {
+  const s = this.passwordStrength();
+  return {
+    'bg-red-400': s <= 1,
+    'bg-yellow-400': s === 2,
+    'bg-blue-400': s === 3,
+    'bg-green-500': s === 4,
+  };
+}
   // === UploadFns que pasamos al hijo ===
   uploadIdentificacionFn = async (file: File): Promise<string> => {
     const resp = await this.fileUploadService.uploadDocumentoIdentificacion(file).toPromise();
@@ -384,38 +471,6 @@ export class PerfilComponent {
 
 
 
-    // documento de identificación
-    // if (this.documentoIdentificacionFile) {
-    //   tasks.push(
-    //     this.fileUploadService.uploadDocumentoIdentificacion(this.documentoIdentificacionFile).pipe(
-    //       map((res: any) => ({
-    //         // si tu backend guarda el archivo en otro campo, ajusta aquí:
-    //         documento_identificacion: res.fileUrl as string,
-    //         documento_identificacion_file_url: res.fileUrl as string,
-    //       })),
-    //       catchError((err) => {
-    //         console.error('Error subiendo documento de identificación:', err);
-    //         return of<Partial<Docente>>({});
-    //       })
-    //     )
-    //   );
-    // }
-
-    // cédula
-    // if (this.cedulaFile) {
-    //   tasks.push(
-    //     this.fileUploadService.uploadCedula(this.cedulaFile).pipe(
-    //       map((res: any) => ({
-    //         // si tu backend guarda número en 'cedula_profesional' y archivo en otro campo, separa:
-    //         cedula_file_url: res.fileUrl as string,
-    //       })),
-    //       catchError((err) => {
-    //         console.error('Error subiendo cédula:', err);
-    //         return of<Partial<Docente>>({});
-    //       })
-    //     )
-    //   );
-    // }
 
     if (tasks.length === 0) {
       return Promise.resolve({});
