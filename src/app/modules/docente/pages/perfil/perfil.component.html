@@ -142,13 +142,14 @@
             <form [formGroup]="form" class="flex flex-col gap-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
                     <app-pdf-uploader-preview class="h-full" [label]="'Documento de Identificación (PDF)'" [placeholder]="'https://...'" [url]="form.get('documento_identificacion')?.value" [targetFolder]="'documentos_identificacion_docentes'" [uploadFn]="uploadIdentificacionFn"
-                        (urlChange)="form.get('documento_identificacion')?.setValue($event)">
+                        (urlChange)="form.get('documento_identificacion')?.setValue($event)" [allowUpload]="editMode">
                     </app-pdf-uploader-preview>
 
-                    <app-pdf-uploader-preview class="h-full" [label]="'Cédula Profesional (PDF)'" [url]="form.get('cedula_profesional')?.value" [targetFolder]="'cedulas_docentes'" [uploadFn]="uploadCedulaFn" (urlChange)="form.get('cedula_profesional')?.setValue($event)">
+                    <app-pdf-uploader-preview class="h-full" [label]="'Cédula Profesional (PDF)'" [url]="form.get('cedula_profesional')?.value" [targetFolder]="'cedulas_docentes'" [uploadFn]="uploadCedulaFn" (urlChange)="form.get('cedula_profesional')?.setValue($event)"
+                        [allowUpload]="editMode">
                     </app-pdf-uploader-preview>
 
-                    <app-pdf-uploader-preview class="h-full" [label]="'Curriculum (CV en PDF)'" [url]="form.get('curriculum_url')?.value" [targetFolder]="'cv_docentes'" [uploadFn]="uploadCurriculumFn" (urlChange)="form.get('curriculum_url')?.setValue($event)">
+                    <app-pdf-uploader-preview class="h-full" [label]="'Curriculum (CV en PDF)'" [url]="form.get('curriculum_url')?.value" [targetFolder]="'cv_docentes'" [uploadFn]="uploadCurriculumFn" (urlChange)="form.get('curriculum_url')?.setValue($event)" [allowUpload]="editMode">
                     </app-pdf-uploader-preview>
                 </div>
             </form>

@@ -18,13 +18,10 @@
     </div>
 
     <!-- Acciones -->
-    <div class="mt-3 flex flex-wrap items-center gap-2">
+    <div *ngIf="allowUpload" class="mt-3 flex flex-wrap items-center gap-2">
         <label class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[13px] font-medium text-slate-700 hover:bg-slate-50 cursor-pointer focus-within:ring-4 focus-within:ring-slate-900/5">
-      <input type="file" accept="application/pdf" class="hidden" (change)="onFilePicked($event)" />
-      <!-- <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-        <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-              d="M12 16V4m0 12l-3-3m3 3l3-3M5 20h14a2 2 0 0 0 2-2v-3" />
-      </svg> -->
+      <input  type="file" accept="application/pdf" class="hidden" (change)="onFilePicked($event)" />
+
       <span class="material-symbols-outlined">
 cloud_upload
 </span>
@@ -56,7 +53,7 @@ delete
             </svg>
                         <div>
                             <p class="text-sm font-medium text-slate-700">Sin documento</p>
-                            <p class="text-xs text-slate-500">Sube un PDF o pega una URL</p>
+                            <p class="text-xs text-slate-500">Sube un PDF </p>
                         </div>
                     </div>
                 </div>

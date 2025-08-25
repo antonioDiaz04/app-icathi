@@ -16,6 +16,9 @@ type UploadResult =
 })
 export class PdfUploaderPreviewComponent {
   constructor(private sanitizer: DomSanitizer) {}
+// En PdfUploaderPreviewComponent
+/** Controla si se muestran las acciones de carga/limpiar */
+@Input() allowUpload = true;
 
   /** Etiqueta visible arriba del control */
   @Input() label = 'Documento PDF';
