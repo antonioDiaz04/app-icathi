@@ -22,6 +22,7 @@ export class FileUploadService {
 
   // Subir currículum
   uploadCurriculum(file: File): Observable<any> {
+  console.log('Uploading curriculum file:', file);
     const formData = new FormData();
     formData.append('curriculum', file); // La clave debe coincidir con la usada en el backend
     return this.http.post(`${this.apiUrl}/upload-curriculum_docente`, formData);

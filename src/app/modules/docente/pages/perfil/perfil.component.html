@@ -11,25 +11,37 @@
                 {{ docente.estatus_valor }}
             </span>
 
-            <!-- Botón Editar -->
-            <button type="button" class="p-2 rounded-lg border border-slate-200 hover:bg-slate-100" (click)="toggleEdit()" [attr.aria-pressed]="editMode">
+            <button type="button" class="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-100" (click)="toggleEdit()" [attr.aria-pressed]="editMode">
                 <!-- Ícono simple -->
-                <span *ngIf="!editMode">✏️</span>
-                <span *ngIf="editMode">✅</span>
+                <span *ngIf="!editMode" class="material-symbols-outlined text-lg">
+                    edit_square
+                </span>
+                <span *ngIf="editMode" class="material-symbols-outlined text-lg">
+                    cancel
+                </span>
             </button>
+
         </div>
 
     </header>
 
-    <!-- Tabs -->
-    <nav class="flex gap-2 bg-slate-100 p-1.5 rounded-xl mb-4">
-        <button *ngFor="let t of tabs" type="button" class="px-3.5 py-2 rounded-lg text-slate-700 transition" [ngClass]="{
+
+    <nav class="bg-slate-100 p-1.5 rounded-xl mb-4" role="tablist" aria-label="Secciones">
+        <!-- Grid auto-fit: crea tantas columnas como quepan; cuando no caben, saltan de línea -->
+        <div class="grid gap-2 [grid-template-columns:repeat(auto-fit,minmax(110px,1fr))]">
+            <button *ngFor="let t of tabs" type="button" role="tab" [attr.aria-selected]="isActive(t.key)()" class="w-full rounded-lg text-slate-700 transition
+             px-3 py-2 sm:px-4 sm:py-2.5
+             text-xs sm:text-sm md:text-base
+             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300
+             active:scale-[.98]" [ngClass]="{
         'bg-white shadow-sm text-slate-900': isActive(t.key)(),
         'hover:bg-white/70 hover:text-slate-900': !isActive(t.key)()
       }" (click)="setTab(t.key)">
-            {{ t.label }}
-        </button>
+                <span class="block text-center leading-tight">{{ t.label }}</span>
+            </button>
+        </div>
     </nav>
+
 
     <!-- Panel -->
     <section class="bg-white border border-slate-200 rounded-2xl p-6" *ngIf="docenteData() as docente">
@@ -39,21 +51,21 @@
             <p class="text-slate-500 text-sm mb-4">Actualiza tu información personal y foto de perfil</p>
 
             <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-5">
-                <!-- Foto -->
+
                 <div class="flex flex-col items-center gap-2">
                     <div class="w-40 h-40 rounded-full overflow-hidden border-4 border-white outline outline-1 outline-slate-200 shadow-sm">
-                        <img class="w-full h-full object-cover" [src]="fotoPreview() || 'https://placehold.co/160x160?text=Foto'" alt="Foto de perfil" />
+                        <img class="w-full h-full object-cover" [src]="fotoPreview() || form.get('foto_url')?.value || 'https://placehold.co/160x160?text=Foto'" alt="Foto de perfil" />
                     </div>
 
-                    <label class="cursor-pointer inline-flex items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-900 px-4 py-2 text-sm hover:bg-slate-100">
-                        <input  [ngClass]="{
-    'pointer-events-none cursor-not-allowed': !editMode
-  }"type="file" accept="image/png,image/jpeg,image/gif" hidden
-                            (change)="onChangePhoto($event)" />
-                        📷 Cambiar foto
+                    <label class="cursor-pointer inline-flex items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-900 px-4 py-2 text-sm hover:bg-slate-100" [class.opacity-60]="!editMode" [class.pointer-events-none]="!editMode">
+                        <input type="file" accept="image/png,image/jpeg,image/gif,image/webp" hidden
+                            [disabled]="!editMode" (change)="onChangePhoto($event)" />
+                        <span class="material-symbols-outlined">
+                            cloud_upload
+                        </span>Cambiar foto
                     </label>
 
-                    <small class="text-slate-500 text-xs">JPG, PNG o GIF. Máximo 2MB.</small>
+                    <small class="text-slate-500 text-xs">JPG/PNG/GIF/WebP. Máx. 2MB.</small>
                 </div>
 
                 <!-- Form -->
@@ -96,14 +108,6 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-1 gap-3">
-                        <!-- <div class="flex flex-col gap-1.5">
-                            <label class="font-medium text-slate-900">WhatsApp</label>
-                            <input  [ngClass]="{
-    'pointer-events-none cursor-not-allowed': !editMode
-  }"       
- formControlName="whatsapp" type="tel" placeholder="+52 55 1234 5678" class="rounded-lg border border-slate-200 px-3 py-2.5 text-[15px] focus:outline-none focus:ring-4 focus:ring-slate-900/10 focus:border-slate-900" />
-                        </div> -->
-
                         <div class="flex flex-col gap-1.5">
                             <label class="font-medium text-slate-900">Dirección</label>
                             <input [ngClass]="{
@@ -115,15 +119,19 @@
             </div>
 
             <!-- Acciones -->
-            <div class="flex justify-end gap-2 mt-4">
+            <div class="flex justify-end gap-2 mt-4" *ngIf="editMode">
                 <button type="button" class="rounded-lg border border-slate-200 bg-white text-slate-900 px-4 py-2.5 text-sm hover:bg-slate-50" (click)="onCancel()">
                     Cancelar
                 </button>
-                <button type="button" class="rounded-lg bg-slate-900 text-white px-4 py-2.5 text-sm disabled:opacity-60" [disabled]="saving()" (click)="onSave()">
-                    <span *ngIf="!saving()">💾 Guardar cambios</span>
-                    <span *ngIf="saving()">Guardando…</span>
+
+                <button type="button" class="flex items-center gap-2 rounded-lg bg-slate-900 text-white px-4 py-2.5 text-sm disabled:opacity-60" [disabled]="saving()" (click)="onSave()">
+                    <span class="material-symbols-outlined text-[18px]">
+                        save
+                    </span>
+                    Guardar cambios
                 </button>
             </div>
+
         </ng-container>
 
         <!-- Documentación -->
@@ -132,7 +140,6 @@
             <p class="text-slate-500 text-sm mb-4">Cédula, identificación y CV del docente</p>
 
             <form [formGroup]="form" class="flex flex-col gap-4">
-                <!-- Fila 1 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
                     <app-pdf-uploader-preview class="h-full" [label]="'Documento de Identificación (PDF)'" [placeholder]="'https://...'" [url]="form.get('documento_identificacion')?.value" [targetFolder]="'documentos_identificacion_docentes'" [uploadFn]="uploadIdentificacionFn"
                         (urlChange)="form.get('documento_identificacion')?.setValue($event)">
@@ -141,24 +148,25 @@
                     <app-pdf-uploader-preview class="h-full" [label]="'Cédula Profesional (PDF)'" [url]="form.get('cedula_profesional')?.value" [targetFolder]="'cedulas_docentes'" [uploadFn]="uploadCedulaFn" (urlChange)="form.get('cedula_profesional')?.setValue($event)">
                     </app-pdf-uploader-preview>
 
-                    <app-pdf-uploader-preview class="h-full" [label]="'Curriculum (CV en PDF)'" [url]="form.get('curriculum_url')?.value" [targetFolder]="'cv_docentes'" [uploadFn]="uploadCvFn" (urlChange)="form.get('curriculum_url')?.setValue($event)">
-                    </app-pdf-uploader-preview>
-                    <app-pdf-uploader-preview class="h-full" [label]="'Curriculum (CV en PDF)'" [url]="form.get('curriculum_url')?.value" [targetFolder]="'cv_docentes'" [uploadFn]="uploadCvFn" (urlChange)="form.get('curriculum_url')?.setValue($event)">
-                    </app-pdf-uploader-preview>
-                    <app-pdf-uploader-preview class="h-full" [label]="'Curriculum (CV en PDF)'" [url]="form.get('curriculum_url')?.value" [targetFolder]="'cv_docentes'" [uploadFn]="uploadCvFn" (urlChange)="form.get('curriculum_url')?.setValue($event)">
+                    <app-pdf-uploader-preview class="h-full" [label]="'Curriculum (CV en PDF)'" [url]="form.get('curriculum_url')?.value" [targetFolder]="'cv_docentes'" [uploadFn]="uploadCurriculumFn" (urlChange)="form.get('curriculum_url')?.setValue($event)">
                     </app-pdf-uploader-preview>
                 </div>
             </form>
 
-
-            <div class="flex justify-end gap-2 mt-4">
+            <!-- [disabled]="!editMode" -->
+            <div class="flex justify-end gap-2 mt-4" *ngIf="editMode">
                 <button type="button" class="rounded-lg border border-slate-200 bg-white text-slate-900 px-4 py-2.5 text-sm hover:bg-slate-50" (click)="onCancel()">
                     Cancelar
                 </button>
-                <button type="button" class="rounded-lg bg-slate-900 text-white px-4 py-2.5 text-sm disabled:opacity-60" [disabled]="saving()" (click)="onSave()">
-                    💾 Guardar cambios
+
+                <button type="button" class="flex items-center gap-2 rounded-lg bg-slate-900 text-white px-4 py-2.5 text-sm disabled:opacity-60" [disabled]="saving()" (click)="onSave()">
+                    <span class="material-symbols-outlined text-[18px]">
+                        save
+                    </span>
+                    Guardar cambios
                 </button>
             </div>
+
         </ng-container>
 
         <!-- Configuración -->
