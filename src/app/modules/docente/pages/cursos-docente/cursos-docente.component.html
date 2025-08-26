@@ -1,204 +1,130 @@
 <div class="bg-gray-100 min-h-screen p-6">
-  <!-- Título y descripción -->
-  <div *ngIf="mostrarBuscador" class="text-center mb-8">
-    <h1 class="text-4xl font-bold text-indigo-700">
-      <i class="book icon"></i> Cursos Asignados
-    </h1>
-    <p class="text-lg text-gray-600 mt-2">
-      Administra y consulta la información de los cursos asignados.
-    </p>
-  </div>
-
-  <!-- Barra de búsqueda -->
-  <div   *ngIf="mostrarBuscador" class="mb-6 flex justify-center">
-    <input
-      type="text"
-      placeholder="Buscar cursos por nombre, clave o área..."
-      [(ngModel)]="filtro"
-      class="p-2 w-full md:w-1/2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-    />
-  </div>
-
-
-  <div 
-  *ngIf="mensajeError" 
-  class="ui negative message relative transition-all duration-500 ease-in-out mb-6 opacity-100 shadow-lg border border-red-500 rounded-lg overflow-hidden"
-  [class.hidden]="!mensajeError"
-  [class.translate-y-0]="mensajeError"
-  [class.opacity-0]="!mensajeError"
->
-  <!-- Contenedor principal -->
-  <div class="flex items-start md:items-center p-4">
-    <!-- Icono animado -->
-    <div class="flex items-center justify-center bg-red-500 text-white rounded-full w-14 h-14 mr-4 animate-bounce">
-      <svg 
-        class="w-8 h-8" 
-        fill="currentColor" 
-        xmlns="http://www.w3.org/2000/svg" 
-        viewBox="0 0 20 20" 
-        aria-hidden="true"
-      >
-        <path 
-          fill-rule="evenodd" 
-          d="M10 18a8 8 0 100-16 8 8 0 000 16zm0 2a10 10 0 110-20 10 10 0 010 20z" 
-          clip-rule="evenodd"
-        ></path>
-      </svg>
+    <!-- Título y descripción -->
+    <div *ngIf="mostrarBuscador" class="text-center mb-8">
+        <h1 class="text-4xl font-bold text-indigo-700">
+            <i class="book icon"></i> Cursos Asignados
+        </h1>
+        <p class="text-lg text-gray-600 mt-2">
+            Administra y consulta la información de los cursos asignados.
+        </p>
     </div>
 
-    <!-- Contenido del mensaje -->
-    <div class="content">
-      <div class="header text-red-700 font-semibold text-lg md:text-xl">
-        ¡Tu perfil está en revisión!
-      </div>
-      <p class="text-gray-700 mt-2 text-sm md:text-base">
-        No te preocupes, solo necesitamos un poco más de información para completar tu registro. Llena los datos necesarios y asegúrate de que todo esté correcto. 
-        <br />
-        <span class="font-bold text-red-600">Es importante</span> para que podamos verificar y activar tu cuenta lo antes posible.
-      </p>
+    <!-- Barra de búsqueda -->
+    <div *ngIf="mostrarBuscador" class="mb-6 flex justify-center">
+        <input type="text" placeholder="Buscar cursos por nombre, clave o área..." [(ngModel)]="filtro" class="p-2 w-full md:w-1/2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
     </div>
 
-    <!-- Botón de cierre -->
-    <button 
-      class="absolute top-2 right-2 text-red-700 hover:text-red-900 focus:outline-none transform hover:scale-110 transition-transform duration-300" 
-      (click)="mensajeError = null" 
-      aria-label="Cerrar mensaje"
-    >
-      <svg 
-        xmlns="http://www.w3.org/2000/svg" 
-        fill="none" 
-        viewBox="0 0 24 24" 
-        stroke="currentColor" 
-        class="w-6 h-6"
-      >
-        <path 
-          stroke-linecap="round" 
-          stroke-linejoin="round" 
-          stroke-width="2" 
-          d="M6 18L18 6M6 6l12 12"
-        />
-      </svg>
-    </button>
-  </div>
-</div>
 
-  
-  
 
-  <!-- Lista de cursos filtrados -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4" *ngIf="!mensajeError">
-    <div
-      *ngFor="let curso of cursosFiltrados"
-      class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
-    >
+    <div class="ui warning message" *ngIf="mensajeError" id="warningMessage">
+        <i class="exclamation triangle icon text-xl"></i>
+        <div class="flex-1">
+            <div class="font-semibold text-lg">Advertencia</div>
+            <p class="mt-2">No hay datos disponibles para este docente.</p>
+        </div>
+    </div>
 
-      <!-- Cabecera del curso -->
-      <div class="p-4 bg-indigo-700 text-white">
-        <h2 class="text-xl font-semibold">{{ curso.curso_nombre }}</h2>
-        <p class="text-sm opacity-90">{{ curso.curso_clave }}</p>
-      </div>
 
-      <!-- Contenido del curso -->
-      <div class="p-4">
-        <p class="text-gray-700 text-sm mb-2">
-          <i class="info circle icon text-indigo-700"></i>
-          <strong>Descripción:</strong> {{ curso.curso_descripcion }}
-        </p>
-        <p class="text-gray-700 text-sm mb-2">
-          <i class="clock  icon text-orange-500"></i>
-          <strong>Duración:</strong> {{ curso.curso_duracion_horas }} horas
-        </p>
-        <p class="text-gray-700 text-sm mb-2">
-          <i class="building icon text-indigo-700"></i>
-          <strong>Área:</strong> {{ curso.area_nombre }}
-        </p>
-        <p class="text-gray-700 text-sm mb-2">
-          <i class="clipboard icon text-indigo-700"></i>
-          <strong>Especialidad:</strong> {{ curso.especialidad_nombre }}
-        </p>
-        <p class="text-gray-700 text-sm mb-2">
-          <i class="check circle icon" [ngClass]="curso.asignacion_estatus ? 'text-green-500' : 'text-red-500'"></i>
-          <strong>Estado:</strong>
-          <span [ngClass]="curso.asignacion_estatus ? 'text-green-600' : 'text-red-600'">
+
+
+
+    <!-- Lista de cursos filtrados -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4" *ngIf="!mensajeError">
+        <div *ngFor="let curso of cursosFiltrados" class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+
+            <!-- Cabecera del curso -->
+            <div class="p-4 bg-indigo-700 text-white">
+                <h2 class="text-xl font-semibold">{{ curso.curso_nombre }}</h2>
+                <p class="text-sm opacity-90">{{ curso.curso_clave }}</p>
+            </div>
+
+            <!-- Contenido del curso -->
+            <div class="p-4">
+                <p class="text-gray-700 text-sm mb-2">
+                    <i class="info circle icon text-indigo-700"></i>
+                    <strong>Descripción:</strong> {{ curso.curso_descripcion }}
+                </p>
+                <p class="text-gray-700 text-sm mb-2">
+                    <i class="clock  icon text-orange-500"></i>
+                    <strong>Duración:</strong> {{ curso.curso_duracion_horas }} horas
+                </p>
+                <p class="text-gray-700 text-sm mb-2">
+                    <i class="building icon text-indigo-700"></i>
+                    <strong>Área:</strong> {{ curso.area_nombre }}
+                </p>
+                <p class="text-gray-700 text-sm mb-2">
+                    <i class="clipboard icon text-indigo-700"></i>
+                    <strong>Especialidad:</strong> {{ curso.especialidad_nombre }}
+                </p>
+                <p class="text-gray-700 text-sm mb-2">
+                    <i class="check circle icon" [ngClass]="curso.asignacion_estatus ? 'text-green-500' : 'text-red-500'"></i>
+                    <strong>Estado:</strong>
+                    <span [ngClass]="curso.asignacion_estatus ? 'text-green-600' : 'text-red-600'">
             {{ curso.asignacion_estatus ? 'Activo' : 'Inactivo' }}
           </span>
-        </p>
-        <p *ngIf="curso.ultima_actualizacion" class="text-gray-700 text-sm mb-2">
-          <i class="history icon text-blue-500"></i>
-          <strong>Última actualización:</strong> {{ curso.ultima_actualizacion | date: 'dd/MM/yyyy' }}
-        </p>
-      </div>
+                </p>
+                <p *ngIf="curso.ultima_actualizacion" class="text-gray-700 text-sm mb-2">
+                    <i class="history icon text-blue-500"></i>
+                    <strong>Última actualización:</strong> {{ curso.ultima_actualizacion | date: 'dd/MM/yyyy' }}
+                </p>
+            </div>
 
-      <!-- Botones de acción -->
-      <div class="p-4 bg-gray-50 text-center">
-        <button
-          (click)="verDetalles(curso)"
-          class="px-4 py-2 rounded-md text-white shadow-md bg-indigo-700 hover:bg-indigo-800"
-        >
+            <!-- Botones de acción -->
+            <div class="p-4 bg-gray-50 text-center">
+                <button (click)="verDetalles(curso)" class="px-4 py-2 rounded-md text-white shadow-md bg-indigo-700 hover:bg-indigo-800">
           <i class="eye icon"></i> Ver detalles
         </button>
-        <!-- (click)="verAlumnosInscritos(curso)" -->
-        <button
-          class="mt-2 px-4 py-2 rounded-md text-white shadow-md bg-blue-600 hover:bg-blue-700"
-        >
+                <!-- (click)="verAlumnosInscritos(curso)" -->
+                <button class="mt-2 px-4 py-2 rounded-md text-white shadow-md bg-blue-600 hover:bg-blue-700">
           <i class="users icon"></i> Ver alumnos
         </button>
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 
 
 <!-- Modal para detalles del curso -->
-<div
-  *ngIf="showModal"
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
->
-  <div class="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
-    <!-- Cabecera del modal -->
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-2xl font-semibold text-indigo-700">
-        Detalles del Curso
-      </h2>
-      <button
-        (click)="cerrarModal()"
-        class="text-gray-600 hover:text-gray-900"
-      >
+<div *ngIf="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
+        <!-- Cabecera del modal -->
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold text-indigo-700">
+                Detalles del Curso
+            </h2>
+            <button (click)="cerrarModal()" class="text-gray-600 hover:text-gray-900">
         <i class="close icon"></i>
       </button>
-    </div>
+        </div>
 
-    <!-- Contenido del modal -->
-    <div *ngIf="selectedCurso">
-      <p class="mb-2">
-        <strong>Nombre:</strong> {{ selectedCurso.curso_nombre }}
-      </p>
-      <p class="mb-2">
-        <strong>Clave:</strong> {{ selectedCurso.curso_clave }}
-      </p>
-      <p class="mb-2">
-        <strong>Descripción:</strong> {{ selectedCurso.curso_descripcion }}
-      </p>
-      <p class="mb-2">
-        <strong>Duración:</strong> {{ selectedCurso.curso_duracion_horas }} horas
-      </p>
-      <p class="mb-2">
-        <strong>Área:</strong> {{ selectedCurso.area_nombre }}
-      </p>
-      <p class="mb-2">
-        <strong>Tipo de curso:</strong> {{ selectedCurso.tipo_curso_nombre }}
-      </p>
-    </div>
+        <!-- Contenido del modal -->
+        <div *ngIf="selectedCurso">
+            <p class="mb-2">
+                <strong>Nombre:</strong> {{ selectedCurso.curso_nombre }}
+            </p>
+            <p class="mb-2">
+                <strong>Clave:</strong> {{ selectedCurso.curso_clave }}
+            </p>
+            <p class="mb-2">
+                <strong>Descripción:</strong> {{ selectedCurso.curso_descripcion }}
+            </p>
+            <p class="mb-2">
+                <strong>Duración:</strong> {{ selectedCurso.curso_duracion_horas }} horas
+            </p>
+            <p class="mb-2">
+                <strong>Área:</strong> {{ selectedCurso.area_nombre }}
+            </p>
+            <p class="mb-2">
+                <strong>Tipo de curso:</strong> {{ selectedCurso.tipo_curso_nombre }}
+            </p>
+        </div>
 
-    <!-- Botón para cerrar -->
-    <div class="text-center mt-4">
-      <button
-        (click)="cerrarModal()"
-        class="px-4 py-2 bg-indigo-700 text-white rounded-md hover:bg-indigo-800"
-      >
+        <!-- Botón para cerrar -->
+        <div class="text-center mt-4">
+            <button (click)="cerrarModal()" class="px-4 py-2 bg-indigo-700 text-white rounded-md hover:bg-indigo-800">
         Cerrar
       </button>
+        </div>
     </div>
-  </div>
 </div>

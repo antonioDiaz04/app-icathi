@@ -44,9 +44,6 @@ private baseUrl = `${environment.api}/adminreporte/docentes`;
     return this.http.get<{ ok: boolean; data: Postulacion }>(`${this.baseUrl}/${id}`);
   }
 
-  updateEstatus(id: number, estatusId: number) {
-    return this.http.patch<{ ok: boolean }>(`${this.baseUrl}/${id}/estatus`, { estatusId });
-  }
 
   delete(id: number) {
     return this.http.delete<{ ok: boolean }>(`${this.baseUrl}/${id}`);

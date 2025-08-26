@@ -57,6 +57,7 @@ export interface Docente {
   imports: [CommonModule, ReactiveFormsModule, PdfUploaderPreviewComponent],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.scss',
+
   providers: [FileUploadService] // ← AÑADE ESTA LÍNEA
 
 })
@@ -84,6 +85,7 @@ export class PerfilComponent {
   curriculumFileName = signal<string>('');
   documentoIdentificacionFileName = signal<string>('');
   cedulaFileName = signal<string>('');
+  correodocente = signal<string>('');
   // --- Formulario ---
   form: FormGroup;
   docenteData = signal<any>(null)
@@ -107,7 +109,7 @@ export class PerfilComponent {
   private fileUploadService = inject(FileUploadService);
   private alertTaiwilService = inject(AlertTaiwilService);
   // private alertTaiwilService: AlertTaiwilService,
-
+  isSaving = signal(false);
   constructor(private fb: FormBuilder
     , private validadorDocenteService: ValidadorDocenteService,
     private docenteDataService: DocenteDataService,
@@ -133,7 +135,7 @@ export class PerfilComponent {
       curriculum_url: [''],
       foto_url: [''],
     });
-   // Form seguridad
+    // Form seguridad
     this.passwordForm = this.fb.group(
       {
         currentPassword: ['', [Validators.required]],
@@ -160,7 +162,7 @@ export class PerfilComponent {
       ''
     );
   }
- // Fuerza de contraseña (para la barra)
+  // Fuerza de contraseña (para la barra)
   // strength = computed(() => {
   //   const v: string = this.passwordForm?.get('newPassword')?.value || '';
   //   let score = 0;
@@ -178,6 +180,7 @@ export class PerfilComponent {
     this.show[which] = !this.show[which];
   }
   async onChangePassword() {
+    this.isSaving.set(true);
     if (this.passwordForm.invalid) {
       this.passwordForm.markAllAsTouched();
       return;
@@ -185,48 +188,132 @@ export class PerfilComponent {
     this.changingPassword = true;
     try {
       const payload = this.passwordForm.value;
+      console.log('Payload para cambiar contraseña:', payload);
+      console.log('Payload this.id:', this.id());
       // Ejemplo:
-      // await this.authService.changePassword(payload).toPromise();
-      // this.alertTaiwilService.showTailwindAlert('Contraseña actualizada', 'success');
-      this.passwordForm.reset();
-    } catch (e) {
+      this.docenteService.cambiarPassword(this.id()!, payload).subscribe({
+        next: (response) => {
+            this.isSaving.set(true);
+          const email = this.docenteData()?.email || '';
+          if ('credentials' in navigator && email && payload.newPassword) {
+            // Algunos navegadores actualizarán la guardada
+            const cred = new (window as any).PasswordCredential({
+              id: email, // username/email
+              password: payload.newPassword,
+              name: email
+            });
+            (navigator as any).credentials.store(cred);
+          }
+          console.log('Contraseña cambiada correctamente:', response);
+          this.alertTaiwilService.showTailwindAlert('Contraseña actualizada', 'success');
+          this.passwordForm.reset();
+            this.isSaving.set(false);
+            
+          },
+          error: (error) => {
+            console.error('Error al cambiar la contraseña:', error.mensaje);
+            this.alertTaiwilService.showTailwindAlert(error.error.mensaje, 'error');
+            this.isSaving.set(false);
+          }
+        });
+        // await this.authService.changePassword(payload).toPromise();
+        // this.alertTaiwilService.showTailwindAlert('Contraseña actualizada', 'success');
+        // this.passwordForm.reset();
+      } catch (e) {
+      // this.isSaving.set(false);
+      console.error("e");
       console.error(e);
-      // this.alertTaiwilService.showTailwindAlert('No se pudo cambiar la contraseña', 'error');
+      this.alertTaiwilService.showTailwindAlert('No se pudo cambiar la contraseña', 'error');
     } finally {
+      // this.isSaving.set(false);
       this.changingPassword = false;
     }
   }
+  // SEGURIDAD
+  // SEGURIDAD
+  // SEGURIDAD
+  // SEGURIDAD
+  // SEGURIDAD
+  //   // --- Asignar contraseña manual (o usar resetPassword como fallback) ---
+  // asignarPassword() {
+  //   console.log("this.detalle", this.detalle?.email)
+  //   if (!this.detalle?.usuario_id) {
+  //     if (this.selectedId) this.showActionResponse(this.selectedId, { success: false, type: 'warning', message: 'Sin usuario asociado.' })
+  //     return
+  //   }
+  //   if (!this.newPassword || this.newPassword.length < 8) {
+  //     this.showActionResponse(this.selectedId!, { success: false, type: 'warning', message: 'La contraseña debe tener al menos 8 caracteres.' })
+  //     return
+  //   }
+  //   this.setLoading(this.selectedId!, true)
+  //   console.log("this.detalle.usuario_id, this.newPassword", this.detalle?.email, this.newPassword)
 
-private get newPassword(): string {
-  return (this.passwordForm?.get('newPassword')?.value ?? '') as string;
-}
-passwordStrength(): 0 | 1 | 2 | 3 | 4 {
-  const p = this.newPassword || '';
-  let score = 0 as 0 | 1 | 2 | 3 | 4;
+  //   // Requiere endpoint en backend. Ver método en el service más abajo.
+  //   // Requiere endpoint en backend. Ver método en el service más abajo.
+  //   this.authService.crearContraseñaADMIN(this.detalle?.email, this.newPassword).subscribe({
+  //     next: () => {
+  //       this.showActionResponse(this.selectedId!, {
+  //         success: true,
+  //         type: 'success',
+  //         message: 'Contraseña asignada.'
+  //       });
+  //       this.newPassword = '';
+  //       this.setLoading(this.selectedId!, false);
+  //       console.log("Contraseña asignada:", this.newPassword);
+  //       this.editandoPass = false; // cerrar edición
+  //       console.log("this.detalle*******++", this.detalle);
+  //             this.recargarDetalle();
 
-  if (p.length >= 8) score = (score + 1) as 0 | 1 | 2 | 3 | 4;
-  if (/[A-Z]/.test(p)) score = (score + 1) as 0 | 1 | 2 | 3 | 4;
-  if (/[a-z]/.test(p)) score = (score + 1) as 0 | 1 | 2 | 3 | 4;
-  if (/\d/.test(p)) score = (score + 1) as 0 | 1 | 2 | 3 | 4;
-  if (/[^A-Za-z0-9]/.test(p)) score = (score + 1) as 0 | 1 | 2 | 3 | 4;
+  //       // this.verDetalles(this.detalle!); // recargar detalle para ver cambios
+  //       // this.volverAlListado()
+  //     },
+  //     error: (err) => {
+  //       console.error('Error al asignar contraseña:', err);
+  //       // Fallback: si no existe el endpoint, avisa usar resetPassword
+  //       this.showActionResponse(this.selectedId!, {
+  //         success: false,
+  //         type: 'error',
+  //         message: 'No se pudo asignar. Verifica el endpoint o usa "Reset pass".'
+  //       });
+  //       this.setLoading(this.selectedId!, false);
+  //     }
+  //   });
 
-  // cap a 4
-  return (score > 4 ? 4 : score) as 0 | 1 | 2 | 3 | 4;
-}
 
-strengthLabel(): string {
-  const s = this.passwordStrength();
-  return ['Muy débil', 'Débil', 'Media', 'Fuerte', 'Muy fuerte'][s];
-}
-strengthBarClass() {
-  const s = this.passwordStrength();
-  return {
-    'bg-red-400': s <= 1,
-    'bg-yellow-400': s === 2,
-    'bg-blue-400': s === 3,
-    'bg-green-500': s === 4,
-  };
-}
+
+  // }
+
+
+  private get newPassword(): string {
+    return (this.passwordForm?.get('newPassword')?.value ?? '') as string;
+  }
+  passwordStrength(): 0 | 1 | 2 | 3 | 4 {
+    const p = this.newPassword || '';
+    let score = 0 as 0 | 1 | 2 | 3 | 4;
+
+    if (p.length >= 8) score = (score + 1) as 0 | 1 | 2 | 3 | 4;
+    if (/[A-Z]/.test(p)) score = (score + 1) as 0 | 1 | 2 | 3 | 4;
+    if (/[a-z]/.test(p)) score = (score + 1) as 0 | 1 | 2 | 3 | 4;
+    if (/\d/.test(p)) score = (score + 1) as 0 | 1 | 2 | 3 | 4;
+    if (/[^A-Za-z0-9]/.test(p)) score = (score + 1) as 0 | 1 | 2 | 3 | 4;
+
+    // cap a 4
+    return (score > 4 ? 4 : score) as 0 | 1 | 2 | 3 | 4;
+  }
+
+  strengthLabel(): string {
+    const s = this.passwordStrength();
+    return ['Muy débil', 'Débil', 'Media', 'Fuerte', 'Muy fuerte'][s];
+  }
+  strengthBarClass() {
+    const s = this.passwordStrength();
+    return {
+      'bg-red-400': s <= 1,
+      'bg-yellow-400': s === 2,
+      'bg-blue-400': s === 3,
+      'bg-green-500': s === 4,
+    };
+  }
   // === UploadFns que pasamos al hijo ===
   uploadIdentificacionFn = async (file: File): Promise<string> => {
     const resp = await this.fileUploadService.uploadDocumentoIdentificacion(file).toPromise();
@@ -340,6 +427,8 @@ strengthBarClass() {
     })
   }
   private patchFromDocente(docente: Docente): void {
+    // this.correodocente.set(docente.email);
+
     this.form.patchValue({
       nombre: docente.nombre,
       apellidos: docente.apellidos,
@@ -387,7 +476,7 @@ strengthBarClass() {
     }
 
     this.saving.set(true);
-
+   this.isSaving.set(true);
     try {
       const currentDocenteData = this.docenteData();
       if (!currentDocenteData) {
@@ -437,10 +526,11 @@ strengthBarClass() {
             this.cedulaFile = null;
             this.alertTaiwilService.showTailwindAlert("Datos del docente guardados correctamente", "success");
             this.editMode = false
-
-            // console.log('Datos guardados correctamente:', response);
-          },
-          error: (error) => {
+               this.isSaving.set(false);
+               // console.log('Datos guardados correctamente:', response);
+              },
+              error: (error) => {
+            this.isSaving.set(false);
             console.error('Error al guardar los datos del docente:', error);
 
             console.error('Error al guardar los datos:', error);
@@ -582,7 +672,6 @@ strengthBarClass() {
   //   });
   //   return diff;
   // }
-
 
 
 }

@@ -1,5 +1,8 @@
-<!-- <div class="max-w-screen-xl mx-auto p-6"> -->
+<div *ngIf="isSaving()" class="ui dimmer active" style="position: fixed;">
+    <div class="ui mini text loader">Loading</div>
+</div>
 <div class="max-w-screen-2xl mx-auto p-6">
+
     <!-- Header -->
     <header class="flex items-start justify-between gap-4 mb-3">
         <div>
@@ -97,6 +100,9 @@
                             <input [ngClass]="{
     'pointer-events-none cursor-not-allowed': !editMode
   }" formControlName="email" type="email" placeholder="correo@ejemplo.com" class="rounded-lg border border-slate-200 px-3 py-2.5 text-[15px] focus:outline-none focus:ring-4 focus:ring-slate-900/10 focus:border-slate-900" />
+                            <p class="text-xs text-slate-500 mt-1">
+                                Con este correo se accede al sistema.
+                            </p>
                         </div>
 
                         <div class="flex flex-col gap-1.5">
@@ -172,29 +178,37 @@
 
 
 
-        <!-- Seguridad -->
-        <!-- <ng-container *ngIf="isActive('seguridad')()">
-            <h2 class="text-[18px] font-semibold mb-2">Seguridad</h2>
-            <ul class="list-disc pl-5 text-slate-800 space-y-1">
-                <li>Cambiar contraseña</li>
-                <li>Activar autenticación de dos factores (2FA)</li>
-                <li>Dispositivos con sesión iniciada</li>
-            </ul>
-            <div class="flex justify-end mt-4">
-                <button type="button" class="rounded-lg bg-red-700 text-white px-4 py-2.5 text-sm hover:bg-red-800">
-                    Cerrar todas las sesiones
-                </button>
-            </div>
-        </ng-container> -->
-        <!-- Seguridad -->
         <ng-container *ngIf="isActive('seguridad')()">
+
             <div class=" bg-white/70  p-5">
                 <!-- Header -->
                 <h3 class="text-[18px] font-semibold text-slate-900">Seguridad de la cuenta</h3>
                 <p class="text-sm text-slate-500 mt-1">Mantén tu cuenta segura</p>
 
+
+
+                <div *ngIf="!editMode">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Contraseña actual</label>
+                    <div class="relative">
+                        <input [type]="show.current ? 'text' : 'password'" class="w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-800 tracking-wider focus:outline-none cursor-not-allowed" formControlName="currentPassword" placeholder="••••••••"
+                            readonly />
+                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">••••</span>
+                    </div>
+                    <p *ngIf="passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid" class="mt-1 text-xs text-red-600">
+                        La contraseña actual es obligatoria.
+                    </p>
+                </div>
+
+
+
+
+
+
                 <!-- Cambiar contraseña -->
-                <form [formGroup]="passwordForm" class="mt-5 space-y-4">
+                <form [formGroup]="passwordForm" class="mt-5 space-y-4" *ngIf="editMode">
+
+                    <input type="email" value="{{docenteData().email}}" autocomplete="username email" class="sr-only absolute w-px h-px -m-px overflow-hidden clip" readonly tabindex="-1" aria-hidden="true" />
+
                     <div>
                         <label class="block text-sm font-medium text-slate-800 mb-1">Contraseña actual</label>
                         <div class="relative">
@@ -219,11 +233,6 @@
                             </button>
                         </div>
 
-                        <!-- Medidor de fuerza -->
-                        <!-- <div class="mt-2 h-1.5 w-full rounded-full bg-slate-100">
-                            <div class="h-1.5 rounded-full transition-all" [ngClass]="strength().barClass" [style.width.%]="strength().value"></div>
-                        </div> -->
-                        <!-- Indicador de fuerza -->
                         <div class="mt-2 w-full sm:w-80">
                             <div class="h-2 w-full rounded bg-gray-200 overflow-hidden">
                                 <div class="h-2" [ngClass]="strengthBarClass()" [style.width.%]="passwordStrength() * 25"></div>

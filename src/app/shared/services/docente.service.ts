@@ -12,7 +12,6 @@ export class DocenteService {
 
 
   url="docentes"
-  // http://localhost:3000/docentes
  getDocentes():Observable<any>{
   return this.http.get<any>(`${environment.api}/${this.url}`)
  }
@@ -27,5 +26,8 @@ export class DocenteService {
   }
 
 
-
+  // Nuevo método para cambiar la contraseña
+  cambiarPassword(id: number, passwordData: any): Observable<any> {
+    return this.http.post<any>(`${environment.api}/${this.url}/${id}/cambiar-password`, passwordData);
+  }
 }
