@@ -4,10 +4,13 @@ import { DocenteComponent } from './docente.component';
 // import { ProfileComponent } from './pages/profile/profile.component';
 import { CoursesComponent } from './pages/courses/courses.component';
 import { AlumnosCursosComponent } from './pages/alumnos/alumnos-cursos/alumnos-cursos.component';
-import { CursosComponent } from './pages/cursos/cursos.component';
+// import { CursosComponent } from './pages/cursos/cursos.component';
 import { AistenciasComponent } from './pages/aistencias/aistencias.component';
 import { CursosDocenteComponent } from './pages/cursos-docente/cursos-docente.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
+import { CursosDisponiblesComponent } from './pages/cursos-disponibles/cursos-disponibles.component';
+import { SolicitarCursoComponent } from './pages/solicitar-curso/solicitar-curso.component';
+import { MisSolicitudesComponent } from './pages/mis-solicitudes/mis-solicitudes.component';
 // import { PerfilesComponent } from '../validador/pages/validador-docente/pages/perfiles/perfiles.component';
 
 const routes: Routes = [
@@ -39,6 +42,18 @@ const routes: Routes = [
       {
         path: 'asistencias/:id',
         component: AistenciasComponent,
+      },
+      {
+        path: 'cursos-disponibles',
+        component: CursosDisponiblesComponent,
+      },
+      {
+        path: 'cursos-solitud',
+        component: SolicitarCursoComponent,
+      },
+      {
+        path: 'mis-solicitudes',
+        component: MisSolicitudesComponent,
       },
 
     ],

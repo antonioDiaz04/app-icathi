@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { NbThemeModule,NbCardModule, NbSelectModule } from '@nebular/theme';
 import { SafeUrlPipe } from '../../shared/pipes/safe-url.pipe';
 import { AlumnosCursosComponent } from './pages/alumnos/alumnos-cursos/alumnos-cursos.component';
-import { CursosComponent } from './pages/cursos/cursos.component';
+// import { CursosComponent } from './pages/cursos/cursos.component';
 import { AistenciasComponent } from './pages/aistencias/aistencias.component';
 import { CursosDocenteComponent } from './pages/cursos-docente/cursos-docente.component';
 import { DrawerModule } from 'primeng/drawer';
@@ -26,7 +26,7 @@ import { DialogModule } from 'primeng/dialog';
     CoursesComponent,
     StatisticsComponent,
     AlumnosCursosComponent,
-    CursosComponent,
+    // CursosComponent,
     AistenciasComponent,
     CursosDocenteComponent
   ],
