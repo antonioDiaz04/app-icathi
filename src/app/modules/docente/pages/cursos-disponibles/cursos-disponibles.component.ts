@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CursoDetallado, CursosService, TipoCurso } from '../../../../shared/services/cursos.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cursos-disponibles',
@@ -18,6 +19,8 @@ export class CursosDisponiblesComponent implements OnInit {
 
   // ------- Data --------
   private cursosService = inject(CursosService);
+    private router = inject(Router);
+
   cursos = signal<CursoDetallado[]>([]);
   tiposCurso = signal<TipoCurso[]>([]);
   loading = signal<boolean>(true);
@@ -63,7 +66,7 @@ export class CursosDisponiblesComponent implements OnInit {
 
 
   solicitarCurso(curso: CursoDetallado) {
-    // Integra aquí tu flujo real (router, modal, petición POST, etc.)
-    alert(`Solicitud enviada para: ${curso.curso_nombre} (ID: ${curso.id})`);
+    // Navega al formulario con el ID del curso (opcional).
+    this.router.navigate(['/docente/cursos-solitud/nueva', curso.id]);
   }
 }

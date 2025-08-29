@@ -52,6 +52,10 @@ const routes: Routes = [
         component: SolicitarCursoComponent,
       },
       {
+        path: 'cursos-solitud/nueva/:idCurso',
+        component: SolicitarCursoComponent,
+      },
+      {
         path: 'mis-solicitudes',
         component: MisSolicitudesComponent,
       },
