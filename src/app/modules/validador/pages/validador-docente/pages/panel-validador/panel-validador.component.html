@@ -1,0 +1,39 @@
+<section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <!-- Tarjeta Docentes Pendientes -->
+    <div class="p-4 bg-white shadow-lg rounded-lg border-l-4 border-[#F08762] hover:shadow-xl transition duration-300">
+        <h3 class="text-lg font-bold text-[#44509D] flex items-center">
+            <i class="fas fa-clock mr-2"></i> Docentes Pendientes
+        </h3>
+        <p class="text-gray-600">Actualmente hay <strong class="text-[#44509D]">{{ pendientes }}</strong> docentes
+            pendientes de validación.</p>
+    </div>
+
+    <!-- Tarjeta Docentes Activos -->
+    <div class="p-4 bg-white shadow-lg rounded-lg border-l-4 border-[#44509D] hover:shadow-xl transition duration-300">
+        <h3 class="text-lg font-bold text-[#44509D] flex items-center">
+            <i class="fas fa-check-circle mr-2"></i> Docentes Activos
+        </h3>
+        <p class="text-gray-600">Actualmente hay <strong class="text-[#44509D]">{{ activos }}</strong> docentes
+            activos.</p>
+    </div>
+
+    <!-- Tarjeta Docentes Suspendidos -->
+    <div class="p-4 bg-white shadow-lg rounded-lg border-l-4 border-[#D8566C] hover:shadow-xl transition duration-300">
+        <h3 class="text-lg font-bold text-[#44509D] flex items-center">
+            <i class="fas fa-exclamation-circle mr-2"></i> Docentes Suspendidos
+        </h3>
+        <p class="text-gray-600">Actualmente hay <strong class="text-[#44509D]">{{ suspendidos }}</strong> docentes
+            suspendidos.</p>
+    </div>
+
+    <!-- Tarjeta Docentes Inactivos -->
+    <div class="p-4 bg-white shadow-lg rounded-lg border-l-4 border-[#F08762] hover:shadow-xl transition duration-300">
+        <h3 class="text-lg font-bold text-[#44509D] flex items-center">
+            <i class="fas fa-user-slash mr-2"></i> Docentes Inactivos
+        </h3>
+        <p class="text-gray-600">Actualmente hay <strong class="text-[#44509D]">{{ inactivos }}</strong> docentes
+            inactivos.</p>
+    </div>
+</section>
+ <app-docentes-list-vali>
+</app-docentes-list-vali>

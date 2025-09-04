@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ValidadorDocenteComponent } from './validador-docente.component';
-import { DocentesComponent } from './pages/docentes/docentes.component';
+// import { DocentesComponent } from './pages/docentes/docentes.component';
 import { PerfilesComponent } from './pages/perfiles/perfiles.component';
+import { PanelValidadorComponent } from './pages/panel-validador/panel-validador.component';
+import { ValidacionSolicitudComponent } from './pages/validacion-solicitud/validacion-solicitud.component';
 
 
 const routes: Routes = [
@@ -17,7 +19,7 @@ const routes: Routes = [
     children: [
       {
         path: 'home',
-        component: DocentesComponent,
+        component: PanelValidadorComponent,
         data: {
           title: 'Home',
           breadcrumb: [
@@ -31,6 +33,19 @@ const routes: Routes = [
       {
         path: 'perfil/:id',
         component: PerfilesComponent,
+        data: {
+          title: 'Home',
+          breadcrumb: [
+            {
+              label: 'Home',
+              path: '/validador/home',
+            },
+          ],
+        },
+      },
+      {
+        path: 'solicitudes-cursos',
+        component: ValidacionSolicitudComponent,
         data: {
           title: 'Home',
           breadcrumb: [

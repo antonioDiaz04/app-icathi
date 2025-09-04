@@ -10,7 +10,7 @@
 
     <div class="flex flex-col sm:flex-row w-full md:w-auto gap-3">
       <button (click)="nuevaSolicitud()"
-        class="inline-flex justify-center items-center gap-2 h-10 px-4 rounded-xl bg-slate-900 text-white font-medium shadow-sm hover:bg-slate-800 w-full sm:w-auto">
+        class="inline-flex justify-center items-center gap-2 h-10 px-4 rounded-xl bg-[#2e3874] text-white font-medium shadow-sm hover:bg-slate-800 w-full sm:w-auto">
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none">
           <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
@@ -34,7 +34,7 @@
           *ngFor="let f of filtros"
           (click)="setFiltro(f.key)"
           class="relative inline-flex items-center gap-2 h-10 px-3 sm:px-4 rounded-xl text-sm border transition shrink-0"
-          [class.bg-slate-900]="activo() === f.key"
+          [class.bg-[#2e3874]]="activo() === f.key"
           [class.text-white]="activo() === f.key"
           [class.border-slate-900]="activo() === f.key"
           [class.bg-slate-50]="activo() !== f.key"
