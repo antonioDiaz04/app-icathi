@@ -5,6 +5,19 @@ import { ValidadorDocenteService } from '../../../../commons/services/validador-
 import { Especialidad_docente, EspecialidadesService } from '../../../../../../shared/services/especialidad.service';
 import { AuthService } from '../../../../../../shared/services/auth.service';
 import { EspecialidadesDocentesService } from '../../../../../../shared/services/especialidades-docentes.service';
+// Importante: no necesitas nada extra, solo pega esto en tu componente.
+type Prioridad = 'Alta' | 'Media' | 'Baja';
+type Estado = 'Pendiente' | 'Aprobado' | 'Rechazado';
+
+interface Solicitud {
+  titulo: string;
+  origen: string;          // ICATHI / Modalidad Escuela / etc.
+  fecha: string;           // ISO para formatear
+  prioridad: Prioridad;
+  estado: Estado;
+  justificacion: string;
+  comentarioValidador?: string;
+}
 
 @Component({
     selector: 'app-perfiles',
@@ -52,6 +65,37 @@ export class PerfilesComponent implements OnInit {
       }
     });
   }
+  selectedTab: 'general' | 'solicitudes' | 'documentos' | 'contacto' = 'general';
+
+setTab(tab: 'general' | 'solicitudes' | 'documentos' | 'contacto') {
+  this.selectedTab = tab;
+}
+
+isTab(tab: 'general' | 'solicitudes' | 'documentos' | 'contacto') {
+  return this.selectedTab === tab;
+}
+
+  solicitudes: Solicitud[] = [
+    {
+      titulo: 'Plomería Básica',
+      origen: 'ICATHI',
+      fecha: '2024-01-14',
+      prioridad: 'Alta',
+      estado: 'Pendiente',
+      justificacion:
+        'Necesito ampliar mis conocimientos en oficios prácticos para diversificar mi enseñanza.'
+    },
+    {
+      titulo: 'Repostería Avanzada',
+      origen: 'Modalidad Escuela',
+      fecha: '2024-01-09',
+      prioridad: 'Media',
+      estado: 'Aprobado',
+      justificacion:
+        'Curso complementario para el programa de gastronomía',
+      comentarioValidador: 'Aprobado por relevancia curricular'
+    }
+  ];
    /**
    * Obtiene los datos del docente.
    * @param id ID del docente
@@ -182,5 +226,73 @@ export class PerfilesComponent implements OnInit {
   }
   regresar(): void {
     this.location.back();
+  }
+
+  // Colores homologados para chips de estatus (mismos de la tabla)
+estatusChipClass(status?: string) {
+  switch (status) {
+    case 'Pendiente de validación':
+      return 'bg-orange-500 text-white';
+    case 'Activo':
+      return 'bg-green-500 text-white';
+    case 'Inactivo':
+      return 'bg-yellow-500 text-white';
+    case 'Suspendido':
+      return 'bg-red-500 text-white';
+    default:
+      return 'bg-neutral-200 text-neutral-800';
+  }
+}
+
+// Chips para estatus de especialidad
+especialidadChipClass(est?: string) {
+  switch ((est || '').toLowerCase()) {
+    case 'aprobado':
+      return 'bg-green-500 text-white';
+    case 'pendiente':
+      return 'bg-yellow-500 text-white';
+    case 'rechazado':
+      return 'bg-red-500 text-white';
+    default:
+      return 'bg-neutral-200 text-neutral-800';
+  }
+}
+
+// Tabs con color primario de la tabla
+tabClass(tab: 'general'|'solicitudes'|'documentos'|'contacto') {
+  const base = 'whitespace-nowrap px-4 py-3 text-sm font-medium border-b-2';
+  const active = 'border-[#44509D] text-[#44509D]';
+  const inactive = 'border-transparent text-neutral-500 hover:text-[#44509D] hover:border-[#44509D]/70';
+  return `${base} ${this.selectedTab === tab ? active : inactive}`;
+}
+
+
+
+
+  prioridadClasses(p: Prioridad): string {
+    switch (p) {
+      case 'Alta':
+        return 'bg-red-50 text-red-700 ring-1 ring-red-200';
+      case 'Media':
+        return 'bg-amber-50 text-amber-700 ring-1 ring-amber-200';
+      default:
+        return 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200';
+    }
+  }
+
+  estadoClasses(e: Estado): string {
+    switch (e) {
+      case 'Pendiente':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'Aprobado':
+        return 'bg-emerald-100 text-emerald-800';
+      default:
+        return 'bg-rose-100 text-rose-800';
+    }
+  }
+
+  // Iconos en texto (opcional) por accesibilidad
+  estadoIcon(e: Estado): string {
+    return e === 'Aprobado' ? '✅' : e === 'Pendiente' ? '🟡' : '❌';
   }
 }

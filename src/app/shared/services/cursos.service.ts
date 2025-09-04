@@ -24,7 +24,7 @@ export interface TipoCurso {
   nombre: string;
 }
 
-interface Curso {
+export interface Curso {
   id: number;
   nombre: string;
   clave: string;
@@ -50,6 +50,17 @@ export class CursosService {
   private cursosApiUrl2 = `${environment.api}/cursos/ByIdPlantel/`;
 
   constructor(private http: HttpClient) {}
+  
+    /**
+   * Obtiene un curso por su ID
+   * @param idCurso El ID del curso
+   * @returns Un observable con los detalles del curso
+   */
+    getCursoById(idCurso: number): Observable<Curso> {
+      const url = `${this.cursosApiUrl}/${idCurso}`; // Construcción dinámica de la URL
+      return this.http.get<Curso>(url);
+    }
+  
   getTiposCurso(): Observable<TipoCurso[]> {
     return this.http.get<TipoCurso[]>(`${this.TipoCursoApiUrl}/tiposCurso`);
   }
@@ -84,16 +95,6 @@ export class CursosService {
 
 
 
-    /**
-   * Obtiene un curso por su ID
-   * @param idCurso El ID del curso
-   * @returns Un observable con los detalles del curso
-   */
-    getCursoById(idCurso: number): Observable<Curso> {
-      const url = `${this.cursosApiUrl}/${idCurso}`; // Construcción dinámica de la URL
-      return this.http.get<Curso>(url);
-    }
-  
 
 
   // Método para obtener los alumnos inscritos en un curso de un plantel

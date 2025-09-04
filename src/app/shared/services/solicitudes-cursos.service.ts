@@ -1,8 +1,36 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.prod';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
+import { Curso } from './cursos.service';
+export type Estado = 'Pendiente' | 'En Revisión' | 'Aprobado' | 'Rechazado';
+export type PrioridadApi = 'Baja' | 'Media' | 'Alta'; // tal como viene del API
 
+export interface SolicitudCursoApi {
+  id: number;
+  cursoId: number;
+  docenteId: number;
+  prioridad: PrioridadApi;
+  justificacion: string;
+  estado: Estado;
+  respuestaMensaje?: string | null;
+  evaluadorId?: number | null;
+  fechaRespuesta?: string | null;
+  fechaSolicitud: string;
+  createdAt: string;
+  updatedAt: string;
+  curso:Curso;
+}
+
+interface ApiOkResponse {
+  ok: boolean;
+  data: {
+    data: SolicitudCursoApi[];
+    total: number;
+    page: number;
+    pageSize: number;
+  };
+}
 export interface SolicitudCurso {
   id?: number;
   cursoId: number;
@@ -43,33 +71,54 @@ export class SolicitudesCursosService {
   private apiUrl = `${environment.api}/solicitudes-cursos`; // Cambia a tu URL del servidor
 
   constructor(private http: HttpClient) { }
+  // Listar solicitudes con filtros (Componente 2)
+    listarSolicitudes(
+    filtros?: SolicitudFiltros
+  ): Observable<{ solicitudes: SolicitudCursoApi[]; total: number; page: number; pageSize: number }> {
+    let params = new HttpParams();
 
+    if (filtros?.docenteId) params = params.set('docenteId', String(filtros.docenteId));
+    if (filtros?.estado)    params = params.set('estado', filtros.estado);
+    if (filtros?.page)      params = params.set('page', String(filtros.page));
+    if (filtros?.pageSize)  params = params.set('pageSize', String(filtros.pageSize));
+
+    return this.http.get<ApiOkResponse>(this.apiUrl, { params }).pipe(
+      map((r) => ({
+        solicitudes: r.data.data,
+        total: r.data.total,
+        page: r.data.page,
+        pageSize: r.data.pageSize,
+      }))
+    );
+  }
+
+
+  // listarSolicitudes(filtros?: SolicitudFiltros): Observable<{solicitudes: SolicitudCurso[], total: number}> {
+  //   let params = new HttpParams();
+    
+  //   if (filtros) {
+  //     if (filtros.docenteId) {
+  //       params = params.set('docenteId', filtros.docenteId.toString());
+  //     }
+  //     if (filtros.estado) {
+  //       params = params.set('estado', filtros.estado);
+  //     }
+  //     if (filtros.page) {
+  //       params = params.set('page', filtros.page.toString());
+  //     }
+  //     if (filtros.pageSize) {
+  //       params = params.set('pageSize', filtros.pageSize.toString());
+  //     }
+  //   }
+
+  //   return this.http.get<{solicitudes: SolicitudCurso[], total: number}>(this.apiUrl, { params });
+  // }
   // Crear solicitud (Componente 1)
   crearSolicitud(solicitud: SolicitudCurso): Observable<SolicitudCurso> {
     return this.http.post<SolicitudCurso>(this.apiUrl, solicitud);
   }
 
-  // Listar solicitudes con filtros (Componente 2)
-  listarSolicitudes(filtros?: SolicitudFiltros): Observable<{solicitudes: SolicitudCurso[], total: number}> {
-    let params = new HttpParams();
-    
-    if (filtros) {
-      if (filtros.docenteId) {
-        params = params.set('docenteId', filtros.docenteId.toString());
-      }
-      if (filtros.estado) {
-        params = params.set('estado', filtros.estado);
-      }
-      if (filtros.page) {
-        params = params.set('page', filtros.page.toString());
-      }
-      if (filtros.pageSize) {
-        params = params.set('pageSize', filtros.pageSize.toString());
-      }
-    }
 
-    return this.http.get<{solicitudes: SolicitudCurso[], total: number}>(this.apiUrl, { params });
-  }
 
   // Obtener detalle de una solicitud
   obtenerSolicitud(id: number): Observable<SolicitudCurso> {

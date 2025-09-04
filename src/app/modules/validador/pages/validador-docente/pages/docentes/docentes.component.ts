@@ -14,6 +14,12 @@ import { AuthService } from '../../../../../../shared/services/auth.service';
 })
 export class DocentesComponent implements OnInit {
   docentes: Docente[] = [];
+    filteredDocentes: Docente[] = [];     // <— lista filtrada
+
+  searchTerm = '';                       // <— texto de búsqueda
+  statusFilter = '';                     // <— filtro por estado
+  statusOptions = ['Pendiente de validación', 'Activo', 'Inactivo', 'Suspendido'];
+
   errorMessage: string | null = null;
   showValidateModal = false;
   showRejectModal = false;
@@ -71,6 +77,7 @@ export class DocentesComponent implements OnInit {
         (data: Docente[]) => {
           this.docentes = data;
           console.log("lista docentes",this.docentes)
+              this.applyFilters();   
           this.errorMessage = null;
         },
         (error) => {
@@ -146,5 +153,41 @@ export class DocentesComponent implements OnInit {
     );
   }
   
+
+  /** Normaliza texto (minúsculas y sin acentos) */
+  private norm(v: any): string {
+    return (v ?? '')
+      .toString()
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+  }
+    /** Aplica búsqueda y filtro por estado */
+  applyFilters(): void {
+    const q = this.norm(this.searchTerm).trim();
+    const tokens = q ? q.split(/\s+/) : [];
+
+    this.filteredDocentes = this.docentes.filter(d => {
+      if (this.statusFilter && d.estatus_valor !== this.statusFilter) return false;
+
+      if (!tokens.length) return true;
+
+      const haystack = this.norm(
+        `${d.id} ${d.nombre} ${d.apellidos} ${d.email} ${d.estatus_valor} ${d.created_at}`
+      );
+
+      // todos los tokens deben aparecer
+      return tokens.every(t => haystack.includes(t));
+    });
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.applyFilters();
+  }
+
+  trackById(index: number, d: Docente) {
+    return d.id;
+  }
 
 }

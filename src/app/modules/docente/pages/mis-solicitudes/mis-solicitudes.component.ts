@@ -1,8 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
+import { SolicitudCursoApi, SolicitudesCursosService } from '../../../../shared/services/solicitudes-cursos.service';
+import { catchError, finalize, forkJoin, map, of, switchMap } from 'rxjs';
+import { Curso, CursosService } from '../../../../shared/services/cursos.service';
+import { DocenteHelper } from '../../commons/helpers/docente.helper';
+import { AuthService } from '../../../../shared/services/auth.service';
+import { DocenteService } from '../../../../shared/services/docente.service';
+import { Router } from '@angular/router';
 
 type Estado = 'Pendiente' | 'En Revisión' | 'Aprobado' | 'Rechazado';
 type Prioridad = 'Prioridad Baja' | 'Prioridad Media' | 'Prioridad Alta';
+
+type PrioridadUi = 'Prioridad Baja' | 'Prioridad Media' | 'Prioridad Alta';
 
 interface Respuesta {
   mensaje: string;
@@ -10,16 +19,7 @@ interface Respuesta {
   fechaISO: string;
 }
 
-interface Solicitud {
-  id: string;
-  curso: string;
-  organismo: 'ICATHI' | 'SEP' | 'Educación Virtual' | string;
-  prioridad: Prioridad;
-  fechaSolicitudISO: string;
-  justificacion: string;
-  estado: Estado;
-  respuesta?: Respuesta;
-}
+
 @Component({
   selector: 'app-mis-solicitudes',
   standalone: true,
@@ -28,108 +28,132 @@ interface Solicitud {
   styleUrl: './mis-solicitudes.component.scss'
 })
 export class MisSolicitudesComponent {
- solicitudes: Solicitud[] = [
-    {
-      id: 'SOL-00045',
-      curso: 'Plomería Básica',
-      organismo: 'ICATHI',
-      prioridad: 'Prioridad Media',
-      fechaSolicitudISO: '2024-01-15',
-      justificacion:
-        'Necesito actualizar mis conocimientos en plomería para mejorar la calidad de mis clases prácticas y ofrecer técnicas más modernas a mis estudiantes.',
-      estado: 'Pendiente',
-    },
-    {
-      id: 'SOL-00044',
-      curso: 'Repostería Avanzada',
-      organismo: 'SEP',
-      prioridad: 'Prioridad Alta',
-      fechaSolicitudISO: '2024-01-10',
-      justificacion:
-        'Este curso me permitirá ampliar el programa de gastronomía con técnicas avanzadas de repostería, beneficiando directamente a 45 estudiantes del programa.',
-      estado: 'Aprobado',
-      respuesta: {
-        mensaje:
-          'Solicitud aprobada. El curso complementa perfectamente el perfil del docente.',
-        evaluador: 'Dra. María López',
-        fechaISO: '2024-01-14',
-      },
-    },
-    {
-      id: 'SOL-00043',
-      curso: 'Electricidad Residencial',
-      organismo: 'ICATHI',
-      prioridad: 'Prioridad Baja',
-      fechaSolicitudISO: '2024-01-05',
-      justificacion:
-        'Me interesa actualizar el módulo de instalaciones residenciales con normativa vigente.',
-      estado: 'En Revisión',
-    },
-    {
-      id: 'SOL-00042',
-      curso: 'Diseño de Material Didáctico Digital',
-      organismo: 'Educación Virtual',
-      prioridad: 'Prioridad Media',
-      fechaSolicitudISO: '2024-01-02',
-      justificacion:
-        'Busco incorporar recursos interactivos en clases híbridas para mejorar la participación.',
-      estado: 'Aprobado',
-      respuesta: {
-        mensaje:
-          'Aprobado. Alineado al plan de actualización docente de este semestre.',
-        evaluador: 'Mtro. Luis Ortega',
-        fechaISO: '2024-01-06',
-      },
-    },
-    {
-      id: 'SOL-00041',
-      curso: 'Gestión del Aula y Evaluación',
-      organismo: 'SEP',
-      prioridad: 'Prioridad Media',
-      fechaSolicitudISO: '2023-12-28',
-      justificacion:
-        'Quiero fortalecer estrategias de evaluación formativa en grupos grandes.',
-      estado: 'Rechazado',
-      respuesta: {
-        mensaje:
-          'Rechazada por cupo completo. Se sugiere volver a postular en el siguiente periodo.',
-        evaluador: 'Coord. Académica',
-        fechaISO: '2024-01-03',
-      },
-    },
+  // ---- estado de vista
+  loading = signal<boolean>(true);
+  errorMsg = signal<string | null>(null);
+
+  // ---- datos
+  solicitudes = signal<SolicitudCursoApi[]>([]);
+  total = signal<number>(0);
+
+  // ---- filtros locales
+  activo = signal<'ALL' | Estado>('ALL');
+
+  // ---- paginación
+  page = signal<number>(1);
+  pageSize = signal<number>(20);
+private pendingLoads = 2;
+
+  // Cambia este valor según el usuario autenticado
+  docenteId = 0;
+  // mapa de cursos por id (para no tocar el tipo de SolicitudCursoApi)
+  cursosMap = signal<Map<number, Curso>>(new Map());
+
+  filtros = [
+    { key: 'ALL' as const, label: 'Todas' },
+    { key: 'Pendiente' as Estado, label: 'Pendientes' },
+    { key: 'En Revisión' as Estado, label: 'En Revisión' },
+    { key: 'Aprobado' as Estado, label: 'Aprobadas' },
+    { key: 'Rechazado' as Estado, label: 'Rechazadas' },
   ];
+  docenteData: any;
+  constructor(     private router: Router,
+   private authService: AuthService,
+    private docenteService: DocenteService,private svc: SolicitudesCursosService,private cursosService :CursosService) {}
 
-  // --- Tabs / filtro ---
-  filtros: Array<{ key: 'ALL' | Estado; label: string }> = [
-    { key: 'ALL', label: 'Todas' },
-    { key: 'Pendiente', label: 'Pendientes' },
-    { key: 'En Revisión', label: 'En Revisión' },
-    { key: 'Aprobado', label: 'Aprobadas' },
-    { key: 'Rechazado', label: 'Rechazadas' },
-  ];
-  activo: 'ALL' | Estado = 'ALL';
+  ngOnInit(): void {
+    this.cargar();
+    this.obtenerDatosDocenteYCursos();
+  }
+  async obtenerDatosDocenteYCursos(): Promise<void> {
+   this.docenteData = await DocenteHelper.obtenerDatosDocenteYCursos(
+      this.authService,
+      this.docenteService
+    );
+    // console.log("this.docenteData",this.docenteData)
+    this.docenteId=this.docenteData.id
+    console.log("this.docenteId",this.docenteId)
+  }
+  cargar(): void {
+    this.loading.set(true);
+    this.errorMsg.set(null);
 
-  setFiltro(key: 'ALL' | Estado) { this.activo = key; }
+    this.svc.listarSolicitudes({
+      docenteId: this.docenteId,
+      estado: this.activo() === 'ALL' ? undefined : this.activo(),
+      page: this.page(),
+      pageSize: this.pageSize(),
+    })
+    .pipe(
+      switchMap((res) => {
+        const solicitudes = res.solicitudes as SolicitudCursoApi[];
+        this.solicitudes.set(solicitudes);
+        this.total.set(res.total ?? solicitudes.length);
 
-  get solicitudesFiltradas(): Solicitud[] {
-    return this.activo === 'ALL'
-      ? this.solicitudes
-      : this.solicitudes.filter(s => s.estado === this.activo);
+        // IDs de curso únicos
+        const uniqueIds = Array.from(
+          new Set(
+            solicitudes
+              .map(s => s.cursoId)
+              .filter((id): id is number => typeof id === 'number')
+          )
+        );
+
+        if (uniqueIds.length === 0) {
+          // No hay cursos, vaciamos el mapa y seguimos
+          this.cursosMap.set(new Map());
+          return of(null);
+        }
+
+        // Pedimos todos los cursos en paralelo
+        const peticiones = uniqueIds.map(id => this.cursosService.getCursoById(id));
+
+        return forkJoin(peticiones).pipe(
+          map((cursos: Curso[]) => {
+            const mapa = new Map<number, Curso>(cursos.map(c => [c.id, c]));
+            this.cursosMap.set(mapa);
+            return null;
+          })
+        );
+      }),
+      catchError(err => {
+        console.error('Error al cargar:', err);
+        this.errorMsg.set('No se pudieron cargar las solicitudes o los cursos.');
+        // en caso de error, mantenemos datos previos
+        return of(null);
+      }),
+      finalize(() => this.loading.set(false))
+    )
+    .subscribe(() => {
+      // listo
+      console.log('Solicitudes:', this.solicitudes());
+      // console.log('CursosMap:', this.cursosMap());
+    });
   }
 
+
+
+  setFiltro(key: 'ALL' | Estado) {
+    this.activo.set(key);
+    this.page.set(1); // reset paginación
+    this.cargar();
+  }
+
+  // Contadores por estado (sobre el dataset cargado)
   count(key: 'ALL' | Estado): number {
-    return key === 'ALL'
-      ? this.solicitudes.length
-      : this.solicitudes.filter(s => s.estado === key).length;
+    const data = this.solicitudes();
+    if (key === 'ALL') return this.total(); // contador global del backend
+    return data.filter(s => s.estado === key).length;
   }
 
-  // --- Utils UI ---
-  fechaCorta(iso: string) {
+  // Formato UI
+  fechaCorta(iso: string | null | undefined) {
+    if (!iso) return '';
     const d = new Date(iso);
     return d.toLocaleDateString('es-MX', { year: 'numeric', month: '2-digit', day: '2-digit' });
-    // ej. 2024-01-15 -> 15/01/2024
   }
 
+  // Badges
   badgeEstadoClass(estado: Estado) {
     switch (estado) {
       case 'Pendiente':   return 'bg-amber-100 text-amber-800';
@@ -139,14 +163,27 @@ export class MisSolicitudesComponent {
     }
   }
 
-  badgePrioridadClass(p: Prioridad) {
+  // El API manda prioridad "Baja/Media/Alta"; la UI muestra "Prioridad X"
+  prioridadUi(p: 'Baja' | 'Media' | 'Alta'): PrioridadUi {
+    return p === 'Alta' ? 'Prioridad Alta' : p === 'Media' ? 'Prioridad Media' : 'Prioridad Baja';
+  }
+  badgePrioridadClass(p: 'Baja' | 'Media' | 'Alta') {
     switch (p) {
-      case 'Prioridad Alta':  return 'bg-rose-100 text-rose-800';
-      case 'Prioridad Media': return 'bg-amber-100 text-amber-800';
-      case 'Prioridad Baja':  return 'bg-slate-100 text-slate-700';
+      case 'Alta':  return 'bg-rose-100 text-rose-800';
+      case 'Media': return 'bg-amber-100 text-amber-800';
+      case 'Baja':  return 'bg-slate-100 text-slate-700';
     }
   }
 
-  nuevaSolicitud() { alert('Acción: crear nueva solicitud'); }
-  volver() { alert('Acción: regresar'); }
+  // Acciones UI
+  nuevaSolicitud() { 
+            this.router.navigate(["/docente/cursos-solitud"])
+
+    /* navegación o modal */ }
+  volver() { /* navegación atrás */ }
+
+  // Paginación simple
+  totalPages = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
+  prevPage() { if (this.page() > 1) { this.page.update(p => p - 1); this.cargar(); } }
+  nextPage() { if (this.page() < this.totalPages()) { this.page.update(p => p + 1); this.cargar(); } }
 }

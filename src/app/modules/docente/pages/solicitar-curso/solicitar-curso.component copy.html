@@ -1,154 +1,160 @@
 <div class="px-6 pt-6 pb-12 bg-slate-50 min-h-screen">
+    <!-- Título -->
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-slate-900">Solicitar Curso</h1>
+        <p class="mt-2 text-slate-500">Envía una solicitud para participar en un curso de capacitación</p>
+    </div>
 
+    <!-- Layout: Formulario + Vista previa -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Columna izquierda (form) -->
+        <section class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm">
+            <div class="px-6 pt-5 pb-2 border-b border-slate-200">
+                <h2 class="text-slate-900 font-semibold">Información de la Solicitud</h2>
+            </div>
 
-  <!-- Título -->
-  <div class="mb-6">
-    <h1 class="text-3xl font-bold text-slate-900">Solicitar Curso</h1>
-    <p class="mt-2 text-slate-500">Envía una solicitud para participar en un curso de capacitación</p>
-  </div>
-
-  <!-- Layout: Formulario + Vista previa -->
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Columna izquierda (form) -->
-    <section class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm">
-      <div class="px-6 pt-5 pb-2 border-b border-slate-200">
-        <h2 class="text-slate-900 font-semibold">Información de la Solicitud</h2>
-      </div>
-
-      <form #f="ngForm" (ngSubmit)="onSubmit(f)" class="p-6 space-y-5">
-        <!-- Curso solicitado -->
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-2">Curso Solicitado <span class="text-rose-600">*</span></label>
-          <div class="relative">
-            <select
-              name="cursoId"
-              [(ngModel)]="formData.cursoId"
-              required
-              class="w-full h-12 appearance-none rounded-xl border border-slate-200 bg-white pr-10 pl-4
+            <form #f="ngForm" (ngSubmit)="onSubmit(f)" class="p-6 space-y-5">
+                <!-- Tipo de Curso -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+            Tipo de Curso <span class="text-rose-600">*</span>
+          </label>
+                    <div class="relative">
+                        <select name="tipoCursoId" [(ngModel)]="tipoSeleccionadoId" (change)="onTipoChange()" required class="w-full h-12 appearance-none rounded-xl border border-slate-200 bg-white pr-10 pl-4
                      text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-              <option *ngFor="let c of cursos" [value]="c.id">{{ c.titulo }} - {{ c.modalidad }}</option>
+              <option *ngFor="let t of tipos" [ngValue]="t.id">{{ t.nombre }}</option>
             </select>
-            <svg class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
+                        <svg class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.19l3.71-3.96a.75.75 0 111.08 1.04l-4.25 4.53a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
             </svg>
-          </div>
-          <p *ngIf="f.submitted && f.controls['cursoId']?.invalid" class="mt-1 text-xs text-rose-600">
-            Selecciona un curso.
-          </p>
-        </div>
+                    </div>
+                    <p *ngIf="f.submitted && !tipoSeleccionadoId" class="mt-1 text-xs text-rose-600">
+                        Selecciona un tipo de curso.
+                    </p>
+                </div>
 
-        <!-- Prioridad -->
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-2">Prioridad de la Solicitud <span class="text-rose-600">*</span></label>
-          <div class="relative">
-            <select
-              name="prioridad"
-              [(ngModel)]="formData.prioridad"
-              required
-              class="w-full h-12 appearance-none rounded-xl border border-slate-200 bg-white pr-10 pl-4
+                <!-- Curso solicitado -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+            Curso Solicitado <span class="text-rose-600">*</span>
+          </label>
+                    <div class="relative">
+                        <select name="cursoId" [(ngModel)]="formData.cursoId" required class="w-full h-12 appearance-none rounded-xl border border-slate-200 bg-white pr-10 pl-4
                      text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-              <option *ngFor="let p of prioridades" [value]="p">{{ p }}</option>
+              <option *ngFor="let c of cursosFiltrados; trackBy: trackById" [value]="c.id">
+                {{ c.curso_nombre }} - {{ c.tipo_curso_nombre }}
+              </option>
             </select>
-            <svg class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
+                        <svg class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.19l3.71-3.96a.75.75 0 111.08 1.04l-4.25 4.53a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
             </svg>
-          </div>
-          <p *ngIf="f.submitted && f.controls['prioridad']?.invalid" class="mt-1 text-xs text-rose-600">
-            Selecciona una prioridad.
-          </p>
-        </div>
+                    </div>
+                    <p *ngIf="f.submitted && f.controls['cursoId']?.invalid" class="mt-1 text-xs text-rose-600">
+                        Selecciona un curso.
+                    </p>
+                </div>
 
-        <!-- Justificación -->
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-2">Justificación de la Solicitud <span class="text-rose-600">*</span></label>
-          <textarea
-            name="justificacion"
-            [(ngModel)]="formData.justificacion"
-            required
-            minlength="100"
-            rows="6"
-            placeholder="Explica por qué necesitas este curso, cómo beneficiará tu desarrollo profesional y cómo aplicarás los conocimientos adquiridos..."
-            class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-800 placeholder-slate-400
+                <!-- Prioridad -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+            Prioridad de la Solicitud <span class="text-rose-600">*</span>
+          </label>
+                    <div class="relative">
+                        <select name="prioridad" [(ngModel)]="formData.prioridadUi" required class="w-full h-12 appearance-none rounded-xl border border-slate-200 bg-white pr-10 pl-4
+                     text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+              <option *ngFor="let p of prioridadesUi" [value]="p.label">{{ p.label }}</option>
+            </select>
+                        <svg class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.19l3.71-3.96a.75.75 0 111.08 1.04l-4.25 4.53a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
+            </svg>
+                    </div>
+                    <p *ngIf="f.submitted && f.controls['prioridad']?.invalid" class="mt-1 text-xs text-rose-600">
+                        Selecciona una prioridad.
+                    </p>
+                </div>
+
+                <!-- Justificación -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Justificación de la Solicitud <span class="text-rose-600">*</span></label>
+                    <textarea name="justificacion" [(ngModel)]="formData.justificacion" required minlength="100" rows="6" placeholder="Explica por qué necesitas este curso, cómo beneficiará tu desarrollo profesional y cómo aplicarás los conocimientos adquiridos..." class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-800 placeholder-slate-400
                    shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
-          <div class="mt-1 text-xs text-slate-500">
-            Mínimo 100 caracteres. Sé específico sobre los beneficios y aplicación del curso.
-          </div>
-          <p *ngIf="f.submitted && (f.controls['justificacion']?.invalid)" class="mt-1 text-xs text-rose-600">
-            La justificación es obligatoria y debe tener al menos 100 caracteres.
-          </p>
-        </div>
+                    <div class="mt-1 text-xs text-slate-500">
+                        Mínimo 100 caracteres. Sé específico sobre los beneficios y aplicación del curso.
+                    </div>
+                    <p *ngIf="f.submitted && (f.controls['justificacion']?.invalid)" class="mt-1 text-xs text-rose-600">
+                        La justificación es obligatoria y debe tener al menos 100 caracteres.
+                    </p>
+                </div>
 
-        <!-- Acciones -->
-        <div class="flex flex-col sm:flex-row gap-3 pt-2">
-          <button
-            type="submit"
-            class="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-xl bg-slate-900 text-white font-semibold
+                <!-- Acciones -->
+                <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                    <button type="submit" class="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-xl bg-slate-900 text-white font-semibold
                    shadow-sm hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900">
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7-11-7z"/></svg>
             Enviar Solicitud
           </button>
 
-          <button type="button"
-            (click)="verCursos()"
-            class="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-xl border border-slate-300 bg-white
+                    <button type="button" (click)="verCursos()" class="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-xl border border-slate-300 bg-white
                    text-slate-800 hover:bg-slate-50">
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none">
               <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             Ver Cursos
           </button>
-        </div>
-      </form>
-    </section>
+                </div>
+            </form>
+        </section>
 
-    <!-- Columna derecha (preview) -->
-    <aside class="bg-white rounded-2xl border border-slate-200 shadow-sm">
-      <div class="px-6 pt-5 pb-2 border-b border-slate-200">
-        <h2 class="text-slate-900 font-semibold">Vista Previa del Curso</h2>
-      </div>
+        <!-- Columna derecha (preview) -->
+        <aside class="bg-white rounded-2xl border border-slate-200 shadow-sm">
+            <div class="px-6 pt-5 pb-2 border-b border-slate-200">
+                <h2 class="text-slate-900 font-semibold">Vista Previa del Curso</h2>
+            </div>
 
-      <div class="p-6 space-y-4">
-        <div class="space-y-1">
-          <h3 class="text-base font-semibold text-slate-900">{{ cursoSeleccionado?.titulo }}</h3>
-          <p class="text-sm text-slate-500">Modalidad {{ cursoSeleccionado?.modalidad }}</p>
-        </div>
+            <div class="p-6 space-y-4" *ngIf="cursoSeleccionado as c">
+                <div class="space-y-1">
+                    <h3 class="text-base font-semibold text-slate-900">{{ c.curso_nombre }}</h3>
+                    <p class="text-sm text-slate-500">Modalidad: {{ c.tipo_curso_nombre || '—' }}</p>
+                </div>
 
-        <ul class="space-y-3 text-sm text-slate-700">
-          <li class="flex items-center gap-2">
-            <!-- reloj -->
-            <svg class="h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none">
+                <ul class="space-y-2 text-sm text-slate-700">
+                    <li><span class="font-medium">Área:</span> {{ c.area_nombre || '—' }}</li>
+                    <li><span class="font-medium">Especialidad:</span> {{ c.especialidad_nombre || '—' }}</li>
+                    <li><span class="font-medium">Clave:</span> {{ c.clave || '—' }}</li>
+                    <li class="flex items-center gap-2">
+                        <svg class="h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none">
               <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
               <path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             </svg>
-            {{ cursoSeleccionado?.horas }} horas
-          </li>
-          <li class="flex items-center gap-2">
-            <!-- calendario -->
-            <svg class="h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none">
-              <rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
-              <path d="M16 3v4M8 3v4M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            <!-- Inicia: {{ cursoSeleccionado?.inicioISO ? fechaCorta(cursoSeleccionado?.inicioISO) : '--/--/----' }} -->
-          </li>
-        </ul>
 
-        <!-- Caja informativa -->
-        <div class="mt-2 rounded-xl bg-indigo-50 text-indigo-900 border border-indigo-100 p-4">
-          <div class="flex items-start gap-3">
-            <svg class="h-5 w-5 mt-0.5 text-indigo-500" viewBox="0 0 24 24" fill="none">
+                        <!-- {{ (c.horas ?? 0) }} horas -->
+                    </li>
+                </ul>
+
+                <div *ngIf="c.detalles" class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700">
+                    {{ c.detalles }}
+                </div>
+
+                <!-- Caja informativa -->
+                <div class="mt-2 rounded-xl bg-indigo-50 text-indigo-900 border border-indigo-100 p-4">
+                    <div class="flex items-start gap-3">
+                        <svg class="h-5 w-5 mt-0.5 text-indigo-500" viewBox="0 0 24 24" fill="none">
               <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
               <path d="M12 7h.01M11 11h2v6h-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             </svg>
-            <div>
-              <p class="font-medium">Proceso de Aprobación</p>
-              <p class="text-sm text-indigo-900/80">
-                Tu solicitud será revisada por el coordinador académico. Recibirás
-                una notificación con la decisión en 3–5 días hábiles.
-              </p>
+                        <div>
+                            <p class="font-medium">Proceso de Aprobación</p>
+                            <p class="text-sm text-indigo-900/80">
+                                Tu solicitud será revisada por el coordinador académico. Recibirás una notificación con la decisión en 3–5 días hábiles.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </aside>
-  </div>
+
+            <div class="p-6" *ngIf="!cursoSeleccionado">
+                <p class="text-sm text-slate-500">Selecciona un tipo y un curso para ver la vista previa.</p>
+            </div>
+        </aside>
+    </div>
 </div>

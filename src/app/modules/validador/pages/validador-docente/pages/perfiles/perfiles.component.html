@@ -1,318 +1,352 @@
-<section class="bg-gray-100 min-h-screen p-6">
-  <!-- Botón de Regresar -->
-  <div class="max-w-4xl mx-auto mb-4">
+<!-- PerfilesComponent Template -->
+<section class="px-4 sm:px-6 pt-6 pb-12 bg-slate-50 min-h-screen">
+  <!-- <div class="px-4 sm:px-6 pt-6 pb-12 bg-slate-50 min-h-screen"></div> -->
+  <!-- <section class="bg-neutral-50 min-h-screen p-6"> -->
+  <!-- Botón regresar -->
+  <div class="max-w-screen-2xl mx-auto mb-4">
     <button
-      class="bg-[#F08762] text-white px-4 py-2 rounded shadow hover:bg-orange-600 transition-all flex items-center"
-      (click)="regresar()"
-    >
-      <i class="icon arrow left text-white mr-2"></i> Regresar
-    </button>
-  </div>
-
-  <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6 space-y-6">
-    <!-- Cabecera del Docente -->
-    <div class="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-6">
-      <!-- Foto del docente -->
-      <img
-        [src]="docente.foto_url"
-        alt="Foto de {{ docente.nombre || 'Docente' }}"
-        class="w-32 h-32 rounded-full shadow-md border-4 border-[#44509D]"
-      />
-      <div class="w-full">
-        <!-- Información del docente -->
-        <h2 class="text-2xl font-bold text-[#44509D]">
-          {{ docente.nombre || 'Pendiente' }} {{ docente.apellidos || 'Pendiente' }}
-        </h2>
-        <p class="text-gray-600">
-          <strong>Especialidad principal:</strong> {{ docente.especialidad || 'Pendiente' }}
-        </p>
-        <p class="text-gray-600">
-          <strong>Registrado el:</strong> 
-          {{ docente.created_at ? (docente.created_at | date:'longDate') : 'Pendiente' }}
-        </p>
-        <p class="text-gray-600">
-          <strong>Última actualización:</strong> 
-          {{ docente.updated_at ? (docente.updated_at | date:'longDate') : 'Pendiente' }}
-        </p>
-        <p class="text-gray-600 flex items-center space-x-2">
-          <strong>Estatus actual:</strong>
-          <span
-            class="px-3 py-1 rounded text-white text-sm"
-            [ngClass]="{
-              'bg-[#F08762]': docente.estatus_valor === 'Suspendido',
-              'bg-[#44509D]': docente.estatus_valor === 'Activo',
-              'bg-yellow-500': docente.estatus_valor === 'Pendiente de validación',
-              'bg-gray-500': docente.estatus_valor === 'Inactivo'
-            }"
-          >
-            {{ docente.estatus_valor || 'Pendiente' }}
-          </span>
-        </p>
-
-
-         <!-- Modificar estatus -->
-<!-- Botón para abrir el modal -->
-<div class="mt-6">
-  <button
-    class="w-full px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-md shadow-md hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-400 focus:ring-opacity-50 transition"
-    (click)="abrirModal()"
-  >
-    Modificar estatus  
-  </button>
-</div>
-
-<!-- Modal  para modificar status del perfil -->
-<div
-  *ngIf="mostrarModal"
-  class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50"
->
-  <div class="bg-white max-w-sm w-full p-6 rounded-lg shadow-lg relative">
-    <!-- Header -->
-    <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">
-      Modificar Estatus del Perfil
-    </h2>
-    <p class="text-sm text-gray-600 mb-4">
-      Cambiar el estatus del perfil afectará su visibilidad y acceso al sistema. 
-      Selecciona cuidadosamente el nuevo estatus según las necesidades:
-    </p>
-
-    <!-- Status Information -->
-    <div class="bg-gray-50 border border-gray-200 rounded-md p-4 mb-4">
-      <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
-        <li><strong class="text-blue-700">Activo:</strong> Habilitado para interactuar en el sistema.</li>
-        <li><strong class="text-red-700">Inactivo:</strong> Deshabilitado, sin acceso ni acciones.</li>
-        <li><strong class="text-yellow-700">Pendiente de validación:</strong> En revisión con acceso limitado.</li>
-        <li><strong class="text-gray-700">Suspendido:</strong> Bloqueado temporalmente por irregularidades.</li>
-      </ul>
-    </div>
-
-    <!-- Dropdown -->
-    <label for="estatus" class="block text-sm font-medium text-gray-800 mb-2">
-      Selecciona el nuevo estatus:
-    </label>
-    <select
-      id="estatus"
-      [(ngModel)]="docente.estatus_valor"
-      class="block w-full px-4 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500 transition mb-6"
-    >
-      <option value="Activo">Activo</option>
-      <option value="Inactivo">Inactivo</option>
-      <option value="Pendiente de validación">Pendiente de validación</option>
-      <option value="Suspendido">Suspendido</option>
-    </select>
-
-    <!-- Buttons -->
-    <div class="flex justify-end space-x-4">
-      <button
-        class="px-4 py-2 text-sm font-semibold text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition"
-        (click)="cerrarModal()"
-      >
-        Cancelar
-      </button>
-      <button
-        class="px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-md shadow-md hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-400 focus:ring-opacity-50 transition"
-        (click)="actualizarEstatus()"
-      >
-        Guardar
-      </button>
-    </div>
-
-    <!-- Decorative Close Button -->
-    <button
-      class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none transition"
-      (click)="cerrarModal()"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-        <path
-          fill-rule="evenodd"
-          d="M10 8.586l4.95-4.95a1 1 0 111.414 1.414L11.414 10l4.95 4.95a1 1 0 01-1.414 1.414L10 11.414l-4.95 4.95a1 1 0 01-1.414-1.414L8.586 10l-4.95-4.95a1 1 0 011.414-1.414L10 8.586z"
-          clip-rule="evenodd"
-        />
+      class="inline-flex items-center gap-2 border border-[#44509D] text-[#44509D] px-3 py-2 rounded-md hover:bg-[#44509D] hover:text-white transition"
+      (click)="regresar()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+        <path fill-rule="evenodd"
+          d="M10.53 4.47a.75.75 0 010 1.06L5.81 10.25H21a.75.75 0 010 1.5H5.81l4.72 4.72a.75.75 0 11-1.06 1.06l-6-6a.75.75 0 010-1.06l6-6a.75.75 0 011.06 0z"
+          clip-rule="evenodd" />
       </svg>
+      Regresar
     </button>
   </div>
-</div>
 
+  <div class="max-w-screen-2xl mx-auto bg-white border border-neutral-200 rounded-xl shadow-sm p-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-start gap-6">
+      <img [src]="docente?.foto_url || 'https://placehold.co/160x160?text=Foto'" alt="Foto"
+        class="w-28 h-28 rounded-lg object-cover border-2 border-[#44509D]" />
 
+      <div class="flex-1">
+        <h1 class="text-2xl md:text-3xl font-semibold text-neutral-900 leading-tight">
+          {{ docente?.nombre || 'Pendiente' }} {{ docente?.apellidos || '' }}
+        </h1>
+        <p class="text-neutral-700 mt-1">{{ docente?.especialidad || 'Especialidad pendiente' }}</p>
 
+        <div class="flex flex-wrap items-center gap-2 mt-3">
+          <span
+            class="inline-flex items-center gap-2 text-xs px-2.5 py-1 rounded-full border border-neutral-300 bg-neutral-100 text-neutral-800">
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-[#44509D]"></span>
+            Registrado: {{ docente?.created_at ? (docente.created_at | date:'d/M/yyyy') : '—' }}
+          </span>
+          <!-- CHIP de estatus homologado -->
+          <span class="inline-flex items-center text-xs px-2.5 py-1 rounded-full font-medium"
+            [ngClass]="estatusChipClass(docente?.estatus_valor)">
+            {{ docente?.estatus_valor || 'Estatus' }}
+          </span>
+        </div>
+      </div>
 
-
+      <div class="shrink-0">
+        <button
+          class="w-full md:w-auto border border-[#44509D] text-[#44509D] px-3 py-2 rounded-md hover:bg-[#44509D] hover:text-white transition"
+          (click)="abrirModal()">
+          Modificar estatus
+        </button>
       </div>
     </div>
 
+    <!-- Tabs -->
+    <div class="mt-6">
+      <div class="border-b border-neutral-200">
+        <nav class="-mb-px flex flex-wrap gap-4" aria-label="Tabs">
+          <button type="button" (click)="setTab('general')" [class]="tabClass('general')">Información General</button>
+          <button type="button" (click)="setTab('solicitudes')" [class]="tabClass('solicitudes')">Solicitudes de
+            Cursos</button>
+          <button type="button" (click)="setTab('documentos')" [class]="tabClass('documentos')">Documentos</button>
+          <button type="button" (click)="setTab('contacto')" [class]="tabClass('contacto')">Contacto</button>
+        </nav>
+      </div>
+
+      <!-- Panel: General -->
+      <div *ngIf="isTab('general')" class="pt-6 space-y-6">
+        <h2 class="text-xl font-semibold text-neutral-900">Información General</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Datos personales -->
+          <div class="border border-neutral-200 rounded-lg p-4">
+            <div class="flex items-center gap-2 mb-3">
+              <span
+                class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#44509D] text-white text-xs">ID</span>
+              <h3 class="font-medium text-neutral-900">Datos personales</h3>
+            </div>
+            <dl class="text-sm text-neutral-700 space-y-3">
+              <div class="flex justify-between gap-6">
+                <dt class="text-neutral-500">Nombre completo</dt>
+                <dd class="text-right font-medium">{{ docente?.nombre || '—' }} {{ docente?.apellidos || '' }}</dd>
+              </div>
+              <div class="flex justify-between gap-6">
+                <dt class="text-neutral-500">Correo</dt>
+                <dd class="text-right font-medium">{{ docente?.email || '—' }}</dd>
+              </div>
+              <div class="flex justify-between gap-6">
+                <dt class="text-neutral-500">Teléfono</dt>
+                <dd class="text-right font-medium">{{ docente?.telefono || '—' }}</dd>
+              </div>
+              <!-- <div class="flex justify-between gap-6">
+                <dt class="text-neutral-500">Especialidad principal</dt>
+                <dd class="text-right font-medium">{{ docente?.especialidad || '—' }}</dd>
+              </div>
+              <div class="flex justify-between gap-6">
+                <dt class="text-neutral-500">Número de documento</dt>
+                <dd class="text-right font-medium">{{ docente?.num_documento_identificacion || '—' }}</dd>
+              </div> -->
+            </dl>
+          </div>
+
+          <!-- Estado del perfil -->
+          <div class="border border-neutral-200 rounded-lg p-4 bg-neutral-50">
+            <div class="flex items-center gap-2 mb-3">
+              <span
+                class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-neutral-200 text-[#44509D] text-xs font-semibold">ST</span>
+              <h3 class="font-medium text-neutral-900">Estado del perfil</h3>
+            </div>
+            <dl class="text-sm text-neutral-700 space-y-3">
+              <div class="flex justify-between gap-6">
+                <dt class="text-neutral-500">Estatus actual</dt>
+                <dd class="text-right">
+                  <span class="inline-flex items-center text-xs px-2.5 py-1 rounded-full font-medium"
+                    [ngClass]="estatusChipClass(docente?.estatus_valor)">
+                    {{ docente?.estatus_valor || '—' }}
+                  </span>
+                </dd>
+              </div>
+              <div class="flex justify-between gap-6">
+                <dt class="text-neutral-500">Última actualización</dt>
+                <dd class="text-right font-medium">{{ docente?.updated_at ? (docente.updated_at | date:'d/M/yyyy') : '—'
+                  }}</dd>
+              </div>
+              <!-- <div class="flex justify-between gap-6">
+                <dt class="text-neutral-500">Certificado profesional</dt>
+                <dd class="text-right font-medium">{{ docente?.certificado_profesional ? 'Sí' : 'No' }}</dd>
+              </div> -->
+            </dl>
+          </div>
+        </div>
+
+        <!-- Especialidades -->
+        <!-- <div class="border border-neutral-200 rounded-lg p-4">
+          <h3 class="font-medium text-neutral-900 mb-4">Especialidades del docente</h3>
+          <ul class="divide-y divide-neutral-200">
+            <li *ngFor="let especialidad of especialidades" class="py-3 flex items-center justify-between">
+              <span class="text-neutral-800">{{ especialidad.especialidad }}</span>
+              <div class="flex items-center gap-3">
+                <span class="text-xs px-2 py-1 rounded-full font-medium"
+                      [ngClass]="especialidadChipClass(especialidad?.estatus)">
+                  {{ (especialidad.estatus || '').toString() | titlecase }}
+                </span>
+                <button
+                  class="text-sm px-2.5 py-1.5 border border-[#44509D] text-[#44509D] rounded hover:bg-[#44509D] hover:text-white transition"
+                  (click)="abrirModal_especialidad(especialidad)"
+                >
+                  Modificar
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div> -->
+      </div>
 
 
-
-    <!-- Especialidades -->
-<!-- Lista de Especialidades -->
-<div class="bg-gray-50 p-4 rounded-md shadow ">
-  <h3 class="text-lg font-bold text-gray-700 mb-4">Especialidades del Docente</h3>
-  <ul class="space-y-3">
-    <li
-      *ngFor="let especialidad of especialidades"
-      class="flex justify-between items-center p-3 border-b border-gray-200 last:border-0 rounded-md shadow-sm"
-    >
-      <!-- Nombre de la especialidad -->
-      <span class="text-gray-700 font-medium">{{ especialidad.especialidad }}</span>
-      <!-- Estado -->
-      <div class="flex items-center space-x-4">
-        <span
-          class="px-4 py-1 rounded-full text-sm font-semibold flex items-center space-x-2"
-          [ngClass]="{
-            'bg-green-500 text-white': especialidad.estatus === 'aprobado',
-            'bg-yellow-500 text-black': especialidad.estatus === 'pendiente',
-            'bg-red-500 text-white': especialidad.estatus === 'rechazado'
-          }"
-        >
-          {{ especialidad.estatus | titlecase }}
-        </span>
-        <!-- Botón para abrir el modal -->
-        <button
-        class="ui button compact tiny blue basic flex items-center gap-2 hover:bg-blue-100 hover:text-blue-700 transition"
-        (click)="abrirModal_especialidad(especialidad)"
-      >
-        <i class="edit icon"></i>
-        Modificar
-      </button>
       
-      </div>
-    </li>
-  </ul>
-</div>
+      <!-- Panel: Solicitudes -->
+      <!-- Panel: Solicitudes -->
+      <div *ngIf="isTab('solicitudes')" class="pt-6 space-y-6">
+        <div *ngFor="let s of solicitudes" class="rounded-xl border border-neutral-200 bg-white shadow-sm">
+          <!-- Header -->
+          <div class="flex items-start justify-between gap-4 p-4">
+            <div class="min-w-0">
+              <h3 class="text-base font-semibold text-neutral-900">
+                {{ s.titulo }}
+              </h3>
 
-<!-- Modal -->
-<div
-  *ngIf="mostrarModal_especialidad"
-  class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 backdrop-blur-sm"
->
-  <div
-    class="bg-white w-11/12 sm:w-2/3 lg:w-1/3 p-6 rounded-lg shadow-lg relative"
-  >
-    <!-- Botón de cerrar -->
-    <button
-      class="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-xl"
-      (click)="cerrarModal_especialidad()"
-    >
-      ✖
-    </button>
-    <!-- Título -->
-    <h2 class="text-2xl font-semibold text-gray-700 mb-4">
-      Modificar Especialidad
-    </h2>
-    <!-- Sección informativa -->
-    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-md mb-6">
-      <div class="flex items-start">
-        <i class="text-blue-500 text-xl mr-3">ℹ️</i>
-        <p class="text-gray-700 text-sm leading-relaxed">
-          Cambiar el estado de una especialidad del docente puede implicar
-          actualizar el acceso del docente a ciertas áreas o funcionalidades
-          dentro de la plataforma. Asegúrate de elegir el estado correcto:
-          <span class="font-medium text-green-600">Aprobado</span> para activar,
-          <span class="font-medium text-yellow-600">Pendiente</span> para
-          revisiones, o <span class="font-medium text-red-600">Rechazado</span>
-          para desactivarlo.
-        </p>
+              <!-- Chips debajo del título -->
+              <div class="mt-2 flex flex-wrap items-center gap-2 text-xs">
+                <!-- Origen -->
+                <span
+                  class="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2.5 py-1 text-neutral-700 ring-1 ring-neutral-200">
+                  <!-- Icono building -->
+                  <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path
+                      d="M3 21h18v-2H3v2Zm2-4h2v-2H5v2Zm4 0h2v-2H9v2Zm4 0h2v-2h-2v2Zm4 0h2v-2h-2v2ZM5 13h2v-2H5v2Zm4 0h2v-2H9v2Zm4 0h2v-2h-2v2Zm4 0h2v-2h-2v2ZM5 9h2V7H5v2Zm4 0h2V7H9v2Zm4 0h2V7h-2v2Zm4 0h2V7h-2v2ZM7 3v2h10V3H7Z" />
+                  </svg>
+                  {{ s.origen }}
+                </span>
+
+                <!-- Fecha -->
+                <span
+                  class="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2.5 py-1 text-neutral-700 ring-1 ring-neutral-200">
+                  <!-- Icono calendario -->
+                  <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M7 2h2v2h6V2h2v2h3v18H4V4h3V2Zm12 8H5v10h14V10Z" />
+                  </svg>
+                  {{ s.fecha | date:'d/M/yyyy' }}
+                </span>
+
+                <!-- Prioridad -->
+                <span class="inline-flex items-center gap-1 rounded-full px-2.5 py-1"
+                  [ngClass]="prioridadClasses(s.prioridad)">
+                  <!-- Icono flama -->
+                  <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path
+                      d="M13.5 2S18 6 18 10.5A6.5 6.5 0 1 1 5 10c0-2.9 2-5.2 4.5-6.5-.6 1.7-.4 3.6.7 4.9 1.1-1.3 1.6-3.3 1.3-5.4Z" />
+                  </svg>
+                  Prioridad {{ s.prioridad }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Estado -->
+            <span class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium"
+              [ngClass]="estadoClasses(s.estado)">
+              {{ estadoIcon(s.estado) }} {{ s.estado }}
+            </span>
+          </div>
+
+          <!-- Cuerpo -->
+          <div class="px-4 pb-4">
+            <p class="text-xs font-medium text-neutral-700 mb-1">Justificación:</p>
+            <div class="rounded-lg bg-neutral-50 p-3 text-sm text-neutral-700 ring-1 ring-neutral-200">
+              {{ s.justificacion }}
+            </div>
+
+            <!-- Comentarios del Validador (opcional) -->
+            <div *ngIf="s.comentarioValidador" class="mt-3 rounded-lg bg-blue-50 p-3 ring-1 ring-blue-200">
+              <div class="mb-1 flex items-center gap-2 text-xs font-semibold text-blue-900">
+                <!-- Icono info -->
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2Zm1 15h-2v-6h2v6Zm0-8h-2V7h2v2Z" />
+                </svg>
+                Comentarios del Validador:
+              </div>
+              <p class="text-sm text-blue-900/90">
+                {{ s.comentarioValidador }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <!-- Panel: Documentos -->
+      <div *ngIf="isTab('documentos')" class="pt-6 space-y-4">
+        <div class="flex items-center gap-2">
+          <h3 class="font-medium text-neutral-900">Currículum</h3>
+          <span class="text-xs text-neutral-500">PDF</span>
+        </div>
+        <ng-container *ngIf="docente?.curriculum_url; else noCv">
+          <a [href]="docente.curriculum_url" target="_blank"
+            class="inline-flex items-center gap-2 border border-[#44509D] text-[#44509D] px-3 py-2 rounded hover:bg-[#44509D] hover:text-white transition">
+            Descargar currículum
+          </a>
+        </ng-container>
+        <ng-template #noCv>
+          <p class="text-neutral-600">Pendiente</p>
+        </ng-template>
+
+        <div class="grid sm:grid-cols-2 gap-4 pt-4">
+          <div class="border border-neutral-200 rounded p-3">
+            <div class="text-sm text-neutral-500">Documento de identificación</div>
+            <div class="mt-2">
+              <a *ngIf="docente?.documento_identificacion" [href]="docente.documento_identificacion" target="_blank"
+                class="underline text-[#44509D] hover:text-[#33407a]">Ver documento</a>
+              <span *ngIf="!docente?.documento_identificacion" class="text-neutral-600">Pendiente</span>
+            </div>
+          </div>
+          <div class="border border-neutral-200 rounded p-3">
+            <div class="text-sm text-neutral-500">Cédula profesional</div>
+            <div class="mt-2">
+              <a *ngIf="docente?.cedula_profesional" [href]="docente.cedula_profesional" target="_blank"
+                class="underline text-[#44509D] hover:text-[#33407a]">Ver documento</a>
+              <span *ngIf="!docente?.cedula_profesional" class="text-neutral-600">Pendiente</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: Contacto -->
+      <div *ngIf="isTab('contacto')" class="pt-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="border border-neutral-200 rounded-lg p-4">
+            <div class="text-sm text-neutral-500">Teléfono</div>
+            <div class="mt-1 font-medium text-neutral-900">{{ docente?.telefono || 'Pendiente' }}</div>
+          </div>
+          <div class="border border-neutral-200 rounded-lg p-4">
+            <div class="text-sm text-neutral-500">Correo</div>
+            <div class="mt-1">
+              <a *ngIf="docente?.email" [href]="'mailto:' + docente.email"
+                class="underline text-[#44509D] hover:text-[#33407a]">
+                {{ docente.email }}
+              </a>
+              <span *ngIf="!docente?.email" class="text-neutral-600">Pendiente</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <!-- Formulario -->
-    <form (ngSubmit)="guardarCambios_especialidad()">
-      <div class="mb-4">
-        <label class="block text-gray-700 font-medium mb-2">Nombre</label>
-        <input
-          type="text"
-          [(ngModel)]="especialidadSeleccionada.especialidad"
-          name="especialidad"
-          class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
-      </div>
-      <div class="mb-4">
-        <label class="block text-gray-700 font-medium mb-2">Estado</label>
-        <select
-          [(ngModel)]="especialidadSeleccionada.estatus"
-          name="estatus"
-          class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        >
-          <option value="aprobado">Aprobado</option>
-          <option value="pendiente">Pendiente</option>
-          <option value="rechazado">Rechazado</option>
-        </select>
-      </div>
-      <!-- Botones -->
-      <div class="flex justify-end space-x-4 mt-6">
-        <button
-          type="button"
-          class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
-          (click)="cerrarModal_especialidad()"
-        >
-          Cancelar
-        </button>
-        <button
-          type="submit"
-          class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-        >
-          Guardar
-        </button>
-      </div>
-    </form>
   </div>
-</div>
 
+  <!-- Modal: Cambiar Estatus -->
+  <div *ngIf="mostrarModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div class="bg-white w-full max-w-sm rounded-xl shadow-lg border border-neutral-200 p-6 relative">
+      <button class="absolute top-3 right-3 text-neutral-500 hover:text-neutral-900" (click)="cerrarModal()"
+        aria-label="Cerrar">✕</button>
+      <h3 class="text-lg font-semibold text-neutral-900 text-center">Modificar estatus del perfil</h3>
+      <p class="text-sm text-neutral-600 mt-2">Selecciona el nuevo estatus. Esto afecta la visibilidad y acceso.</p>
 
+      <label for="estatus" class="block text-sm font-medium text-neutral-800 mt-4">Nuevo estatus</label>
+      <select id="estatus" [(ngModel)]="docente.estatus_valor"
+        class="mt-1 block w-full border border-neutral-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#44509D] focus:border-[#44509D]">
+        <option value="Activo">Activo</option>
+        <option value="Inactivo">Inactivo</option>
+        <option value="Pendiente de validación">Pendiente de validación</option>
+        <option value="Suspendido">Suspendido</option>
+      </select>
 
-    
-    
-    
-    
-
-    <!-- Información adicional -->
-    <div>
-      <h3 class="text-xl font-semibold text-[#44509D] mb-4">Información de Contacto</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div><i class="icon phone text-[#44509D]"></i> <strong>Teléfono:</strong> {{ docente.telefono || 'Pendiente' }}</div>
-        <div>
-          <i class="icon mail text-[#44509D]"></i> <strong>Correo:</strong>
-          <a *ngIf="docente.email" href="mailto:{{ docente.email }}" class="text-blue-500 hover:underline">
-            {{ docente.email }}
-          </a>
-          <span *ngIf="!docente.email">Pendiente</span>
-        </div>
-        <div>
-          <i class="icon id card text-[#44509D]"></i> <strong>Cédula Profesional:</strong>
-          <a *ngIf="docente.cedula_profesional" [href]="docente.cedula_profesional" target="_blank" class="text-blue-500 hover:underline">
-            Ver Documento
-          </a>
-          <span *ngIf="!docente.cedula_profesional">Pendiente</span>
-        </div>
-        <div>
-          <i class="icon id card text-[#44509D]"></i> <strong>Número de Documento:</strong> 
-          {{ docente.num_documento_identificacion || 'Pendiente' }}
-        </div>
-        <div>
-          <i class="icon certificate text-[#44509D]"></i> <strong>Certificado Profesional:</strong> 
-          {{ docente.certificado_profesional ? 'Sí' : 'No' }}
-        </div>
-        <div>
-          <i class="icon file text-[#44509D]"></i> <strong>Documento de Identificación:</strong>
-          <a *ngIf="docente.documento_identificacion" [href]="docente.documento_identificacion" target="_blank" class="text-blue-500 hover:underline">
-            Ver Documento
-          </a>
-          <span *ngIf="!docente.documento_identificacion">Pendiente</span>
-        </div>
+      <div class="mt-6 flex justify-end gap-3">
+        <button class="px-3 py-2 rounded-md border border-neutral-300 text-neutral-700 hover:bg-neutral-100"
+          (click)="cerrarModal()">Cancelar</button>
+        <button class="px-3 py-2 rounded-md border border-[#44509D] text-[#44509D] hover:bg-[#44509D] hover:text-white"
+          (click)="actualizarEstatus()">Guardar</button>
       </div>
     </div>
+  </div>
 
-    <!-- Currículum -->
-    <div>
-      <h3 class="text-xl font-semibold text-[#44509D] mb-4">Currículum</h3>
-      <a
-        *ngIf="docente.curriculum_url"
-        [href]="docente.curriculum_url"
-        target="_blank"
-        class="bg-[#D8566C] text-white px-4 py-2 rounded shadow hover:bg-red-700 transition-all flex items-center"
-      >
-        <i class="icon file text-white mr-2"></i> Descargar Currículum
-      </a>
-      <p *ngIf="!docente.curriculum_url" class="text-gray-600">Pendiente</p>
+  <!-- Modal: Especialidad -->
+  <div *ngIf="mostrarModal_especialidad" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div class="bg-white w-full max-w-lg rounded-xl shadow-lg border border-neutral-200 p-6 relative">
+      <button class="absolute top-3 right-3 text-neutral-500 hover:text-neutral-900"
+        (click)="cerrarModal_especialidad()" aria-label="Cerrar">✕</button>
+
+      <h3 class="text-lg font-semibold text-neutral-900">Modificar especialidad</h3>
+      <div class="mt-4 grid grid-cols-1 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-neutral-800">Nombre</label>
+          <input type="text" [(ngModel)]="especialidadSeleccionada.especialidad"
+            class="mt-1 w-full border border-neutral-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#44509D]" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-neutral-800">Estado</label>
+          <select [(ngModel)]="especialidadSeleccionada.estatus"
+            class="mt-1 w-full border border-neutral-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#44509D]">
+            <option value="aprobado">Aprobado</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="rechazado">Rechazado</option>
+          </select>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end gap-3">
+        <button class="px-3 py-2 rounded-md border border-neutral-300 text-neutral-700 hover:bg-neutral-100"
+          (click)="cerrarModal_especialidad()">Cancelar</button>
+        <button class="px-3 py-2 rounded-md border border-[#44509D] text-[#44509D] hover:bg-[#44509D] hover:text-white"
+          (click)="guardarCambios_especialidad()">Guardar</button>
+      </div>
     </div>
   </div>
 </section>

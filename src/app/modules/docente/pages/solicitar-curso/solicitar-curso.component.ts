@@ -4,6 +4,9 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CursosService, CursoDetallado, TipoCurso } from '../../../../shared/services/cursos.service';
 import { SolicitudesCursosService } from '../../../../shared/services/solicitudes-cursos.service';
+import { DocenteHelper } from '../../commons/helpers/docente.helper';
+import { AuthService } from '../../../../shared/services/auth.service';
+import { DocenteService } from '../../../../shared/services/docente.service';
 
 @Component({
   selector: 'app-solicitar-curso',
@@ -13,7 +16,7 @@ import { SolicitudesCursosService } from '../../../../shared/services/solicitude
   styleUrl: './solicitar-curso.component.scss'
 })
 export class SolicitarCursoComponent implements OnInit {
-
+  docenteData: any;
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private cursosService = inject(CursosService);
@@ -45,8 +48,12 @@ export class SolicitarCursoComponent implements OnInit {
 trackById = (_: number, item: { id: number }) => item.id;
 
   // (Opcional) si manejas auth, pon aquí el docente logueado
-  docenteId = 379; // TODO: reemplaza con el id real del docente autenticado
-
+  docenteId = 0; 
+  private pendingLoads = 2;
+ constructor(
+    private authService: AuthService,
+    private docenteService: DocenteService
+  ) {}
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('idCurso');
     const idCurso = idParam ? Number(idParam) : null;
@@ -79,11 +86,19 @@ trackById = (_: number, item: { id: number }) => item.id;
         }
       }
     });
-
-    // Nota: si los tipos llegan DESPUÉS que los cursos, y no hubo idRuta,
+  this.obtenerDatosDocenteYCursos();
+      // Nota: si los tipos llegan DESPUÉS que los cursos, y no hubo idRuta,
     // el usuario puede cambiar el tipo en el select; ahí recalculamos.
   }
-
+  async obtenerDatosDocenteYCursos(): Promise<void> {
+   this.docenteData = await DocenteHelper.obtenerDatosDocenteYCursos(
+      this.authService,
+      this.docenteService
+    );
+    // console.log("this.docenteData",this.docenteData)
+    this.docenteId=this.docenteData.id
+    console.log("this.docenteId",this.docenteId)
+  }
   /** Filtra cursos por tipo seleccionado (y estatus true) */
   aplicarFiltroCursos(): void {
     const tipoId = this.tipoSeleccionadoId;
@@ -102,7 +117,10 @@ trackById = (_: number, item: { id: number }) => item.id;
   onTipoChange(): void {
     this.aplicarFiltroCursos();
   }
-
+private doneLoad() {
+  this.pendingLoads--;
+  if (this.pendingLoads <= 0) this.loading = false;
+}
   get cursoSeleccionado(): CursoDetallado | undefined {
     return this.cursosAll.find(c => c.id === Number(this.formData.cursoId));
   }
@@ -133,7 +151,7 @@ trackById = (_: number, item: { id: number }) => item.id;
     this.solicitudesService.crearSolicitud(payload).subscribe({
       next: () => {
         alert('¡Solicitud enviada con éxito!');
-        this.router.navigate(['/mis-solicitudes']); // o la ruta que uses para el componente 2
+        this.router.navigate(['/docente/mis-solicitudes']); // o la ruta que uses para el componente 2
       },
       error: (err) => {
         console.error(err);
