@@ -9,10 +9,13 @@ import { HttpClient } from '@angular/common/http';
 import { PdfUploaderPreviewComponent } from '../../../../shared/components/pdf-uploader-preview/pdf-uploader-preview.component';
 import { DocenteService } from '../../../../shared/services/docente.service';
 // import { FileUploadService } from '../../../../shared/services/file-upload.service';
-import { catchError, finalize, forkJoin, map, of } from 'rxjs';
+import { catchError, finalize, forkJoin, map, of, switchMap } from 'rxjs';
 import { checkPrime } from 'crypto';
 import { FileUploadService } from '../../../../shared/services/file-upload.service';
 import { AlertTaiwilService } from '../../../../shared/services/alert-taiwil.service';
+import { SolicitudCursoApi, SolicitudesCursosService } from '../../../../shared/services/solicitudes-cursos.service';
+import { Curso, CursosService } from '../../../../shared/services/cursos.service';
+import { RouterModule } from '@angular/router';
 
 type TabKey = 'personal' | 'documentacion' | 'configuracion' | 'seguridad';
 // Reglas de contraseña fuerte
@@ -54,7 +57,7 @@ export interface Docente {
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, PdfUploaderPreviewComponent],
+  imports: [CommonModule, ReactiveFormsModule, PdfUploaderPreviewComponent,RouterModule],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.scss',
 
@@ -115,6 +118,7 @@ export class PerfilComponent {
     private docenteDataService: DocenteDataService,
     private docenteService: DocenteService,
     private authService: AuthService,
+    private svc: SolicitudesCursosService, private cursosService: CursosService
     // private fileUploadService: FileUploadService,
 
   ) {
@@ -151,6 +155,7 @@ export class PerfilComponent {
         this.patchFromDocente(data);
       }
     });
+   
   }
 
   private extractUrl(resp: any): string {
@@ -391,6 +396,7 @@ export class PerfilComponent {
   ngOnInit(): void {
 
     this.loadUserDetails()
+     
   }
   private async loadUserDetails(): Promise<void> {
     try {
@@ -414,6 +420,7 @@ export class PerfilComponent {
             this.docenteData.set(data[0])
             console.log("#W", this.docenteData())
             this.docenteDataService.docenteData.set(data[0])
+            this.cargar()
           } else {
             this.docenteData.set(null)
           }
@@ -672,6 +679,73 @@ export class PerfilComponent {
   //   });
   //   return diff;
   // }
+// imports sugeridos:
+// import { computed, signal } from '@angular/core';
+  cursosMap = signal<Map<number, Curso>>(new Map());
+  solicitudes = signal<SolicitudCursoApi[]>([]);
+aprobados = computed(() =>
+  (this.solicitudes?.() ?? []).filter(s => s.estado === 'Aprobado')
+);
 
+topAprobados = computed(() => this.aprobados().slice(0, 3));
 
+aprobadosCount = computed(() => this.aprobados().length);
+
+  cargar(): void {
+    // this.loading = true;
+    // this.errorMsg=null;
+   const currentDocenteData = this.docenteData();
+   console.log()
+    this.svc.listarSolicitudes({
+      docenteId: Number(currentDocenteData.id),
+      // estado: this.activo() === 'ALL' ? undefined : this.activo(),
+      // page: this.page(),
+      // pageSize: this.pageSize(),
+    })
+      .pipe(
+        switchMap((res) => {
+          const solicitudes = res.solicitudes as SolicitudCursoApi[];
+          this.solicitudes.set(solicitudes);
+          // this.total.set(res.total ?? solicitudes.length);
+
+          // IDs de curso únicos
+          const uniqueIds = Array.from(
+            new Set(
+              solicitudes
+                .map(s => s.cursoId)
+                .filter((id): id is number => typeof id === 'number')
+            )
+          );
+
+          if (uniqueIds.length === 0) {
+            // No hay cursos, vaciamos el mapa y seguimos
+            this.cursosMap.set(new Map());
+            return of(null);
+          }
+
+          // Pedimos todos los cursos en paralelo
+          const peticiones = uniqueIds.map(id => this.cursosService.getCursoById(id));
+
+          return forkJoin(peticiones).pipe(
+            map((cursos: Curso[]) => {
+              const mapa = new Map<number, Curso>(cursos.map(c => [c.id, c]));
+              this.cursosMap.set(mapa);
+              return null;
+            })
+          );
+        }),
+        catchError(err => {
+          console.error('Error al cargar:', err);
+          // this.errorMsg.set('No se pudieron cargar las solicitudes o los cursos.');
+          // en caso de error, mantenemos datos previos
+          return of(null);
+        })
+        // finali
+      )
+      .subscribe(() => {
+        // listo
+        console.log('Solicitudes:', this.solicitudes());
+        // console.log('CursosMap:', this.cursosMap());
+      });
+  }
 }

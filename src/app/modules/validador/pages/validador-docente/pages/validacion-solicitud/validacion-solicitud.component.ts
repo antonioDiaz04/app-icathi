@@ -5,7 +5,7 @@ import { Curso, CursosService } from '../../../../../../shared/services/cursos.s
 import { SolicitudCursoApi, SolicitudesCursosService } from '../../../../../../shared/services/solicitudes-cursos.service';
 import { Docente, DocenteService } from '../../../../../../shared/services/docente.service';
 import { catchError, finalize, forkJoin, map, of, switchMap } from 'rxjs';
-import { DocenteHelper } from '../../../../../docente/commons/helpers/docente.helper';
+// import { DocenteHelper } from '../../../../../docente/commons/helpers/docente.helper';
 import { AuthService } from '../../../../../../shared/services/auth.service';
 
 type Estado = 'Pendiente' | 'En Revisión' | 'Aprobado' | 'Rechazado';
@@ -37,6 +37,7 @@ export class ValidacionSolicitudComponent {
   constructor(private authService: AuthService, private docenteService: DocenteService, private svc: SolicitudesCursosService, private cursosService: CursosService) {
     this.cargar()
   }
+  q = signal(''); // <- antes era string plano
 
   cargar(): void {
     this.loading.set(true);
@@ -96,10 +97,11 @@ export class ValidacionSolicitudComponent {
       rechazadas: arr.filter(s => s.estado === 'Rechazado').length,
     };
   });
-  filtradas = computed(() => {
+   filtradas = computed(() => {
     const tab = this.activeTab();
     const arr = this.solicitudes();
-    const q = this.q.toLowerCase();
+
+    const q = this.q().toLowerCase(); // <- lee la signal
 
     // 1) Filtrar por estado según tab
     let byTab = arr;
@@ -107,11 +109,10 @@ export class ValidacionSolicitudComponent {
     else if (tab === 'revision') byTab = arr.filter(s => s.estado === 'En Revisión');
     else if (tab === 'aprobadas') byTab = arr.filter(s => s.estado === 'Aprobado');
     else if (tab === 'rechazadas') byTab = arr.filter(s => s.estado === 'Rechazado');
-    // dashboard = todos
 
     if (!q) return byTab;
 
-    // 2) Búsqueda por nombre docente o nombre curso
+    // 2) Búsqueda por docente/curso
     const dMap = this.docentesMap();
     const cMap = this.cursosMap();
 
@@ -134,17 +135,6 @@ export class ValidacionSolicitudComponent {
       return docenteStr.includes(q) || cursoStr.includes(q);
     });
   });
-
-  // filtradas = computed(() => {
-  //   const tab = this.activeTab();
-  //   const arr = this.solicitudes();
-  //   if (tab === 'dashboard') return arr;
-  //   if (tab === 'pendientes') return arr.filter(s => s.estado === 'Pendiente');
-  //   if (tab === 'revision') return arr.filter(s => s.estado === 'En Revisión');
-  //   if (tab === 'aprobadas') return arr.filter(s => s.estado === 'Aprobado');
-  //   return arr.filter(s => s.estado === 'Rechazado'); // 'rechazadas'
-  // });
-
   // --- Acciones ---
   setTab(tab: (typeof this.tabs)[number]) {
     this.activeTab.set(tab);
@@ -193,16 +183,14 @@ export class ValidacionSolicitudComponent {
 
   // trackById = (_: number, s: Solicitud) => s.id;
   // --- UI búsqueda ---
-  q = ''; // ngModel del input
-
+  // q = ''; // ngModel del input
   onSearch(value: string) {
-    this.q = (value || '').trim();
+    this.q.set((value || '').trim());
   }
 
   clearSearch() {
-    this.q = '';
+    this.q.set('');
   }
-
   // Etiqueta amigable para el tab actual (solo vista)
   labelTab(tab: (typeof this.tabs)[number]) {
     return tab === 'dashboard' ? 'Todos'

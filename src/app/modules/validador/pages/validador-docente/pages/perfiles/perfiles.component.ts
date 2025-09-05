@@ -6,7 +6,7 @@ import { Especialidad_docente, EspecialidadesService } from '../../../../../../s
 import { AuthService } from '../../../../../../shared/services/auth.service';
 import { EspecialidadesDocentesService } from '../../../../../../shared/services/especialidades-docentes.service';
 import { PdfUploaderPreviewComponent } from '../../../../../../shared/components/pdf-uploader-preview/pdf-uploader-preview.component';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { SolicitudCursoApi, SolicitudesCursosService } from '../../../../../../shared/services/solicitudes-cursos.service';
 import { Curso, CursosService } from '../../../../../../shared/services/cursos.service';
 import { DocenteService } from '../../../../../../shared/services/docente.service';
@@ -47,6 +47,7 @@ export class PerfilesComponent implements OnInit {
   docenteData: any;
   editMode = false;
   constructor(
+    private fb: FormBuilder,
     private route: ActivatedRoute,
     private location: Location,
     private router: Router,
@@ -80,7 +81,7 @@ export class PerfilesComponent implements OnInit {
       }
     });
     this.cargar();
-    this.obtenerDatosDocenteYCursos();
+    // this.obtenerDatosDocenteYCursos();
   }
   selectedTab: 'general' | 'solicitudes' | 'documentos' | 'contacto' = 'general';
 
@@ -319,15 +320,15 @@ export class PerfilesComponent implements OnInit {
 
   // mostrar solicitudes1
   cursosMap = signal<Map<number, Curso>>(new Map());
-  async obtenerDatosDocenteYCursos(): Promise<void> {
-    this.docenteData = await DocenteHelper.obtenerDatosDocenteYCursos(
-      this.authService,
-      this.docenteService
-    );
-    // console.log("this.docenteData",this.docenteData)
-    this.docenteId = this.docenteData.id
-    console.log("this.docenteId", this.docenteId)
-  }
+  // async obtenerDatosDocenteYCursos(): Promise<void> {
+  //   this.docenteData = await DocenteHelper.obtenerDatosDocenteYCursos(
+  //     this.authService,
+  //     this.docenteService
+  //   );
+  //   // console.log("this.docenteData",this.docenteData)
+  //   this.docenteId = this.docenteData.id
+  //   console.log("this.docenteId", this.docenteId)
+  // }
   cargar(): void {
     this.loading = true;
     // this.errorMsg=null;
@@ -382,6 +383,73 @@ export class PerfilesComponent implements OnInit {
         // listo
         console.log('Solicitudes:', this.solicitudes());
         // console.log('CursosMap:', this.cursosMap());
+      });
+  }
+
+editingId = signal<number | null>(null);
+
+// Helper para saber si una card está en edición
+isEditing(id: number) {
+  return this.editingId() === id;
+}
+
+// Ajusta tu toggleEdit() para que reciba el id de la solicitud
+toggleEdit(id?: number) {
+  // si ya está en edición, cancela; si no, activa para ese id
+  this.editingId.set(this.editingId() === id ? null : (id ?? null));
+}
+
+  private savingIds = signal<Set<number>>(new Set());
+
+  isSaving(id: number) {
+    return this.savingIds().has(id);
+  }
+  private get evaluadorId(): number | undefined {
+    try {
+      // ej.: this.authService.userValue?.id || this.authService.usuario?.id
+      const u: any = (this.authService as any)?.user || (this.authService as any)?.usuario || null;
+      return u?.id ?? u?.userId ?? undefined;
+    } catch { return undefined; }
+  }
+
+  private setSaving(id: number, saving: boolean) {
+    const set = new Set(this.savingIds());
+    if (saving) set.add(id); else set.delete(id);
+    this.savingIds.set(set);
+  }
+  onActualizar(s: SolicitudCursoApi) {
+    console.log(s)
+    // Optimista: ya tienes s.estado y s.respuestaMensaje en el modelo
+    this.setSaving(s.id, true);
+    console.log(s.estado,
+      s.respuestaMensaje,
+      this.evaluadorId)
+    // 1) Cambiar estado en su endpoint
+    this.svc.cambiarEstado(s.id, {
+      estado: s.estado,
+      respuestaMensaje: s.respuestaMensaje ?? '',
+      evaluadorId: this.evaluadorId
+    })
+      .pipe(
+        // 2) Guardar respuestaMensaje si existe (o vacía)
+        switchMap(() => this.svc.actualizarSolicitud(s.id, {
+          respuestaMensaje: s.respuestaMensaje ?? ''
+        })),
+        finalize(() => this.setSaving(s.id, false)),
+        catchError(err => {
+          console.error('Error al actualizar solicitud', err);
+          // revertir si quieres (ejemplo simple: recargar)
+          // this.cargar();
+          return of(null);
+        })
+      )
+      .subscribe(resp => {
+        // Si tu API regresa el recurso actualizado, sincroniza el arreglo local:
+        if (resp) {
+          this.solicitudes.update(list =>
+            list.map(it => it.id === s.id ? { ...it, ...resp } as any : it)
+          );
+        }
       });
   }
 }

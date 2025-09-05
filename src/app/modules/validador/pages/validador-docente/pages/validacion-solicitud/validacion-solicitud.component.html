@@ -47,18 +47,13 @@
   <div class="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
     <div class="relative flex-1">
       <input type="text" class="w-full rounded-md border border-neutral-200 px-3 py-2 text-sm pr-9"
-        placeholder="Buscar por docente o curso…" [(ngModel)]="q" (ngModelChange)="onSearch($event)" />
+        placeholder="Buscar por docente o curso…" [ngModel]="q()"(ngModelChange)="onSearch($event)" />
       <!-- botón limpiar -->
       <button *ngIf="q?.length" type="button" (click)="clearSearch()"
         class="absolute right-2 top-1/2 -translate-y-1/2 rounded px-2 py-0.5 text-xs text-neutral-500 hover:bg-neutral-100">
         Limpiar
       </button>
     </div>
-
-    <!-- (Opcional) Filtro rápido de estado actual -->
-    <!-- <div class="text-xs text-neutral-500 sm:ml-auto">
-      Mostrando: <span class="font-medium">{{ labelTab(activeTab()) }}</span>
-    </div> -->
   </div>
 
   <ng-template #resumenReal>
