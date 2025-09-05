@@ -62,15 +62,16 @@ private pendingLoads = 2;
     private docenteService: DocenteService,private svc: SolicitudesCursosService,private cursosService :CursosService) {}
 
   ngOnInit(): void {
-    this.cargar();
-    this.obtenerDatosDocenteYCursos();
+      this.obtenerDatosDocenteYCursos().then(() => this.cargar());
+
+
   }
   async obtenerDatosDocenteYCursos(): Promise<void> {
    this.docenteData = await DocenteHelper.obtenerDatosDocenteYCursos(
       this.authService,
       this.docenteService
     );
-    // console.log("this.docenteData",this.docenteData)
+    console.log("this.docenteData",this.docenteData)
     this.docenteId=this.docenteData.id
     console.log("this.docenteId",this.docenteId)
   }

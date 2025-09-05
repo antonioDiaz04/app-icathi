@@ -5,13 +5,13 @@ import { AuthService } from '../../../../shared/services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-courses',
-    templateUrl: './courses.component.html',
-    styleUrls: ['./courses.component.scss'],
-    standalone: false
+  selector: 'app-courses',
+  templateUrl: './courses.component.html',
+  styleUrls: ['./courses.component.scss'],
+  standalone: false
 })
-export class CoursesComponent implements OnInit{
-    docente = {
+export class CoursesComponent implements OnInit {
+  docente = {
     nombre: 'María',
     apellidos: 'López',
     email: 'maria.lopez@ejemplo.edu.mx'
@@ -48,56 +48,56 @@ export class CoursesComponent implements OnInit{
   // Datos estadísticos (debe ser calculado o obtenido desde una base de datos)
   attendancePercentage: number = 85; // Porcentaje de asistencia
   averageGrade: number = 90; // Promedio de calificaciones
-constructor(private router:Router,private http:HttpClient,private autS:AuthService){}
-ngOnInit() {
-  this.autS.getIdFromToken().then((id) => {
-    console.log("id --^^^^^^^^^del token",id)
-    this.http.get(`${environment.api}/cursos/byIdDocente/${id}`).subscribe((data: any) => {
-      this.courses = data;
-      console.log("datsxppp",this.courses)
-      this.updatePendingAlerts()
+  constructor(private router: Router, private http: HttpClient, private autS: AuthService) { }
+  ngOnInit() {
+    this.autS.getIdFromToken().then((id) => {
+      console.log("id --^^^^^^^^^del token", id)
+      this.http.get(`${environment.api}/cursos/byIdDocente/${id}`).subscribe((data: any) => {
+        this.courses = data;
+        console.log("datsxppp", this.courses)
+        this.updatePendingAlerts()
+      });
+    }).catch((error) => { // Corregido de catchh a catch
+      // Manejar el error al obtener el ID del token
+      console.error('Error al obtener ID del token:', error);
     });
-  }).catch((error) => { // Corregido de catchh a catch
-    // Manejar el error al obtener el ID del token
-    console.error('Error al obtener ID del token:', error);
-  });
-}
-docenteData: any = null; // Datos del docente
+  }
+  docenteData: any = null; // Datos del docente
 
   marcarAsistencia(id: number) {
     // Simulación de acción
     console.log('Asistencia marcada para curso:', id);
     // Aquí puedes integrar tu servicio real de asistencia/toast.
   }
-  
-// Helper simple para ejemplo
- addHours(date: Date, h: number) {
-  const d = new Date(date);
-  d.setHours(d.getHours() + h);
-  return d;
-}
-updatePendingAlerts() {
-  const alerts: string[] = [];
 
-  // Verificar que this.docenteData no sea null o undefined antes de acceder a sus propiedades
-  if (!this.docenteData?.cedula_profesional) {
-    alerts.push('Cédula profesional pendiente');
+  // Helper simple para ejemplo
+  addHours(date: Date, h: number) {
+    const d = new Date(date);
+    d.setHours(d.getHours() + h);
+    return d;
   }
-  if (!this.docenteData?.curriculum_url) {
-    alerts.push('Curriculum pendiente');
-  }
-  if (!this.docenteData?.documento_identificacion) {
-    alerts.push('Documento de identificación pendiente');
-  }
+  updatePendingAlerts() {
+    const alerts: string[] = [];
 
-  if (!this.docenteData?.estatus_id) {
-    alerts.push('Validación pendiente');
-  }
-  if (!this.docenteData?.usuario_validador_id) {
-    alerts.push('Asignación de validador pendiente');
-  }
+    // Verificar que this.docenteData no sea null o undefined antes de acceder a sus propiedades
+    if (!this.docenteData?.cedula_profesional) {
+      alerts.push('Cédula profesional pendiente');
+    }
+    if (!this.docenteData?.curriculum_url) {
+      alerts.push('Curriculum pendiente');
+    }
+    if (!this.docenteData?.documento_identificacion) {
+      alerts.push('Documento de identificación pendiente');
+    }
 
-}
+    if (!this.docenteData?.estatus_id) {
+      alerts.push('Validación pendiente');
+    }
+    if (!this.docenteData?.usuario_validador_id) {
+      alerts.push('Asignación de validador pendiente');
+    }
+
+  }
 
 
   // Método para marcar la asistencia

@@ -1,122 +1,91 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Curso, CursosService } from '../../../../../../shared/services/cursos.service';
+import { SolicitudCursoApi, SolicitudesCursosService } from '../../../../../../shared/services/solicitudes-cursos.service';
+import { Docente, DocenteService } from '../../../../../../shared/services/docente.service';
+import { catchError, finalize, forkJoin, map, of, switchMap } from 'rxjs';
+import { DocenteHelper } from '../../../../../docente/commons/helpers/docente.helper';
+import { AuthService } from '../../../../../../shared/services/auth.service';
 
 type Estado = 'Pendiente' | 'En Revisión' | 'Aprobado' | 'Rechazado';
 type Prioridad = 'Alta' | 'Media' | 'Baja';
 
-interface Solicitud {
-  id: number;
-  docente: {
-    nombre: string;
-    email: string;
-    telefono: string;
-    cedula: string;
-    experiencia: string;
-  };
-  curso: {
-    nombre: string;
-    modalidad: string;
-    categoria: string;
-    duracionHoras: number;
-  };
-  fecha: string; // ISO
-  prioridad: Prioridad;
-  estado: Estado;
-  justificacion: string;
-  comentarios?: string;
-}
+
 
 @Component({
   selector: 'app-validacion-solicitud',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './validacion-solicitud.component.html',
   styleUrl: './validacion-solicitud.component.scss'
 })
 export class ValidacionSolicitudComponent {
-// --- UI ---
+  // --- UI ---
   readonly tabs = ['dashboard', 'pendientes', 'revision', 'aprobadas', 'rechazadas'] as const;
   activeTab = signal<(typeof this.tabs)[number]>('dashboard');
   loading = signal(true);
-
+  docenteData: any;
   // --- Datos (signals) ---
-  solicitudes = signal<Solicitud[]>([]);
-
+  solicitudes = signal<SolicitudCursoApi[]>([]);
+  // loading: boolean = true;
   // Simula carga inicial
-  constructor() {
-    // Skeleton 1.1s
-    setTimeout(() => {
-      this.solicitudes.set([
-        {
-          id: 1,
-          docente: {
-            nombre: 'María Elena González',
-            email: 'maria.gonzalez@icathi.gob.mx',
-            telefono: '+52 55 1234 5678',
-            cedula: 'CEID123456789',
-            experiencia: '8 años',
-          },
-          curso: {
-            nombre: 'Plomería Básica',
-            modalidad: 'ICATHI',
-            categoria: 'Oficios',
-            duracionHoras: 120,
-          },
-          fecha: '2024-01-15',
-          prioridad: 'Alta',
-          estado: 'Pendiente',
-          justificacion:
-            'Necesito impartir este curso para cubrir la demanda en mi región. Tengo experiencia previa en instalaciones hidráulicas.',
-        },
-        {
-          id: 2,
-          docente: {
-            nombre: 'Carlos Ramírez López',
-            email: 'carlos.ramirez@icathi.gob.mx',
-            telefono: '+52 55 9876 5432',
-            cedula: 'CED0987654321',
-            experiencia: '6 años',
-          },
-          curso: {
-            nombre: 'Repostería Avanzada',
-            modalidad: 'Regular',
-            categoria: 'Gastronomía',
-            duracionHoras: 80,
-          },
-          fecha: '2024-01-14',
-          prioridad: 'Media',
-          estado: 'En Revisión',
-          justificacion:
-            'Curso complementario para el programa de gastronomía.',
-        },
-        {
-          id: 3,
-          docente: {
-            nombre: 'Ana Torres Medina',
-            email: 'ana.torres@icathi.gob.mx',
-            telefono: '+52 55 2468 1357',
-            cedula: 'CED5678901234',
-            experiencia: '10 años',
-          },
-          curso: {
-            nombre: 'Electricidad Básica',
-            modalidad: 'ICATHI',
-            categoria: 'Oficios',
-            duracionHoras: 100,
-          },
-          fecha: '2024-01-12',
-          prioridad: 'Baja',
-          estado: 'Aprobado',
-          justificacion:
-            'Fortalecer la oferta de capacitación técnica en el municipio.',
-        },
-      ]);
-      this.loading.set(false);
-    }, 1100);
+  docenteId: string = ''; // ID del docente obtenido de la URL
+  // mostrar solicitudes1
+  cursosMap = signal<Map<number, Curso>>(new Map());
+  docentesMap = signal<Map<number, Docente>>(new Map());
+  constructor(private authService: AuthService, private docenteService: DocenteService, private svc: SolicitudesCursosService, private cursosService: CursosService) {
+    this.cargar()
   }
 
-  // --- Derivados (computed) ---
+  cargar(): void {
+    this.loading.set(true);
+
+    this.svc.listarSolicitudes()
+      .pipe(
+        switchMap((res) => {
+          const solicitudes = res.solicitudes ?? [];
+          this.solicitudes.set(solicitudes);
+
+          // IDs únicos de cursos y docentes
+          const cursoIds = Array.from(new Set(
+            solicitudes.map(s => s.cursoId).filter((id): id is number => typeof id === 'number')
+          ));
+          const docenteIds = Array.from(new Set(
+            solicitudes.map(s => s.docenteId).filter((id): id is number => typeof id === 'number' && id > 0)
+          ));
+
+          // Arma peticiones en paralelo (cursos + docentes)
+          const reqCursos = cursoIds.length
+            ? forkJoin(cursoIds.map(id => this.cursosService.getCursoById(id)))
+            : of<Curso[]>([]);
+
+          const reqDocentes = docenteIds.length
+            ? forkJoin(docenteIds.map(id => this.docenteService.getById(id)))
+            : of<Docente[]>([]);
+
+          return forkJoin([reqCursos, reqDocentes]).pipe(
+            map(([cursos, docentes]) => {
+              // Map de cursos
+              const cursosM = new Map<number, Curso>(cursos.map(c => [c.id, c]));
+              this.cursosMap.set(cursosM);
+
+              const docentesM = new Map<number, Docente>(docentes.map(d => [d.id, d]));
+              this.docentesMap.set(docentesM);
+
+              return null;
+            })
+          );
+        }),
+        catchError(err => {
+          console.error('Error al cargar:', err);
+          return of(null);
+        }),
+        finalize(() => this.loading.set(false))
+      )
+      .subscribe();
+  }
+
   resumen = computed(() => {
     const arr = this.solicitudes();
     return {
@@ -127,16 +96,54 @@ export class ValidacionSolicitudComponent {
       rechazadas: arr.filter(s => s.estado === 'Rechazado').length,
     };
   });
-
   filtradas = computed(() => {
     const tab = this.activeTab();
     const arr = this.solicitudes();
-    if (tab === 'dashboard') return arr;
-    if (tab === 'pendientes') return arr.filter(s => s.estado === 'Pendiente');
-    if (tab === 'revision') return arr.filter(s => s.estado === 'En Revisión');
-    if (tab === 'aprobadas') return arr.filter(s => s.estado === 'Aprobado');
-    return arr.filter(s => s.estado === 'Rechazado'); // 'rechazadas'
+    const q = this.q.toLowerCase();
+
+    // 1) Filtrar por estado según tab
+    let byTab = arr;
+    if (tab === 'pendientes') byTab = arr.filter(s => s.estado === 'Pendiente');
+    else if (tab === 'revision') byTab = arr.filter(s => s.estado === 'En Revisión');
+    else if (tab === 'aprobadas') byTab = arr.filter(s => s.estado === 'Aprobado');
+    else if (tab === 'rechazadas') byTab = arr.filter(s => s.estado === 'Rechazado');
+    // dashboard = todos
+
+    if (!q) return byTab;
+
+    // 2) Búsqueda por nombre docente o nombre curso
+    const dMap = this.docentesMap();
+    const cMap = this.cursosMap();
+
+    return byTab.filter(s => {
+      const d = dMap.get(s.docenteId);
+      const c = cMap.get(s.cursoId);
+
+      const docenteStr = [
+        d?.nombre ?? '',
+        (d as any)?.apellidos ?? '',
+        d?.email ?? ''
+      ].join(' ').toLowerCase();
+
+      const cursoStr = [
+        c?.nombre ?? '',
+        c?.tipo_curso_nombre ?? '',
+        c?.area_nombre ?? ''
+      ].join(' ').toLowerCase();
+
+      return docenteStr.includes(q) || cursoStr.includes(q);
+    });
   });
+
+  // filtradas = computed(() => {
+  //   const tab = this.activeTab();
+  //   const arr = this.solicitudes();
+  //   if (tab === 'dashboard') return arr;
+  //   if (tab === 'pendientes') return arr.filter(s => s.estado === 'Pendiente');
+  //   if (tab === 'revision') return arr.filter(s => s.estado === 'En Revisión');
+  //   if (tab === 'aprobadas') return arr.filter(s => s.estado === 'Aprobado');
+  //   return arr.filter(s => s.estado === 'Rechazado'); // 'rechazadas'
+  // });
 
   // --- Acciones ---
   setTab(tab: (typeof this.tabs)[number]) {
@@ -184,5 +191,101 @@ export class ValidacionSolicitudComponent {
     }
   }
 
-  trackById = (_: number, s: Solicitud) => s.id;
+  // trackById = (_: number, s: Solicitud) => s.id;
+  // --- UI búsqueda ---
+  q = ''; // ngModel del input
+
+  onSearch(value: string) {
+    this.q = (value || '').trim();
+  }
+
+  clearSearch() {
+    this.q = '';
+  }
+
+  // Etiqueta amigable para el tab actual (solo vista)
+  labelTab(tab: (typeof this.tabs)[number]) {
+    return tab === 'dashboard' ? 'Todos'
+      : tab === 'pendientes' ? 'Pendientes'
+        : tab === 'revision' ? 'En Revisión'
+          : tab === 'aprobadas' ? 'Aprobadas'
+            : 'Rechazadas';
+  }
+
+
+  
+
+
+  // --- Guardado/Loading por solicitud ---
+private savingIds = signal<Set<number>>(new Set());
+
+isSaving(id: number) {
+  return this.savingIds().has(id);
+}
+private get evaluadorId(): number | undefined {
+  try {
+    // ej.: this.authService.userValue?.id || this.authService.usuario?.id
+    const u: any = (this.authService as any)?.user || (this.authService as any)?.usuario || null;
+    return u?.id ?? u?.userId ?? undefined;
+  } catch { return undefined; }
+}
+
+private setSaving(id: number, saving: boolean) {
+  const set = new Set(this.savingIds());
+  if (saving) set.add(id); else set.delete(id);
+  this.savingIds.set(set);
+}
+
+// Botón principal
+onActualizar(s: SolicitudCursoApi) {
+  // Optimista: ya tienes s.estado y s.respuestaMensaje en el modelo
+  this.setSaving(s.id, true);
+  console.log(  s.estado,
+     s.respuestaMensaje,
+     this.evaluadorId )
+  // 1) Cambiar estado en su endpoint
+  this.svc.cambiarEstado(s.id, {   estado: s.estado,
+    respuestaMensaje: s.respuestaMensaje ?? '',
+    evaluadorId: this.evaluadorId })
+    .pipe(
+      // 2) Guardar respuestaMensaje si existe (o vacía)
+      switchMap(() => this.svc.actualizarSolicitud(s.id, {
+        respuestaMensaje: s.respuestaMensaje ?? ''
+      })),
+      finalize(() => this.setSaving(s.id, false)),
+      catchError(err => {
+        console.error('Error al actualizar solicitud', err);
+        // revertir si quieres (ejemplo simple: recargar)
+        // this.cargar();
+        return of(null);
+      })
+    )
+    .subscribe(resp => {
+      // Si tu API regresa el recurso actualizado, sincroniza el arreglo local:
+      if (resp) {
+        this.solicitudes.update(list =>
+          list.map(it => it.id === s.id ? { ...it, ...resp } as any : it)
+        );
+      }
+    });
+}
+// --- debajo de las otras signals ---
+brokenAvatars = signal<Set<number>>(new Set());
+
+// --- helpers de avatar ---
+hasFoto(d: Partial<Docente> | undefined | null): boolean {
+  if (!d || !d.foto_url) return false;
+  return !this.brokenAvatars().has(Number(d.id));
+}
+
+onImgError(id?: number) {
+  if (!id) return;
+  // mutación segura del Set dentro de la signal
+  this.brokenAvatars.update(prev => {
+    const next = new Set(prev);
+    next.add(Number(id));
+    return next;
+  });
+}
+
 }

@@ -1,13 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ValidadorDocenteService } from '../../../../commons/services/validador-docente.service';
 import { Especialidad_docente, EspecialidadesService } from '../../../../../../shared/services/especialidad.service';
 import { AuthService } from '../../../../../../shared/services/auth.service';
 import { EspecialidadesDocentesService } from '../../../../../../shared/services/especialidades-docentes.service';
+import { PdfUploaderPreviewComponent } from '../../../../../../shared/components/pdf-uploader-preview/pdf-uploader-preview.component';
+import { FormsModule } from '@angular/forms';
+import { SolicitudCursoApi, SolicitudesCursosService } from '../../../../../../shared/services/solicitudes-cursos.service';
+import { Curso, CursosService } from '../../../../../../shared/services/cursos.service';
+import { DocenteService } from '../../../../../../shared/services/docente.service';
+import { catchError, finalize, forkJoin, map, of, switchMap } from 'rxjs';
+import { DocenteHelper } from '../../../../../docente/commons/helpers/docente.helper';
 // Importante: no necesitas nada extra, solo pega esto en tu componente.
 type Prioridad = 'Alta' | 'Media' | 'Baja';
-type Estado = 'Pendiente' | 'Aprobado' | 'Rechazado';
+type Estado = 'Pendiente' | 'Aprobado' | 'Rechazado' | 'En Revisión';
 
 interface Solicitud {
   titulo: string;
@@ -20,10 +27,12 @@ interface Solicitud {
 }
 
 @Component({
-    selector: 'app-perfiles',
-    templateUrl: './perfiles.component.html',
-    styleUrls: ['./perfiles.component.scss'],
-    standalone: false
+  selector: 'app-perfiles',
+  templateUrl: './perfiles.component.html',
+  styleUrls: ['./perfiles.component.scss'],
+  standalone: true,
+  imports: [PdfUploaderPreviewComponent, FormsModule,
+    CommonModule]
 })
 export class PerfilesComponent implements OnInit {
   docenteId: string = ''; // ID del docente obtenido de la URL
@@ -35,20 +44,26 @@ export class PerfilesComponent implements OnInit {
   mostrarModal_especialidad = false;
   especialidadSeleccionada: any = null;
   userId: number | null = null; // ID del usuario desde el token
-
+  docenteData: any;
+  editMode = false;
   constructor(
     private route: ActivatedRoute,
     private location: Location,
-        private router: Router,
-    private authService:AuthService,
+    private router: Router,
+    private authService: AuthService,
     private especialidadesService: EspecialidadesService,
     private validadorDocenteService: ValidadorDocenteService,
-    private especialidadesDocentesService: EspecialidadesDocentesService
-  ) {}
+    private especialidadesDocentesService: EspecialidadesDocentesService,
+    private docenteService: DocenteService, private svc: SolicitudesCursosService, private cursosService: CursosService
+  ) { }
 
+
+  // constructor(     private router: Router,
+  //  private authService: AuthService,
+  //   private docenteService: DocenteService,private svc: SolicitudesCursosService,private cursosService :CursosService) {}
   ngOnInit(): void {
-     // Obtén el ID del usuario desde el token (si es necesario)
-     this.authService.getIdFromToken().then(id => {
+    // Obtén el ID del usuario desde el token (si es necesario)
+    this.authService.getIdFromToken().then(id => {
       this.userId = id; // Asigna el ID del usuario al componente
       console.log('ID del usuario desde el token:', this.userId);
     });
@@ -64,43 +79,47 @@ export class PerfilesComponent implements OnInit {
         this.error = 'No se encontró el ID del docente en la URL.';
       }
     });
+    this.cargar();
+    this.obtenerDatosDocenteYCursos();
   }
   selectedTab: 'general' | 'solicitudes' | 'documentos' | 'contacto' = 'general';
 
-setTab(tab: 'general' | 'solicitudes' | 'documentos' | 'contacto') {
-  this.selectedTab = tab;
-}
+  setTab(tab: 'general' | 'solicitudes' | 'documentos' | 'contacto') {
+    this.selectedTab = tab;
+  }
 
-isTab(tab: 'general' | 'solicitudes' | 'documentos' | 'contacto') {
-  return this.selectedTab === tab;
-}
+  isTab(tab: 'general' | 'solicitudes' | 'documentos' | 'contacto') {
+    return this.selectedTab === tab;
+  }
 
-  solicitudes: Solicitud[] = [
-    {
-      titulo: 'Plomería Básica',
-      origen: 'ICATHI',
-      fecha: '2024-01-14',
-      prioridad: 'Alta',
-      estado: 'Pendiente',
-      justificacion:
-        'Necesito ampliar mis conocimientos en oficios prácticos para diversificar mi enseñanza.'
-    },
-    {
-      titulo: 'Repostería Avanzada',
-      origen: 'Modalidad Escuela',
-      fecha: '2024-01-09',
-      prioridad: 'Media',
-      estado: 'Aprobado',
-      justificacion:
-        'Curso complementario para el programa de gastronomía',
-      comentarioValidador: 'Aprobado por relevancia curricular'
-    }
-  ];
-   /**
-   * Obtiene los datos del docente.
-   * @param id ID del docente
-   */
-   obtenerDocente(id: string): void {
+  // ---- datos
+  solicitudes = signal<SolicitudCursoApi[]>([]);
+  // solicitudes: Solicitud[] = [
+  //   {
+  //     titulo: 'Plomería Básica',
+  //     origen: 'ICATHI',
+  //     fecha: '2024-01-14',
+  //     prioridad: 'Alta',
+  //     estado: 'Pendiente',
+  //     justificacion:
+  //       'Necesito ampliar mis conocimientos en oficios prácticos para diversificar mi enseñanza.'
+  //   },
+  //   {
+  //     titulo: 'Repostería Avanzada',
+  //     origen: 'Modalidad Escuela',
+  //     fecha: '2024-01-09',
+  //     prioridad: 'Media',
+  //     estado: 'Aprobado',
+  //     justificacion:
+  //       'Curso complementario para el programa de gastronomía',
+  //     comentarioValidador: 'Aprobado por relevancia curricular'
+  //   }
+  // ];
+  /**
+  * Obtiene los datos del docente.
+  * @param id ID del docente
+  */
+  obtenerDocente(id: string): void {
     this.validadorDocenteService.getDocenteById(id).subscribe({
       next: (docente) => {
         this.docente = docente;
@@ -117,7 +136,7 @@ isTab(tab: 'general' | 'solicitudes' | 'documentos' | 'contacto') {
     this.especialidadesService.obtenerEspecialidadesPorDocente(docenteId).subscribe({
       next: (response) => {
         this.especialidades = response.especialidades;
-        console.log("this.especialidades del docente",this.especialidades)
+        console.log("this.especialidades del docente", this.especialidades)
       },
       error: (err) => {
         this.error = `Error al obtener las especialidades: ${err.message}`;
@@ -144,34 +163,34 @@ isTab(tab: 'general' | 'solicitudes' | 'documentos' | 'contacto') {
       'aprobado': 2,
       'rechazado': 3
     };
-  
+
     // Asignamos el valor numérico al campo 'estatus' de la especialidad
     if (estadoMap[this.especialidadSeleccionada.estatus]) {
       this.especialidadSeleccionada.estatus_id = estadoMap[this.especialidadSeleccionada.estatus];
     }
-  
+
     // Extraer datos necesarios para la solicitud
     const docenteId = Number(this.docenteId); // Convertir a número
     const especialidadId = this.especialidadSeleccionada.especialidad_id;
     const nuevoEstatusId = this.especialidadSeleccionada.estatus_id;
     const usuarioValidadorId = Number(this.userId);
-  
+
     // Realizar la actualización mediante el servicio
     this.especialidadesDocentesService
       .actualizarEstatus(docenteId, especialidadId, nuevoEstatusId, usuarioValidadorId)
       .subscribe({
         next: (response) => {
           console.log('Estatus actualizado exitosamente:', response);
-  
+
           // Actualizar la lista local de especialidades
           const index = this.especialidades.findIndex(
             (esp) => esp.especialidad === this.especialidadSeleccionada.especialidad
           );
-  
+
           if (index !== -1) {
             this.especialidades[index] = { ...this.especialidadSeleccionada };
           }
-  
+
           // Cerrar el modal
           this.cerrarModal_especialidad();
         },
@@ -180,7 +199,7 @@ isTab(tab: 'general' | 'solicitudes' | 'documentos' | 'contacto') {
         }
       });
   }
-  
+
   cerrarModal_especialidad() {
     this.mostrarModal_especialidad = false;
     this.especialidadSeleccionada = null;
@@ -197,23 +216,23 @@ isTab(tab: 'general' | 'solicitudes' | 'documentos' | 'contacto') {
     const valorNumerico = this.estatusMap[this.docente.estatus_valor];
     console.log('Estatus actualizado:', valorNumerico);
     const usuarioValidadorId = Number(this.userId);
-  
+
     // Aquí envías al backend el valor numérico
     alert(`Estatus cambiado Exitosamente ..`);
-    
-        this.validadorDocenteService.updateDocenteStatus(usuarioValidadorId,this.docenteId, valorNumerico)
-    .subscribe(
-      () => {
-        this.cerrarModal()
-        this.router.navigate(['/validador/docente/perfil/', this.docenteId]);
 
-      },
-      (error) => {
-        alert('Error al cambiar el estado del docente.')
-        // this.errorMessage = 'Error al cambiar el estado del docente.';
-        console.error('Error al cambiar el estado:', error);
-      }
-    );
+    this.validadorDocenteService.updateDocenteStatus(usuarioValidadorId, this.docenteId, valorNumerico)
+      .subscribe(
+        () => {
+          this.cerrarModal()
+          this.router.navigate(['/validador/docente/perfil/', this.docenteId]);
+
+        },
+        (error) => {
+          alert('Error al cambiar el estado del docente.')
+          // this.errorMessage = 'Error al cambiar el estado del docente.';
+          console.error('Error al cambiar el estado:', error);
+        }
+      );
   }
   obtenerDescripcionEstatus(valor: number): string {
     const descripciones: { [key: number]: string } = {
@@ -229,42 +248,42 @@ isTab(tab: 'general' | 'solicitudes' | 'documentos' | 'contacto') {
   }
 
   // Colores homologados para chips de estatus (mismos de la tabla)
-estatusChipClass(status?: string) {
-  switch (status) {
-    case 'Pendiente de validación':
-      return 'bg-orange-500 text-white';
-    case 'Activo':
-      return 'bg-green-500 text-white';
-    case 'Inactivo':
-      return 'bg-yellow-500 text-white';
-    case 'Suspendido':
-      return 'bg-red-500 text-white';
-    default:
-      return 'bg-neutral-200 text-neutral-800';
+  estatusChipClass(status?: string) {
+    switch (status) {
+      case 'Pendiente de validación':
+        return 'bg-orange-500 text-white';
+      case 'Activo':
+        return 'bg-green-500 text-white';
+      case 'Inactivo':
+        return 'bg-yellow-500 text-white';
+      case 'Suspendido':
+        return 'bg-red-500 text-white';
+      default:
+        return 'bg-neutral-200 text-neutral-800';
+    }
   }
-}
 
-// Chips para estatus de especialidad
-especialidadChipClass(est?: string) {
-  switch ((est || '').toLowerCase()) {
-    case 'aprobado':
-      return 'bg-green-500 text-white';
-    case 'pendiente':
-      return 'bg-yellow-500 text-white';
-    case 'rechazado':
-      return 'bg-red-500 text-white';
-    default:
-      return 'bg-neutral-200 text-neutral-800';
+  // Chips para estatus de especialidad
+  especialidadChipClass(est?: string) {
+    switch ((est || '').toLowerCase()) {
+      case 'aprobado':
+        return 'bg-green-500 text-white';
+      case 'pendiente':
+        return 'bg-yellow-500 text-white';
+      case 'rechazado':
+        return 'bg-red-500 text-white';
+      default:
+        return 'bg-neutral-200 text-neutral-800';
+    }
   }
-}
 
-// Tabs con color primario de la tabla
-tabClass(tab: 'general'|'solicitudes'|'documentos'|'contacto') {
-  const base = 'whitespace-nowrap px-4 py-3 text-sm font-medium border-b-2';
-  const active = 'border-[#44509D] text-[#44509D]';
-  const inactive = 'border-transparent text-neutral-500 hover:text-[#44509D] hover:border-[#44509D]/70';
-  return `${base} ${this.selectedTab === tab ? active : inactive}`;
-}
+  // Tabs con color primario de la tabla
+  tabClass(tab: 'general' | 'solicitudes' | 'documentos' | 'contacto') {
+    const base = 'whitespace-nowrap px-4 py-3 text-sm font-medium border-b-2';
+    const active = 'border-[#44509D] text-[#44509D]';
+    const inactive = 'border-transparent text-neutral-500 hover:text-[#44509D] hover:border-[#44509D]/70';
+    return `${base} ${this.selectedTab === tab ? active : inactive}`;
+  }
 
 
 
@@ -294,5 +313,75 @@ tabClass(tab: 'general'|'solicitudes'|'documentos'|'contacto') {
   // Iconos en texto (opcional) por accesibilidad
   estadoIcon(e: Estado): string {
     return e === 'Aprobado' ? '✅' : e === 'Pendiente' ? '🟡' : '❌';
+  }
+
+
+
+  // mostrar solicitudes1
+  cursosMap = signal<Map<number, Curso>>(new Map());
+  async obtenerDatosDocenteYCursos(): Promise<void> {
+    this.docenteData = await DocenteHelper.obtenerDatosDocenteYCursos(
+      this.authService,
+      this.docenteService
+    );
+    // console.log("this.docenteData",this.docenteData)
+    this.docenteId = this.docenteData.id
+    console.log("this.docenteId", this.docenteId)
+  }
+  cargar(): void {
+    this.loading = true;
+    // this.errorMsg=null;
+
+    this.svc.listarSolicitudes({
+      docenteId: Number(this.docenteId),
+      // estado: this.activo() === 'ALL' ? undefined : this.activo(),
+      // page: this.page(),
+      // pageSize: this.pageSize(),
+    })
+      .pipe(
+        switchMap((res) => {
+          const solicitudes = res.solicitudes as SolicitudCursoApi[];
+          this.solicitudes.set(solicitudes);
+          // this.total.set(res.total ?? solicitudes.length);
+
+          // IDs de curso únicos
+          const uniqueIds = Array.from(
+            new Set(
+              solicitudes
+                .map(s => s.cursoId)
+                .filter((id): id is number => typeof id === 'number')
+            )
+          );
+
+          if (uniqueIds.length === 0) {
+            // No hay cursos, vaciamos el mapa y seguimos
+            this.cursosMap.set(new Map());
+            return of(null);
+          }
+
+          // Pedimos todos los cursos en paralelo
+          const peticiones = uniqueIds.map(id => this.cursosService.getCursoById(id));
+
+          return forkJoin(peticiones).pipe(
+            map((cursos: Curso[]) => {
+              const mapa = new Map<number, Curso>(cursos.map(c => [c.id, c]));
+              this.cursosMap.set(mapa);
+              return null;
+            })
+          );
+        }),
+        catchError(err => {
+          console.error('Error al cargar:', err);
+          // this.errorMsg.set('No se pudieron cargar las solicitudes o los cursos.');
+          // en caso de error, mantenemos datos previos
+          return of(null);
+        }),
+        finalize(() => this.loading = false)
+      )
+      .subscribe(() => {
+        // listo
+        console.log('Solicitudes:', this.solicitudes());
+        // console.log('CursosMap:', this.cursosMap());
+      });
   }
 }

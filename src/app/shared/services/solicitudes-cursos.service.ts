@@ -53,6 +53,8 @@ export interface SolicitudFiltros {
 export interface CambioEstado {
   estado: string;
   evaluadorId?: number;
+    respuestaMensaje?: string; // <-- NUEVO
+
 }
 
 export interface AprobarRequest {
@@ -71,12 +73,30 @@ export class SolicitudesCursosService {
   private apiUrl = `${environment.api}/solicitudes-cursos`; // Cambia a tu URL del servidor
 
   constructor(private http: HttpClient) { }
+
+  // Actualizar prioridad/justificación
+  actualizarSolicitud(id: number, datos: Partial<SolicitudCurso>): Observable<SolicitudCurso> {
+    return this.http.patch<SolicitudCurso>(`${this.apiUrl}/${id}`, datos);
+  }
+
+  // // Cambiar estado
+  // cambiarEstado(id: number, cambioEstado: CambioEstado): Observable<SolicitudCurso> {
+  //   return this.http.patch<SolicitudCurso>(`${this.apiUrl}/${id}/estado`, cambioEstado);
+  // }
+// (sin cambios)
+cambiarEstado(id: number, cambioEstado: CambioEstado): Observable<SolicitudCurso> {
+  return this.http.patch<SolicitudCurso>(`${this.apiUrl}/${id}/estado`, cambioEstado);
+}
+  // Aprobar y asignar
+  aprobarYAsignar(id: number, aprobarRequest: AprobarRequest): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${id}/aprobar`, aprobarRequest);
+  }
   // Listar solicitudes con filtros (Componente 2)
     listarSolicitudes(
     filtros?: SolicitudFiltros
-  ): Observable<{ solicitudes: SolicitudCursoApi[]; total: number; page: number; pageSize: number }> {
+  ): Observable<{ solicitudes: SolicitudCursoApi[]; total: number; page: number; pageSize: number ; }> {
     let params = new HttpParams();
-
+    console.log("filtros",filtros)
     if (filtros?.docenteId) params = params.set('docenteId', String(filtros.docenteId));
     if (filtros?.estado)    params = params.set('estado', filtros.estado);
     if (filtros?.page)      params = params.set('page', String(filtros.page));
@@ -124,21 +144,11 @@ export class SolicitudesCursosService {
   obtenerSolicitud(id: number): Observable<SolicitudCurso> {
     return this.http.get<SolicitudCurso>(`${this.apiUrl}/${id}`);
   }
-
-  // Actualizar prioridad/justificación
-  actualizarSolicitud(id: number, datos: Partial<SolicitudCurso>): Observable<SolicitudCurso> {
-    return this.http.patch<SolicitudCurso>(`${this.apiUrl}/${id}`, datos);
+  // Obtener detalle de una solicitud
+  obtenerSolicitudes(): Observable<SolicitudCurso> {
+    return this.http.get<SolicitudCurso>(`${this.apiUrl}`);
   }
 
-  // Cambiar estado
-  cambiarEstado(id: number, cambioEstado: CambioEstado): Observable<SolicitudCurso> {
-    return this.http.patch<SolicitudCurso>(`${this.apiUrl}/${id}/estado`, cambioEstado);
-  }
-
-  // Aprobar y asignar
-  aprobarYAsignar(id: number, aprobarRequest: AprobarRequest): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${id}/aprobar`, aprobarRequest);
-  }
 
   // Eliminar solicitud
   eliminarSolicitud(id: number): Observable<void> {
