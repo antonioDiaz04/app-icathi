@@ -1,0 +1,144 @@
+<div *ngIf="!mostrarFormulario" class="container mx-auto p-4"   @fadeIn>
+  <!-- Tabla de cursos -->
+  <div
+    class="bg-white rounded-lg border border-gray-300 p-4 w-full max-w-screen-xl"
+  >
+    <table class="min-w-full table-auto">
+      <thead>
+        <tr>
+          <th class="px-4 py-2 text-left text-[#44509D] font-semibold">ID</th>
+          <th class="px-4 py-2 text-left text-[#44509D] font-semibold">
+            NOMBRE DEL AREA DEL CURSO
+          </th>
+          <th class="px-4 py-2 text-left text-[#44509D] font-semibold">
+            ACCIONES
+          </th>
+        </tr>
+      </thead>
+      <tbody *ngIf="areas" @fadeIn>
+        <tr *ngFor="let area of areas">
+          <td class="px-4 py-2">{{ area.id }}</td>
+          <td class="px-4 py-2">{{ area.nombre }}</td>
+          <!-- Columna Estatus -->
+          <td class="px-4 py-2">
+            <button
+  (click)="solicitarCurso(area.id)"
+  class="bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold px-4 py-2 transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-white"
+>
+  Solicitar
+</button>
+
+<button
+  (click)="verDetalles(area.id)"
+  class="bg-white border border-gray-300 rounded-[20px] shadow-md text-gray-700 font-semibold px-4 py-2 transition duration-200 hover:border-purple-600 hover:text-purple-600 hover:bg-white ml-2"
+>
+  Ver detalles
+</button>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<app-solicitud-curso
+  [areaId]="areaId"
+  *ngIf="mostrarFormulario"
+  (mostrarFormularioChange)="onFormularioCerrado($event)"
+></app-solicitud-curso>
+
+<!-- Modal de Detalles -->
+<div *ngIf="mostrarDetalleModal" class="fixed z-10 inset-0 overflow-y-auto">
+  <div
+    class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+  >
+    <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+      <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+    </div>
+
+    <span
+      class="hidden sm:inline-block sm:align-middle sm:h-screen"
+      aria-hidden="true"
+      >&#8203;</span
+    >
+
+    <div
+      class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full"
+    >
+      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <div class="sm:flex sm:items-start">
+          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+              {{ details[0].area_nombre }}
+            </h3>
+            <div class="mt-2">
+              <p class="text-sm text-gray-500">
+                {{ details[0].area_descripcion }}
+              </p>
+              <div class="mt-4">
+                <p class="text-sm font-medium text-gray-900">
+                  Número de Especialidades: {{ details[0].num_especialidades }}
+                </p>
+                <p class="text-sm font-medium text-gray-900">
+                  Número de Cursos en el Área: {{ details[0].num_cursos_area }}
+                </p>
+                <p class="text-sm font-medium text-gray-900">
+                  Número de Cursos en el Área y Especialidades:
+                  {{ details[0].num_cursos_area_especialidad }}
+                </p>
+              </div>
+              <div class="mt-4">
+                <h4 class="text-sm font-medium text-gray-900">
+                  Especialidades:
+                </h4>
+                <ul class="list-disc pl-6">
+                  <li
+                    *ngFor="let especialidad of details[0].especialidades"
+                    class="text-sm text-gray-500"
+                  >
+                    {{ especialidad.nombre }}
+                  </li>
+                </ul>
+              </div>
+              <div class="mt-4">
+                <h4 class="text-sm font-medium text-gray-900">Cursos:</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div
+                    *ngFor="let curso of details[0].cursos"
+                    class="bg-gray-100 rounded-lg p-4"
+                  >
+                    <h5 class="text-sm font-medium text-gray-900">
+                      {{ curso.nombre }}
+                    </h5>
+                    <p class="text-sm text-gray-500">{{ curso.descripcion }}</p>
+                    <div class="mt-2">
+                      <p class="text-sm font-medium text-gray-900">
+                        Duración: {{ curso.duracion_horas }} horas
+                      </p>
+                      <p class="text-sm font-medium text-gray-900">
+                        Nivel: {{ curso.nivel }}
+                      </p>
+                      <p class="text-sm font-medium text-gray-900">
+                        Costo: {{ curso.costo }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        <button
+          type="button"
+          class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+          (click)="cerrarDetalleModal()"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

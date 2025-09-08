@@ -1,0 +1,41 @@
+@media (max-width: 768px) {
+    aside {
+      width: 100%;
+      position: fixed;
+      z-index: 10;
+      top: 0;
+      left: 0;
+      transition: transform 0.3s ease-in-out;
+    }
+  
+    aside.hidden {
+      transform: translateX(-100%);
+    }
+  
+    main {
+      margin-top: 64px; /* Altura aproximada del menú */
+    }
+  }
+  aside {
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  aside.hidden {
+    transform: translateX(-100%);
+  }
+  
+  aside.md\:block {
+    transform: translateX(0); /* Menú siempre visible en pantallas medianas o más grandes */
+  }
+  
+  @media (min-width: 769px) {
+    aside {
+      position: relative;
+      transform: translateX(0);
+    }
+  
+    main {
+      margin-top: 0;
+    }
+  }
+  

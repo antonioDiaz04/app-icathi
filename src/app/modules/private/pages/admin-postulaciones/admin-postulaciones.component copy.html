@@ -1,0 +1,251 @@
+<div class="p-4 sm:p-6 bg-gray-100 ml-0 sm:ml-64">
+    <!-- Encabezado + filtros -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6 mb-6">
+        <div class="w-full sm:w-auto flex-1">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-[#44509D] whitespace-nowrap">
+                        Postulaciones
+                    </h2>
+                    <p class="text-sm text-gray-500">Total: {{ total }}</p>
+                </div>
+
+                <!-- Buscador -->
+                <div class="relative w-full sm:w-80">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clip-rule="evenodd"></path>
+            </svg>
+                    </div>
+                    <input type="text" [(ngModel)]="terminoBusqueda" (input)="onInputBuscar()" class="block w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#44509D] focus:border-transparent transition" placeholder="Buscar por nombre, email, especialidad..."
+                    />
+                </div>
+
+                <!-- Filtro Estatus -->
+                <div>
+                    <select [(ngModel)]="filtroEstatus" (change)="onChangeFiltros()" class="block w-full sm:w-56 px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#44509D]">
+            <option *ngFor="let e of estatusOpciones" [ngValue]="e.id">{{ e.label }}</option>
+          </select>
+                </div>
+
+                <!-- Filtro días recientes -->
+                <div class="flex items-center gap-2">
+                    <label class="text-sm text-gray-600">Días recientes</label>
+                    <input type="number" [(ngModel)]="filtroDias" (change)="onChangeFiltros()" min="0" class="w-24 px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estado de carga / error -->
+    <div *ngIf="cargando" class="text-center text-gray-600 py-8">Cargando postulaciones...</div>
+    <div *ngIf="!cargando && errorMsg" class="text-center text-red-600 py-8">{{ errorMsg }}</div>
+
+    <!-- Tabla optimizada sin modales -->
+    <div *ngIf="!cargando" class="w-full overflow-x-auto">
+        <div class="inline-block min-w-full align-middle rounded-md border border-gray-200">
+            <table class="min-w-full bg-white border rounded-md shadow-md text-sm">
+                <thead class="bg-[#44509D] text-white">
+                    <tr>
+                        <th class="px-3 py-3 text-left font-medium uppercase tracking-wider whitespace-nowrap cursor-pointer" (click)="cambiarOrden('p.postulacion_id')">ID</th>
+                        <th class="px-3 py-3 text-left font-medium uppercase tracking-wider whitespace-nowrap min-w-[220px] cursor-pointer" (click)="cambiarOrden('p.nombre')">Nombre</th>
+                        <th class="px-3 py-3 text-left font-medium uppercase tracking-wider whitespace-nowrap cursor-pointer" (click)="cambiarOrden('p.email')">Email</th>
+                        <th class="px-3 py-3 text-left font-medium uppercase tracking-wider whitespace-nowrap">Especialidad</th>
+                        <th class="px-3 py-3 text-left font-medium uppercase tracking-wider whitespace-nowrap cursor-pointer" (click)="cambiarOrden('p.postulacion_created_at')">Fecha</th>
+                        <th class="px-3 py-3 text-left font-medium uppercase tracking-wider whitespace-nowrap">Estatus</th>
+                        <th class="px-3 py-3 text-center font-medium uppercase tracking-wider whitespace-nowrap min-w-[200px]">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-gray-200">
+                    <ng-container *ngFor="let p of postulacionesFiltradas">
+                        <!-- Fila principal -->
+                        <tr class="hover:bg-gray-50 transition" [class.bg-blue-50]="expandedRowId === p.postulacion_id">
+                            <td class="px-3 py-3 text-gray-700 whitespace-nowrap text-center">{{ p.postulacion_id }}</td>
+                            <td class="px-3 py-3 font-medium text-gray-800 whitespace-nowrap">
+                                {{ p.nombre }} {{ p.apellidos }}
+                            </td>
+                            <td class="px-3 py-3 text-gray-700 whitespace-nowrap">{{ p.email }}</td>
+                            <td class="px-3 py-3 text-gray-700 whitespace-nowrap">{{ p.especialidad || 'N/A' }}</td>
+                            <td class="px-3 py-3 text-gray-700 whitespace-nowrap">
+                                {{ p.postulacion_created_at | date:'dd/MM/yyyy HH:mm' }}
+                            </td>
+                            <td class="px-3 py-3 whitespace-nowrap">
+                                <!-- Edición inline de estatus -->
+                                <div *ngIf="editingStatusId === p.postulacion_id; else statusDisplay" class="flex items-center gap-2">
+                                    <select [(ngModel)]="newStatusValue" class="px-2 py-1 border rounded text-xs">
+                    <option [ngValue]="1">Pendiente</option>
+                    <option [ngValue]="2">Aprobada</option>
+                    <option [ngValue]="3">Rechazada</option>
+                  </select>
+                                    <button (click)="saveStatus(p)" class="text-green-600 hover:text-green-800 text-xs">✓</button>
+                                    <button (click)="cancelEditingStatus()" class="text-red-600 hover:text-red-800 text-xs">✗</button>
+                                </div>
+                                <ng-template #statusDisplay>
+                                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold cursor-pointer" (click)="startEditingStatus(p)" [ngClass]="{
+                      'bg-yellow-100 text-yellow-700': p.estatus_id === 1,
+                      'bg-green-100 text-green-700': p.estatus_id === 2,
+                      'bg-red-100 text-red-700': p.estatus_id === 3
+                    }">
+                    {{ p.estatus_valor }}
+                  </span>
+                                </ng-template>
+                            </td>
+                            <td class="px-3 py-3 text-center whitespace-nowrap">
+                                <div class="flex flex-wrap justify-center gap-1">
+                                    <button (click)="toggleExpandRow(p.postulacion_id)" class="bg-green-600 text-white px-2 py-1 rounded text-xs hover:bg-green-700 transition" [class.bg-green-800]="expandedRowId === p.postulacion_id">
+                    {{ expandedRowId === p.postulacion_id ? 'Ocultar' : 'Ver' }}
+                  </button>
+                                    <button (click)="toggleSeguimiento(p.postulacion_id)" class="bg-[#F08762] text-white px-2 py-1 rounded text-xs hover:brightness-95 transition" [class.brightness-90]="showingSeguimientoId === p.postulacion_id">
+                    Seguimiento
+                  </button>
+                                    <button (click)="deletePostulacion(p)" [disabled]="isLoading(p.postulacion_id)" class="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700 transition disabled:opacity-50">
+                    {{ isLoading(p.postulacion_id) ? '...' : 'Eliminar' }}
+                  </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Respuesta de acción -->
+                        <tr *ngIf="getActionResponse(p.postulacion_id) as response">
+                            <td colspan="7" class="px-3 py-2">
+                                <div class="rounded-md p-3 text-sm" [ngClass]="{
+                    'bg-green-50 text-green-800 border border-green-200': response.type === 'success',
+                    'bg-red-50 text-red-800 border border-red-200': response.type === 'error',
+                    'bg-yellow-50 text-yellow-800 border border-yellow-200': response.type === 'warning'
+                  }">
+                                    {{ response.message }}
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Fila expandida con detalles -->
+                        <tr *ngIf="expandedRowId === p.postulacion_id">
+                            <td colspan="7" class="px-3 py-4 bg-gray-50">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-700">
+                                    <div class="space-y-2">
+                                        <p><strong>ID:</strong> {{ p.postulacion_id }}</p>
+                                        <p><strong>Nombre:</strong> {{ p.nombre }} {{ p.apellidos }}</p>
+                                        <p><strong>Email:</strong> {{ p.email }}</p>
+                                        <p><strong>Teléfono:</strong> {{ p.telefono || 'N/A' }}</p>
+                                        <p><strong>Especialidad:</strong> {{ p.especialidad || 'N/A' }}</p>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <p><strong>Creada:</strong> {{ p.postulacion_created_at | date:'dd/MM/yyyy HH:mm' }}</p>
+                                        <p><strong>Estatus:</strong> {{ p.estatus_valor }}</p>
+                                        <p><strong>Curriculum:</strong>
+                                            <ng-container *ngIf="p.curriculum_url; else noCv">
+                                                <a [href]="p.curriculum_url" target="_blank" class="text-blue-600 underline">Ver CV</a>
+                                            </ng-container>
+                                            <ng-template #noCv>N/A</ng-template>
+                                        </p>
+                                        <p><strong>Carta de motivación:</strong>
+                                            <ng-container *ngIf="p.carta_motivacion_url; else noCarta">
+                                                <a [href]="p.carta_motivacion_url" target="_blank" class="text-blue-600 underline">Ver Carta</a>
+                                            </ng-container>
+                                            <ng-template #noCarta>N/A</ng-template>
+                                        </p>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Panel de seguimiento inline -->
+                        <tr *ngIf="showingSeguimientoId === p.postulacion_id">
+                            <td colspan="7" class="px-3 py-4 bg-blue-50">
+                                <div class="space-y-4">
+                                    <h4 class="font-semibold text-gray-800 mb-3">Seguimiento administrativo</h4>
+
+                                    <!-- Stepper -->
+                                    <div class="space-y-2">
+                                        <div *ngFor="let paso of getPasos(p)" class="flex items-start gap-3 p-2 rounded border text-sm" [ngClass]="paso.done ? 'bg-green-50 border-green-200' : paso.danger ? 'bg-red-50 border-red-200' : 'bg-yellow-50 border-yellow-200'">
+                                            <div class="mt-0.5">
+                                                <span class="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold" [ngClass]="paso.done ? 'bg-green-600 text-white' : paso.danger ? 'bg-red-600 text-white' : 'bg-yellow-500 text-white'">
+                          {{ paso.done ? '✓' : '!' }}
+                        </span>
+                                            </div>
+                                            <div>
+                                                <div class="font-medium text-gray-800">{{ paso.label }}</div>
+                                                <div class="text-xs text-gray-600" *ngIf="paso.hint">{{ paso.hint }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Acciones rápidas -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                        <!-- Cuenta -->
+                                        <div class="p-3 rounded-lg border bg-white">
+                                            <h5 class="font-semibold mb-2 text-sm">Cuenta</h5>
+                                            <div class="flex flex-wrap gap-1">
+                                                <button (click)="onCrearCuentaOInvitar(p)" [disabled]="!!p.usuario_id || isLoading(p.postulacion_id)" class="px-2 py-1 rounded bg-indigo-600 text-white hover:bg-indigo-700 text-xs disabled:opacity-50">
+                          Crear/Invitar
+                        </button>
+                                                <button (click)="onResetPassword(p)" [disabled]="!p.usuario_id || isLoading(p.postulacion_id)" class="px-2 py-1 rounded border hover:bg-gray-50 text-xs disabled:opacity-50">
+                          Reset password
+                        </button>
+                                                <button (click)="onMarcarCorreo(p, true)" [disabled]="!p.usuario_id || p.usuario_correo_validado || isLoading(p.postulacion_id)" class="px-2 py-1 rounded border hover:bg-gray-50 text-xs disabled:opacity-50">
+                          Validar correo
+                        </button>
+                                                <button (click)="onSetActivo(p, true)" [disabled]="!p.usuario_id || p.usuario_activo || isLoading(p.postulacion_id)" class="px-2 py-1 rounded bg-green-600 text-white hover:bg-green-700 text-xs disabled:opacity-50">
+                          Activar
+                        </button>
+                                            </div>
+                                            <div class="mt-2 text-xs text-gray-600">
+                                                <div><strong>Usuario:</strong> {{ p.usuario_username || '—' }} (ID: {{ p.usuario_id || '—' }})</div>
+                                                <div><strong>Correo validado:</strong> {{ p.usuario_correo_validado ? 'Sí' : 'No' }}</div>
+                                                <div><strong>Activo:</strong> {{ p.usuario_activo ? 'Sí' : 'No' }}</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Postulación/Docente -->
+                                        <!-- <div class="p-3 rounded-lg border bg-white">
+                                            <h5 class="font-semibold mb-2 text-sm">Postulación / Docente</h5>
+                                            <div class="flex flex-wrap gap-1">
+                                                <button (click)="onAprobar(p)" [disabled]="p.estatus_valor.toLowerCase().includes('aprob') || isLoading(p.postulacion_id)" class="px-2 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 text-xs disabled:opacity-50">
+                          Aprobar
+                        </button>
+                                                <button (click)="onRechazar(p)" [disabled]="p.estatus_valor.toLowerCase().includes('rechaz') || isLoading(p.postulacion_id)" class="px-2 py-1 rounded bg-orange-600 text-white hover:bg-orange-700 text-xs disabled:opacity-50">
+                          Rechazar
+                        </button>
+                                                <button (click)="onValidarDocente(p)" [disabled]="!p.docente_id || isLoading(p.postulacion_id)" class="px-2 py-1 rounded border hover:bg-gray-50 text-xs disabled:opacity-50">
+                          Validar Docente
+                        </button>
+                                            </div>
+                                            <div class="mt-2 text-xs text-gray-600">
+                                                <div><strong>Docente ID:</strong> {{ p.docente_id || '—' }}</div>
+                                                <div><strong>Estatus:</strong> {{ p.estatus_tipo }} · {{ p.estatus_valor }}</div>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-container>
+
+                    <tr *ngIf="!postulacionesFiltradas.length">
+                        <td class="px-3 py-6 text-center text-gray-500" colspan="7">
+                            Sin resultados.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Paginación -->
+    <div class="flex items-center justify-between mt-4" *ngIf="total > 0">
+        <div class="text-sm text-gray-600">
+            Mostrando {{ offset + 1 }}–{{ Math.min(offset + limit, total) }} de {{ total }}
+        </div>
+        <div class="flex gap-2">
+            <button (click)="cambiarPagina('prev')" [disabled]="offset === 0" class="px-3 py-1.5 rounded border bg-white hover:bg-gray-50 disabled:opacity-50">
+        Anterior
+      </button>
+            <button (click)="cambiarPagina('next')" [disabled]="offset + limit >= total" class="px-3 py-1.5 rounded border bg-white hover:bg-gray-50 disabled:opacity-50">
+        Siguiente
+      </button>
+        </div>
+    </div>
+</div>

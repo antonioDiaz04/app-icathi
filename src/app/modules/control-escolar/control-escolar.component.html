@@ -1,0 +1,41 @@
+<div class="container">
+    <h1>Control Escolar</h1>
+  
+    <!-- Botones para filtrar por estatus -->
+    <div class="filters">
+      <button class="btn btn-primary" (click)="filterCursos(true)">Activos</button>
+      <button class="btn btn-warning" (click)="filterCursos(false)">Inactivos</button>
+      <button class="btn btn-secondary" (click)="resetFilter()">Todos</button>
+    </div>
+  
+    <!-- Tabla para mostrar los cursos -->
+    <table class="table table-striped mt-3">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Plantel ID</th>
+          <th>Curso ID</th>
+          <th>Horario</th>
+          <th>Cupo Máximo</th>
+          <th>Requisitos Extra</th>
+          <th>Fecha Inicio</th>
+          <th>Fecha Fin</th>
+          <th>Estatus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let curso of displayedCursos">
+          <td>{{ curso.id }}</td>
+          <td>{{ curso.plantel_id }}</td>
+          <td>{{ curso.curso_id }}</td>
+          <td>{{ curso.horario || 'No disponible' }}</td>
+          <td>{{ curso.cupo_maximo || 'No definido' }}</td>
+          <td>{{ curso.requisitos_extra || 'N/A' }}</td>
+          <td>{{ curso.estatus ? (curso.fecha_inicio | date: 'dd/MM/yyyy') : 'Pendiente' }}</td>
+          <td>{{ curso.estatus ? (curso.fecha_fin | date: 'dd/MM/yyyy') : 'Pendiente' }}</td>
+          <td>{{ curso.estatus ? 'Activo' : 'Inactivo' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

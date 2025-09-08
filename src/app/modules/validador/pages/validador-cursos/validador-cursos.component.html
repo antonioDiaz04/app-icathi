@@ -1,0 +1,192 @@
+<div class="min-h-screen flex bg-gray-50">
+  <!-- Menú Lateral -->
+  <aside class="w-64 bg-white text-[#fff] flex flex-col border border-gray-300">
+    <!-- Logo -->
+    <div class="flex items-center justify-center mb-8">
+      <img src="https://www.icathi.edu.mx/img/ICATHI.png" alt="ICATHI Logo" class="w-32 h-auto" />
+    </div>
+    
+    <div class="px-6 py-4 text-center text-lg font-bold bg-white text-orange-500">
+      Validador de Cursos
+    </div>
+    
+    <nav class="flex-1 p-6">
+      <!-- Botón de cerrar sesión -->
+      <button (click)="logout()" 
+              class="mt-8 block px-4 py-3 flex items-center justify-center text-gray-600 w-full border-2 border-[#44509D] rounded-full hover:bg-[#44509D] hover:text-white transition-all duration-300 shadow-lg hover:shadow-[#8A4F98]">
+        <i class="fas fa-sign-out-alt text-[#44509D] mr-3 hover:text-white"></i> 
+        Cerrar Sesión
+      </button>
+    </nav>
+    
+    <div class="bg-[#D8566C] px-6 py-4 text-sm text-center">© 2024 Validador de Cursos</div>
+  </aside>
+
+  <!-- Contenido Principal -->
+  <main class="flex-1">
+    <header class="sticky top-0 bg-transparent backdrop-blur-lg px-6 py-4 flex justify-between items-center z-10 border-b border-[#44509D]">
+      <h1 class="text-2xl font-bold text-[#44509D]">
+        Panel de Validaciones
+      </h1>
+      <div class="flex items-center space-x-4">
+        <span class="text-gray-600">Bienvenido, [Usuario]</span>
+        <div class="w-8 h-8 rounded-full bg-[#44509D] flex items-center justify-center text-white">
+          <i class="fas fa-user"></i>
+        </div>
+      </div>
+    </header>
+    
+    <div class="p-10">
+      <!-- Lista de Planteles -->
+      <section *ngIf="!mostrarDetalleModal" class="mb-12">
+        <h3 class="text-2xl font-semibold text-[#44509D] mb-6">Lista de Planteles</h3>
+        <ul class="bg-white shadow-lg rounded-lg divide-y divide-gray-200">
+          <li *ngFor="let plantel of plantelesUnicos"
+            class="flex justify-between items-center p-6 hover:bg-gray-100 transition duration-300 cursor-pointer">
+            <span class="text-lg font-medium text-black">{{ plantel.plantel_nombre }}</span>
+            <button (click)="cargarCursosPorPlantel(plantel.plantel_id)"
+              class="bg-[#44509D] text-white py-2 px-6 rounded-md hover:bg-[#F08762] transition duration-300">
+              Ver Cursos
+            </button>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Cursos del Plantel Seleccionado -->
+      <section *ngIf="cursosSolicitados.length > 0 && !mostrarDetalleModal" class="mb-12">
+        <h3 class="text-2xl font-semibold text-[#44509D] mb-6">
+          Cursos del Plantel Seleccionado
+        </h3>
+        <table class="min-w-full bg-white shadow-lg rounded-lg">
+          <thead>
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre del Curso</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr *ngFor="let curso of cursosSolicitados" class="hover:bg-gray-100 transition duration-300 cursor-pointer">
+              <td class="px-6 py-4 text-lg font-medium text-black">{{ curso.curso_nombre }}</td>
+              <td class="px-6 py-4 text-lg font-medium text-black">{{ curso.estatus ? 'Activo' : 'Inactivo' }}</td>
+              <td class="px-6 py-4">
+                <button (click)="verDetallesCurso(curso)"
+                  class="bg-[#F08762] text-white py-2 px-6 rounded-md hover:bg-[#D8566C] transition duration-300">
+                  Ver Detalles
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      
+      <!-- Detalles del Curso -->
+      <section *ngIf="mostrarDetalleModal" class="mb-12">
+        <h2 class="text-3xl font-bold mb-6 text-[#44509D]">
+          Detalles del Curso: {{ cursoSeleccionado?.curso_nombre }}
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white shadow-lg rounded-lg p-6">
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Plantel:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.plantel_nombre }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Curso:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.curso_nombre }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Tipo de Curso:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.tipo_curso_nombre }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Horario:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.horario }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Cupo Máximo:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.cupo_maximo }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Requisitos Extra:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.requisitos_extra }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Fecha de Inicio:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.fecha_inicio | date:'short' }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Fecha de Fin:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.fecha_fin | date:'short' }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Estatus:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.estatus ? 'Activo' : 'Inactivo' }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Cantidad de Instructores:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.cant_instructores }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Sector Atendido:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.sector_atendido }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Rango de Edad:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.rango_edad }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Cruzada Contra el Hambre:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.cruzada_contra_hambre ? 'Sí' : 'No' }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Tipo de Beca:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.tipo_beca }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Participantes:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.participantes }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Cuota Tipo:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.cuota_tipo }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Cuota Monto:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.cuota_monto }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Pagar al Final:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.pagar_final ? 'Sí' : 'No' }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Número de Convenio:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.convenio_numero }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Equipo Necesario:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.equipo_necesario ? 'Sí' : 'No' }}</p>
+          </div>
+          <div class="col-span-1">
+            <p class="font-medium text-gray-900">Tipos de Curso:</p>
+            <p class="mb-4">{{ cursoSeleccionado?.tipos_curso }}</p>
+          </div>
+          <div class="col-span-2">
+            <p class="font-medium text-gray-900">Dejar Sugerencias:</p>
+            <textarea [(ngModel)]="sugerencia" class="form-control w-full h-32 p-2 border border-gray-300 rounded-md"></textarea>
+          </div>
+        </div>
+        <div class="mt-6 flex justify-end space-x-4">
+          <button (click)="cerrarDetalleModal()" class="bg-[#44509D] text-white py-2 px-6 rounded-md hover:bg-[#F08762] transition duration-300">
+            Regresar
+          </button>
+          <button (click)="validarCurso()" class="bg-green-500 text-white py-2 px-6 rounded-md hover:bg-green-700 transition duration-300">
+            {{ cursoSeleccionado?.estatus ? 'Desvalidar' : 'Validar' }}
+          </button>
+          <button (click)="enviarSugerencia()" class="bg-yellow-500 text-white py-2 px-6 rounded-md hover:bg-yellow-700 transition duration-300">
+            Dejar Sugerencias
+          </button>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,228 @@
+<!-- Header -->
+<header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-slate-200 pb-4">
+  <div>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">Panel de Validacion Solicitudes</h1>
+    <p class="text-xs sm:text-sm text-slate-500">Gestiona las solicitudes de cursos de los docentes .</p>
+  </div>
+</header>
+
+<!-- Tabs -->
+<div class="flex flex-wrap items-center gap-2">
+  <button
+    class="px-3 py-1.5 rounded-full text-sm border transition data-[active=true]:bg-[#44509D] data-[active=true]:text-white hover:bg-[#44509D]/90 hover:text-white"
+    *ngFor="let t of tabs" [attr.data-active]="activeTab() === t" (click)="setTab(t)">
+    {{ t === 'dashboard' ? 'Dashboard' :
+    t === 'pendientes' ? 'Pendientes' :
+    t === 'revision' ? 'En Revisión' :
+    t === 'aprobadas' ? 'Aprobadas' : 'Rechazadas' }}
+  </button>
+</div>
+
+<!-- Top info -->
+<div class="text-right text-[10px] sm:text-xs text-neutral-500 mt-2">
+  {{ resumen().pendientes + resumen().revision }} solicitudes por revisar
+</div>
+
+<!-- Resumen -->
+<div *ngIf="activeTab() === 'dashboard'">
+  <div *ngIf="loading(); else resumenReal" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-5">
+    <div class="p-4 rounded-xl border bg-white animate-pulse">
+      <div class="h-4 w-16 bg-neutral-200 rounded mb-3"></div>
+      <div class="h-6 w-10 bg-neutral-200 rounded"></div>
+    </div>
+    <div class="p-4 rounded-xl border bg-white animate-pulse">
+      <div class="h-4 w-20 bg-neutral-200 rounded mb-3"></div>
+      <div class="h-6 w-10 bg-neutral-200 rounded"></div>
+    </div>
+    <div class="p-4 rounded-xl border bg-white animate-pulse">
+      <div class="h-4 w-24 bg-neutral-200 rounded mb-3"></div>
+      <div class="h-6 w-10 bg-neutral-200 rounded"></div>
+    </div>
+    <div class="p-4 rounded-xl border bg-white animate-pulse">
+      <div class="h-4 w-24 bg-neutral-200 rounded mb-3"></div>
+      <div class="h-6 w-10 bg-neutral-200 rounded"></div>
+    </div>
+  </div>
+  <!-- Search -->
+  <div class="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+    <div class="relative flex-1">
+      <input type="text" class="w-full rounded-md border border-neutral-200 px-3 py-2 text-sm pr-9"
+        placeholder="Buscar por docente o curso…" [ngModel]="q()"(ngModelChange)="onSearch($event)" />
+      <!-- botón limpiar -->
+      <button *ngIf="q?.length" type="button" (click)="clearSearch()"
+        class="absolute right-2 top-1/2 -translate-y-1/2 rounded px-2 py-0.5 text-xs text-neutral-500 hover:bg-neutral-100">
+        Limpiar
+      </button>
+    </div>
+  </div>
+
+  <ng-template #resumenReal>
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mt-5">
+      <div class="p-4 rounded-xl border bg-white">
+        <p class="text-neutral-500 text-xs">Total</p>
+        <p class="text-2xl font-semibold">{{ resumen().total }}</p>
+      </div>
+      <div class="p-4 rounded-xl border bg-white">
+        <p class="text-neutral-500 text-xs">Pendientes</p>
+        <p class="text-2xl font-semibold text-yellow-700">{{ resumen().pendientes }}</p>
+      </div>
+      <div class="p-4 rounded-xl border bg-white">
+        <p class="text-neutral-500 text-xs">En Revisión</p>
+        <p class="text-2xl font-semibold text-indigo-700">{{ resumen().revision }}</p>
+      </div>
+      <div class="p-4 rounded-xl border bg-white">
+        <p class="text-neutral-500 text-xs">Aprobadas</p>
+        <p class="text-2xl font-semibold text-emerald-700">{{ resumen().aprobadas }}</p>
+      </div>
+      <div class="p-4 rounded-xl border bg-white">
+        <p class="text-neutral-500 text-xs">Rechazado</p>
+        <p class="text-2xl font-semibold text-red-700">{{ resumen().rechazadas }}</p>
+      </div>
+    </div>
+  </ng-template>
+</div>
+
+<!-- Lista de solicitudes -->
+<div class="mt-6 space-y-5">
+  <!-- Skeleton de tarjetas -->
+  <ng-container *ngIf="loading(); else listaReal">
+    <div class="rounded-xl border bg-white p-4 animate-pulse" *ngFor="let _ of [1,2,3]">
+      <div class="flex flex-col sm:flex-row justify-between gap-6">
+        <div class="flex-1">
+          <div class="h-4 w-48 bg-neutral-200 rounded mb-3"></div>
+          <div class="h-3 w-64 bg-neutral-200 rounded mb-2"></div>
+          <div class="h-3 w-40 bg-neutral-200 rounded"></div>
+          <div class="h-9 w-full bg-neutral-100 rounded mt-4"></div>
+        </div>
+        <div class="w-full sm:w-64">
+          <div class="h-5 w-28 bg-neutral-200 rounded mb-3"></div>
+          <div class="h-3 w-24 bg-neutral-200 rounded mb-2"></div>
+          <div class="h-9 w-full bg-neutral-100 rounded mt-2"></div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Contenido real -->
+  <ng-template #listaReal>
+    <div *ngFor="let s of filtradas();" class="rounded-xl border border-neutral-200 bg-white">
+      <div class="p-4 grid grid-cols-1 lg:grid-cols-[1fr_18rem] gap-6">
+        <!-- IZQ: info -->
+        <div class="space-y-4 min-w-0">
+          <!-- Docente -->
+          <div class="flex items-start gap-3 min-w-0" *ngIf="docentesMap().get(s.docenteId) as docente">
+            <ng-container *ngIf="hasFoto(docente); else initialsAvatar">
+              <img [src]="docente.foto_url" loading="lazy" alt="Foto de {{ docente?.nombre }} {{ docente?.apellidos }}"
+                class="h-10 w-10 rounded-full object-cover ring-1 ring-neutral-200" (error)="onImgError(docente.id)" />
+            </ng-container>
+
+            <ng-template #initialsAvatar>
+              <div class="h-10 w-10 shrink-0 rounded-full bg-neutral-100 ring-1 ring-neutral-200
+             flex items-center justify-center text-sm font-semibold text-neutral-700">
+                {{ getIniciales(docente.nombre || '') }}
+              </div>
+                </ng-template>
+
+      
+              <div class="min-w-0">
+                <p class="text-sm font-semibold text-neutral-900 truncate">
+                  {{ docente?.nombre }} {{ docente?.apellidos }}
+                </p>
+                <p class="text-xs text-neutral-600 truncate">
+                  {{ docente?.email }} • {{ docente?.telefono || 'Sin teléfono' }}
+                </p>
+                <p class="text-[11px] text-neutral-500">
+                  Estatus: {{ docente?.estatus_valor || '—' }}
+                  <span *ngIf="docente?.cedula_profesional">&nbsp;•&nbsp; Cédula: {{ docente?.cedula_profesional
+                    }}</span>
+                </p>
+              </div>
+          </div>
+
+          <!-- Curso -->
+          <div class="rounded-lg bg-neutral-50 p-3 ring-1 ring-neutral-200" *ngIf="cursosMap().get(s.cursoId) as curso">
+            <p class="text-xs font-semibold text-neutral-700 mb-2">Curso Solicitado</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+              <div>
+                <span class="text-neutral-500">Nombre:</span>
+                <span class="font-medium break-words">{{ curso.nombre }}</span>
+              </div>
+              <div>
+                <span class="text-neutral-500">Modalidad:</span>
+                <span class="font-medium">{{ curso.tipo_curso_nombre }}</span>
+              </div>
+              <div>
+                <span class="text-neutral-500">Duración:</span>
+                <span class="font-medium">{{ curso.duracion_horas }} horas</span>
+              </div>
+              <div>
+                <span class="text-neutral-500">Categoría:</span>
+                <span class="font-medium">{{ curso.area_nombre }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Justificación -->
+          <div>
+            <p class="text-xs font-medium text-neutral-700 mb-1">Justificación</p>
+            <div class="rounded-lg bg-neutral-50 p-3 text-sm text-neutral-700 ring-1 ring-neutral-200
+                     whitespace-pre-line break-words md:break-normal md:break-words
+                     max-h-40 lg:max-h-56 overflow-auto">
+              {{ s.justificacion }}
+            </div>
+          </div>
+        </div>
+
+        <!-- DER: estado -->
+        <div class="rounded-lg border bg-white p-3">
+          <div class="flex items-center justify-between gap-2">
+            <p class="text-sm font-semibold text-neutral-800">Estado de Solicitud</p>
+            <span class="text-[11px] font-medium px-2 py-0.5 rounded-full" [ngClass]="estadoClasses(s.estado)">
+              {{ s.estado }}
+            </span>
+          </div>
+
+          <div class="mt-3 space-y-2 text-sm">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-neutral-500">Fecha:</span>
+              <span class="font-medium truncate">{{ s.fechaSolicitud | date:'yyyy-MM-dd' }}</span>
+            </div>
+
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-neutral-500">Prioridad:</span>
+              <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs"
+                [ngClass]="prioridadClasses(s.prioridad)">
+                {{ s.prioridad }}
+              </span>
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <label class="text-xs text-neutral-600">Cambiar Estado</label>
+            <select class="mt-1 w-full rounded-md border-neutral-200 text-sm" [ngModel]="s.estado"
+              (ngModelChange)="cambiarEstado(s.id, $event)">
+              <option [ngValue]="'Pendiente'">Pendiente</option>
+              <option [ngValue]="'En Revisión'">En Revisión</option>
+              <option [ngValue]="'Aprobado'">Aprobado</option>
+              <option [ngValue]="'Rechazado'">Rechazado</option>
+            </select>
+          </div>
+
+          <div class="mt-3">
+            <label class="text-xs text-neutral-600">Comentarios</label>
+            <textarea class="mt-1 w-full rounded-md border-neutral-200 text-sm" rows="3"
+              placeholder="Agregar comentarios sobre la decisión…" [(ngModel)]="s.respuestaMensaje"></textarea>
+          </div>
+
+          <button
+            class="mt-3 w-full rounded-md bg-[#44509D] text-white text-sm py-2 hover:bg-[#060f4b] transition disabled:opacity-60 disabled:cursor-not-allowed"
+            type="button" [disabled]="isSaving(s.id)" (click)="onActualizar(s)">
+            <span *ngIf="!isSaving(s.id)">Actualizar Solicitud</span>
+            <span *ngIf="isSaving(s.id)">Guardando…</span>
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

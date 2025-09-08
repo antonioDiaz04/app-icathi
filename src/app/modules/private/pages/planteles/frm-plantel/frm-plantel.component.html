@@ -1,0 +1,145 @@
+<div class="p-8 bg-white rounded-lg shadow-md">
+  <h2 class="text-3xl font-bold text-gray-800 mb-6">Datos del Plantel</h2>
+
+  <form class="space-y-10" [formGroup]="formPlantel" (ngSubmit)="guardarPlantel()">
+    <!-- Datos Generales -->
+    <h3 class="text-2xl font-semibold text-gray-700 mb-6 border-b pb-2">Datos Generales</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div>
+        <label for="nombre" class="block text-sm font-medium text-gray-600 mb-2">Nombre</label>
+        <div class="ui input w-full">
+          <input
+            type="text"
+            id="nombre"
+            formControlName="nombre"
+            class="w-full rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-2 px-3"
+            placeholder="Nombre del plantel"
+          />
+          <i class="user icon absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+      </div>
+      <div>
+        <label for="direccion" class="block text-sm font-medium text-gray-600 mb-2">Dirección</label>
+        <div class="relative">
+          <textarea
+            id="direccion"
+            formControlName="direccion"
+            rows="2"
+            class="w-full rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-2 px-3"
+            placeholder="Dirección completa"
+          ></textarea>
+          <i class="location arrow icon absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+      </div>
+      <div>
+        <label for="telefono" class="block text-sm font-medium text-gray-600 mb-2">Teléfono</label>
+        <div class="ui input w-full">
+          <input
+            type="text"
+            id="telefono"
+            formControlName="telefono"
+            class="w-full rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-2 px-3"
+            placeholder="Ej: 123-456-7890"
+          />
+          <i class="phone icon absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+      </div>
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-600 mb-2">Email</label>
+        <div class="ui input w-full">
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            class="w-full rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-2 px-3"
+            placeholder="correo@ejemplo.com"
+          />
+          <i class="mail icon absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+        <p class="text-xs text-blue-600 mt-1">
+          * Es importante ingresar un correo válido, ya que a través de él se enviará el acceso del gestor.
+        </p>
+      </div>
+      <div>
+        <label for="director" class="block text-sm font-medium text-gray-600 mb-2">Director</label>
+        <div class="ui input w-full">
+          <input
+            type="text"
+            id="director"
+            formControlName="director"
+            class="w-full rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-2 px-3"
+            placeholder="Nombre del director"
+          />
+          <i class="user circle icon absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+      </div>
+      <div>
+        <label for="capacidad" class="block text-sm font-medium text-gray-600 mb-2">Capacidad de Alumnos</label>
+        <div class="ui input w-full">
+          <input
+            type="number"
+            id="capacidad"
+            formControlName="capacidad_alumnos"
+            class="w-full rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-2 px-3"
+            placeholder="Ej: 300"
+          />
+          <i class="users icon absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ubicación -->
+    <h3 class="text-2xl font-semibold text-gray-700 mb-6 border-b pb-2">Ubicación</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div>
+        <label for="estado" class="block text-sm font-medium text-gray-600 mb-2">Estado</label>
+        <div class="ui input w-full">
+          <input
+            type="text"
+            id="estado"
+            formControlName="estado"
+            class="w-full rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-2 px-3"
+            placeholder="Ej: Veracruz"
+          />
+          <i class="map marker alternate icon absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+      </div>
+      <div>
+        <label for="municipio" class="block text-sm font-medium text-gray-600 mb-2">Municipio</label>
+        <div class="ui input w-full">
+          <input
+            type="text"
+            id="municipio"
+            formControlName="municipio"
+            class="w-full rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-2 px-3"
+            placeholder="Ej: Xalapa"
+          />
+          <i class="map marker alternate icon absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="flex justify-end space-x-4">
+      <button
+        type="button"
+        class="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+        (click)="regresar()"
+      >
+        Regresar
+      </button>
+      <button
+        type="reset"
+        class="px-5 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
+      >
+        Limpiar
+      </button>
+      <button
+        type="submit"
+        class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+      >
+        Guardar
+      </button>
+    </div>
+  </form>
+</div>

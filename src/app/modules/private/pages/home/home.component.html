@@ -1,0 +1,97 @@
+<div class="container mx-auto mt-10 px-4">
+    <h1 class="text-3xl font-bold text-center mb-6">Control Escolar</h1>
+  
+    <!-- Barra de búsqueda -->
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
+        <input
+        type="text"
+        class="border border-gray-300 rounded-md p-2 w-full sm:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4 sm:mb-0"
+        placeholder="Buscar curso"
+        (input)="searchCursos($event)"
+      />
+      
+      <div class="flex gap-2">
+        <button
+          class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+          (click)="filterCursos(true)"
+        >
+          Activos
+        </button>
+        <button
+          class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition"
+          (click)="filterCursos(false)"
+        >
+          Inactivos
+        </button>
+        <button
+          class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition"
+          (click)="resetFilter()"
+        >
+          Todos
+        </button>
+      </div>
+    </div>
+  
+    <!-- Tabla para mostrar los cursos -->
+    <div class="overflow-x-auto shadow-md">
+      <table class="min-w-full bg-white border border-gray-300">
+        <thead>
+          <tr class="bg-gray-800 text-white">
+            <th class="px-4 py-2">Plantel</th>
+            <th class="px-4 py-2">Curso</th>
+            <th class="px-4 py-2">Horario</th>
+            <th class="px-4 py-2">Cupo Máximo</th>
+            <th class="px-4 py-2">Requisitos Extra</th>
+            <th class="px-4 py-2">Fecha Inicio</th>
+            <th class="px-4 py-2">Fecha Fin</th>
+            <th class="px-4 py-2">Estatus</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let curso of displayedCursos"
+            class="hover:bg-gray-100 border-b border-gray-300"
+          >
+            <td class="px-4 py-2 text-center">{{ curso.plantel_nombre }}</td>
+            <td class="px-4 py-2 text-center">{{ curso.curso_nombre }}</td>
+            <td class="px-4 py-2 text-center">
+              {{ curso.horario || 'Pendiente' }}
+            </td>
+            <td class="px-4 py-2 text-center">
+              {{ curso.cupo_maximo || 'Sin Definir' }}
+            </td>
+            <td class="px-4 py-2 text-center">
+              {{ curso.requisitos_extra || 'Ninguno' }}
+            </td>
+            <td class="px-4 py-2 text-center">
+              {{ curso.fecha_inicio
+                ? (curso.fecha_inicio | date: 'dd/MM/yyyy')
+                : 'Pendiente' }}
+            </td>
+            <td class="px-4 py-2 text-center">
+              {{ curso.fecha_fin
+                ? (curso.fecha_fin | date: 'dd/MM/yyyy')
+                : 'Pendiente' }}
+            </td>
+            <td class="px-4 py-2 text-center">
+              <span
+                class="px-3 py-1 rounded-full text-sm font-medium"
+                [ngClass]="{
+                  'bg-green-500 text-white': curso.estatus,
+                  'bg-red-500 text-white': !curso.estatus
+                }"
+              >
+                {{ curso.estatus ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+          </tr>
+          <tr *ngIf="displayedCursos.length === 0">
+            <td colspan="8" class="text-center text-gray-500 py-4">
+              No hay cursos disponibles
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  

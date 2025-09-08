@@ -1,0 +1,23 @@
+<div class="container mx-auto px-4 py-8">
+  <h2 class="text-3xl font-bold mb-6">Planteles</h2>
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+  >
+    @for (plantel of planteles; track $index) {
+
+    <div class="flex flex-col">
+      <div class="flex items-center mb-2">
+        <span class="text-orange-500 text-2xl mr-2">📍</span>
+        <h3 class="text-lg font-semibold">{{ plantel.nombre }}</h3>
+      </div>
+      <ul class="list-none pl-4 text-gray-600">
+        <li>- Direccion:{{ plantel.direccion }}</li>
+        <!-- <li>- El Arenal</li> -->
+        <!-- <li>- San Salvador</li> -->
+      </ul>
+    </div>
+    }
+
+    <!-- Repite el mismo patrón para los demás planteles -->
+  </div>
+</div>

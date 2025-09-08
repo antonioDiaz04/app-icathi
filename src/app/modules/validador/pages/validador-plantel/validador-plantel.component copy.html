@@ -1,0 +1,100 @@
+<div class="flex min-h-screen bg-gray-50">
+  <!-- Menú lateral -->
+  <aside class="w-64 bg-gray-800 text-white flex flex-col">
+    <div class="px-6 py-4 text-center text-lg font-bold bg-gray-900">Panel Admin</div>
+    <nav class="flex-1">
+      <ul>
+        <li class="hover:bg-gray-700">
+          <a href="#" class="block py-3 px-6 flex items-center">
+            <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+          </a>
+        </li>
+        <li class="hover:bg-gray-700">
+          <a href="#" class="block py-3 px-6 flex items-center">
+            <i class="fas fa-school mr-3"></i> Validación de Planteles
+          </a>
+        </li>
+        <li class="hover:bg-gray-700">
+          <a href="#" class="block py-3 px-6 flex items-center">
+            <i class="fas fa-chart-bar mr-3"></i> Estadísticas
+          </a>
+        </li>
+        <li class="hover:bg-gray-700">
+          <a href="#" class="block py-3 px-6 flex items-center">
+            <i class="fas fa-cogs mr-3"></i> Configuración
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="bg-gray-900 px-6 py-4 text-sm text-center">© 2024 Admin</div>
+  </aside>
+
+  <!-- Contenido principal -->
+  <main class="flex-1">
+    <!-- Encabezado -->
+    <header class="sticky top-0 bg-white shadow-md px-6 py-4 flex justify-between items-center z-10">
+      <h1 class="text-2xl font-bold text-gray-800 flex items-center">
+        <i class="fas fa-school text-blue-600 mr-2"></i> Validador de Planteles
+      </h1>
+      <button class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+        <i class="fas fa-plus-circle mr-2"></i> Añadir Plantel
+      </button>
+    </header>
+
+    <!-- Contenido -->
+    <div class="container mx-auto p-6">
+      <!-- Estadísticas -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-yellow-400">
+          <h3 class="text-lg font-semibold text-gray-700 flex items-center">
+            <i class="fas fa-clock text-yellow-400 mr-2"></i> Planteles Pendientes
+          </h3>
+          <p class="text-gray-600 mt-2">Actualmente hay <strong class="text-gray-800">12</strong> solicitudes pendientes.</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-green-500">
+          <h3 class="text-lg font-semibold text-gray-700 flex items-center">
+            <i class="fas fa-check-circle text-green-500 mr-2"></i> Validaciones Realizadas
+          </h3>
+          <p class="text-gray-600 mt-2">Se han validado <strong class="text-gray-800">30</strong> planteles este mes.</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-red-500">
+          <h3 class="text-lg font-semibold text-gray-700 flex items-center">
+            <i class="fas fa-exclamation-circle text-red-500 mr-2"></i> Errores Recientes
+          </h3>
+          <p class="text-gray-600 mt-2">Se encontraron <strong class="text-gray-800">2</strong> errores en el proceso.</p>
+        </div>
+      </section>
+
+      <!-- Tabla de Validaciones -->
+      <section>
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Solicitudes de Validación de Planteles</h2>
+        <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="py-3 px-4 text-gray-700 font-medium">ID</th>
+                <th class="py-3 px-4 text-gray-700 font-medium">Nombre del Plantel</th>
+                <th class="py-3 px-4 text-gray-700 font-medium">Estado</th>
+                <th class="py-3 px-4 text-gray-700 font-medium">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="hover:bg-gray-50">
+                <td class="py-3 px-4 text-gray-600">PLANTEL123</td>
+                <td class="py-3 px-4 text-gray-600">Escuela Secundaria ABC</td>
+                <td class="py-3 px-4">
+                  <span class="px-3 py-1 rounded-full bg-yellow-100 text-yellow-600 text-sm font-medium">Pendiente</span>
+                </td>
+                <td class="py-3 px-4">
+                  <button class="px-3 py-1 bg-green-500 text-white rounded-md text-sm hover:bg-green-600">Validar</button>
+                  <button class="px-3 py-1 bg-red-500 text-white rounded-md text-sm ml-2 hover:bg-red-600">Rechazar</button>
+                </td>
+              </tr>
+              <!-- Más filas dinámicas -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>

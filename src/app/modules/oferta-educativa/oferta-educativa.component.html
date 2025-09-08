@@ -1,0 +1,76 @@
+<div class="flex min-h-screen bg-gray-50">
+  <!-- Botón para móviles -->
+   
+  <button (click)="toggleSidebar()" id="sidebarToggle" 
+    class="md:hidden fixed top-4 left-4 z-50 p-2 bg-[#44509D] text-white rounded-lg hover:bg-[#3a468a] transition-colors duration-200">
+    <i class="fas" [class.fa-bars]="!sidebarVisible" [class.fa-times]="sidebarVisible"></i>
+  </button>
+  <!-- Menú lateral - Añadido fixed, h-screen y overflow-y-auto -->
+  <aside [class.hidden]="isMobileView && !sidebarVisible" 
+         [class.-translate-x-full]="isMobileView && !sidebarVisible"
+         id="sidebar"
+         class="w-64 bg-white text-[#fff] flex flex-col border border-gray-300 fixed h-screen overflow-y-auto transform transition-transform duration-300 ease-in-out z-40">
+    <!-- Logo -->
+    <div class="flex items-center justify-center mb-8 pt-4">
+      <img src="https://www.icathi.edu.mx/img/ICATHI.png" alt="ICATHI Logo" class="w-32 h-auto" />
+    </div>
+    <div class="px-6 py-4 text-center text-lg font-bold bg-white text-orange-500">
+      <!-- Oferta Educativa -->
+      OFERTA EDUCATIVA
+    </div>
+
+    <nav class="flex-1 p-6">
+      <ul class="space-y-2">
+
+
+        <!-- Gestión de Cursos -->
+        <li class="cursor-pointer rounded-3xl hover:bg-gray-100 transition-all duration-300 hover:text-[#F08762]">
+          <a (click)="redirecto('home')"
+            class="block py-3 px-6 flex items-center text-gray-600 hover:text-[#F08762]">
+            <i class="fas fa-book text-[#44509D] mr-3"></i>
+            Gestión de Cursos
+          </a>
+        </li>
+
+        <!-- Crear Nuevo Curso -->
+        <li class="cursor-pointer rounded-3xl hover:bg-gray-100 transition-all duration-300 hover:text-[#F08762]">
+          <a (click)="mostrarCrear()"
+            class="block py-3 px-6 flex items-center text-gray-600 hover:text-[#F08762]">
+            <i class="fas fa-plus-circle text-[#44509D] mr-3"></i>
+            Crear Nuevo Curso
+          </a>
+        </li>
+
+
+      </ul>
+
+      <!-- Botón de cerrar sesión -->
+      <button (click)="logout()"
+        class="mt-8 block px-4 py-3 flex items-center text-gray-600 w-full border-2 border-[#44509D] rounded-full hover:bg-[#44509D] hover:text-white transition-all duration-300 shadow-lg hover:shadow-[#8A4F98]">
+        <i class="fas fa-sign-out-alt text-[#44509D] mr-3 hover:text-white"></i>
+        Cerrar Sesión
+      </button>
+    </nav>
+
+    <div class="bg-[#D8566C] px-6 py-4 text-sm text-center">© 2024 Oferta Educativa</div>
+  </aside>
+
+  <!-- Contenido principal - Añadido ml-64 para compensar el ancho del sidebar -->
+  <main id="mainContent" class="flex-1 transition-all duration-300" 
+        [class.md:ml-64]="!isMobileView || sidebarVisible">
+        <header
+      class="sticky top-0 bg-transparent backdrop-blur-lg px-6 py-4 flex justify-between items-center z-10 border-b border-[#44509D]">
+      <h1 class="text-2xl font-bold text-[#44509D]">
+        Panel de Oferta Educativa
+      </h1>
+      <div class="flex items-center space-x-4">
+        <span class="text-gray-600">Bienvenido, {{userData?.nombre}} {{userData?.apellidos}}</span>
+        <div class="w-8 h-8 rounded-full bg-[#44509D] flex items-center justify-center text-white">
+          <i class="fas fa-user"></i>
+        </div>
+      </div>
+    </header>
+
+    <router-outlet></router-outlet>
+  </main>
+</div>

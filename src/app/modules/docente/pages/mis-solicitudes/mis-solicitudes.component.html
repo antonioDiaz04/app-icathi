@@ -1,0 +1,178 @@
+<div class="px-4 sm:px-6 pt-6 pb-12 bg-slate-50 min-h-screen">
+  <!-- Header superior -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">Mis Solicitudes</h1>
+      <p class="mt-1 sm:mt-2 text-slate-500">
+        Revisa el estado de todas tus solicitudes de cursos
+      </p>
+    </div>
+
+    <div class="flex flex-col sm:flex-row w-full md:w-auto gap-3">
+      <button (click)="nuevaSolicitud()"
+        class="inline-flex justify-center items-center gap-2 h-10 px-4 rounded-xl bg-[#2e3874] text-white font-medium shadow-sm hover:bg-slate-800 w-full sm:w-auto">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none">
+          <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Nueva Solicitud
+      </button>
+
+      <button (click)="volver()"
+        class="h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center w-full sm:w-10">
+        <svg class="h-5 w-5 text-slate-700" viewBox="0 0 24 24" fill="none">
+          <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabs / filtros -->
+  <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-2 sm:p-3 mb-6">
+    <div class="-mx-2 sm:mx-0 px-2 sm:px-0 overflow-x-auto no-scrollbar">
+      <div class="flex gap-2 sm:gap-3 whitespace-nowrap">
+        <button
+          *ngFor="let f of filtros"
+          (click)="setFiltro(f.key)"
+          class="relative inline-flex items-center gap-2 h-10 px-3 sm:px-4 rounded-xl text-sm border transition shrink-0"
+          [class.bg-[#2e3874]]="activo() === f.key"
+          [class.text-white]="activo() === f.key"
+          [class.border-slate-900]="activo() === f.key"
+          [class.bg-slate-50]="activo() !== f.key"
+          [class.text-slate-700]="activo() !== f.key"
+          [class.border-slate-200]="activo() !== f.key">
+          <span class="truncate">{{ f.label }}</span>
+          <span
+            class="inline-flex items-center justify-center h-6 min-w-[1.75rem] px-2 rounded-full text-xs font-semibold"
+            [class.bg-white]="activo() === f.key"
+            [class.text-slate-900]="activo() === f.key"
+            [class.bg-slate-200]="activo() !== f.key"
+            [class.text-slate-700]="activo() !== f.key">
+            {{ count(f.key) }}
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Error -->
+  <div *ngIf="errorMsg()" class="mb-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-rose-700">
+    {{ errorMsg() }}
+  </div>
+
+  <!-- Skeletons -->
+  <div *ngIf="loading()" class="space-y-5">
+    <div *ngFor="let i of [1,2]" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 animate-pulse">
+      <div class="h-4 w-24 bg-slate-200 rounded mb-2 ml-auto"></div>
+      <div class="h-5 w-56 sm:w-64 bg-slate-200 rounded mb-2"></div>
+      <div class="h-4 w-28 sm:w-32 bg-slate-200 rounded mb-4"></div>
+      <div class="h-20 w-full bg-slate-100 rounded"></div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!loading() && solicitudes().length === 0" class="text-center p-8 sm:p-12 bg-white border border-slate-200 rounded-2xl">
+    <div class="mx-auto h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center mb-3">
+      <svg class="h-6 w-6 text-slate-400" viewBox="0 0 24 24" fill="none">
+        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h3 class="text-slate-900 font-semibold text-lg">Sin solicitudes</h3>
+    <p class="text-slate-500 mt-1">No encontramos solicitudes para este filtro.</p>
+  </div>
+
+  <!-- Lista -->
+  <div *ngIf="!loading() && solicitudes().length > 0" class="space-y-5">
+    <article *ngFor="let s of solicitudes()"
+      class="relative bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
+      <!-- Badge de estado -->
+      <div class="md:absolute md:top-4 md:right-4 relative mb-3 md:mb-0">
+        <span class="px-3 py-1 rounded-full text-xs font-semibold" [ngClass]="badgeEstadoClass(s.estado)">
+          {{ s.estado }}
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        <!-- Columna izquierda -->
+        <div>
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-2" *ngIf="cursosMap().get(s.cursoId) as curso">
+            <h3 class="text-base sm:text-lg font-semibold text-slate-900">
+              {{ curso.nombre }}
+            </h3>
+            <span class="text-sky-700 text-sm">• {{ curso.tipo_curso_nombre }}</span>
+            <span class="px-3 py-1 rounded-full text-xs font-semibold"
+                  [ngClass]="badgePrioridadClass(s.prioridad)">
+              {{ prioridadUi(s.prioridad) }}
+            </span>
+          </div>
+
+          <p class="text-sm text-slate-500 mt-1">
+            Solicitado el {{ fechaCorta(s.fechaSolicitud) }}
+          </p>
+
+          <div class="mt-4 sm:mt-5">
+            <h4 class="text-slate-900 font-semibold mb-2">Justificación</h4>
+            <!-- CLAVE: resistente a textos sin espacios y con clamp -->
+            <div class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-600 clamp-4 break-all md:break-words hyphens-auto whitespace-pre-line max-h-52 overflow-auto thin-scroll">
+              {{ s.justificacion }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna derecha -->
+        <div>
+          <ng-container [ngSwitch]="s.estado">
+            <div *ngSwitchCase="'Pendiente'">
+              <h4 class="text-slate-900 font-semibold mb-2">Estado</h4>
+              <div class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-600 italic">
+                Tu solicitud está en espera de revisión.
+              </div>
+            </div>
+
+            <div *ngSwitchCase="'En Revisión'">
+              <h4 class="text-slate-900 font-semibold mb-2">Estado</h4>
+              <div class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-600 italic">
+                Tu solicitud está siendo evaluada por el comité académico.
+              </div>
+            </div>
+
+            <!-- Aprobado / Rechazado -->
+            <div *ngSwitchDefault>
+              <h4 class="text-slate-900 font-semibold mb-2">Respuesta</h4>
+              <div class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-600">
+                {{ s.respuestaMensaje || 'Sin comentarios del evaluador por el momento.' }}
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-sm text-slate-500 mt-3" *ngIf="s.fechaRespuesta || s.evaluadorId">
+                <svg class="h-4 w-4 text-slate-400" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2" />
+                  <path d="M4 20c1.5-3 4.5-5 8-5s6.5 2 8 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <span>Evaluador #{{ s.evaluadorId || '—' }}</span>
+                <span class="hidden sm:inline">•</span>
+                <span>{{ fechaCorta(s.fechaRespuesta || '') }}</span>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </article>
+
+    <!-- Paginación -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
+      <p class="text-sm text-slate-500 text-center sm:text-left">
+        Página {{ page() }} de {{ totalPages() }} — {{ total() }} resultado(s)
+      </p>
+      <div class="flex justify-center sm:justify-end gap-2">
+        <button (click)="prevPage()" [disabled]="page() <= 1"
+          class="h-9 px-3 rounded-lg border border-slate-200 bg-white disabled:opacity-50">
+          Anterior
+        </button>
+        <button (click)="nextPage()" [disabled]="page() >= totalPages()"
+          class="h-9 px-3 rounded-lg border border-slate-200 bg-white disabled:opacity-50">
+          Siguiente
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

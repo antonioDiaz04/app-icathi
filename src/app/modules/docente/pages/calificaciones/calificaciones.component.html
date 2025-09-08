@@ -1,0 +1,55 @@
+<section class="bg-white shadow-md rounded-lg p-6 border border-gray-300">
+    <h2 class="text-2xl font-semibold text-[#44509D]">Vista de Calificaciones</h2>
+  
+    <!-- Filtro por Asignatura -->
+    <div class="mt-6 flex justify-between items-center">
+      <div class="w-full sm:w-1/2 md:w-1/3">
+        <label for="materia" class="block text-gray-700">Selecciona una Asignatura</label>
+        <select [(ngModel)]="selectedMateria" name="materia" class="input w-full">
+          <option *ngFor="let materia of materias" [value]="materia">{{ materia }}</option>
+        </select>
+      </div>
+      <button class="mt-4 sm:mt-0 bg-[#F08762] text-white px-4 py-2 rounded-lg hover:bg-[#D47552]">
+        Filtrar
+      </button>
+    </div>
+  
+    <!-- Tabla de Calificaciones -->
+    <div class="mt-6">
+      <table class="min-w-full bg-white border border-gray-300 rounded-lg">
+        <thead>
+          <tr class="bg-[#44509D] text-white">
+            <th class="py-2 px-4 text-left">Estudiante</th>
+            <th class="py-2 px-4 text-left">Calificación</th>
+            <th class="py-2 px-4 text-left">Promedio</th>
+            <th class="py-2 px-4 text-left">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let estudiante of estudiantes" class="border-b border-gray-200">
+            <td class="py-2 px-4">{{ estudiante.nombre }}</td>
+            <td class="py-2 px-4">
+              <input [(ngModel)]="estudiante.calificacion" type="number" class="input w-full" min="0" max="10" />
+            </td>
+            <td class="py-2 px-4">{{ estudiante.promedio }}</td>
+            <td class="py-2 px-4 flex gap-2">
+              <button (click)="guardarCalificacion(estudiante)" class="bg-[#F08762] text-white px-4 py-2 rounded-lg hover:bg-[#D47552]">
+                Guardar
+              </button>
+              <button (click)="verDetalles(estudiante)" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-400">
+                Ver Detalles
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Botón de Exportar -->
+    <div class="mt-6 flex justify-end">
+      <button (click)="exportarCalificaciones()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-400">
+        Exportar a CSV
+      </button>
+    </div>
+  </section>
+  

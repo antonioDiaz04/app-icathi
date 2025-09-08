@@ -1,0 +1,45 @@
+/* Media Queries para diseño responsive */
+@media (max-width: 768px) {
+  .text-lg {
+    font-size: 1rem; /* Reducir tamaño del texto */
+  }
+  .text-xl {
+    font-size: 1.25rem; /* Tamaño menor para encabezados */
+  }
+  .p-6 {
+    padding: 1rem; /* Reducir el padding en pantallas pequeñas */
+  }
+  .space-y-4 {
+    gap: 1rem; /* Espaciado adecuado entre elementos */
+  }
+}
+
+/* Animaciones */
+@keyframes border-animation {
+  0% {
+    border-color: #4f46e5;
+  }
+  50% {
+    border-color: #7c3aed;
+  }
+  100% {
+    border-color: #ec4899;
+  }
+}
+
+.animate-border {
+  animation: border-animation 3s linear infinite;
+}
+
+@keyframes icon-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.animate-icon {
+  animation: icon-pulse 1.5s ease-in-out infinite;
+}

@@ -1,0 +1,17 @@
+/* Estilos personalizados para el componente Perfil */
+.input {
+    @apply border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-[#F08762];
+  }
+  
+  h2 {
+    @apply text-2xl font-semibold text-[#44509D];
+  }
+  
+  button {
+    @apply text-white rounded-lg px-4 py-2 transition-all duration-300;
+  }
+  
+  button:hover {
+    @apply scale-105;
+  }
+  

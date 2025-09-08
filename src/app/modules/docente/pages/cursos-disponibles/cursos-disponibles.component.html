@@ -1,0 +1,139 @@
+<!-- Contenedor principal -->
+<div class="px-4 sm:px-6 pt-6 pb-12 bg-slate-50 min-h-screen">
+
+    <!-- Título de página -->
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-slate-900">Cursos Disponibles</h1>
+        <p class="mt-2 text-slate-500">Explora todos los cursos disponibles para solicitar</p>
+    </div>
+
+    <!-- Barra de búsqueda + filtro -->
+    <div class="flex flex-col md:flex-row gap-4 items-stretch md:items-center">
+        <!-- input search -->
+        <div class="flex-1">
+            <label class="sr-only">Buscar</label>
+            <div class="relative">
+                <!-- icono lupa -->
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" viewBox="0 0 24 24"
+                    fill="none">
+                    <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                    <circle cx="10.5" cy="10.5" r="7.5" stroke="currentColor" stroke-width="2"></circle>
+                </svg>
+                <input [ngModel]="q()" (ngModelChange)="q.set($event)" type="text"
+                    placeholder="Buscar cursos por nombre, detalles, área o especialidad..." class="w-full pl-11 pr-4 h-12 rounded-xl border border-slate-200 bg-white text-slate-800 placeholder-slate-400
+                 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+            </div>
+        </div>
+
+        <!-- select -->
+        <div class="w-full md:w-64">
+            <label class="sr-only">Filtrar</label>
+            <div class="relative">
+                <select [ngModel]="categoriaSeleccionada()" (ngModelChange)="categoriaSeleccionada.set($event)"
+                    class="w-full h-12 appearance-none rounded-xl border border-slate-200 bg-white pr-10 pl-4
+                 text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    <option *ngFor="let c of categorias()" [value]="c">{{ c }}</option>
+                </select>
+                <svg class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400"
+                    viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.19l3.71-3.96a.75.75 0 111.08 1.04l-4.25 4.53a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
+                        clip-rule="evenodd"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contador -->
+    <p class="text-sm text-slate-500 mt-4">
+        Mostrando {{ cursosFiltrados().length }} de {{ cursos().length }} cursos
+    </p>
+
+    <!-- Skeletons -->
+    <div *ngIf="loading()" class="mt-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6"
+        aria-busy="true">
+        <article *ngFor="let s of skeletons"
+            class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 animate-pulse h-full">
+            <div class="flex items-start justify-between">
+                <div class="h-6 w-28 bg-slate-200 rounded-full"></div>
+                <div class="h-4 w-24 bg-slate-200 rounded"></div>
+            </div>
+            <div class="mt-3 h-6 w-2/3 bg-slate-200 rounded"></div>
+            <div class="mt-2 space-y-2">
+                <div class="h-4 w-full bg-slate-200 rounded"></div>
+                <div class="h-4 w-5/6 bg-slate-200 rounded"></div>
+            </div>
+            <ul class="mt-4 space-y-3">
+                <li class="h-4 w-40 bg-slate-200 rounded"></li>
+                <li class="h-4 w-52 bg-slate-200 rounded"></li>
+                <li class="h-4 w-48 bg-slate-200 rounded"></li>
+            </ul>
+            <div class="mt-5 h-12 w-full bg-slate-200 rounded-xl"></div>
+        </article>
+    </div>
+
+    <!-- Grid de tarjetas -->
+    <div *ngIf="!loading()" class="mt-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+        <!-- Card (misma UI, igual altura) -->
+        <article *ngFor="let c of cursosFiltrados()" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 hover:shadow-md transition
+             h-full flex flex-col">
+
+            <!-- Encabezado de card -->
+            <div class="flex items-start justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold
+                        bg-indigo-100 text-indigo-700">
+                        {{ c.tipo_curso_nombre }}
+                    </span>
+                    <span *ngIf="!c.estatus"
+                        class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-rose-100 text-rose-700">
+                        Inactivo
+                    </span>
+                </div>
+                <span class="text-sm text-slate-400">{{ c.area_nombre }}</span>
+            </div>
+
+            <h3 class="mt-3 text-lg font-semibold text-slate-900">{{ c.curso_nombre }}</h3>
+            <p class="mt-1 text-sm text-slate-500 line-clamp-3">{{ c.detalles || 'Sin descripción.' }}</p>
+
+            <!-- Lista de características -->
+            <ul class="mt-4 space-y-2 text-sm text-slate-700">
+                <li class="flex items-center gap-2">
+                    <!-- reloj -->
+                    <svg class="h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"></circle>
+                        <path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                    </svg> {{ c.horas || 0 }} horas
+                </li>
+                <li class="flex items-center gap-2">
+                    <!-- especialidad -->
+                    <svg class="h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none">
+                        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        </path>
+                    </svg> {{ c.especialidad_nombre }}
+                </li>
+                <li class="flex items-center gap-2">
+                    <!-- clave -->
+                    <svg class="h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 3l9 5-9 5-9-5 9-5z" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        </path>
+                        <path d="M3 14l9 5 9-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                    </svg> Clave: {{ c.clave || 'N/D' }}
+                </li>
+            </ul>
+
+            <!-- Botón (pegado al fondo para igualar alturas) -->
+            <div class="mt-5 pt-1 md:pt-2 lg:pt-3 mt-auto">
+                <button (click)="solicitarCurso(c)" class="w-full h-12 inline-flex items-center justify-center gap-2 rounded-xl
+                 bg-[#2e3879] text-white font-semibold shadow-sm hover:bg-slate-800
+                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900">
+                    <!-- icono play -->
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7-11-7z"></path>
+                    </svg>
+                    Solicitar Curso
+                </button>
+            </div>
+        </article>
+    </div>
+</div>

@@ -1,0 +1,91 @@
+<div class="container mx-auto px-6 py-4">
+  <h2 class="text-3xl font-bold text-gray-800 mb-6">Calificaciones del Curso</h2>
+
+  <!-- Dropdown de cursos -->
+  <div class="mb-6">
+    <label class="block text-lg font-medium text-gray-700 mb-2" for="courseSelect">
+      Selecciona un curso para ver a los alumnos inscritos
+    </label>
+    <select
+      id="courseSelect"
+      class="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+      [(ngModel)]="selectedCourse"
+      (change)="onCourseChange($event)"
+    >
+      <option value="" disabled selected>Selecciona un curso...</option>
+      <option *ngFor="let course of cursos" [value]="course.curso_id">
+        {{ course.curso_nombre }} ({{ course.plantel_nombre }})
+      </option>
+    </select>
+  </div>
+
+  <!-- Tabla de calificaciones -->
+  <div class="overflow-x-auto shadow-lg rounded-lg bg-white">
+    <table
+      class="min-w-full table-fixed border-collapse bg-white text-gray-800 transition-opacity duration-500"
+      [class.opacity-50]="filteredStudents.length === 0"
+    >
+      <thead class="bg-blue-500 text-white">
+        <tr>
+          <th class="px-4 py-3 text-left font-semibold">Nombre</th>
+          <th class="px-4 py-3 text-left font-semibold">Apellido</th>
+          <th class="px-4 py-3 text-left font-semibold">Email</th>
+          <th class="px-4 py-3 text-center font-semibold">Promedio</th>
+          <th class="px-4 py-3 text-center font-semibold">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let student of filteredStudents"
+          class="hover:bg-gray-50 transition"
+        >
+          <td class="px-4 py-3">{{ student.alumno_nombre }}</td>
+          <td class="px-4 py-3">{{ student.alumno_apellidos }}</td>
+          <td class="px-4 py-3">{{ student.alumno_email }}</td>
+          <td class="px-4 py-3 text-center">
+            <input
+              type="number"
+              class="w-full p-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+              [(ngModel)]="student.calificacion"
+              [disabled]="!isModifying || student.alumno_id !== selectedStudent?.alumno_id"
+            />
+          </td>
+          <td class="px-4 py-3 text-center space-x-2">
+            <button
+              class="px-3 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 transition focus:outline-none focus:ring-2 focus:ring-yellow-300"
+              [hidden]="isModifying && student.alumno_id === selectedStudent?.alumno_id"
+              (click)="modifyGrade(student)"
+            >
+              <i class="edit icon"></i> Modificar
+            </button>
+            <button
+              class="px-3 py-2 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition focus:outline-none focus:ring-2 focus:ring-green-300"
+              [hidden]="!isModifying || student.alumno_id !== selectedStudent?.alumno_id"
+              (click)="saveGrade(student)"
+            >
+              <i class="check icon"></i> Guardar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Mensaje cuando no hay estudiantes -->
+    <div
+      *ngIf="filteredStudents.length === 0"
+      class="text-center py-8 text-gray-600 text-lg transition-opacity duration-500"
+    >
+      <i class="frown icon text-4xl text-gray-400 mb-4"></i>
+      <p class="text-xl font-semibold">No hay alumnos inscritos en este curso.</p>
+      <p class="text-gray-500">
+        Selecciona un curso diferente para ver las calificaciones de sus alumnos, o verifica que los alumnos estén registrados correctamente.
+      </p>
+
+      <button
+        class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-300"
+        >
+        <i class="redo icon"></i> Recargar Lista
+      </button>
+    </div>
+  </div>
+</div>

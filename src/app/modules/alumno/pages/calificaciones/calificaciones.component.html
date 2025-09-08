@@ -1,0 +1,97 @@
+<section class="bg-white shadow-md rounded-lg p-4 sm:p-6 border border-gray-300">
+  <!-- Fecha actual -->
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-lg font-semibold text-[#44509D]">Panel del Estudiante</h1>
+    <p class="text-gray-500 text-sm">{{ today | date: 'longDate' }}</p>
+  </div>
+
+  <!-- Encabezado: Foto y Detalles del Alumno -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <!-- Foto del Alumno -->
+    <div class="text-center">
+      <div class="flex justify-center mb-3">
+        <img 
+          src="https://randomuser.me/api/portraits/men/26.jpg" 
+          alt="Foto de perfil" 
+          class="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-[#44509D] animate-fade-in" />
+      </div>
+      <h2 class="text-lg font-semibold text-[#44509D]">{{ alumnoData?.nombre }}</h2>
+      <p class="text-gray-600">Estudiante</p>
+      <p class="text-gray-500 text-sm">{{ alumnoData?.email }}</p>
+    </div>
+  </div>
+
+  <!-- Promedio y Cursos -->
+  <div class="mt-4">
+    <h3 class="text-base md:text-lg font-semibold text-[#F08762] mb-3">Calificaciones</h3>
+    <div *ngIf="cursos.length > 0">
+      <table class="table-auto w-full border-collapse border border-gray-300 rounded-lg text-sm md:text-base">
+        <thead>
+          <tr class="bg-[#44509D] text-white">
+            <th class="py-2 px-2 text-left">Curso</th>
+            <th class="py-2 px-2 text-left">Calificación</th>
+            <th class="py-2 px-2 text-left">Duración</th>
+            <th class="py-2 px-2 text-left">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let curso of cursos" class="hover:bg-gray-100">
+            <td class="py-2 px-2">{{ curso.nombre_curso }}</td>
+            <td class="py-2 px-2">
+              {{ curso.calificacion_final !== null ? curso.calificacion_final : 'Sin Calificar' }}
+            </td>
+            <td class="py-2 px-2">{{ curso.duracion_horas }} horas</td>
+            <td class="py-2 px-2">
+              <button 
+                (click)="abrirModal(curso)" 
+                class="px-3 py-1 bg-[#D8566C] text-white rounded hover:bg-[#F08762] transition-all duration-300">
+                <i class="eye icon"></i> Detalles
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="cursos.length === 0" class="mt-4 text-center text-gray-500">
+      <p>No estás inscrito en ningún curso actualmente.</p>
+    </div>
+  </div>
+
+  <!-- Botón de Exportar -->
+  <div class="mt-4 flex justify-end">
+    <button 
+      (click)="exportarCalificaciones()" 
+      class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-transform duration-300 transform hover:scale-105">
+      <i class="download icon"></i> Exportar a CSV
+    </button>
+  </div>
+
+  <!-- Modal de Detalles -->
+  <div 
+    *ngIf="cursoSeleccionado" 
+    class="fixed inset-0 bg-gray-900 bg-opacity-60 backdrop-blur-sm flex items-center justify-center animate-fade-in">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-2/3 lg:w-1/2">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold text-[#44509D]">Detalles del Curso</h2>
+        <button 
+          (click)="cerrarModal()" 
+          class="text-gray-500 hover:text-gray-700 transition duration-300">
+          <i class="close icon"></i>
+        </button>
+      </div>
+      <p><strong>Nombre del Curso:</strong> {{ cursoSeleccionado?.nombre_curso }}</p>
+      <p><strong>Docente:</strong> {{ cursoSeleccionado?.nombre_docente }}</p>
+      <p><strong>Calificación:</strong> {{ cursoSeleccionado?.calificacion_final }}</p>
+      <p><strong>Duración:</strong> {{ cursoSeleccionado?.duracion_horas }} horas</p>
+      <p><strong>Fecha de Inicio:</strong> {{ cursoSeleccionado?.fecha_inicio | date: 'longDate' }}</p>
+      <p><strong>Fecha de Fin:</strong> {{ cursoSeleccionado?.fecha_fin | date: 'longDate' }}</p>
+      <div class="flex justify-end mt-4">
+        <button 
+          (click)="cerrarModal()" 
+          class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-all duration-300">
+          <i class="close icon"></i> Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
