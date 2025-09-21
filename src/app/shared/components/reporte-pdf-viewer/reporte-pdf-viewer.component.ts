@@ -93,15 +93,7 @@ cargarDetallesCurso(): void {
   });
 }
 
-  // generarPDF(): void {
-  //   const doc = new jsPDF({ unit: 'pt', format: 'letter' });
-  //   const modalidad = this.cursoData().TIPO_CURSO_ID;
-  //   const strategy = this.pdfFormatService.getStrategy(modalidad);
 
-  //   const helpers = new PdfHelpers((finalDoc) => this.finalizePDF(finalDoc));
-
-  //   strategy.generate(doc, this.cursoData(), helpers);
-  // }
 generarPDF(): void {
   const modalidad = this.cursoData().TIPO_CURSO_ID;
   console.log("modalidad", modalidad);
@@ -134,10 +126,33 @@ generarPDF(): void {
     this.pdfUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl));
   }
 
-  // Navigation methods
-  regresar(): void {
-    this.router.navigate(['/oferta-educativa']);
+regresar(): void {
+  // 1) state
+  const s = history.state as { returnUrl?: string };
+  if (s?.returnUrl) {
+    this.router.navigateByUrl(s.returnUrl);
+    return;
   }
+  // 2) query param
+  const qp = this.route.snapshot.queryParamMap.get('returnUrl');
+  if (qp) {
+    this.router.navigateByUrl(qp);
+    return;
+  }
+  // 3) default de la ruta
+  const def = this.route.snapshot.data?.['defaultReturn'] as string | undefined;
+  if (def) {
+    this.router.navigateByUrl(def);
+    return;
+  }
+  // 4) heurística por prefijo actual
+  const url = this.router.url;
+  this.router.navigateByUrl(
+    url.startsWith('/docente') ? '/docente/perfil' :
+    url.startsWith('/validador') ? '/validador/docente/solicitudes-cursos' :
+    '/oferta-educativa'
+  );
+}
 
 
 }

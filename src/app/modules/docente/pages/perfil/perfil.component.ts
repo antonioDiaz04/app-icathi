@@ -15,7 +15,7 @@ import { FileUploadService } from '../../../../shared/services/file-upload.servi
 import { AlertTaiwilService } from '../../../../shared/services/alert-taiwil.service';
 import { SolicitudCursoApi, SolicitudesCursosService } from '../../../../shared/services/solicitudes-cursos.service';
 import { Curso, CursosService } from '../../../../shared/services/cursos.service';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 type TabKey = 'personal' | 'documentacion' | 'configuracion' | 'seguridad';
 // Reglas de contraseña fuerte
@@ -113,12 +113,15 @@ export class PerfilComponent {
   private alertTaiwilService = inject(AlertTaiwilService);
   // private alertTaiwilService: AlertTaiwilService,
   isSaving = signal(false);
+
+
+      public currentUrl: string = ''; // expón la URL actual al template
   constructor(private fb: FormBuilder
     , private validadorDocenteService: ValidadorDocenteService,
     private docenteDataService: DocenteDataService,
     private docenteService: DocenteService,
     private authService: AuthService,
-    private svc: SolicitudesCursosService, private cursosService: CursosService
+    private svc: SolicitudesCursosService, private cursosService: CursosService,private router: Router,
     // private fileUploadService: FileUploadService,
 
   ) {
@@ -392,9 +395,10 @@ export class PerfilComponent {
       this.previewObjectUrl = null;
     }
   }
-
+    
   ngOnInit(): void {
-
+    
+    this.currentUrl = this.router.url; // Asigna la URL actual aquí
     this.loadUserDetails()
      
   }

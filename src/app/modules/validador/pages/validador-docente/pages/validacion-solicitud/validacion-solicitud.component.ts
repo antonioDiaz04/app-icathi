@@ -7,6 +7,7 @@ import { Docente, DocenteService } from '../../../../../../shared/services/docen
 import { catchError, finalize, forkJoin, map, of, switchMap } from 'rxjs';
 // import { DocenteHelper } from '../../../../../docente/commons/helpers/docente.helper';
 import { AuthService } from '../../../../../../shared/services/auth.service';
+import { RouterModule } from '@angular/router';
 
 type Estado = 'Pendiente' | 'En Revisión' | 'Aprobado' | 'Rechazado';
 type Prioridad = 'Alta' | 'Media' | 'Baja';
@@ -16,7 +17,7 @@ type Prioridad = 'Alta' | 'Media' | 'Baja';
 @Component({
   selector: 'app-validacion-solicitud',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,RouterModule],
   templateUrl: './validacion-solicitud.component.html',
   styleUrl: './validacion-solicitud.component.scss'
 })

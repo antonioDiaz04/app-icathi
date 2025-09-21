@@ -6,7 +6,7 @@ import { Curso, CursosService } from '../../../../shared/services/cursos.service
 import { DocenteHelper } from '../../commons/helpers/docente.helper';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { DocenteService } from '../../../../shared/services/docente.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 type Estado = 'Pendiente' | 'En Revisión' | 'Aprobado' | 'Rechazado';
 type Prioridad = 'Prioridad Baja' | 'Prioridad Media' | 'Prioridad Alta';
@@ -23,7 +23,7 @@ interface Respuesta {
 @Component({
   selector: 'app-mis-solicitudes',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,RouterModule],
   templateUrl: './mis-solicitudes.component.html',
   styleUrl: './mis-solicitudes.component.scss'
 })
@@ -59,12 +59,14 @@ private pendingLoads = 2;
   docenteData: any;
   constructor(     private router: Router,
    private authService: AuthService,
-    private docenteService: DocenteService,private svc: SolicitudesCursosService,private cursosService :CursosService) {}
+    private docenteService: DocenteService,private svc: SolicitudesCursosService,private cursosService :CursosService) {
 
+    }
+    public currentUrl: string = ''; // expón la URL actual al template
+    
   ngOnInit(): void {
+      this.currentUrl = this.router.url; // Asigna la URL actual aquí
       this.obtenerDatosDocenteYCursos().then(() => this.cargar());
-
-
   }
   async obtenerDatosDocenteYCursos(): Promise<void> {
    this.docenteData = await DocenteHelper.obtenerDatosDocenteYCursos(

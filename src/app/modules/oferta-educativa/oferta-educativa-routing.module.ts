@@ -27,6 +27,8 @@ const routes: Routes = [
       {
         path: 'reporte/:id',
         component: ReportePdfViewerComponent,
+          data: { defaultReturn: '/oferta-educativa' }
+
       },
 
     ]

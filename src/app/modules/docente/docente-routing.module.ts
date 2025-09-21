@@ -11,6 +11,8 @@ import { PerfilComponent } from './pages/perfil/perfil.component';
 import { CursosDisponiblesComponent } from './pages/cursos-disponibles/cursos-disponibles.component';
 import { SolicitarCursoComponent } from './pages/solicitar-curso/solicitar-curso.component';
 import { MisSolicitudesComponent } from './pages/mis-solicitudes/mis-solicitudes.component';
+import { DictamenPdfViewerComponent } from '../../shared/components/dictamen-pdf-viewer/dictamen-pdf-viewer.component';
+import { ReportePdfViewerComponent } from '../../shared/components/reporte-pdf-viewer/reporte-pdf-viewer.component';
 // import { PerfilesComponent } from '../validador/pages/validador-docente/pages/perfiles/perfiles.component';
 
 const routes: Routes = [
@@ -59,7 +61,17 @@ const routes: Routes = [
         path: 'mis-solicitudes',
         component: MisSolicitudesComponent,
       },
+      {
+        path: 'dictamen-validacion/:solicitudId',
+        component: DictamenPdfViewerComponent,
+        data: { defaultReturn: '/docente/mis-solicitudes' }
+      },
+      {
+        path: 'curso-pdf/:id',
+        component: ReportePdfViewerComponent,
+          data: { defaultReturn: '/docente/perfil' }
 
+      },
     ],
   },
 ]

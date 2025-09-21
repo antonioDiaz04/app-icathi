@@ -75,10 +75,13 @@ export class HomeComponent {
     { id: 5, nombre: 'Cursos Modalidad SEP', componente: 'curso5' }
   ];
   selectedCourseId: number = 0;
+  public currentUrl: string = ''; // expón la URL actual al template
   constructor(private http: HttpClient, private router: Router, private sanitizer: DomSanitizer,  private route: ActivatedRoute
 ) { }
 
   ngOnInit(): void {
+        this.currentUrl = this.router.url; // Asigna la URL actual aquí
+
     this.cargarCursos();
     this.route.queryParams.subscribe(params => {
       if (params['agregar'] === 'true') {

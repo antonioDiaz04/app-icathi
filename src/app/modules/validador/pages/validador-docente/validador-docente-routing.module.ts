@@ -5,6 +5,7 @@ import { ValidadorDocenteComponent } from './validador-docente.component';
 import { PerfilesComponent } from './pages/perfiles/perfiles.component';
 import { PanelValidadorComponent } from './pages/panel-validador/panel-validador.component';
 import { ValidacionSolicitudComponent } from './pages/validacion-solicitud/validacion-solicitud.component';
+import { DictamenPdfViewerComponent } from '../../../../shared/components/dictamen-pdf-viewer/dictamen-pdf-viewer.component';
 
 
 const routes: Routes = [
@@ -56,6 +57,23 @@ const routes: Routes = [
           ],
         },
       },
+      {
+        path: 'dictamen-validacion/:solicitudId',
+        component: DictamenPdfViewerComponent,
+        data: {
+          title: 'Home',
+          breadcrumb: [
+            {
+              label: 'Home',
+              path: '/validador/home',
+            },
+          ],
+        },
+        // loadComponent: () =>
+        //   import('./features/cursos/pages/dictamen-pdf-viewer/dictamen-pdf-viewer.component')
+        //     .then(m => m.DictamenPdfViewerComponent)
+      }
+
 
 
 
